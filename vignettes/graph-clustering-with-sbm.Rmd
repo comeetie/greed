@@ -36,3 +36,13 @@ fit=fit_icl(model,sbm$x,20)
 plot_adjmat(sbm$x[order(fit$cl),order(fit$cl)])
 
 ```
+
+
+```{r, fig.show='hold'}
+model = new("sbm")
+kk=kmeans(sbm$x,20)
+fit=fit_icl_init(model,sbm$x,max(kk$cluster),kk$cluster-1)
+plot_adjmat(sbm$x[order(fit$cl),order(fit$cl)])
+
+```
+
