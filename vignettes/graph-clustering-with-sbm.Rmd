@@ -1,0 +1,38 @@
+---
+title: "Graph clustering with SBM"
+author: "Etienne Côme"
+date: "`r Sys.Date()`"
+fig_caption: yes
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Graph clustering with SBM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, fig.show='hold'}
+library(greed)
+N  = 500
+pi = rep(1/5,5)
+mu = diag(rep(1/25,5))+0.005
+mu[3,4] = 0.01
+
+sbm = rsbm(N,pi,mu)
+plot_adjmat(sbm$x[order(sbm$cl),order(sbm$cl)])
+
+```
+
+
+```{r, fig.show='hold'}
+model = new("sbm")
+fit=fit_icl(model,sbm$x,20)
+plot_adjmat(sbm$x[order(fit$cl),order(fit$cl)])
+
+```
