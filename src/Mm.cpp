@@ -58,8 +58,10 @@ double Mm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
 
 
 arma::mat Mm::delta_swap(int i){
+  // Rcout << "--" << i << "--" << std::endl;;
   int oldcl = cl(i);
-  arma::sp_mat crow = xt.col(i);
+  arma::sp_mat crow = xt.col(i).t();
+  // Rcout << crow << std::endl;;
   arma::mat delta(K,1);
   delta.fill(0);
   List old_stats = List::create(Named("counts", counts), Named("x_counts", x_counts));
@@ -78,14 +80,17 @@ arma::mat Mm::delta_swap(int i){
 
 
 void Mm::swap_update(int i,int newcl){
-  int self=x(i,i);
+  // Rcout << "swap !!" << i << newcl << std::endl;;
   int oldcl = cl(i);
-  arma::sp_mat crow = xt.col(i);
+  arma::sp_mat crow = xt.col(i).t();
   arma::mat new_ec = x_counts;
+  
   new_ec.row(newcl) = new_ec.row(newcl)+crow;
   new_ec.row(oldcl) = new_ec.row(oldcl)-crow;
+  
   arma::mat new_counts = update_count(counts,oldcl,newcl);
   cl(i)=newcl;
+  
   if(new_counts(oldcl)==0){
     counts = new_counts.elem(arma::find(arma::linspace(0,K-1,K)!=oldcl));
     x_counts = new_ec(arma::find(arma::linspace(0,K-1,K)!=oldcl),arma::find(arma::linspace(0,K-1,K)<0));
@@ -159,9 +164,16 @@ MergeMat Mm::delta_merge(arma::mat delta, int obk, int obl){
 void Mm::merge_update(int k,int l){
   cl(arma::find(cl==k))=arma::ones(counts(k),1)*l;
   cl.elem(arma::find(cl>k))=cl.elem(arma::find(cl>k))-1;
+  
   counts(l) = counts(k)+counts(l);
+  
+  
+
   counts    = counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
+  
   x_counts.row(l) = x_counts.row(k)+x_counts.row(l);
-  x_counts = x_counts(arma::find(arma::linspace(0,K-1,K)!=k),arma::find(arma::linspace(0,K-1,K)!=k));
+  
+  x_counts = x_counts.rows(arma::find(arma::linspace(0,K-1,K)!=k));
+
   --K;
 }

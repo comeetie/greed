@@ -19,9 +19,52 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fit_icl_init
+List fit_icl_init(S4 model, arma::sp_mat& xp, int Ki, arma::vec& clt);
+RcppExport SEXP _greed_fit_icl_init(SEXP modelSEXP, SEXP xpSEXP, SEXP KiSEXP, SEXP cltSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< int >::type Ki(KiSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
+    rcpp_result_gen = Rcpp::wrap(fit_icl_init(model, xp, Ki, clt));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fit_greed_sbm
+List fit_greed_sbm(S4 model, arma::sp_mat& xp, int Ki);
+RcppExport SEXP _greed_fit_greed_sbm(SEXP modelSEXP, SEXP xpSEXP, SEXP KiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< int >::type Ki(KiSEXP);
+    rcpp_result_gen = Rcpp::wrap(fit_greed_sbm(model, xp, Ki));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fit_greed_mm
+List fit_greed_mm(S4 model, arma::sp_mat& xp, int Ki);
+RcppExport SEXP _greed_fit_greed_mm(SEXP modelSEXP, SEXP xpSEXP, SEXP KiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< int >::type Ki(KiSEXP);
+    rcpp_result_gen = Rcpp::wrap(fit_greed_mm(model, xp, Ki));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_greed_fit_icl", (DL_FUNC) &_greed_fit_icl, 3},
+    {"_greed_fit_icl_init", (DL_FUNC) &_greed_fit_icl_init, 4},
+    {"_greed_fit_greed_sbm", (DL_FUNC) &_greed_fit_greed_sbm, 3},
+    {"_greed_fit_greed_mm", (DL_FUNC) &_greed_fit_greed_mm, 3},
     {NULL, NULL, 0}
 };
 

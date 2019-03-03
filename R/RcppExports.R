@@ -5,3 +5,15 @@ fit_icl <- function(model, xp, Ki) {
     .Call(`_greed_fit_icl`, model, xp, Ki)
 }
 
+fit_icl_init <- function(model, xp, Ki, clt) {
+    .Call(`_greed_fit_icl_init`, model, xp, Ki, clt)
+}
+
+fit_greed_sbm <- function(model, xp, Ki) {
+    .Call(`_greed_fit_greed_sbm`, model, xp, Ki)
+}
+
+fit_greed_mm <- function(model, xp, Ki) {
+    .Call(`_greed_fit_greed_mm`, model, xp, Ki)
+}
+

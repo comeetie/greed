@@ -32,15 +32,18 @@ void IclModel::greedy_swap(int nbpassmax){
   int cnode = 0;
   bool hasMoved = true;
   while (hasMoved){
-
+    // 
     arma::vec pass= as<arma::vec>(sample(N,N))-1;
     hasMoved=false;
     nbmove=0;
     for (int i=0;i<N ;++i){
       cnode=pass(i);
+      
       arma::mat delta = this->delta_swap(cnode);
+      
       int ncl = delta.index_max();
       if(ncl!=cl(cnode)){
+   
         this->swap_update(cnode,ncl);
         hasMoved=true;
         ++nbmove;
@@ -49,28 +52,32 @@ void IclModel::greedy_swap(int nbpassmax){
     ++nbpass;
     icl_value = icl(this->get_obs_stats());
     Rcout << "##################################"<< std::endl;
-    Rcout << "Pass N°"<< nbpass << " completed with " << nbmove << " moves, icl :" << icl_value << std::endl;
-    Rcout << "##################################"<< std::endl;
+    Rcout << "Pass N°"<< nbpass << " completed with " << hasMoved << " moves, icl :" << icl_value << std::endl;
+    Rcout << "##################################"<< std::endl; 
   }
 }
 
 
 void IclModel::greedy_merge(){
+  
   MergeMat merge_mat = this->delta_merge();
   int nbmerge = 0;
+  
   while(merge_mat.getValue()>0){
     ++nbmerge;
     Rcout << "##################################"<< std::endl;
     Rcout << "Merge N°"<< nbmerge << " with delta :" << merge_mat.getValue() << std::endl;
-    Rcout << "##################################"<< std::endl;
+    Rcout << "##################################"<< std::endl; 
+    
     this->merge_update(merge_mat.getK(),merge_mat.getL());
+  
     merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL());
 
   }
   icl_value = icl(this->get_obs_stats());
   Rcout << "##################################"<< std::endl;
   Rcout << "Final icl : "<< icl_value << std::endl;
-  Rcout << "##################################"<< std::endl;
+  Rcout << "##################################"<< std::endl; 
 }
 
 List IclModel::greedy_merge_path(){
@@ -79,9 +86,9 @@ List IclModel::greedy_merge_path(){
   int nbmerge = 0;
   while(K>1){
     ++nbmerge;
-    Rcout << "##################################"<< std::endl;
+    /* Rcout << "##################################"<< std::endl;
     Rcout << "Merge N°"<< nbmerge << " with delta :" << merge_mat.getValue() << std::endl;
-    Rcout << "##################################"<< std::endl;
+    Rcout << "##################################"<< std::endl; */
     this->merge_update(merge_mat.getK(),merge_mat.getL());
     path.push_back(List::create(Named("counts") = counts, Named("x_counts") = x_counts, Named("cl") = cl+1, Named("K") = K));
     merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL());
