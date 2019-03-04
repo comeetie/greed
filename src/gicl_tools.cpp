@@ -68,3 +68,13 @@ arma::mat update_count(arma::mat counts,int oldcl,int newcl) {
   counts(newcl,0)=counts(newcl,0)+1;
   return counts;
 }
+
+
+arma::vec sum_cols(const arma::sp_mat& x){
+  arma::vec tots(x.n_cols);
+  tots.fill(0);
+  for (arma::sp_mat::const_iterator i = x.begin(); i != x.end(); ++i)  {
+    tots(i.col()) += *i;
+  }
+  return tots;
+}

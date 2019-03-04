@@ -17,5 +17,7 @@ arma::mat gsum_col(arma::vec cl,const arma::sp_mat& x, int i, int K);
 
 arma::mat update_count(arma::mat counts,int oldcl, int newcl);
 
+arma::vec sum_cols(const arma::sp_mat& x);
+
 #endif
 

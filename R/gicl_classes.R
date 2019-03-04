@@ -23,7 +23,7 @@ setClass("sbm",
 setClass("mm",
          representation = list(beta = "numeric"),
          contains = "icl_model",
-         prototype(name="sbm",beta=1,alpha=1))
+         prototype(name="mm",beta=1,alpha=1))
 
 #' An S4 class to represent a degree corrected stochastick block model that extends \code{icl_model} class.
 #'
@@ -69,49 +69,41 @@ setClass("greed",
 
 setClass("genetic",
          contains = "alg",
-         representation =  list(pop_size = "numeric"),
-         prototype(name="genetic",pop_size=10))
+         representation =  list(pop_size = "numeric",nb_max_gen = "numeric"),
+         prototype(name="genetic",pop_size=10, nb_max_gen = 4))
 
 setGeneric("fit", function(model,x,K,alg) standardGeneric("fit")) 
+
 setMethod(f = "fit", 
-          signature = signature("sbm","dgCMatrix", "numeric","greed"), 
+          signature = signature("icl_model","dgCMatrix", "numeric","greed"), 
           definition = function(model, x, K,alg){
-            future::plan(multisession)
+            future::plan(future::multisession)
             solutions = listenv::listenv()
             for (i in 1:alg@nb_start){
-              solutions[[i]]%<-%fit_greed_sbm(model,x,K)  
+              solutions[[i]] %<-% fit_greed(model,x,K) 
             }
             solutions = as.list(solutions)
             icls = sapply(solutions,function(s){s$icl})
             solutions[[order(icls,decreasing = TRUE)[1]]]  
           })
 
-setMethod(f = "fit", 
-          signature = signature("mm","dgCMatrix", "numeric","greed"), 
-          definition = function(model, x, K,alg){
-            future::plan(multisession)
-            solutions = listenv::listenv()
-            for (i in 1:alg@nb_start){
-              solutions[[i]]%<-%fit_greed_mm(model,x,K)  
-            }
-            solutions = as.list(solutions)
-            icls = sapply(solutions,function(s){s$icl})
-            solutions[[order(icls,decreasing = TRUE)[1]]]
-          })
+
 
 setMethod(f = "fit", 
-          signature = signature("sbm","dgCMatrix", "numeric","genetic"), 
+          signature = signature("icl_model","dgCMatrix", "numeric","genetic"), 
           definition = function(model, x, K,alg){
             future::plan(multisession)
             solutions = listenv::listenv()
             # première generation
             pop_size = alg@pop_size
             for (i in 1:pop_size){
-                solutions[[i]] %<-% fit_greed_sbm(model,x,K)
+                solutions[[i]] %<-% fit_greed(model,x,K)
             }
             solutions = as.list(solutions)
-            icls = sapply(solutions,function(s){s$icl})
-            while((max(icls)-min(icls))>1){
+            icls  = sapply(solutions,function(s){s$icl})
+            nbgen = 1
+            # tout le monde a converger vers la même solution
+            while((max(icls)-min(icls))>1 | nbgen < alg@nb_max_gen){
               # sélections 
               icl_order = order(icls,decreasing = TRUE)
               selected  = icl_order[1:(pop_size/2)]
@@ -119,12 +111,13 @@ setMethod(f = "fit",
               new_solutions = listenv::listenv()
               selected_couples = matrix(selected[sample(1:length(selected),length(selected)*2,replace = TRUE)],ncol=2)
               for (i in 1:nrow(selected_couples)){
-                new_solutions[[i]] %<-% cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],model,x)
+                cvo = future::future(cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],model,x))
+                new_solutions[[i]] = value(cvo)
               }
               new_solutions = as.list(new_solutions)
               solutions = c(solutions[selected],new_solutions)
               icls = sapply(solutions,function(s){s$icl})
-              
+              nbgen = nbgen + 1;
             }
             solutions[[order(icls,decreasing = TRUE)[1]]]
             
@@ -133,5 +126,5 @@ setMethod(f = "fit",
 
 cross_over = function(sol1,sol2,model,x){
   ncl = unclass(factor(paste(sol1$cl,sol2$cl)))
-  fit_icl_init(model,x,max(ncl),ncl-1)
+  fit_greed_init(model,x,max(ncl),ncl-1)
 }

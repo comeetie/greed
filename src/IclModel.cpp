@@ -6,8 +6,12 @@ using namespace Rcpp;
 
 double IclModel::icl(const List & obs_stats){
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
+  
+  int N = arma::accu(counts);
+  int K = x_counts.n_elem;
   double icl_prop = lgamma(K*alpha)+arma::accu(lgamma(alpha+counts))-K*lgamma(alpha)-lgamma(arma::accu(counts+alpha));
   double icl_e = this->icl_emiss(obs_stats);
+
   double icl = icl_prop+icl_e;
   return icl;
 }
@@ -31,7 +35,7 @@ void IclModel::greedy_swap(int nbpassmax){
   int nbmove = 0;
   int cnode = 0;
   bool hasMoved = true;
-  while (hasMoved){
+  while (hasMoved && nbpass < nbpassmax ){
     // 
     arma::vec pass= as<arma::vec>(sample(N,N))-1;
     hasMoved=false;
@@ -43,7 +47,7 @@ void IclModel::greedy_swap(int nbpassmax){
       
       int ncl = delta.index_max();
       if(ncl!=cl(cnode)){
-   
+        //Rcout << delta << std::endl;
         this->swap_update(cnode,ncl);
         hasMoved=true;
         ++nbmove;
@@ -52,7 +56,7 @@ void IclModel::greedy_swap(int nbpassmax){
     ++nbpass;
     icl_value = icl(this->get_obs_stats());
     Rcout << "##################################"<< std::endl;
-    Rcout << "Pass N°"<< nbpass << " completed with " << hasMoved << " moves, icl :" << icl_value << std::endl;
+    Rcout << "Pass N°"<< nbpass << " completed with " << nbmove << " moves, icl :" << icl_value << std::endl;
     Rcout << "##################################"<< std::endl; 
   }
 }

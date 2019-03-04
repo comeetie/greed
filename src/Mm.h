@@ -25,6 +25,7 @@ private:
   arma::sp_mat x;
   arma::sp_mat xt;
   double beta;
+  double norm_fact;
 };
 
 #endif
