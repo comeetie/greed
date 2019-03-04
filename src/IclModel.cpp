@@ -55,9 +55,9 @@ void IclModel::greedy_swap(int nbpassmax){
     }
     ++nbpass;
     icl_value = icl(this->get_obs_stats());
-    Rcout << "##################################"<< std::endl;
+    /* Rcout << "##################################"<< std::endl;
     Rcout << "Pass N°"<< nbpass << " completed with " << nbmove << " moves, icl :" << icl_value << std::endl;
-    Rcout << "##################################"<< std::endl; 
+    Rcout << "##################################"<< std::endl; */
   }
 }
 
@@ -69,9 +69,9 @@ void IclModel::greedy_merge(){
   
   while(merge_mat.getValue()>0){
     ++nbmerge;
-    Rcout << "##################################"<< std::endl;
+    /* Rcout << "##################################"<< std::endl;
     Rcout << "Merge N°"<< nbmerge << " with delta :" << merge_mat.getValue() << std::endl;
-    Rcout << "##################################"<< std::endl; 
+    Rcout << "##################################"<< std::endl;  */
     
     this->merge_update(merge_mat.getK(),merge_mat.getL());
   
@@ -93,8 +93,17 @@ List IclModel::greedy_merge_path(){
     /* Rcout << "##################################"<< std::endl;
     Rcout << "Merge N°"<< nbmerge << " with delta :" << merge_mat.getValue() << std::endl;
     Rcout << "##################################"<< std::endl; */
-    this->merge_update(merge_mat.getK(),merge_mat.getL());
-    path.push_back(List::create(Named("counts") = counts, Named("x_counts") = x_counts, Named("cl") = cl+1, Named("K") = K));
+    int k = merge_mat.getK();
+    int l = merge_mat.getL();
+    this->merge_update(k,l);
+    double icl = this->icl(this->get_obs_stats());
+    path.push_back(List::create(Named("counts") = counts, 
+                                Named("x_counts") = x_counts, 
+                                Named("cl") = cl+1, 
+                                Named("K") = K,
+                                Named("icl")=icl,
+                                Named("k")=k+1,
+                                Named("l")=l+1));
     merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL());
   }
   return path;

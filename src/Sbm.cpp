@@ -55,10 +55,11 @@ double Sbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
   for (int i = 0;i<si.n_rows;++i){
     k=si(i,0);
     l=si(i,1);
-    if(!(counts(oldcl)==0 & (k==oldcl | l==oldcl))){
-      cc = counts(k,0)*counts(l,0);
-      icl_emiss += lgamma(a0+edges_counts(k,l))+lgamma(b0+cc-edges_counts(k,l))+lgamma(a0+b0)-lgamma(a0)-lgamma(b0)-lgamma(a0+b0+cc);
+    if(counts(k)*counts(l)!=0){
+        cc = counts(k)*counts(l);
+        icl_emiss += lgamma(a0+edges_counts(k,l))+lgamma(b0+cc-edges_counts(k,l))+lgamma(a0+b0)-lgamma(a0)-lgamma(b0)-lgamma(a0+b0+cc);  
     }
+    
   }
   return icl_emiss;
 }
@@ -140,12 +141,8 @@ MergeMat Sbm::delta_merge(){
       new_counts(k)=0;
       new_ec.col(l) = new_ec.col(k)+new_ec.col(l);
       new_ec.row(l) = new_ec.row(k)+new_ec.row(l);
-
-      new_counts    = new_counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
-      new_ec = new_ec(arma::find(arma::linspace(0,K-1,K)!=k),arma::find(arma::linspace(0,K-1,K)!=k));
-
       List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec));
-      delta(k,l)=icl(new_stats)-icl(old_stats);
+      delta(k,l)=icl(new_stats,k,l)-icl(old_stats,k,l);
       delta(l,k)=delta(k,l);
       if(delta(k,l)>bv){
         bk=k;
@@ -170,13 +167,10 @@ MergeMat Sbm::delta_merge(arma::mat delta, int obk, int obl){
         arma::mat new_counts = counts;
         new_counts(l)=new_counts(k)+new_counts(l);
         new_counts(k)=0;
-        new_counts    = new_counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
         new_ec.col(l) = new_ec.col(k)+new_ec.col(l);
         new_ec.row(l) = new_ec.row(k)+new_ec.row(l);
-        new_ec = new_ec(arma::find(arma::linspace(0,K-1,K)!=k),arma::find(arma::linspace(0,K-1,K)!=k));
-
         List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec));
-        delta(k,l)=icl(new_stats)-icl(old_stats);
+        delta(k,l)=icl(new_stats,k,l)-icl(old_stats,k,l);
         delta(l,k)=delta(k,l);
       }
       if(delta(k,l)>bv){

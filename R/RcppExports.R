@@ -9,3 +9,7 @@ fit_greed_init <- function(model, xp, Ki, clt) {
     .Call(`_greed_fit_greed_init`, model, xp, Ki, clt)
 }
 
+fit_greed_path <- function(xp, init) {
+    .Call(`_greed_fit_greed_path`, xp, init)
+}
+

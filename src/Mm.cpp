@@ -77,6 +77,7 @@ double Mm::icl_emiss(const List & obs_stats){
 double Mm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
   // compute log(p(X|Z)) but only for the 2 classes which haved changed (oldcl,newcl)
   arma::mat x_counts =as<arma::mat>(obs_stats["x_counts"]);
+  arma::vec counts =as<arma::vec>(obs_stats["counts"]);
   double icl_emiss = 0;
   int d = x_counts.n_cols;
   for (int k = 0;k<x_counts.n_rows;++k){
@@ -159,23 +160,32 @@ void Mm::swap_update(int i,int newcl){
 
 
 MergeMat Mm::delta_merge(){
+  // inititalize delta merge matrix
   arma::mat delta(K,K);
   delta.fill(0);
+  // index to store current best merge
   int bk = 0;
   int bl = 0;
+  // initialize bv found to -infty
   double bv = -std::numeric_limits<double>::infinity();
+  // store cuurent stats
   List old_stats = List::create(Named("counts", counts), Named("x_counts", x_counts));
   for(int k = 1; k < K; ++k) {
     for (int l = 0;l<k;++l){
+      // for each possible merge
       arma::mat new_ec = x_counts;
       arma::mat new_counts = counts;
+      // counts after merge
       new_counts(l) = new_counts(k)+new_counts(l);
-      new_counts    = new_counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
+      new_counts(k) = 0;
+      // x_counts after merge on l
+      // row/col k will not be taken into account since counts(k)==0
       new_ec.row(l) = new_ec.row(l)+new_ec.row(k);
-      new_ec        = new_ec.rows(arma::find(arma::linspace(0,K-1,K)!=k));
       List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec));
-      delta(k,l)=icl(new_stats)-icl(old_stats);
+      // delta
+      delta(k,l)=icl(new_stats,k,l)-icl(old_stats,k,l);
       delta(l,k)=delta(k,l);
+      // best merge ?
       if(delta(k,l)>bv){
         bk=k;
         bl=l;
@@ -183,11 +193,11 @@ MergeMat Mm::delta_merge(){
       }
     }
   }
-  Rcout << delta << std::endl;
   return MergeMat(bk,bl,bv,delta);
 }
 
 MergeMat Mm::delta_merge(arma::mat delta, int obk, int obl){
+  // optimized version to compute only new values of the merge mat
   delta = delta(arma::find(arma::linspace(0,K,K+1)!=obk),arma::find(arma::linspace(0,K,K+1)!=obk));
   int bk = 0;
   int bl = 0;
@@ -199,11 +209,10 @@ MergeMat Mm::delta_merge(arma::mat delta, int obk, int obl){
         arma::mat new_ec = x_counts;
         arma::mat new_counts = counts;
         new_counts(l) = new_counts(k)+new_counts(l);
-        new_counts    = new_counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
+        new_counts(k) = 0;
         new_ec.row(l) = new_ec.row(l)+new_ec.row(k);
-        new_ec        = new_ec.rows(arma::find(arma::linspace(0,K-1,K)!=k));
         List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec));
-        delta(k,l)=icl(new_stats)-icl(old_stats);
+        delta(k,l)=icl(new_stats,k,l)-icl(old_stats,k,l);
         delta(l,k)=delta(k,l);
         if(delta(k,l)>bv){
           bk=k;
@@ -216,17 +225,17 @@ MergeMat Mm::delta_merge(arma::mat delta, int obk, int obl){
   return MergeMat(bk,bl,bv,delta);
 }
 
+// Merge update between k and l
 void Mm::merge_update(int k,int l){
+  // update cl
   cl(arma::find(cl==k))=arma::ones(counts(k),1)*l;
   cl.elem(arma::find(cl>k))=cl.elem(arma::find(cl>k))-1;
-  
+  // update counts
   counts(l) = counts(k)+counts(l);
-  
   counts    = counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
-  
+  // update x_counts
   x_counts.row(l) = x_counts.row(k)+x_counts.row(l);
-  
   x_counts = x_counts.rows(arma::find(arma::linspace(0,K-1,K)!=k));
-
+  // update K
   --K;
 }
