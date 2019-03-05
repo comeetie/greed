@@ -1,16 +1,26 @@
 Package: greed
 Type: Package
-Title: What the package does (short line)
+Title: greed: clustering and model selection for graphs and counts data
 Version: 1.0
 Date: 2019-02-27
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
-Imports: Rcpp (>= 1.0.0), Matrix, future, listenv, ggplot2
+Author: Etienne Come
+Maintainer: Etienne Come <etienne.come@ifsttar.fr>
+Description: Greed enable the clustering of networks and counts data such as document/term matrix with different type of generatiove models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood (which is equivalent to minimizing the description length). Their are for models availables : SBM degree corected SBM, Mixture of Multinomials, Multivariate mixture of poisson. The optimization is performed thanks to a comination of greedy local search and a genetic algorithm.
+License: GPL
+Imports: Rcpp (>= 1.0.0), Matrix, future, listenv, ggplot2, graphics
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: 
     testthat,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+RoxygenNote: 6.1.1
+Collate: 
+    'RcppExports.R'
+    'models_classes.R'
+    'fit_classes.R'
+    'alg_classes.R'
+    'generator.R'
+    'greed.R'
+    'misc.R'
+    'plot.R'

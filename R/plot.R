@@ -1,12 +1,24 @@
-setGeneric("plot", function(sol) standardGeneric("plot")) 
+#' @include models_classes.R fit_classes.R
+NULL
 
-setMethod(f = "plot", 
+#' Plot a clustering results
+#' @param sol \code{\link{icl_fit}} obejct to be ploted
+#' @return a ggplot2 graphics which summarize the results 
+#' @export
+setGeneric("clustplot", function(sol) standardGeneric("clustplot")) 
+
+#' Plot a clustering results
+#' @param sol \code{\link{sbm_fit}} obejct to be ploted
+#' @return a ggplot2 graphics which summarize the results 
+#' @export
+setMethod(f = "clustplot", 
           signature = signature("sbm_fit"),
           definition = function(sol){
-            gg=data.frame(kc=rep(cumsum(sol@counts),each=10),
-                          lc=rep(cumsum(sol@counts),10),
-                          sizek = rep(sol@counts,each=10),
-                          sizel = rep(sol@counts,10), 
+            K = length(sol@counts)
+            gg=data.frame(kc=rep(cumsum(sol@counts),each=K),
+                          lc=rep(cumsum(sol@counts),K),
+                          sizek = rep(sol@counts,each=K),
+                          sizel = rep(sol@counts,K), 
                           count=as.vector(sol@x_counts))
             ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes(x=kc-sizek/2,y=lc-sizel/2,width=sizek,height=sizel,fill=count/(sizek*sizel),alpha=count/(sizek*sizel)))+
               ggplot2::scale_fill_distiller("Link density",type="seq",direction = 1)+
@@ -18,8 +30,11 @@ setMethod(f = "plot",
             
           });
 
-
-setMethod(f = "plot", 
+#' Plot a clustering results
+#' @param sol \code{\link{mm_fit}} obejct to be ploted
+#' @return a ggplot2 graphics which summarize the results
+#' @export
+setMethod(f = "clustplot", 
           signature = signature("mm_fit"),
           definition = function(sol){
             K = length(sol@counts)

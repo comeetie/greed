@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 ```{r, fig.show='hold'}
 library(greed)
-N=1000
+N=500
 D=20
 pi=c(0.25,0.25,0.25,0.25)
 mu=matrix(0.01,4,D)
@@ -34,12 +34,13 @@ table(sol@cl,mm$cl)
 
 
 ```{r, fig.show='hold',out.width="100%",fig.width=9}
-plot(sol)
+clustplot(sol)
 ```
 
 
 ```{r, fig.show='hold'}
-K=10
+N=4000
+K=20
 pi=rep(1/K,K)
 epsilon = 0.0001
 lambda  = 0.1
@@ -50,5 +51,5 @@ table(sol@cl,sbm$cl)
 ```
 
 ```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
-plot(sol)
+clustplot(sol)
 ```

@@ -4,7 +4,11 @@
 #include "Mm.h"
 using namespace Rcpp;
 
-
+//' fit_greed 
+//' @param model icl_model
+//' @param xp sparseMatrix
+//' @param Ki initia guess for K
+//' @export
 // [[Rcpp::export]]
 S4 fit_greed(S4 model,arma::sp_mat& xp, int Ki) {
 
@@ -41,6 +45,12 @@ S4 fit_greed(S4 model,arma::sp_mat& xp, int Ki) {
 
 
 
+//' fit_greed_init
+//' @param model icl_model
+//' @param xp sparseMatrix
+//' @param Ki initia guess for K
+//' @param clt luster labels 
+//' @export
 // [[Rcpp::export]]
 S4 fit_greed_init(S4 model,arma::sp_mat& xp, int Ki, arma::vec& clt) {
   
@@ -78,6 +88,10 @@ S4 fit_greed_init(S4 model,arma::sp_mat& xp, int Ki, arma::vec& clt) {
 
 
 
+//' fit_greed 
+//' @param xp sparseMatrix
+//' @param init initial fit
+//' @export
 // [[Rcpp::export]]
 S4 fit_greed_path(arma::sp_mat& xp, S4 init) {
   
