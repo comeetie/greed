@@ -19,30 +19,36 @@ knitr::opts_chunk$set(
 
 ```{r, fig.show='hold'}
 library(greed)
-N  = 500
-pi = rep(1/5,5)
-mu = diag(rep(1/25,5))+0.005
-mu[3,4] = 0.01
+N=1000
+D=20
+pi=c(0.25,0.25,0.25,0.25)
+mu=matrix(0.01,4,D)
+mu[1:4,1:4]=diag(rep(1,4))+mu[1:4,1:4]
+mu=mu/rowSums(mu)
+mm=rmm(N,pi,mu,30)
+sol=fit(mm$x,10)
+table(sol@cl,mm$cl)
 
+
+```
+
+
+```{r, fig.show='hold',out.width="100%",fig.width=9}
+plot(sol)
+```
+
+
+```{r, fig.show='hold'}
+K=10
+pi=rep(1/K,K)
+epsilon = 0.0001
+lambda  = 0.1
+mu=matrix(epsilon,K,K)+diag(rep(lambda,K))
 sbm = rsbm(N,pi,mu)
-plot_adjmat(sbm$x[order(sbm$cl),order(sbm$cl)])
-
+sol=fit(sbm$x,10)
+table(sol@cl,sbm$cl)
 ```
 
-
-```{r, fig.show='hold'}
-model = new("sbm")
-fit=fit_icl(model,sbm$x,20)
-plot_adjmat(sbm$x[order(fit$cl),order(fit$cl)])
-
+```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+plot(sol)
 ```
-
-
-```{r, fig.show='hold'}
-model = new("sbm")
-kk=kmeans(sbm$x,20)
-fit=fit_icl_init(model,sbm$x,max(kk$cluster),kk$cluster-1)
-plot_adjmat(sbm$x[order(fit$cl),order(fit$cl)])
-
-```
-

@@ -79,9 +79,9 @@ void IclModel::greedy_merge(){
 
   }
   icl_value = icl(this->get_obs_stats());
-  Rcout << "##################################"<< std::endl;
+  /* Rcout << "##################################"<< std::endl;
   Rcout << "Final icl : "<< icl_value << std::endl;
-  Rcout << "##################################"<< std::endl; 
+  Rcout << "##################################"<< std::endl; */
 }
 
 List IclModel::greedy_merge_path(){
