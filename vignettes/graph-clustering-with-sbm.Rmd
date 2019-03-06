@@ -28,8 +28,6 @@ mu=mu/rowSums(mu)
 mm=rmm(N,pi,mu,30)
 sol=fit(mm$x,10)
 table(sol@cl,mm$cl)
-
-
 ```
 
 
@@ -39,14 +37,14 @@ clustplot(sol)
 
 
 ```{r, fig.show='hold'}
-N=4000
-K=20
+N=1000
+K=15
 pi=rep(1/K,K)
 epsilon = 0.0001
 lambda  = 0.1
 mu=matrix(epsilon,K,K)+diag(rep(lambda,K))
 sbm = rsbm(N,pi,mu)
-sol=fit(sbm$x,10)
+sol=fit(sbm$x,30)
 table(sol@cl,sbm$cl)
 ```
 

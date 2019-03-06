@@ -57,3 +57,29 @@ plotpath = function(hierch){
   gg$logalpha[1:6]=gg$logalpha[2:7]
   ggplot(gg)+geom_abline(aes(slope=K-1,intercept=icl))
 }
+
+loadcorpus = function(data,freq_three){
+s <- SimpleCorpus(VectorSource(unlist(lapply(data$text, as.character))))
+m <- DocumentTermMatrix(s,control = list(removeNumbers = TRUE,
+                                         stopwords = TRUE,
+                                         stemming = TRUE))
+Fterms = findFreqTerms(m,freq_three)
+sx = m[,m$dimnames$Terms %in% Fterms]
+X=sparseMatrix(i = sx$i, j = sx$j, x = sx$v, dims = dim(sx), 
+               dimnames = dimnames(sx))
+}
+
+buildpath(hier){
+  path = hier@path
+  
+  tree = rep(0,nbnodes)
+  f = K+1;
+  for (p in 1:length(path)){
+    tree[path[[p]]$k]=f
+    tree[path[[p]]$l]=f
+    path[[p+1]]$lab = c(1:(k-1),(k+1):path[[p+1]])
+    path[[p+1]]$lab[l]= f
+    f = f +1
+  }
+  
+}
