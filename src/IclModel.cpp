@@ -77,9 +77,9 @@ void IclModel::greedy_swap(int nbpassmax){
     icl_value = icl(this->get_obs_stats());
     
      
-    /* Rcout << "##################################"<< std::endl;
+    Rcout << "##################################"<< std::endl;
     Rcout << "Pass N°"<< nbpass << " completed with " << nbmove << " moves, icl :" << icl_value << std::endl;
-    Rcout << "##################################"<< std::endl; */
+    Rcout << "##################################"<< std::endl; 
   }
 }
 

@@ -1,6 +1,9 @@
 #' @useDynLib greed
 #' @importFrom Rcpp sourceCpp
+#' @importFrom future %<-%
+#' @name %<-%
 NULL
+
 #' @include models_classes.R fit_classes.R
 #' @import Matrix
 NULL
@@ -63,6 +66,7 @@ setGeneric("fit", function(x,K,model,alg) standardGeneric("fit"))
 setMethod(f = "fit", 
           signature = signature("dgCMatrix", "numeric","missing","missing"),
           definition = function(x,K){
+            # only a sparseMatrix and a number check dim to choose between graph models and 
             if(dim(x)[1]==dim(x)[2]){
               fit(x,K,new("sbm"),new("genetic"))  
             }else{
@@ -93,13 +97,15 @@ setMethod(f = "fit",
 setMethod(f = "fit", 
           signature = signature("dgCMatrix", "numeric","icl_model","genetic"), 
           definition = function(x, K,model,alg){
-            future::plan(future::multisession)
+            #cl <- parallel::makeCluster(K, timeout = 60)
+            #future::plan(future::cluster,workers = cl)
+            future::plan(future::multiprocess)
             solutions = listenv::listenv()
             # première generation
             pop_size = alg@pop_size
             for (i in 1:pop_size){
-              s = future::future(fit_greed(model,x,K))
-              solutions[[i]] = future::value(s) 
+
+              solutions[[i]] %<-% fit_greed(model,x,K)
             }
             solutions = as.list(solutions)
             icls  = sapply(solutions,function(s){s@icl})
@@ -108,7 +114,7 @@ setMethod(f = "fit",
             # tout le monde a converger vers la même solution
             while((max(icls)-min(icls))>1 & nbgen < alg@nb_max_gen){
               # sélections 
-              print(paste0("GEN :",nbgen ))
+              print(paste0("GEN: ",nbgen ))
               icl_order = order(icls,decreasing = TRUE)
               selected  = icl_order[1:(pop_size/2)]
               # cross_over
@@ -117,8 +123,7 @@ setMethod(f = "fit",
               
               for (i in 1:nrow(selected_couples)){
                 
-                cvo = future::future(cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],model,x))
-                new_solutions[[i]] = future::value(cvo)
+                new_solutions[[i]] %<-% cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],model,x)
               }
               new_solutions = as.list(new_solutions)
               solutions = c(solutions[selected],new_solutions)
@@ -127,8 +132,9 @@ setMethod(f = "fit",
               nbgen = nbgen + 1;
             }
             
-            solutions[[order(icls,decreasing = TRUE)[1]]]
-            
+            #parallel::stopCluster(cl)
+            res = solutions[[order(icls,decreasing = TRUE)[1]]]
+
           })
 
 
@@ -148,18 +154,69 @@ cross_over = function(sol1,sol2,model,x){
 setMethod(f = "fit", 
           signature = signature("dgCMatrix", "numeric","icl_model","greed"), 
           definition = function(x, K,model,alg){
-            future::plan(future::multiprocess)
+            cl <- parallel::makeCluster(K, timeout = 60)
+            future::plan(future::cluster,workers = cl)
+            #future::plan(future::multiprocess)
             solutions = listenv::listenv()
             for (i in 1:alg@nb_start){
-              val = future::future(fit_greed(model,x,K))
-              solutions[[i]] = future::value(val)  
+              solutions[[i]] %<-% fit_greed(model,x,K)
             }
             solutions = as.list(solutions)
             icls = sapply(solutions,function(s){s@icl})
             print(icls)
+            parallel::stopCluster(cl)
             solutions[[order(icls,decreasing = TRUE)[1]]]  
           })
 
-cleanpath = function(path){
+cleanpath = function(pathsol){
+  K=length(pathsol@counts)
+  path=pathsol@path
+  tree =c(0)
+  xtree=c(0)
+  cn  = 1
+  lab = c(1)
+  xpos = c(0)
+  H = rep(0,2*K-1)
+  x = 0
+  w = 0.5
+  K=1
+  for (lev in seq(length(path),1)){
+    print(xpos)
+    pl = length(path)-lev
+    path[[lev]]$lab  = lab
+    path[[lev]]$xpos = xpos
+    path[[lev]]$perm = order(xpos)
+    k=path[[lev]]$k
+    l=path[[lev]]$l
+    tree=c(tree,lab[l],lab[l])
+    
+    H[lab[l]]=-path[[lev]]$logalpha
+    if(tree[lab[l]]!=0 && H[lab[l]]>H[tree[lab[l]]]){
+      H[lab[l]]=H[tree[lab[l]]]
+    }
+
+    lab[l]=cn+1
+    fpos = xpos[l]
+    xtree=c(xtree,fpos-w^pl,fpos+w^pl)
+    # choisir + ou - en fonctionde la taille ?
+    xpos[l]=fpos-w^pl
+    if(k>K){
+      xpos = c(xpos,fpos+w^pl)
+      lab=c(lab,cn+2)  
+    }else{
+      xpos = c(xpos[1:(k-1)],fpos+w^pl,xpos[k:length(lab)])
+      lab=c(lab[1:(k-1)],cn+2,lab[k:length(lab)])
+    }
+    K  = K+1
+    cn = cn + 2 
+  }
+  gg=data.frame(H=H,tree=tree,x=xtree,node=1:length(tree))
+  gg$Hend = c(-1,gg$H[gg$tree])
+  gg$xend = c(-1,gg$x[gg$tree])
+  ggplot()+geom_segment(data=gg[-1,],aes(x=x,y=H,xend=xend,yend=Hend))+geom_point(data=gg,aes(x=x,y=H))
+  pathsol@path = path
+  pathsol@tree = tree
   
 } 
+
+
