@@ -10,7 +10,7 @@ double IclModel::icl(const List & obs_stats){
   // compute the first part p(Z) from clusters counts
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
   // number of cluster
-  int K = x_counts.n_elem;
+  int K = counts.n_elem;
   // log(p(Z))
   double icl_prop = lgamma(K*alpha)+arma::accu(lgamma(alpha+counts))-K*lgamma(alpha)-lgamma(arma::accu(counts+alpha));
   // complete with log(p(X|X)) from derived class
@@ -23,6 +23,7 @@ double IclModel::icl(const List & obs_stats){
 double IclModel::icl(const List & obs_stats,int oldcl,int newcl){
   // compute the first part p(Z) from clusters counts
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
+  int K = counts.n_elem;
   double icl_prop = 0;
   if(counts(oldcl)!=0){
     // both clusters are healthy
@@ -59,10 +60,13 @@ void IclModel::greedy_swap(int nbpassmax){
       // current node
       cnode=pass(i);
       // compute delta swap
-      arma::mat delta = this->delta_swap(cnode);
+      arma::vec delta = this->delta_swap(cnode);
       // best swap
       int ncl = delta.index_max();
       if(ncl!=cl(cnode)){
+        /* if(counts(cl(cnode))==1){
+          Rcout << "DEATHHHHHHHHHHHHHH" << std::endl;
+        } */
         // if best swap corresponds to a move
         // update the stats
         this->swap_update(cnode,ncl);
@@ -75,11 +79,11 @@ void IclModel::greedy_swap(int nbpassmax){
     ++nbpass;
     // compute icl after the pass
     icl_value = icl(this->get_obs_stats());
-    
+
      
-    Rcout << "##################################"<< std::endl;
+    /* Rcout << "##################################"<< std::endl;
     Rcout << "Pass N°"<< nbpass << " completed with " << nbmove << " moves, icl :" << icl_value << std::endl;
-    Rcout << "##################################"<< std::endl; 
+    Rcout << "##################################"<< std::endl; */
   }
 }
 

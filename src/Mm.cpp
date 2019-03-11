@@ -100,7 +100,7 @@ arma::mat Mm::delta_swap(int i){
   arma::sp_mat crow = xt.col(i).t();
 
   // initialize vecor of delta ICL
-  arma::mat delta(K,1);
+  arma::vec delta(K);
   delta.fill(0);
   // old stats
   List old_stats = List::create(Named("counts", counts), Named("x_counts", x_counts));
@@ -114,10 +114,10 @@ arma::mat Mm::delta_swap(int i){
       new_ec.row(k) = new_ec.row(k)+crow;
       new_ec.row(oldcl) = new_ec.row(oldcl)-crow;
       // update cluster counts
-      arma::mat new_counts = update_count(counts,oldcl,k);
+      arma::vec new_counts = update_count(counts,oldcl,k);
       // new stats and delta
       List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec));
-      delta(k,0)=icl(new_stats,oldcl,k)-icl(old_stats,oldcl,k);
+      delta(k)=icl(new_stats,oldcl,k)-icl(old_stats,oldcl,k);
     }
   }
   

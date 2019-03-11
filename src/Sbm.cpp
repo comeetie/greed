@@ -76,7 +76,7 @@ arma::mat Sbm::delta_swap(int i){
   col_sum(oldcl)=col_sum(oldcl)-self;
   arma::mat row_sum = gsum_col(cl,xt,i,K);
   row_sum(oldcl)=row_sum(oldcl)-self;
-  arma::mat delta(K,1);
+  arma::vec delta(K);
   delta.fill(0);
   List old_stats = List::create(Named("counts", counts), Named("x_counts", x_counts));
   for(int k = 0; k < K; ++k) {
@@ -88,9 +88,9 @@ arma::mat Sbm::delta_swap(int i){
       new_ec.row(oldcl) = new_ec.row(oldcl)-row_sum.t();
       new_ec(k,k)=new_ec(k,k)+self;
       new_ec(oldcl,oldcl)=new_ec(oldcl,oldcl)-self;
-      arma::mat new_counts = update_count(counts,oldcl,k);
+      arma::vec new_counts = update_count(counts,oldcl,k);
       List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec));
-      delta(k,0)=icl(new_stats,oldcl,k)-icl(old_stats,oldcl,k);
+      delta(k)=icl(new_stats,oldcl,k)-icl(old_stats,oldcl,k);
     }
   }
   return delta;

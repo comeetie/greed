@@ -45,7 +45,7 @@ setClass("greed",
 setClass("genetic",
          contains = "alg",
          representation =  list(pop_size = "numeric",nb_max_gen = "numeric"),
-         prototype(name="genetic",pop_size=10, nb_max_gen = 4))
+         prototype(name="genetic",pop_size=10, nb_max_gen = 10))
 
 
 #' @describeIn fit 
@@ -104,7 +104,6 @@ setMethod(f = "fit",
             # première generation
             pop_size = alg@pop_size
             for (i in 1:pop_size){
-
               solutions[[i]] %<-% fit_greed(model,x,K)
             }
             solutions = as.list(solutions)
@@ -210,10 +209,24 @@ cleanpath = function(pathsol){
     K  = K+1
     cn = cn + 2 
   }
-  gg=data.frame(H=H,tree=tree,x=xtree,node=1:length(tree))
-  gg$Hend = c(-1,gg$H[gg$tree])
-  gg$xend = c(-1,gg$x[gg$tree])
-  ggplot()+geom_segment(data=gg[-1,],aes(x=x,y=H,xend=xend,yend=Hend))+geom_point(data=gg,aes(x=x,y=H))
+  ggtree=data.frame(H=H,tree=tree,x=xtree,node=1:length(tree))
+  # recalculer les x
+  leafs = which(ggtree$H==0)
+  or = order(ggtree[leafs,"x"])
+  ggtree$x[leafs[or]]=seq(-1,1,length.out = length(leafs))
+  others = setdiff(1:nrow(ggtree),leafs)
+  for(n in others[order(H[others])]){
+    sons=which(ggtree$tree==n)
+    ggtree$x[n]=mean(ggtree$x[sons])
+    ggtree$xmin[n] = min(ggtree$x[sons])
+    ggtree$xmax[n] = max(ggtree$x[sons])
+  }
+
+
+
+  ggtree$Hend = c(-1,ggtree$H[gg$tree])
+  ggtree$xend = c(-1,ggtree$x[gg$tree])
+  ggplot()+geom_segment(data=ggtree[-1,],aes(x=x,y=H,xend=xend,yend=Hend))+geom_point(data=ggtree,aes(x=x,y=H))
   pathsol@path = path
   pathsol@tree = tree
   

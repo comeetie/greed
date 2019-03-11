@@ -63,9 +63,9 @@ arma::mat gsum_col(arma::vec cl,const arma::sp_mat& x,int i, int K) {
 }
 
 
-arma::mat update_count(arma::mat counts,int oldcl,int newcl) {
-  counts(oldcl,0)=counts(oldcl,0)-1;
-  counts(newcl,0)=counts(newcl,0)+1;
+arma::mat update_count(arma::vec counts,int oldcl,int newcl) {
+  counts(oldcl)=counts(oldcl)-1;
+  counts(newcl)=counts(newcl)+1;
   return counts;
 }
 
