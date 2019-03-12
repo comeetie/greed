@@ -1,8 +1,8 @@
 #' Generate graph adjacency matrix using a SBM
 #'
-#' \code{rsbm} returns the adjacency matrix and the cluster labels generated ranomly unsig a Stochastick Block Model.
+#' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Stochastick Block Model.
 #'
-#' It take graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
+#' Thisfunction take graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 #'
 #' @param N A numeric value the size of the graph to generate
 #' @param pi A numeric vector of length K with clusters proportions. Must sum up to 1.

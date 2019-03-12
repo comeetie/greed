@@ -9,7 +9,7 @@ NULL
 #' @export
 setMethod(f = "plot", 
           signature = signature("sbm_fit","missing"),
-          definition = function(x){
+          definition = function(x,y,type='blokcs'){
             K = length(x@obs_stats$counts)
             gg=data.frame(kc=rep(cumsum(x@obs_stats$counts),each=K),
                           lc=rep(cumsum(x@obs_stats$counts),K),
@@ -33,7 +33,7 @@ setMethod(f = "plot",
 #' @export
 setMethod(f = "plot", 
           signature = signature("dcsbm_fit","missing"),
-          definition = function(x){
+          definition = function(x,y,type="blocks"){
             K = length(x@obs_stats$counts)
             gg=data.frame(kc=rep(cumsum(x@obs_stats$counts),each=K),
                           lc=rep(cumsum(x@obs_stats$counts),K),
@@ -81,5 +81,25 @@ setMethod(f = "plot",
 setMethod(f = "plot", 
           signature = signature("dcsbm_path","missing"),
           definition = function(x,y,type='tree'){
-            print(type)   
+            switch(type,tree = {
+              ggtree = x@ggtree
+              ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[-1,],ggplot2::aes(x=xmin,y=H,xend=xmax,yend=H))+
+                ggplot2::geom_segment(data=ggtree[-1,],ggplot2::aes(x=x,y=H,xend=x,yend=Hend))+
+                ggplot2::geom_segment(data=ggtree[1,],ggplot2::aes(x=xmin,xend=xmax,y=H,yend=H))+
+                ggplot2::scale_x_continuous("",breaks=c())+
+                ggplot2::scale_y_continuous("-log(alpha)")+
+                ggplot2::ggtitle(paste0(x@model@name," ",length(x@obs_stats$counts),"clusters, dendogram"))+
+                ggplot2::theme_bw()
+            },
+              path ={
+                gg = gg=data.frame(k=sapply(x@path,function(p){length(p$counts)}),logalpha=sapply(x@path,function(p){p$logalpha}))
+                ggplot2::ggplot(data=gg)+ggplot2::geom_line(ggplot2::aes(x=k,y=-logalpha))+
+                ggplot2::geom_point(ggplot2::aes(x=k,y=-logalpha))+
+                ggplot2::scale_y_continuous("-log(alpha)")+
+                ggplot2::ggtitle(paste0(x@model@name," ",length(x@obs_stats$counts)," clusters, -log(alpha) / k"))+
+                ggplot2::theme_bw()
+              },
+              blocks ={
+                callNextMethod()
+            })   
           });
