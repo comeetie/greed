@@ -79,7 +79,7 @@ setMethod(f = "plot",
 #' @return a ggplot2 graphics which summarize the results
 #' @export
 setMethod(f = "plot", 
-          signature = signature("dcsbm_path","missing","character"),
+          signature = signature("dcsbm_path","missing"),
           definition = function(x,y,type='tree'){
-            print("tree")   
+            print(type)   
           });
