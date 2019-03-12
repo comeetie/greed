@@ -36,6 +36,26 @@ setClass("sbm",
 
 
 #' @rdname models-classes
+#' @title sbm
+#' 
+#' An S4 class to represent a stochastick block model that extends \code{icl_model} class.
+#' \itemize{
+#' \item slots : \code{name,alpha,a0,b0}
+#' }
+#' @slot a0 a numeric vector of length 1 which define the parameters of the beta prior over the edges (default to 1)
+#' @slot b0 a numeric vector of length 1 which define the parameters of the beta prior over the non-edges (default to 1)
+#' @examples 
+#' new("sbm")
+#' new("sbm",a0=0.5,b0=0.5,alpha=1)
+#' @export
+setClass("dcsbm",
+         representation = list(),
+         contains = "icl_model",
+         prototype(name="dcsbm",alpha=1))
+
+
+
+#' @rdname models-classes
 #' @title mm
 #' 
 #' An S4 class to represent a mixture of multinomial also known has mixture of unigrams that extends \code{icl_model} class.

@@ -66,10 +66,13 @@ void IclModel::greedy_swap(int nbpassmax){
       if(ncl!=cl(cnode)){
         /* if(counts(cl(cnode))==1){
           Rcout << "DEATHHHHHHHHHHHHHH" << std::endl;
-        } */
+        }
+        Rcout << "icl :" << icl(this->get_obs_stats()) << std::endl;
+        Rcout << "delta :" << delta(ncl) << std::endl; */
         // if best swap corresponds to a move
         // update the stats
         this->swap_update(cnode,ncl);
+        /* Rcout << "icl :" << icl(this->get_obs_stats()) << std::endl; */
         // update the move counters
         hasMoved=true;
         ++nbmove;

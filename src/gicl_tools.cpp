@@ -78,3 +78,32 @@ arma::vec sum_cols(const arma::sp_mat& x){
   }
   return tots;
 }
+
+arma::vec sum_cols(const arma::mat x){
+  int nbcols = x.n_cols;
+  int nbrows = x.n_rows;
+  arma::vec tots(x.n_cols);
+  tots.fill(0);
+  for (int j=0;j<nbcols;++j)  {
+    for (int i=0;i<nbrows;++i)  {
+      tots(j) += x(i,j);
+    }
+  }
+  return tots;
+}
+
+arma::vec sum_rows(const arma::mat x){
+  int nbcols = x.n_cols;
+  int nbrows = x.n_rows;
+  arma::vec tots(x.n_cols);
+  tots.fill(0);
+  for (int i=0;i<nbrows;++i) {
+    for (int j=0;j<nbcols;++j) {
+      tots(i) += x(i,j);
+    }
+  }
+  return tots;
+}
+
+
+

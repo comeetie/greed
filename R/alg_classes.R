@@ -104,10 +104,14 @@ setMethod(f = "fit",
             # première generation
             pop_size = alg@pop_size
             for (i in 1:pop_size){
+              print("za")
               solutions[[i]] %<-% fit_greed(model,x,K)
             }
+            print("zo")
             solutions = as.list(solutions)
             icls  = sapply(solutions,function(s){s@icl})
+            solutions=solutions[!is.nan(icls)]
+            icls=icls[!is.nan(icls)]
             print(icls)
             nbgen = 1
             # tout le monde a converger vers la même solution
@@ -170,7 +174,7 @@ setMethod(f = "fit",
           })
 
 cleanpath = function(pathsol){
-  K=length(pathsol@counts)
+  K=length(pathsol@obs_stats$counts)
   path=pathsol@path
   tree =c(0)
   xtree=c(0)
@@ -183,9 +187,10 @@ cleanpath = function(pathsol){
   K=1
   for (lev in seq(length(path),1)){
     pl = length(path)-lev
-    path[[lev]]$lab  = lab
-    path[[lev]]$xpos = xpos
-    path[[lev]]$perm = order(xpos)
+    #path[[lev]]$lab  = lab
+    #path[[lev]]$xpos = xpos
+    #path[[lev]]$perm = order(xpos)
+    path[[lev]] = reorder(pathsol@model,path[[lev]],order(xpos))
     k=path[[lev]]$k
     l=path[[lev]]$l
     tree=c(tree,lab[l],lab[l])
@@ -229,14 +234,60 @@ cleanpath = function(pathsol){
   ggtree$xend = c(-1,ggtree$x[ggtree$tree])
   #ggplot()+geom_segment(data=ggtree[-1,],aes(x=x,y=H,xend=xend,yend=Hend))+geom_point(data=ggtree,aes(x=x,y=H))
   print("ordering...")
-  pathsol@x_counts = pathsol@x_counts[order(xpos),order(xpos)]
-  pathsol@counts = pathsol@counts[order(xpos)]  
-  # pathsol@cl = pathsol@cl[order()]
-  
+  or = order(xpos)
+  pathsol@obs_stats = reorder(pathsol@model,pathsol@obs_stats,or)
+  pathsol@cl=order(or)[pathsol@cl] 
   pathsol@path = path
   pathsol@tree = tree
   pathsol@ggtree = ggtree 
   pathsol
 } 
+
+reorder_sbm = function(obs_stats,or){
+  obs_stats$counts = obs_stats$counts[or]
+  obs_stats$x_counts = obs_stats$x_counts[or,or]
+  if(!is.null(obs_stats$cl)){
+    obs_stats$cl = order(or)[obs_stats$cl] 
+  }
+  obs_stats
+}
+
+reorder_dcsbm = function(obs_stats,or){
+  obs_stats$counts = obs_stats$counts[or]
+  obs_stats$din = obs_stats$din[or]
+  obs_stats$dout = obs_stats$dout[or]
+  obs_stats$x_counts = obs_stats$x_counts[or,or]
+  if(!is.null(obs_stats$cl)){
+    obs_stats$cl = order(or)[obs_stats$cl] 
+  }
+  obs_stats
+}
+
+reorder_mm = function(obs_stats,or){
+  obs_stats$counts = obs_stats$counts[or]
+  obs_stats$x_counts = obs_stats$x_counts[or,]
+  if(!is.null(obs_stats$cl)){
+    obs_stats$cl = order(or)[obs_stats$cl] 
+  }
+  obs_stats
+}
+
+setGeneric("reorder", function(model, obs_stats,order) standardGeneric("reorder")) 
+
+setMethod(f = "reorder", 
+          signature = signature("sbm", "list","numeric"), 
+          definition = function(model, obs_stats,order){
+            reorder_sbm(obs_stats,order)
+          })
+setMethod(f = "reorder", 
+          signature = signature("mm", "list","numeric"), 
+          definition = function(model, obs_stats,order){
+            reorder_mm(obs_stats,order)
+          })
+setMethod(f = "reorder", 
+          signature = signature("dcsbm", "list","numeric"), 
+          definition = function(model, obs_stats,order){
+            reorder_dcsbm(obs_stats,order)
+          })
 
 
