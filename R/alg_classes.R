@@ -182,7 +182,6 @@ cleanpath = function(pathsol){
   w = 0.5
   K=1
   for (lev in seq(length(path),1)){
-    print(xpos)
     pl = length(path)-lev
     path[[lev]]$lab  = lab
     path[[lev]]$xpos = xpos
@@ -218,7 +217,6 @@ cleanpath = function(pathsol){
   ggtree$x[leafs[or]]=seq(-1,1,length.out = length(leafs))
   others = setdiff(1:nrow(ggtree),leafs)
   for(n in others[order(H[others])]){
-    n
     sons=which(ggtree$tree==n)
     ggtree$x[n]=mean(ggtree$x[sons])
     ggtree$xmin[n] = min(ggtree$x[sons])
