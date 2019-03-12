@@ -16,9 +16,9 @@ setMethod(f = "plot",
                           sizek = rep(x@counts,each=K),
                           sizel = rep(x@counts,K), 
                           count=as.vector(x@x_counts))
-            ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes(x=kc-sizek/2,y=lc-sizel/2,width=sizek,height=sizel,fill=count/(sizek*sizel),alpha=count/(sizek*sizel)))+
+          ggplot2::ggplot(gg[gg$count>0,])+ggplot2::geom_tile(ggplot2::aes(x=kc-sizek/2,y=lc-sizel/2,width=sizek,height=sizel,fill=log10(count/(sizek*sizel))))+
               ggplot2::scale_fill_distiller("Link density",type="seq",direction = 1)+
-              ggplot2::scale_alpha("Link density")+
+              #ggplot2::scale_alpha("Link density")+
               ggplot2::ggtitle(paste0("SBM Model with : ",max(x@cl)," clusters."))+
               ggplot2::scale_x_continuous("",breaks=cumsum(x@counts),labels = ifelse(x@counts/sum(x@counts)>0.05,paste0(round(100*x@counts/sum(x@counts)),"%"),""),minor_breaks = NULL)+
               ggplot2::scale_y_continuous("",breaks=cumsum(x@counts),labels = ifelse(x@counts/sum(x@counts)>0.05,paste0(round(100*x@counts/sum(x@counts)),"%"),""),minor_breaks = NULL)+

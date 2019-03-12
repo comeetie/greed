@@ -19,9 +19,9 @@ NULL
 #' @slot cl a numeric vector of length N which store the clusters labels
 #' @slot counts a numeric vector of length K which store the counts for each cluster
 #' @export 
-setClass("icl_fit",slots = list(name="character",K="numeric",counts="matrix",icl="numeric",cl="matrix"))
+setClass("icl_fit",slots = list(name="character",K="numeric",counts="numeric",icl="numeric",cl="matrix"))
 
-#' @rdname fits-classes
+#' @rdname fits-classesmr
 #' @title sbm_fit
 #' 
 #' An S4 class to represent a fit of a stochastick block model that extend \code{icl_fit}.
@@ -44,6 +44,10 @@ setClass("sbm_fit",slots = list(x_counts="matrix",model="sbm"),contains="icl_fit
 #' @export 
 setClass("mm_fit",slots = list(x_counts="matrix",model="mm"),contains="icl_fit")
 
+
+
+setClass("icl_path",slots=list(path="list",tree="numeric",ggtree="data.frame"))
+
 #' @rdname fits-classes
 #' @title mm_path
 #' 
@@ -53,7 +57,7 @@ setClass("mm_fit",slots = list(x_counts="matrix",model="mm"),contains="icl_fit")
 #' }
 #' @slot path a list of merge moves describing the hierachie of merge followed to complete totaly the merge path.
 #' @export
-setClass("mm_path",slots = list(x_counts="matrix",path="list"),contains="icl_fit")
+setClass("mm_path",slots = list(x_counts="matrix"),contains=c("icl_path","mm_fit"))
 
 #' @rdname fits-classes
 #' @title sbm_path
@@ -63,4 +67,4 @@ setClass("mm_path",slots = list(x_counts="matrix",path="list"),contains="icl_fit
 #' \item slots : \code{name,K,icl,cl,counts,x_counts,path}
 #' }
 #' @export 
-setClass("sbm_path",slots = list(x_counts="matrix",path="list"),contains="icl_fit")
+setClass("sbm_path",slots = list(x_counts="matrix"),contains=c("icl_path","sbm_fit"))

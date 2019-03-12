@@ -132,8 +132,10 @@ setMethod(f = "fit",
             }
             
             #parallel::stopCluster(cl)
+            
             res = solutions[[order(icls,decreasing = TRUE)[1]]]
-
+            pathsol = fit_greed_path(x,res)
+            cleanpath(pathsol)   
           })
 
 
@@ -209,13 +211,14 @@ cleanpath = function(pathsol){
     K  = K+1
     cn = cn + 2 
   }
-  ggtree=data.frame(H=H,tree=tree,x=xtree,node=1:length(tree))
+  ggtree=data.frame(H=H,tree=tree,x=xtree,node=1:length(tree),xmin=0,xmax=0)
   # recalculer les x
   leafs = which(ggtree$H==0)
   or = order(ggtree[leafs,"x"])
   ggtree$x[leafs[or]]=seq(-1,1,length.out = length(leafs))
   others = setdiff(1:nrow(ggtree),leafs)
   for(n in others[order(H[others])]){
+    n
     sons=which(ggtree$tree==n)
     ggtree$x[n]=mean(ggtree$x[sons])
     ggtree$xmin[n] = min(ggtree$x[sons])
@@ -224,12 +227,18 @@ cleanpath = function(pathsol){
 
 
 
-  ggtree$Hend = c(-1,ggtree$H[gg$tree])
-  ggtree$xend = c(-1,ggtree$x[gg$tree])
-  ggplot()+geom_segment(data=ggtree[-1,],aes(x=x,y=H,xend=xend,yend=Hend))+geom_point(data=ggtree,aes(x=x,y=H))
+  ggtree$Hend = c(-1,ggtree$H[ggtree$tree])
+  ggtree$xend = c(-1,ggtree$x[ggtree$tree])
+  #ggplot()+geom_segment(data=ggtree[-1,],aes(x=x,y=H,xend=xend,yend=Hend))+geom_point(data=ggtree,aes(x=x,y=H))
+  print("ordering...")
+  pathsol@x_counts = pathsol@x_counts[order(xpos),order(xpos)]
+  pathsol@counts = pathsol@counts[order(xpos)]  
+  # pathsol@cl = pathsol@cl[order()]
+  
   pathsol@path = path
   pathsol@tree = tree
-  
+  pathsol@ggtree = ggtree 
+  pathsol
 } 
 
 
