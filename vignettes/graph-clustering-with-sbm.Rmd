@@ -48,7 +48,7 @@ mu[1:5,1:5]=mu[1:5,1:5]+tau
 mu[6:10,6:10]=mu[6:10,6:10]+tau
 mu[11:15,11:15]=mu[11:15,11:15]+tau
 sbm = rsbm(N,pi,mu)
-sol=fit(sbm$x,30,new("sbm"),new("genetic",pop_size=30,nb_max_gen=30))
+sol=fit(sbm$x,30,new("sbm"),new("genetic",pop_size=15,nb_max_gen=30))
 table(sol@cl,sbm$cl)
 ```
 

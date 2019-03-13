@@ -4,15 +4,33 @@
 \alias{fit_greed}
 \title{fit_greed}
 \usage{
-fit_greed(model, xp, Ki)
+fit_greed(model, xp, clt, type = "both", nb_max_pass = 10L)
+
+fit_greed(model, xp, clt, type = "both", nb_max_pass = 10L)
 }
 \arguments{
 \item{model}{icl_model}
 
 \item{xp}{sparseMatrix}
 
+\item{clt}{cluster labels {0,...,K-1}}
+
+\item{type}{: merge, swap or both (default)}
+
+\item{nb_max_pass}{: maximum number of pass for greedy swap}
+
 \item{Ki}{initia guess for K}
+
+\item{model}{icl_model}
+
+\item{xp}{sparseMatrix}
+
+\item{type}{: merge, swap or both (default)}
+
+\item{nb_max_pass}{: maximum number of pass for greedy swap}
 }
 \description{
 fit_greed
+
+fit_greed_init_type
 }

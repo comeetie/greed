@@ -113,7 +113,7 @@ setMethod(f = "fit",
             #future::plan(future::cluster,workers = cl)
             future::plan(future::multiprocess)
             solutions = listenv::listenv()
-            # première generation
+            # premiere generation
             pop_size = alg@pop_size
             for (i in 1:pop_size){
      
@@ -126,9 +126,9 @@ setMethod(f = "fit",
             icls=icls[!is.nan(icls)]
             print(icls)
             nbgen = 1
-            # tout le monde a converger vers la même solution
+            # tout le monde a converger vers la meme solution
             while((max(icls)-min(icls))>1 & nbgen < alg@nb_max_gen){
-              # sélections 
+              # selections 
               print(paste0("GEN: ",nbgen ))
               icl_order = order(icls,decreasing = TRUE)
               selected  = icl_order[1:(pop_size/2)]
@@ -157,7 +157,7 @@ setMethod(f = "fit",
 
 cross_over = function(sol1,sol2,model,x){
   ncl = unclass(factor(paste(sol1@cl,sol2@cl)))
-  fit_greed_init_type(model,x,max(ncl),ncl-1,"merge")
+  fit_greed_init(model,x,ncl,"merge")
 }
 
 #' @describeIn fit 
@@ -203,7 +203,7 @@ setMethod(f = "fit",
             if(class(model)=="mm"){
               cl = kmeans(x,K)  
             }
-            res = fit_greed_init_type(model,x,max(cl),cl-1,"both")
+            res = fit_greed_init(model,x,cl,"both")
             pathsol = fit_greed_path(x,res)
             p=cleanpath(pathsol)   
             
@@ -254,7 +254,7 @@ cleanpath = function(pathsol){
     K  = K+1
     cn = cn + 2 
   }
-  ggtree=data.frame(H=H,tree=tree,x=0,node=1:length(tree),xmin=0,xmax=0)
+  ggtree=data.frame(H=H,tree=tree,x=xtree,node=1:length(tree),xmin=0,xmax=0)
   # recalculer les x
   leafs = which(ggtree$H==0)
   or = order(ggtree[leafs,"x"])
@@ -262,6 +262,10 @@ cleanpath = function(pathsol){
   others = ggtree$node[ggtree$H!=0]
   for(n in others[seq(length(others),1)]){
     sons=which(ggtree$tree==n)
+    print(n)
+    print(ggtree$H[n])
+    print(sons)
+    print(ggtree$x[sons])
     ggtree$x[n]=mean(ggtree$x[sons])
     ggtree$xmin[n] = min(ggtree$x[sons])
     ggtree$xmax[n] = max(ggtree$x[sons])

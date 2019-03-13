@@ -2,8 +2,6 @@
 
 export(fit)
 export(fit_greed)
-export(fit_greed_init)
-export(fit_greed_init_type)
 export(fit_greed_path)
 export(guide_edge_colourbar)
 export(rdcsbm)
