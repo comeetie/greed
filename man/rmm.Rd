@@ -2,7 +2,7 @@
 % Please edit documentation in R/generator.R
 \name{rmm}
 \alias{rmm}
-\title{Generate graph adjacency matrix using a SBM}
+\title{Generate graph adjacency matrix using a Multinomial Mixture}
 \usage{
 rmm(N, pi, mu, lambda)
 }

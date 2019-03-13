@@ -4,10 +4,10 @@
 \name{fits-classes}
 \alias{fits-classes}
 \alias{icl_fit-class}
-\alias{sbm_fit-class}
 \alias{mm_fit-class}
 \alias{mm_path-class}
 \alias{sbm_path-class}
+\alias{dcsbm_path-class}
 \title{Clustering solutions classes}
 \description{
 Clustering solutions classes
@@ -17,13 +17,6 @@ icl_fit
 An S4 abstract class to represent an icl fit of a clustering model.
 \itemize{
 \item slots : \code{name,K,icl,cl,count}
-}
-
-sbm_fit
-
-An S4 class to represent a fit of a stochastick block model that extend \code{icl_fit}.
-\itemize{
-\item slots : \code{name,K,icl,cl,counts,x_counts,model}
 }
 
 mm_fit
@@ -36,6 +29,13 @@ An S4 class to represent an icl fit of a mixture of multinomials model that exte
 mm_path
 
 An S4 class to represent a hierachical path of stochastick block models that extend \code{icl_fit}.
+\itemize{
+\item slots : \code{name,K,icl,cl,counts,x_counts,path}
+}
+
+sbm_path
+
+An S4 class to represent a hierachical path pf mixture of multinomials models that extend \code{icl_fit}.
 \itemize{
 \item slots : \code{name,K,icl,cl,counts,x_counts,path}
 }
@@ -59,10 +59,6 @@ An S4 class to represent a hierachical path pf mixture of multinomials models th
 \item{\code{cl}}{a numeric vector of length N which store the clusters labels}
 
 \item{\code{counts}}{a numeric vector of length K which store the counts for each cluster}
-
-\item{\code{x_counts}}{a numeric matrix to store the observed counts in the data for each cluster}
-
-\item{\code{model}}{an \code{\link{icl_model}} to store the model fitted}
 
 \item{\code{path}}{a list of merge moves describing the hierachie of merge followed to complete totaly the merge path.}
 }}

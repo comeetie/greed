@@ -7,6 +7,7 @@
 \alias{fit,dgCMatrix,numeric,icl_model,missing-method}
 \alias{fit,dgCMatrix,numeric,icl_model,genetic-method}
 \alias{fit,dgCMatrix,numeric,icl_model,greed-method}
+\alias{fit,dgCMatrix,numeric,icl_model,km-method}
 \title{Fit a clustering model}
 \usage{
 fit(x, K, model, alg)
@@ -18,6 +19,8 @@ fit(x, K, model, alg)
 \S4method{fit}{dgCMatrix,numeric,icl_model,genetic}(x, K, model, alg)
 
 \S4method{fit}{dgCMatrix,numeric,icl_model,greed}(x, K, model, alg)
+
+\S4method{fit}{dgCMatrix,numeric,icl_model,km}(x, K, model, alg)
 }
 \arguments{
 \item{x}{A sparse Matrix dgCMatrix}
@@ -53,8 +56,18 @@ fit(x, K, model, alg)
 \item{model}{An IclModel}
 
 \item{alg}{An optimization algorithm}
+
+\item{x}{A sparse Matrix dgCMatrix}
+
+\item{K}{An initial guess of the maximal number of cluster}
+
+\item{model}{An IclModel}
+
+\item{alg}{An optimization algorithm}
 }
 \description{
+Fit a clustering model
+
 Fit a clustering model
 
 Fit a clustering model
@@ -74,5 +87,7 @@ Fit a clustering model
 \item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = genetic}: 
 
 \item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = greed}: 
+
+\item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = km}: 
 }}
 

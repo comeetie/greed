@@ -25,10 +25,10 @@ A list with fields:
 }
 }
 \description{
-\code{rsbm} returns the adjacency matrix and the cluster labels generated ranomly unsig a Stochastick Block Model.
+\code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Stochastick Block Model.
 }
 \details{
-It take graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
+Thisfunction take graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 }
 \examples{
 simu = rsbm(100,rep(1/5,5),diag(rep(0.1,5))+0.001)

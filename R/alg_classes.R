@@ -35,6 +35,18 @@ setClass("greed",
          prototype(name="greed",nb_start=10))
 
 
+#' @rdname algs-classes 
+#' @title greedy 
+#' An S4 class to represent a greedy algorithm extends \code{alg} class.
+#' @slot name greed
+#' @slot nb_start number of random starts (default to 10)
+#' @export
+setClass("km",
+         contains = "alg",
+         representation =  list(),
+         prototype(name="km"))
+
+
 #' @rdname algs-classes
 #' @title genetic
 #' An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
@@ -104,10 +116,10 @@ setMethod(f = "fit",
             # première generation
             pop_size = alg@pop_size
             for (i in 1:pop_size){
-              print("za")
+     
               solutions[[i]] %<-% fit_greed(model,x,K)
             }
-            print("zo")
+   
             solutions = as.list(solutions)
             icls  = sapply(solutions,function(s){s@icl})
             solutions=solutions[!is.nan(icls)]
@@ -145,7 +157,7 @@ setMethod(f = "fit",
 
 cross_over = function(sol1,sol2,model,x){
   ncl = unclass(factor(paste(sol1@cl,sol2@cl)))
-  fit_greed_init(model,x,max(ncl),ncl-1)
+  fit_greed_init_type(model,x,max(ncl),ncl-1,"merge")
 }
 
 #' @describeIn fit 
@@ -159,22 +171,49 @@ cross_over = function(sol1,sol2,model,x){
 setMethod(f = "fit", 
           signature = signature("dgCMatrix", "numeric","icl_model","greed"), 
           definition = function(x, K,model,alg){
-            cl <- parallel::makeCluster(K, timeout = 60)
-            future::plan(future::cluster,workers = cl)
-            #future::plan(future::multiprocess)
+            #cl <- parallel::makeCluster(K, timeout = 60)
+            #future::plan(future::cluster,workers = cl)
+            future::plan(future::multiprocess)
             solutions = listenv::listenv()
             for (i in 1:alg@nb_start){
               solutions[[i]] %<-% fit_greed(model,x,K)
             }
             solutions = as.list(solutions)
             icls = sapply(solutions,function(s){s@icl})
-            print(icls)
-            parallel::stopCluster(cl)
-            solutions[[order(icls,decreasing = TRUE)[1]]]  
+            #parallel::stopCluster(cl)
+            res = solutions[[order(icls,decreasing = TRUE)[1]]]
+            pathsol = fit_greed_path(x,res)
+            cleanpath(pathsol)   
           })
+
+#' @describeIn fit 
+#' @title Fit a clustering model
+#' 
+#' @param x A sparse Matrix dgCMatrix
+#' @param K An initial guess of the maximal number of cluster
+#' @param model An IclModel
+#' @param alg An optimization algorithm
+#' @export
+setMethod(f = "fit", 
+          signature = signature("dgCMatrix", "numeric","icl_model","km"), 
+          definition = function(x, K,model,alg){
+            if(class(model)=="dcsbm" | class(model)=="sbm"){
+              cl = spectral(x,K)  
+            }
+            if(class(model)=="mm"){
+              cl = kmeans(x,K)  
+            }
+            res = fit_greed_init_type(model,x,max(cl),cl-1,"both")
+            pathsol = fit_greed_path(x,res)
+            p=cleanpath(pathsol)   
+            
+
+          })
+
 
 cleanpath = function(pathsol){
   K=length(pathsol@obs_stats$counts)
+  pathsol@logalpha = 0
   path=pathsol@path
   tree =c(0)
   xtree=c(0)
@@ -215,13 +254,13 @@ cleanpath = function(pathsol){
     K  = K+1
     cn = cn + 2 
   }
-  ggtree=data.frame(H=H,tree=tree,x=xtree,node=1:length(tree),xmin=0,xmax=0)
+  ggtree=data.frame(H=H,tree=tree,x=0,node=1:length(tree),xmin=0,xmax=0)
   # recalculer les x
   leafs = which(ggtree$H==0)
   or = order(ggtree[leafs,"x"])
   ggtree$x[leafs[or]]=seq(-1,1,length.out = length(leafs))
-  others = setdiff(1:nrow(ggtree),leafs)
-  for(n in others[order(H[others])]){
+  others = ggtree$node[ggtree$H!=0]
+  for(n in others[seq(length(others),1)]){
     sons=which(ggtree$tree==n)
     ggtree$x[n]=mean(ggtree$x[sons])
     ggtree$xmin[n] = min(ggtree$x[sons])
@@ -232,7 +271,6 @@ cleanpath = function(pathsol){
 
   ggtree$Hend = c(-1,ggtree$H[ggtree$tree])
   ggtree$xend = c(-1,ggtree$x[ggtree$tree])
-  #ggplot()+geom_segment(data=ggtree[-1,],aes(x=x,y=H,xend=xend,yend=Hend))+geom_point(data=ggtree,aes(x=x,y=H))
   print("ordering...")
   or = order(xpos)
   pathsol@obs_stats = reorder(pathsol@model,pathsol@obs_stats,or)
@@ -289,5 +327,40 @@ setMethod(f = "reorder",
           definition = function(model, obs_stats,order){
             reorder_dcsbm(obs_stats,order)
           })
+
+
+setGeneric("cut", function(fit,K,...) standardGeneric("cut")) 
+setMethod(f = "cut", 
+          signature = signature("icl_path", "numeric"), 
+          definition = function(fit, K){
+            i = which(sapply(fit@path,function(p){p$K})==K)
+            print(i)
+            fit@tree = fit@tree[1:(2*K-1)]
+            fit@ggtree = fit@ggtree[1:(2*K-1),]
+            fit@K = K
+            fit@logalpha=fit@path[[i]]$logalpha
+            fit@icl = fit@path[[i]]$icl
+            fit@cl = fit@path[[i]]$cl
+            for(st in names(fit@obs_stats)){
+              fit@obs_stats[st] = fit@path[[i]][st]
+            }
+
+            fit@path=fit@path[(i+1):length(fit@path)]
+            fit
+            
+})
+
+spectral= function(X,K){
+  X = X+t(X)
+  X[X>0]=1
+  nu=sum(X)/dim(X)[1]
+  L = diag((rowSums(X)+nu)^-0.5)%*%X%*%diag((colSums(X)+nu)^-0.5)
+  S = svd(L,K,K)
+  Xp=S$u
+  #Xp = S$u/rowSums(S$u)
+  #Xp[rowSums(S$u)==0,]=0
+  km = kmeans(Xp,K)
+  km$cluster
+}
 
 

@@ -28,3 +28,13 @@ fit_greed_path <- function(xp, init) {
     .Call('_greed_fit_greed_path', PACKAGE = 'greed', xp, init)
 }
 
+#' fit_greed_init_type
+#' @param model icl_model
+#' @param xp sparseMatrix
+#' @param Ki initia guess for K
+#' @param clt luster labels 
+#' @export
+fit_greed_init_type <- function(model, xp, Ki, clt, type) {
+    .Call('_greed_fit_greed_init_type', PACKAGE = 'greed', model, xp, Ki, clt, type)
+}
+

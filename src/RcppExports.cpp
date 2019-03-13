@@ -45,11 +45,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fit_greed_init_type
+S4 fit_greed_init_type(S4 model, arma::sp_mat& xp, int Ki, arma::vec& clt, std::string type);
+RcppExport SEXP _greed_fit_greed_init_type(SEXP modelSEXP, SEXP xpSEXP, SEXP KiSEXP, SEXP cltSEXP, SEXP typeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< int >::type Ki(KiSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
+    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
+    rcpp_result_gen = Rcpp::wrap(fit_greed_init_type(model, xp, Ki, clt, type));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 3},
     {"_greed_fit_greed_init", (DL_FUNC) &_greed_fit_greed_init, 4},
     {"_greed_fit_greed_path", (DL_FUNC) &_greed_fit_greed_path, 2},
+    {"_greed_fit_greed_init_type", (DL_FUNC) &_greed_fit_greed_init_type, 5},
     {NULL, NULL, 0}
 };
 

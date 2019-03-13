@@ -176,4 +176,57 @@ S4 fit_greed_path(arma::sp_mat& xp, S4 init) {
   
 }
 
+//' fit_greed_init_type
+//' @param model icl_model
+//' @param xp sparseMatrix
+//' @param Ki initia guess for K
+//' @param clt luster labels 
+//' @export
+// [[Rcpp::export]]
+S4 fit_greed_init_type(S4 model,arma::sp_mat& xp, int Ki, arma::vec& clt, std::string type) {
+  
+  IclModel * M;
+  S4 sol("sbm_fit");
+  try{
+    if(strcmp(model.slot("name"),"sbm")!=0 && strcmp(model.slot("name"),"dcsbm")!=0 && strcmp(model.slot("name"),"mm")!=0){
+      stop("Unsuported model");
+    }
+    if(strcmp(model.slot("name"),"sbm")==0){
+      M = new Sbm(xp,Ki,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt);
+      S4 solt("sbm_fit");
+      solt.slot("name") = "sbm_fit";
+      sol = solt;
+    }
+    if(strcmp(model.slot("name"),"dcsbm")==0){
+      M = new DcSbm(xp,Ki,model.slot("alpha"),clt);
+      S4 solt("dcsbm_fit");
+      solt.slot("name") = "dcsbm_fit";
+      sol = solt;
+    }
+    if(strcmp(model.slot("name"),"mm")==0){
+      M = new Mm(xp,Ki,model.slot("alpha"),model.slot("beta"),clt);
+      S4 solt("mm_fit");
+      solt.slot("name") = "mm_fit";
+      sol = solt;
+    }
+    Rcout << type << std::endl;
+    if(type!="merge" && type!="swap" && type!="both"){
+      stop("Unsuported algorithm");
+    }
+    if(type=="swap" || type=="both"){
+      M->greedy_swap(100);
+    }
+    if(type=="merge" || type=="both"){
+      M->greedy_merge();
+    }
 
+    List obs_stats = M->get_obs_stats();
+    sol.slot("model") = model;
+    sol.slot("obs_stats") = obs_stats;
+    sol.slot("cl") = M->get_cl()+1 ;
+    sol.slot("icl") = M->icl(obs_stats);
+    return(sol);
+  }catch(std::exception &ex) {	
+    forward_exception_to_r(ex);
+  }
+}

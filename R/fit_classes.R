@@ -61,7 +61,7 @@ setClass("mm_fit",slots = list(model="mm"),contains="icl_fit")
 
 
 
-setClass("icl_path",slots=list(path="list",tree="numeric",ggtree="data.frame"))
+setClass("icl_path",slots=list(path="list",tree="numeric",ggtree="data.frame",logalpha="numeric"))
 
 #' @rdname fits-classes
 #' @title mm_path

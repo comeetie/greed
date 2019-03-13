@@ -5,6 +5,7 @@
 \alias{algs-classes}
 \alias{alg-class}
 \alias{greed-class}
+\alias{km-class}
 \alias{genetic-class}
 \title{Optimization algorithm classes}
 \description{
@@ -16,6 +17,9 @@ An S4 class to represent an abstract optimisation algorithm.
 greedy 
 An S4 class to represent a greedy algorithm extends \code{alg} class.
 
+greedy 
+An S4 class to represent a greedy algorithm extends \code{alg} class.
+
 genetic
 An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
 }
@@ -23,6 +27,10 @@ An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} cl
 
 \describe{
 \item{\code{name}}{Name of the algorithm}
+
+\item{\code{name}}{greed}
+
+\item{\code{nb_start}}{number of random starts (default to 10)}
 
 \item{\code{name}}{greed}
 

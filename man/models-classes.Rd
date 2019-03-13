@@ -9,6 +9,7 @@
 \alias{sbm-class}
 \alias{mm}
 \alias{mm-class}
+\alias{dcsbm-class}
 \title{Clustering models classes}
 \description{
 Clustering models classes
@@ -18,6 +19,13 @@ icl_model
 An S4 class to represent an abstract clustering model
 \itemize{
 \item slots : \code{name,alpha}
+}
+
+sbm
+
+An S4 class to represent a stochastick block model that extends \code{icl_model} class.
+\itemize{
+\item slots : \code{name,alpha,a0,b0}
 }
 
 sbm
@@ -45,10 +53,16 @@ An S4 class to represent a mixture of multinomial also known has mixture of unig
 
 \item{\code{b0}}{a numeric vector of length 1 which define the parameters of the beta prior over the non-edges (default to 1)}
 
+\item{\code{a0}}{a numeric vector of length 1 which define the parameters of the beta prior over the edges (default to 1)}
+
+\item{\code{b0}}{a numeric vector of length 1 which define the parameters of the beta prior over the non-edges (default to 1)}
+
 \item{\code{beta}}{a numeric vector of length 1 which define the parameters of the beta prior over the counts (default to 1)}
 }}
 
 \examples{
+new("sbm")
+new("sbm",a0=0.5,b0=0.5,alpha=1)
 new("sbm")
 new("sbm",a0=0.5,b0=0.5,alpha=1)
 new("mm")

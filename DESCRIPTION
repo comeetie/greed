@@ -7,7 +7,7 @@ Author: Etienne Come
 Maintainer: Etienne Come <etienne.come@ifsttar.fr>
 Description: Greed enable the clustering of networks and counts data such as document/term matrix with different type of generatiove models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood (which is equivalent to minimizing the description length). Their are for models availables : SBM degree corected SBM, Mixture of Multinomials, Multivariate mixture of poisson. The optimization is performed thanks to a comination of greedy local search and a genetic algorithm.
 License: GPL
-Imports: Rcpp (>= 1.0.0), Matrix, future, listenv, ggplot2, graphics
+Imports: Rcpp (>= 1.0.0), Matrix, future, listenv, ggplot2, graphics, ggraph, igraph
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: 
     testthat,

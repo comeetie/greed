@@ -5,7 +5,7 @@
 \alias{plot,sbm_fit,missing-method}
 \title{Plot a clustering results}
 \usage{
-\S4method{plot}{sbm_fit,missing}(x)
+\S4method{plot}{sbm_fit,missing}(x, y, ..., type = "blocks")
 }
 \arguments{
 \item{sol}{\code{\link{sbm_fit}} obejct to be ploted}
