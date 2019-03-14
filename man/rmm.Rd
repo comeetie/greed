@@ -11,20 +11,20 @@ rmm(N, pi, mu, lambda)
 
 \item{pi}{A numeric vector of length K with clusters proportions. Must sum up to 1.}
 
-\item{mu}{A numeric matrix of dim k x K with the connectivity pattern to generate. elements in [0,1].}
+\item{mu}{A numeric matrix of dim k x D with the clusters patterns to generate, all elements in [0,1].}
 
-\item{lambda}{A numeric value which specify the expectation}
+\item{lambda}{A numeric value which specify the expectation for the row sums.}
 }
 \value{
 A list with fields:
 \itemize{
-\item x:
-\item K:
-\item N:
-\item cl:
-\item pi:
-\item mu: 
-\item lambda:
+\item x: the count matrix as a \code{dgCMatrix}
+\item K: number of generated clusters
+\item N: number of vertex
+\item cl: vector of clusters labels
+\item pi: clusters proportions
+\item mu: connectivity matrix
+\item lambda: expectation of row sums
 }
 }
 \description{

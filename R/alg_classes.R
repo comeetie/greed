@@ -24,9 +24,8 @@ setClass("alg",slots = list(name = "character"))
 
 
 #' @rdname algs-classes 
-#' @title greedy 
-#' An S4 class to represent a greedy algorithm extends \code{alg} class.
-#' @slot name greed
+#' @title gree 
+#' An S4 class to represent a greedy algorithm extends \code{alg} class with multiple start.
 #' @slot nb_start number of random starts (default to 10)
 #' @export
 setClass("greed",
@@ -36,10 +35,8 @@ setClass("greed",
 
 
 #' @rdname algs-classes 
-#' @title greedy 
-#' An S4 class to represent a greedy algorithm extends \code{alg} class.
-#' @slot name greed
-#' @slot nb_start number of random starts (default to 10)
+#' @title km 
+#' An S4 class to represent a greedy algorithm extends \code{alg} class with initialization with spectral clustering and or k-means.
 #' @export
 setClass("km",
          contains = "alg",
@@ -50,7 +47,6 @@ setClass("km",
 #' @rdname algs-classes
 #' @title genetic
 #' An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
-#' @slot name genetic
 #' @slot pop_size size of the solutions populations (default to 10)
 #' @slot nb_max_gen maximal number of generation to produce (default to 4) 
 #' @export
@@ -63,22 +59,20 @@ setClass("genetic",
 #' @describeIn fit 
 #' @title Fit a clustering model
 #' 
-#' @param x A sparse Matrix dgCMatrix
+#' @param x A sparse Matrix as a \code{dgCMatrix}
 #' @param K An initial guess of the maximal number of cluster
-#' @param model An IclModel
-#' @param alg An optimization algorithm
+#' @param model An \code{\link{IclModel-class}} such as \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, ...
+#' @param alg An optimization algorithm such as \code{\link{greed-class}}, \code{\link{genetic-class}} or \code{\link{km-class}}
 #' @export
 setGeneric("fit", function(x,K,model,alg) standardGeneric("fit")) 
 
+
 #' @describeIn fit 
-#' @title Fit a clustering model
-#' 
-#' @param x A sparse Matrix dgCMatrix
-#' @param K An initial guess of the maximal number of cluster
+#' @export
 setMethod(f = "fit", 
           signature = signature("dgCMatrix", "numeric","missing","missing"),
           definition = function(x,K){
-            # only a sparseMatrix and a number check dim to choose between graph models and 
+            # only a sparseMatrix and a number check dim to choose between graph models and mm
             if(dim(x)[1]==dim(x)[2]){
               fit(x,K,new("sbm"),new("genetic"))  
             }else{
@@ -87,11 +81,6 @@ setMethod(f = "fit",
           });
 
 #' @describeIn fit 
-#' @title Fit a clustering model
-#' 
-#' @param x A sparse Matrix dgCMatrix
-#' @param K An initial guess of the maximal number of cluster
-#' @param model An IclModel
 #' @export
 setMethod(f = "fit", 
           signature = signature("dgCMatrix", "numeric","icl_model","missing"),
@@ -100,79 +89,80 @@ setMethod(f = "fit",
           });
 
 #' @describeIn fit 
-#' @title Fit a clustering model
-#' 
-#' @param x A sparse Matrix dgCMatrix
-#' @param K An initial guess of the maximal number of cluster
-#' @param model An IclModel
-#' @param alg An optimization algorithm
+#' @export
 setMethod(f = "fit", 
           signature = signature("dgCMatrix", "numeric","icl_model","genetic"), 
           definition = function(x, K,model,alg){
-            #cl <- parallel::makeCluster(K, timeout = 60)
-            #future::plan(future::cluster,workers = cl)
-            future::plan(future::multiprocess)
+
+            
+            train.hist = data.frame(generation=c(),icl=c(),K=c())
+            
+            # multi-start in //
+            #future::plan(future::multiprocess)
+            
             solutions = listenv::listenv()
-            # premiere generation
+            # first generation of solutions
             pop_size = alg@pop_size
             for (i in 1:pop_size){
-     
               solutions[[i]] %<-% fit_greed(model,x,K)
             }
-   
             solutions = as.list(solutions)
             icls  = sapply(solutions,function(s){s@icl})
+            # check for errors 
             solutions=solutions[!is.nan(icls)]
             icls=icls[!is.nan(icls)]
-            print(icls)
             nbgen = 1
-            # tout le monde a converger vers la meme solution
+            # while maximum number of generation // all solutions are equals // no improvements
+
             while((max(icls)-min(icls))>1 & nbgen < alg@nb_max_gen){
-              # selections 
-              print(paste0("GEN: ",nbgen ))
+              
+              
+              train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
+              # selection keep the top half solutions
               icl_order = order(icls,decreasing = TRUE)
               selected  = icl_order[1:(pop_size/2)]
-              # cross_over
+              # cross_over between the kept solution
               new_solutions = listenv::listenv()
               selected_couples = matrix(selected[sample(1:length(selected),length(selected)*2,replace = TRUE)],ncol=2)
-              
               for (i in 1:nrow(selected_couples)){
-                
                 new_solutions[[i]] %<-% cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],model,x)
               }
               new_solutions = as.list(new_solutions)
               solutions = c(solutions[selected],new_solutions)
               icls = sapply(solutions,function(s){s@icl})
-              print(icls)
+
               nbgen = nbgen + 1;
             }
-            
+            train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
             #parallel::stopCluster(cl)
-            
+            # best solution
             res = solutions[[order(icls,decreasing = TRUE)[1]]]
-            pathsol = fit_greed_path(x,res)
-            cleanpath(pathsol)   
+            # compute merge path
+            path = fit_greed_path(x,res)
+            # clean the resuts (compute, merge tree,...)
+            path = cleanpath(path)
+            # store train history
+            path@train_hist = train.hist
+            # stop future plan
+            #oplan <- future::plan()
+            #on.exit(future::plan(oplan), add = TRUE)
+            path
           })
 
 
 cross_over = function(sol1,sol2,model,x){
+  # cartesian product on the z of the two solution
   ncl = unclass(factor(paste(sol1@cl,sol2@cl)))
+  # greedy merge
   fit_greed_init(model,x,ncl,"merge")
 }
 
 #' @describeIn fit 
-#' @title Fit a clustering model
-#' 
-#' @param x A sparse Matrix dgCMatrix
-#' @param K An initial guess of the maximal number of cluster
-#' @param model An IclModel
-#' @param alg An optimization algorithm
 #' @export
 setMethod(f = "fit", 
           signature = signature("dgCMatrix", "numeric","icl_model","greed"), 
           definition = function(x, K,model,alg){
-            #cl <- parallel::makeCluster(K, timeout = 60)
-            #future::plan(future::cluster,workers = cl)
+
             future::plan(future::multiprocess)
             solutions = listenv::listenv()
             for (i in 1:alg@nb_start){
@@ -182,17 +172,15 @@ setMethod(f = "fit",
             icls = sapply(solutions,function(s){s@icl})
             #parallel::stopCluster(cl)
             res = solutions[[order(icls,decreasing = TRUE)[1]]]
-            pathsol = fit_greed_path(x,res)
-            cleanpath(pathsol)   
+            path = fit_greed_path(x,res)
+            cleanpath(path)
+            path@train_hist = data.frame(icl=icls,K= sapply(solutions,function(s){max(s@cl)}))
+            oplan <- future::plan()
+            on.exit(future::plan(oplan), add = TRUE)
+            path
           })
 
 #' @describeIn fit 
-#' @title Fit a clustering model
-#' 
-#' @param x A sparse Matrix dgCMatrix
-#' @param K An initial guess of the maximal number of cluster
-#' @param model An IclModel
-#' @param alg An optimization algorithm
 #' @export
 setMethod(f = "fit", 
           signature = signature("dgCMatrix", "numeric","icl_model","km"), 
@@ -204,13 +192,14 @@ setMethod(f = "fit",
               cl = kmeans(x,K)  
             }
             res = fit_greed_init(model,x,cl,"both")
-            pathsol = fit_greed_path(x,res)
-            p=cleanpath(pathsol)   
+            path = fit_greed_path(x,res)
+            p=cleanpath(path)   
             
 
           })
 
 
+# clean the merge path 
 cleanpath = function(pathsol){
   K=length(pathsol@obs_stats$counts)
   pathsol@logalpha = 0
@@ -226,9 +215,6 @@ cleanpath = function(pathsol){
   K=1
   for (lev in seq(length(path),1)){
     pl = length(path)-lev
-    #path[[lev]]$lab  = lab
-    #path[[lev]]$xpos = xpos
-    #path[[lev]]$perm = order(xpos)
     path[[lev]] = reorder(pathsol@model,path[[lev]],order(xpos))
     k=path[[lev]]$k
     l=path[[lev]]$l
@@ -262,10 +248,6 @@ cleanpath = function(pathsol){
   others = ggtree$node[ggtree$H!=0]
   for(n in others[seq(length(others),1)]){
     sons=which(ggtree$tree==n)
-    print(n)
-    print(ggtree$H[n])
-    print(sons)
-    print(ggtree$x[sons])
     ggtree$x[n]=mean(ggtree$x[sons])
     ggtree$xmin[n] = min(ggtree$x[sons])
     ggtree$xmax[n] = max(ggtree$x[sons])
@@ -275,7 +257,7 @@ cleanpath = function(pathsol){
 
   ggtree$Hend = c(-1,ggtree$H[ggtree$tree])
   ggtree$xend = c(-1,ggtree$x[ggtree$tree])
-  print("ordering...")
+  #print("ordering...")
   or = order(xpos)
   pathsol@obs_stats = reorder(pathsol@model,pathsol@obs_stats,or)
   pathsol@cl=order(or)[pathsol@cl] 
@@ -332,13 +314,17 @@ setMethod(f = "reorder",
             reorder_dcsbm(obs_stats,order)
           })
 
-
+#' @describeIn cut
+#' @title Cut a path to a desired number of cluster a clustering model
+#' 
+#' @param fit A an \code{icl_path} solution 
+#' @param K DEsired number of cluster
+#' @export
 setGeneric("cut", function(fit,K,...) standardGeneric("cut")) 
 setMethod(f = "cut", 
           signature = signature("icl_path", "numeric"), 
           definition = function(fit, K){
             i = which(sapply(fit@path,function(p){p$K})==K)
-            print(i)
             fit@tree = fit@tree[1:(2*K-1)]
             fit@ggtree = fit@ggtree[1:(2*K-1),]
             fit@K = K
@@ -354,15 +340,17 @@ setMethod(f = "cut",
             
 })
 
+
+# Regularized spectral clustering nips paper 2013
 spectral= function(X,K){
   X = X+t(X)
   X[X>0]=1
   nu=sum(X)/dim(X)[1]
-  L = diag((rowSums(X)+nu)^-0.5)%*%X%*%diag((colSums(X)+nu)^-0.5)
-  S = svd(L,K,K)
-  Xp=S$u
-  #Xp = S$u/rowSums(S$u)
-  #Xp[rowSums(S$u)==0,]=0
+  L = diag((rowSums(X)+nu)^-0.5)%*%X%*%diag((rowSums(X)+nu)^-0.5)
+  S = eigen(L)
+  Xp =S$vectors[,1:K]
+  Xpn = Xp/sqrt(rowSums(Xp)^2)
+  Xpn[rowSums(Xp)==0,]=0
   km = kmeans(Xp,K)
   km$cluster
 }

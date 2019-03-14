@@ -11,24 +11,24 @@ rsbm(N, pi, mu)
 
 \item{pi}{A numeric vector of length K with clusters proportions. Must sum up to 1.}
 
-\item{mu}{A numeric matrix of dim k x K with the connectivity pattern to generate. elements in [0,1].}
+\item{mu}{A numeric matrix of dim K x K with the connectivity pattern to generate. elements in [0,1].}
 }
 \value{
 A list with fields:
 \itemize{
-\item x:
-\item K:
-\item N:
-\item cl:
-\item pi:
-\item mu: 
+\item x: the graph adjacency matrix as a \code{dgCMatrix}
+\item K: number of generated clusters
+\item N: number of vertex
+\item cl: vector of clusters labels
+\item pi: clusters proportions
+\item mu: connectivuty matrix
 }
 }
 \description{
 \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Stochastick Block Model.
 }
 \details{
-Thisfunction take graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
+This function take graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 }
 \examples{
 simu = rsbm(100,rep(1/5,5),diag(rep(0.1,5))+0.001)

@@ -23,59 +23,15 @@ fit(x, K, model, alg)
 \S4method{fit}{dgCMatrix,numeric,icl_model,km}(x, K, model, alg)
 }
 \arguments{
-\item{x}{A sparse Matrix dgCMatrix}
+\item{x}{A sparse Matrix as a \code{dgCMatrix}}
 
 \item{K}{An initial guess of the maximal number of cluster}
 
-\item{model}{An IclModel}
+\item{model}{An \code{\link{IclModel-class}} such as \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, ...}
 
-\item{alg}{An optimization algorithm}
-
-\item{x}{A sparse Matrix dgCMatrix}
-
-\item{K}{An initial guess of the maximal number of cluster}
-
-\item{x}{A sparse Matrix dgCMatrix}
-
-\item{K}{An initial guess of the maximal number of cluster}
-
-\item{model}{An IclModel}
-
-\item{x}{A sparse Matrix dgCMatrix}
-
-\item{K}{An initial guess of the maximal number of cluster}
-
-\item{model}{An IclModel}
-
-\item{alg}{An optimization algorithm}
-
-\item{x}{A sparse Matrix dgCMatrix}
-
-\item{K}{An initial guess of the maximal number of cluster}
-
-\item{model}{An IclModel}
-
-\item{alg}{An optimization algorithm}
-
-\item{x}{A sparse Matrix dgCMatrix}
-
-\item{K}{An initial guess of the maximal number of cluster}
-
-\item{model}{An IclModel}
-
-\item{alg}{An optimization algorithm}
+\item{alg}{An optimization algorithm such as \code{\link{greed-class}}, \code{\link{genetic-class}} or \code{\link{km-class}}}
 }
 \description{
-Fit a clustering model
-
-Fit a clustering model
-
-Fit a clustering model
-
-Fit a clustering model
-
-Fit a clustering model
-
 Fit a clustering model
 }
 \section{Methods (by class)}{

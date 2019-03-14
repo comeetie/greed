@@ -2,19 +2,19 @@
 #'
 #' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Stochastick Block Model.
 #'
-#' Thisfunction take graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
+#' This function take graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 #'
 #' @param N A numeric value the size of the graph to generate
 #' @param pi A numeric vector of length K with clusters proportions. Must sum up to 1.
-#' @param mu A numeric matrix of dim k x K with the connectivity pattern to generate. elements in [0,1].
+#' @param mu A numeric matrix of dim K x K with the connectivity pattern to generate. elements in [0,1].
 #' @return A list with fields:
 #' \itemize{
-#' \item x:
-#' \item K:
-#' \item N:
-#' \item cl:
-#' \item pi:
-#' \item mu: 
+#' \item x: the graph adjacency matrix as a \code{dgCMatrix}
+#' \item K: number of generated clusters
+#' \item N: number of vertex
+#' \item cl: vector of clusters labels
+#' \item pi: clusters proportions
+#' \item mu: connectivuty matrix
 #' }
 #' @examples
 #' simu = rsbm(100,rep(1/5,5),diag(rep(0.1,5))+0.001)
@@ -38,17 +38,17 @@ rsbm = function (N,pi,mu){
 #'
 #' @param N A numeric value the size of the graph to generate
 #' @param pi A numeric vector of length K with clusters proportions. Must sum up to 1.
-#' @param mu A numeric matrix of dim k x K with the connectivity pattern to generate. elements in [0,1].
-#' @param lambda A numeric value which specify the expectation
+#' @param mu A numeric matrix of dim k x D with the clusters patterns to generate, all elements in [0,1].
+#' @param lambda A numeric value which specify the expectation for the row sums.
 #' @return A list with fields:
 #' \itemize{
-#' \item x:
-#' \item K:
-#' \item N:
-#' \item cl:
-#' \item pi:
-#' \item mu: 
-#' \item lambda:
+#' \item x: the count matrix as a \code{dgCMatrix}
+#' \item K: number of generated clusters
+#' \item N: number of vertex
+#' \item cl: vector of clusters labels
+#' \item pi: clusters proportions
+#' \item mu: connectivity matrix
+#' \item lambda: expectation of row sums
 #' }
 #' @export
 rmm = function (N,pi,mu,lambda){
@@ -71,18 +71,18 @@ rmm = function (N,pi,mu,lambda){
 #'
 #' @param N A numeric value the size of the graph to generate
 #' @param pi A numeric vector of length K with clusters proportions. Must sum up to 1.
-#' @param mu A numeric matrix of dim k x K with the connectivity pattern to generate. elements in [0,1].
-#' @param betain A numeric value which specify the expectation
+#' @param mu A numeric matrix of dim K x K with the connectivity pattern to generate, elements in [0,1].
+#' @param betain A numeric vector of length N which specify the degree-correction will be normalized per cluster during the generation.
 #' @return A list with fields:
 #' \itemize{
-#' \item x:
-#' \item K:
-#' \item N:
-#' \item cl:
-#' \item pi:
-#' \item mu: 
-#' \item betain:
-#' \item betaout
+#' \item x: the count matrix as a \code{dgCMatrix}
+#' \item K: number of generated clusters
+#' \item N: number of vertex
+#' \item cl: vector of clusters labels
+#' \item pi: clusters proportions
+#' \item mu: connectivity matrix
+#' \item betain: normalized in-degree parameters 
+#' \item betaout: normalized out-degree parameters
 #' }
 #' @export
 rdcsbm = function (N,pi,mu,betain,betaout){

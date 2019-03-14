@@ -4,7 +4,10 @@
 \name{fits-classes}
 \alias{fits-classes}
 \alias{icl_fit-class}
+\alias{sbm_fit-class}
+\alias{dcsbm_fit-class}
 \alias{mm_fit-class}
+\alias{icl_path-class}
 \alias{mm_path-class}
 \alias{sbm_path-class}
 \alias{dcsbm_path-class}
@@ -19,32 +22,53 @@ An S4 abstract class to represent an icl fit of a clustering model.
 \item slots : \code{name,K,icl,cl,count}
 }
 
+sbm_fit
+
+An S4 class to represent a fit of a stochastick block model that extend \code{icl_fit}.
+\itemize{
+\item slots : \code{name,K,icl,cl,obs_stats,model}
+}
+
+dcsbm_fit
+
+An S4 class to represent a fit of a stochastick block model that extend \code{icl_fit}.
+\itemize{
+\item slots : \code{name,K,icl,cl,obs_stats,model}
+}
+
 mm_fit
 
 An S4 class to represent an icl fit of a mixture of multinomials model that extend \code{icl_fit}.
 \itemize{
-\item slots : \code{name,K,icl,cl,counts,x_counts,model}
+\item slots : \code{name,K,icl,cl,obs_stats,model}
+}
+
+icl_path
+
+An S4 class to represent a hierachical path of solution.
+\itemize{
+\item slots : \code{path,tree,ggtree,logalpha}
 }
 
 mm_path
 
-An S4 class to represent a hierachical path of stochastick block models that extend \code{icl_fit}.
+An S4 class to represent a hierachical path of solutions for a mixture of mutinomials model that extend \code{mm_fit-class} and \code{icl_path-class}.
 \itemize{
-\item slots : \code{name,K,icl,cl,counts,x_counts,path}
+\item slots : \code{name,K,icl,cl,obs_stats, model, path, tree, ggtree, logalpha}
 }
 
 sbm_path
 
-An S4 class to represent a hierachical path pf mixture of multinomials models that extend \code{icl_fit}.
+An S4 class to represent a hierachical path of solutions for a SBM model that extend \code{sbm_fit-class} and \code{icl_path-class}.
 \itemize{
-\item slots : \code{name,K,icl,cl,counts,x_counts,path}
+\item slots : \code{name,K,icl,cl,obs_stats, model, path, tree, ggtree, logalpha}
 }
 
-sbm_path
+dcsbm_path
 
-An S4 class to represent a hierachical path pf mixture of multinomials models that extend \code{icl_fit}.
+An S4 class to represent a hierachical path of solutions for a DC-SBM model that extend \code{dcsbm_fit-class} and \code{icl_path-class}.
 \itemize{
-\item slots : \code{name,K,icl,cl,counts,x_counts,path}
+\item slots : \code{name,K,icl,cl,obs_stats, model, path, tree, ggtree, logalpha}
 }
 }
 \section{Slots}{
@@ -58,8 +82,18 @@ An S4 class to represent a hierachical path pf mixture of multinomials models th
 
 \item{\code{cl}}{a numeric vector of length N which store the clusters labels}
 
-\item{\code{counts}}{a numeric vector of length K which store the counts for each cluster}
+\item{\code{obs_stats}}{a list to store the observed statistics of the model needed to compute ICL.}
+
+\item{\code{model}}{an \code{\link{icl_model}} to store the model fitted}
+
+\item{\code{model}}{an \code{\link{icl_model}} to store the model fitted}
 
 \item{\code{path}}{a list of merge moves describing the hierachie of merge followed to complete totaly the merge path.}
+
+\item{\code{tree}}{a tree representation of the merges.}
+
+\item{\code{ggtree}}{a data.frame for easy ploting of the dendogram}
+
+\item{\code{logalpha}}{a numeric value which corresponds to the starting value of log(alpha).}
 }}
 

@@ -11,21 +11,21 @@ rdcsbm(N, pi, mu, betain, betaout)
 
 \item{pi}{A numeric vector of length K with clusters proportions. Must sum up to 1.}
 
-\item{mu}{A numeric matrix of dim k x K with the connectivity pattern to generate. elements in [0,1].}
+\item{mu}{A numeric matrix of dim K x K with the connectivity pattern to generate, elements in [0,1].}
 
-\item{betain}{A numeric value which specify the expectation}
+\item{betain}{A numeric vector of length N which specify the degree-correction will be normalized per cluster during the generation.}
 }
 \value{
 A list with fields:
 \itemize{
-\item x:
-\item K:
-\item N:
-\item cl:
-\item pi:
-\item mu: 
-\item betain:
-\item betaout
+\item x: the count matrix as a \code{dgCMatrix}
+\item K: number of generated clusters
+\item N: number of vertex
+\item cl: vector of clusters labels
+\item pi: clusters proportions
+\item mu: connectivity matrix
+\item betain: normalized in-degree parameters 
+\item betaout: normalized out-degree parameters
 }
 }
 \description{
