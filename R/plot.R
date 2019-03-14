@@ -182,6 +182,25 @@ setMethod(f = "plot",
           });
 
 
+
+nodelink = function(sol){
+  ij = Matrix::which(sol@obs_stats$x_counts>0,arr.ind = TRUE)
+  ld = sol@obs_stats$x_counts
+  #/(sol@obs_stats$counts%*%t(sol@obs_stats$counts))
+  ij = ij[ij[,1]!=ij[,2],]
+  gglink = data.frame(from=ij[,1],to=ij[,2],p=ld[ij])
+  ggnode = data.frame(i=1:length(sol@obs_stats$counts),pi=sol@obs_stats$counts)
+  ggplot()+geom_curve(data=gglink,aes(x=from,xend=to,y=ifelse(from<to,-0.3,0.3),yend=ifelse(from<to,-0.3,0.3),size=p,alpha=p),arrow=arrow(length = unit(2,"mm")),curvature = 0.7)+
+    scale_x_continuous("",c())+
+    scale_y_continuous("",c(),limits = c(-5,5))+
+    #scale_size("Ld sizes:",limits=c(0,max(gglink$p)))+
+    scale_alpha("Link density:",limits=c(0,max(gglink$p)))+
+    scale_size_area("Clusters size:",limits=c(0,max(gglink$p)),max_size = 4)+
+    geom_point(data=ggnode,aes(x=i,y=0,size=pi))+
+    #coord_equal()+
+    theme_minimal()
+}
+
 graph = function(sol,layout='linear'){
   ig = igraph::graph_from_adjacency_matrix(sol@obs_stats$x_counts/(sol@obs_stats$counts%*%t(sol@obs_stats$counts)),weighted = TRUE)
   igraph::V(ig)$weight = sol@obs_stats$counts

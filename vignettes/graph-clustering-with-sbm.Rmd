@@ -52,6 +52,16 @@ sol=fit(sbm$x,30,new("sbm"),new("genetic",pop_size=15,nb_max_gen=30))
 table(sol@cl,sbm$cl)
 ```
 
+
 ```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
-plot(sol)
+plot(sol,type='blocks')
+```
+
+```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+plot(sol,type='tree')
+```
+
+
+```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+plot(sol,type='path')
 ```
