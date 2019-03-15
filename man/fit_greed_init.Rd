@@ -4,7 +4,8 @@
 \alias{fit_greed_init}
 \title{fit_greed_init_type}
 \usage{
-fit_greed_init(model, xp, clt, type = "both", nb_max_pass = 10L)
+fit_greed_init(model, xp, clt, type = "both", nb_max_pass = 50L,
+  verbose = FALSE)
 }
 \arguments{
 \item{model}{icl_model}

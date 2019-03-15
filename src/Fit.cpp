@@ -13,7 +13,7 @@ using namespace Rcpp;
 //' @param nb_max_pass : maximum number of pass for greedy swap 
 //' @export
 // [[Rcpp::export]]
-S4 fit_greed(S4 model,arma::sp_mat& xp, int Ki, std::string type="both", int nb_max_pass = 10) {
+S4 fit_greed(S4 model,arma::sp_mat& xp, int Ki, std::string type="both", int nb_max_pass = 50,bool verbose = false) {
   
   IclModel * M;
   S4 sol("sbm_fit");
@@ -22,19 +22,19 @@ S4 fit_greed(S4 model,arma::sp_mat& xp, int Ki, std::string type="both", int nb_
       stop("Unsuported model");
     }
     if(strcmp(model.slot("name"),"sbm")==0){
-      M = new Sbm(xp,Ki,model.slot("alpha"),model.slot("a0"),model.slot("b0"));
+      M = new Sbm(xp,Ki,model.slot("alpha"),model.slot("a0"),model.slot("b0"),verbose);
       S4 solt("sbm_fit");
       solt.slot("name") = "sbm_fit";
       sol = solt;
     }
     if(strcmp(model.slot("name"),"dcsbm")==0){
-      M = new DcSbm(xp,Ki,model.slot("alpha"));
+      M = new DcSbm(xp,Ki,model.slot("alpha"),verbose);
       S4 solt("dcsbm_fit");
       solt.slot("name") = "dcsbm_fit";
       sol = solt;
     }
     if(strcmp(model.slot("name"),"mm")==0){
-      M = new Mm(xp,Ki,model.slot("alpha"),model.slot("beta"));
+      M = new Mm(xp,Ki,model.slot("alpha"),model.slot("beta"),verbose);
       S4 solt("mm_fit");
       solt.slot("name") = "mm_fit";
       sol = solt;
@@ -70,7 +70,7 @@ S4 fit_greed(S4 model,arma::sp_mat& xp, int Ki, std::string type="both", int nb_
 //' @param nb_max_pass : maximum number of pass for greedy swap 
 //' @export
 // [[Rcpp::export]]
-S4 fit_greed_init(S4 model,arma::sp_mat& xp,  arma::vec& clt, std::string type="both", int nb_max_pass = 10) {
+S4 fit_greed_init(S4 model,arma::sp_mat& xp,  arma::vec& clt, std::string type="both", int nb_max_pass = 50,bool verbose=false) {
   
   IclModel * M;
   int Ki = arma::max(clt);
@@ -82,19 +82,19 @@ S4 fit_greed_init(S4 model,arma::sp_mat& xp,  arma::vec& clt, std::string type="
       stop("Unsuported model");
     }
     if(strcmp(model.slot("name"),"sbm")==0){
-      M = new Sbm(xp,Ki,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt);
+      M = new Sbm(xp,Ki,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt,verbose);
       S4 solt("sbm_fit");
       solt.slot("name") = "sbm_fit";
       sol = solt;
     }
     if(strcmp(model.slot("name"),"dcsbm")==0){
-      M = new DcSbm(xp,Ki,model.slot("alpha"),clt);
+      M = new DcSbm(xp,Ki,model.slot("alpha"),clt,verbose);
       S4 solt("dcsbm_fit");
       solt.slot("name") = "dcsbm_fit";
       sol = solt;
     }
     if(strcmp(model.slot("name"),"mm")==0){
-      M = new Mm(xp,Ki,model.slot("alpha"),model.slot("beta"),clt);
+      M = new Mm(xp,Ki,model.slot("alpha"),model.slot("beta"),clt,verbose);
       S4 solt("mm_fit");
       solt.slot("name") = "mm_fit";
       sol = solt;

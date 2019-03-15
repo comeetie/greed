@@ -11,8 +11,8 @@ using namespace Rcpp;
 class Mm : public IclModel
 {
 public:
-  Mm(arma::sp_mat& xp,int K,double alpha,double beta);
-  Mm(arma::sp_mat& xp,int K,double alpha,double beta,arma::vec& cl);
+  Mm(arma::sp_mat& xp,int K,double alpha,double beta,bool verb=false);
+  Mm(arma::sp_mat& xp,int K,double alpha,double beta,arma::vec& cl,bool verb=false);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
   arma::mat delta_swap(int i);

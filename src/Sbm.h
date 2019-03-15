@@ -10,8 +10,8 @@ using namespace Rcpp;
 class Sbm : public IclModel
 {
 public:
-  Sbm(arma::sp_mat& xp,int K,double alpha,double a0,double b0);
-  Sbm(arma::sp_mat& xp,int K,double alpha,double a0,double b0,arma::vec& cl);
+  Sbm(arma::sp_mat& xp,int K,double alpha,double a0,double b0, bool verb=false);
+  Sbm(arma::sp_mat& xp,int K,double alpha,double a0,double b0,arma::vec& cl,bool verb=false);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
   arma::mat delta_swap(int i);

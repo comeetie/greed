@@ -84,6 +84,8 @@ An S4 class to represent a hierachical path of solutions for a DC-SBM model that
 
 \item{\code{obs_stats}}{a list to store the observed statistics of the model needed to compute ICL.}
 
+\item{\code{train_hist}}{a data.frame to store training history (format depends on the used algorithm used).}
+
 \item{\code{model}}{an \code{\link{icl_model}} to store the model fitted}
 
 \item{\code{model}}{an \code{\link{icl_model}} to store the model fitted}

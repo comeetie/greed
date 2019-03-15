@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 
-Mm::Mm(arma::sp_mat& xp,int Ki,double alphai,double betai){
+Mm::Mm(arma::sp_mat& xp,int Ki,double alphai,double betai,bool verb){
   // dirichlet prior parameter on proportion
   alpha = alphai;
   // dirichlet prior parameter on proportion
@@ -28,10 +28,10 @@ Mm::Mm(arma::sp_mat& xp,int Ki,double alphai,double betai){
   // counts : number of row in each cluster
   counts = count(cl,K);
   // TODO : add a filed to store the icl const ?
-
+  verbose=verb;
 }
 
-Mm::Mm(arma::sp_mat& xp,int Ki,double alphai,double betai,arma::vec& clt){
+Mm::Mm(arma::sp_mat& xp,int Ki,double alphai,double betai,arma::vec& clt,bool verb){
   // dirichlet prior parameter on proportion
   alpha = alphai;
   // dirichlet prior parameter on proportion
@@ -52,7 +52,7 @@ Mm::Mm(arma::sp_mat& xp,int Ki,double alphai,double betai,arma::vec& clt){
   // counts : number of row in each cluster
   counts = count(cl,K);
   // TODO : add a filed to store the icl const ?
-
+  verbose=verb;
 }
 
 

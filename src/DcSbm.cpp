@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 
-DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai){
+DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai,bool verb){
   alpha = alphai;
   x  = xp;
   xt = xp.t();
@@ -19,9 +19,10 @@ DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai){
   din = sum_cols(x_counts);
   dout = sum_rows(x_counts);
   p= arma::accu(x_counts)/(N*N);
+  verbose=verb;
 }
 
-DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai,arma::vec& clt){
+DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai,arma::vec& clt,bool verb){
   alpha = alphai;
   x  = xp;
   xt = xp.t();
@@ -33,6 +34,7 @@ DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai,arma::vec& clt){
   din = sum_cols(x_counts);
   dout = sum_rows(x_counts);
   p= arma::accu(x_counts)/(N*N);
+  verbose=verb;
 }
 
 

@@ -57,6 +57,8 @@ protected:
   // matrix of observed counts for each clusters
   arma::mat x_counts;
   double icl_value;
+  // verbose ?
+  bool verbose;
 };
 
 #endif

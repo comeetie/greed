@@ -108,7 +108,7 @@ nodelink = function(sol){
   gglink = data.frame(from=ij[,1],to=ij[,2],p=ld[ij])
   ggnode = data.frame(i=1:length(sol@obs_stats$counts),pi=diag(sol@obs_stats$x_counts))
   gl = ggplot2::guide_legend()
-  ggplot2::ggplot()+ggplot2::geom_curve(data=gglink,aes(x=from,xend=to,y=ifelse(from<to,-0.3,0.3),yend=ifelse(from<to,-0.3,0.3),size=p,alpha=p),arrow=arrow(length = unit(2,"mm")),curvature = 0.7)+
+  ggplot2::ggplot()+ggplot2::geom_curve(data=gglink,ggplot2::aes(x=from,xend=to,y=ifelse(from<to,-0.3,0.3),yend=ifelse(from<to,-0.3,0.3),size=p,alpha=p),arrow=grid::arrow(length = unit(2,"mm")),curvature = 0.7)+
     ggplot2::scale_x_continuous("",c())+
     ggplot2::scale_y_continuous("",c(),limits = c(-5,5))+
     #scale_size("Ld sizes:",limits=c(0,max(gglink$p)))+
@@ -127,7 +127,7 @@ graph_blocks = function(x){
                 sizek = rep(x@obs_stats$counts,each=K),
                 sizel = rep(x@obs_stats$counts,K), 
                 count=as.vector(x@obs_stats$x_counts))
-  ggplot2::ggplot(gg[gg$count>0,])+ggplot2::geom_tile(ggplot2::aes(x=kc-sizek/2,y=lc-sizel/2,width=sizek,height=sizel,fill=count/(sizek*sizel),alpha=count/(sizek*sizel)))+
+  ggplot2::ggplot(gg[gg$count>0,])+ggplot2::geom_tile(ggplot2::aes(x=kc-sizek/2,y=lc-sizel/2,width=sizek,height=sizel,fill=log(count/(sizek*sizel)),alpha=count/(sizek*sizel)))+
     ggplot2::scale_fill_distiller("Link density",type="seq",direction = 1)+
     ggplot2::scale_alpha("Link density")+
     ggplot2::ggtitle(paste0(toupper(x@model@name)," model with : ",max(x@cl)," clusters."))+
@@ -174,3 +174,45 @@ lapath = function(x){
   ggplot2::ggtitle(paste0(toupper(x@model@name)," ",length(x@obs_stats$counts)," clusters"))+
   ggplot2::theme_bw()
 }
+
+
+pprint =function(x,M,l){
+  K = length(x@obs_stats$counts)
+  na = colnames(M)
+  D=Matrix::rowSums(M)
+  for (k in 1:K){
+    print("###########################")
+    print(paste0("#########",k, "#########"))
+    print("###########################")
+    ii=which(x@cl==k)
+    topk=order(D[ii],decreasing = TRUE)[1:l]
+    print(na[ii[topk]])
+  }  
+}
+
+spy = function(x){
+  ij=Matrix::which(x!=0,arr.ind = TRUE)
+  gg=data.frame(i=ij[,1],j=ij[,2],v=x[ij])
+  ggplot2::ggplot(gg)+ggplot2::geom_point(aes(y=-i,x=j,size=v))+
+    ggplot2::scale_x_continuous("",c())+
+    ggplot2::scale_y_continuous("",c())+
+    ggplot2::scale_size_area(max_size=1,guide='none')
+}
+
+#' @rdname print
+#' @param x \code{\link{icl_path-class}} object to print
+#' @export
+setMethod(f = "print", 
+          signature = signature("icl_path"),
+          definition = function(x){
+            print(paste0("ICL clustering with a ",toupper(x@model@name)," model, ",length(x@obs_stats$counts), " clusters and an icl of ", round(x@icl),"."))
+          })
+
+#' @rdname show
+#' @param object \code{\link{icl_path-class}} object to print
+#' @export
+setMethod(f = "show", 
+          signature = signature("icl_path"),
+          definition = function(object){
+            print(object)
+          })

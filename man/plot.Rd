@@ -11,17 +11,17 @@
 \alias{plot,mm_path,missing-method}
 \title{Plot a clustering results}
 \usage{
-\S4method{plot}{sbm_fit,missing}(x, ..., type = "blocks")
+\S4method{plot}{sbm_fit,missing}(x, type = "blocks")
 
-\S4method{plot}{dcsbm_fit,missing}(x, ..., type = "blocks")
+\S4method{plot}{dcsbm_fit,missing}(x, type = "blocks")
 
-\S4method{plot}{mm_fit,missing}(x, ..., type = "blocks")
+\S4method{plot}{mm_fit,missing}(x, type = "blocks")
 
-\S4method{plot}{dcsbm_path,missing}(x, ..., type = "blocks")
+\S4method{plot}{dcsbm_path,missing}(x, type = "blocks")
 
-\S4method{plot}{sbm_path,missing}(x, ..., type = "blocks")
+\S4method{plot}{sbm_path,missing}(x, type = "blocks")
 
-\S4method{plot}{mm_path,missing}(x, ..., type = "blocks")
+\S4method{plot}{mm_path,missing}(x, type = "blocks")
 }
 \arguments{
 \item{x}{\code{\link{sbm_fit-class}} object to be ploted}

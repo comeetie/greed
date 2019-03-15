@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 
-Sbm::Sbm(arma::sp_mat& xp,int Ki,double alphai,double a0i,double b0i){
+Sbm::Sbm(arma::sp_mat& xp,int Ki,double alphai,double a0i,double b0i,bool verb){
   alpha = alphai;
   a0 = a0i;
   b0 = b0i;
@@ -18,9 +18,10 @@ Sbm::Sbm(arma::sp_mat& xp,int Ki,double alphai,double a0i,double b0i){
   cl = cl -1;
   x_counts = gsum_mat(cl,x,K);
   counts = count(cl,K);
+  verbose=verb;
 }
 
-Sbm::Sbm(arma::sp_mat& xp,int Ki,double alphai,double a0i,double b0i,arma::vec& clt){
+Sbm::Sbm(arma::sp_mat& xp,int Ki,double alphai,double a0i,double b0i,arma::vec& clt,bool verb){
   alpha = alphai;
   a0 = a0i;
   b0 = b0i;
@@ -31,6 +32,7 @@ Sbm::Sbm(arma::sp_mat& xp,int Ki,double alphai,double a0i,double b0i,arma::vec& 
   cl = clt;
   x_counts = gsum_mat(cl,x,K);
   counts = count(cl,K);
+  verbose=verb;
 }
 
 

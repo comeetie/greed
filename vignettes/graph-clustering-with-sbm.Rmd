@@ -17,51 +17,96 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, fig.show='hold'}
+
+Loads packages and set a future plan for parallel processing.
+```{r}
+library(future)
+library(Matrix)
+library(ggplot2)
 library(greed)
-N=1500
-D=20
-pi=c(0.25,0.25,0.25,0.25)
-mu=matrix(0.01,4,D)
-mu[1:4,1:4]=diag(rep(1,4))+mu[1:4,1:4]
-mu=mu/rowSums(mu)
-mm=rmm(N,pi,mu,30)
-sol=fit(mm$x,10)
-table(sol@cl,mm$cl)
+plan(multisession)
 ```
 
-
-```{r, fig.show='hold',out.width="100%",fig.width=9}
-plot(sol)
-```
-
-
+Simulation of an SBM graph with a hierarchical structure.
 ```{r, fig.show='hold'}
 N=1500
 K=15
 pi=rep(1/K,K)
-epsilon = 0.0001
 lambda  = 0.1
-mu=matrix(epsilon,K,K)+diag(rep(lambda,K))
-tau = 0.025
-mu[1:5,1:5]=mu[1:5,1:5]+tau
-mu[6:10,6:10]=mu[6:10,6:10]+tau
-mu[11:15,11:15]=mu[11:15,11:15]+tau
+lambda_o = 0.01
+Ks=5
+mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
 sbm = rsbm(N,pi,mu)
-sol=fit(sbm$x,30,new("sbm"),new("genetic",pop_size=15,nb_max_gen=30))
-table(sol@cl,sbm$cl)
 ```
 
+Perform the clustering with default model and algorithm. An sbm model is used for squared matrix and a genetic algorithm is selected by default. The second parameter is just an itnitial guess for the number of cluster.
 
-```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+```{r}
+sol = fit(sbm$x,25)
+```
+Plot the results using a block representation.
+
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='blocks')
 ```
-
-```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+Plot the results with a node link diagram.
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+plot(sol,type='nodelink')
+```
+Or a dendogram for sleecting a smaller value for K.
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='tree')
+```
+Eventually study the evolution of $-log(\alpha)$ with respect to $K$.
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+plot(sol,type='path')
+```
+
+And select a smaller value to extract a new solution.
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+sol3 = cut(sol,3)
+plot(sol3,type='blocks')
+```
+
+Other model are availbale dscbm, mm
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+soldc = fit(sbm$x,25,new("dcsbm"))
+plot(soldc,type='blocks')
+```
+
+Eventualy you may change the algorithm genetic (default), greed multiple start of simple greedy and km greed initialized with spectral clustering. See the doc for details on the algorithm parameters. 
+
+
+One example with the polbooks dataset:
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+data("Xpolbooks")
+solpol=fit(Xpolbooks,5,new("dcsbm"),new("genetic",pop_size=30))
+plot(solpol,type='blocks')
 ```
 
 
-```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
-plot(sol,type='path')
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+data("Lpolbooks")
+plot(solpol,type='path')
+table(Lpolbooks,cut(solpol,3)@cl)
+```
+
+
+One with the polblogs dataset:
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+data("Xpolblogs")
+solblogs=fit(Xpolblogs,25,new("dcsbm"),new("km"))
+plot(solblogs,type='blocks')
+```
+
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+data("Lpolblogs")
+plot(solblogs,type='tree')
+table(Lpolblogs,cut(solblogs,2)@cl)
+```
+
+A better fit with a genetic algorithm ?
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+solblogsgen =fit(Xpolblogs,25,new("dcsbm"),new("genetic",pop_size=20))
+solblogsgen@icl-solblogs@icl
 ```

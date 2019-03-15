@@ -14,11 +14,11 @@ Optimization algorithm classes
 alg 
 An S4 class to represent an abstract optimisation algorithm.
 
-greedy 
-An S4 class to represent a greedy algorithm extends \code{alg} class.
+gree 
+An S4 class to represent a greedy algorithm extends \code{alg} class with multiple start.
 
-greedy 
-An S4 class to represent a greedy algorithm extends \code{alg} class.
+km 
+An S4 class to represent a greedy algorithm extends \code{alg} class with initialization with spectral clustering and or k-means.
 
 genetic
 An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
@@ -28,15 +28,7 @@ An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} cl
 \describe{
 \item{\code{name}}{Name of the algorithm}
 
-\item{\code{name}}{greed}
-
 \item{\code{nb_start}}{number of random starts (default to 10)}
-
-\item{\code{name}}{greed}
-
-\item{\code{nb_start}}{number of random starts (default to 10)}
-
-\item{\code{name}}{genetic}
 
 \item{\code{pop_size}}{size of the solutions populations (default to 10)}
 

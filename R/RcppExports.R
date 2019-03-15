@@ -8,8 +8,8 @@
 #' @param type : merge, swap or both (default)  
 #' @param nb_max_pass : maximum number of pass for greedy swap 
 #' @export
-fit_greed <- function(model, xp, Ki, type = "both", nb_max_pass = 10L) {
-    .Call('_greed_fit_greed', PACKAGE = 'greed', model, xp, Ki, type, nb_max_pass)
+fit_greed <- function(model, xp, Ki, type = "both", nb_max_pass = 50L, verbose = FALSE) {
+    .Call('_greed_fit_greed', PACKAGE = 'greed', model, xp, Ki, type, nb_max_pass, verbose)
 }
 
 #' fit_greed_init_type
@@ -19,8 +19,8 @@ fit_greed <- function(model, xp, Ki, type = "both", nb_max_pass = 10L) {
 #' @param type : merge, swap or both (default)  
 #' @param nb_max_pass : maximum number of pass for greedy swap 
 #' @export
-fit_greed_init <- function(model, xp, clt, type = "both", nb_max_pass = 10L) {
-    .Call('_greed_fit_greed_init', PACKAGE = 'greed', model, xp, clt, type, nb_max_pass)
+fit_greed_init <- function(model, xp, clt, type = "both", nb_max_pass = 50L, verbose = FALSE) {
+    .Call('_greed_fit_greed_init', PACKAGE = 'greed', model, xp, clt, type, nb_max_pass, verbose)
 }
 
 #' fit_greed 

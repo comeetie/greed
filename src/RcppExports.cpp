@@ -7,8 +7,8 @@
 using namespace Rcpp;
 
 // fit_greed
-S4 fit_greed(S4 model, arma::sp_mat& xp, int Ki, std::string type, int nb_max_pass);
-RcppExport SEXP _greed_fit_greed(SEXP modelSEXP, SEXP xpSEXP, SEXP KiSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP) {
+S4 fit_greed(S4 model, arma::sp_mat& xp, int Ki, std::string type, int nb_max_pass, bool verbose);
+RcppExport SEXP _greed_fit_greed(SEXP modelSEXP, SEXP xpSEXP, SEXP KiSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -17,13 +17,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type Ki(KiSEXP);
     Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
     Rcpp::traits::input_parameter< int >::type nb_max_pass(nb_max_passSEXP);
-    rcpp_result_gen = Rcpp::wrap(fit_greed(model, xp, Ki, type, nb_max_pass));
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(fit_greed(model, xp, Ki, type, nb_max_pass, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // fit_greed_init
-S4 fit_greed_init(S4 model, arma::sp_mat& xp, arma::vec& clt, std::string type, int nb_max_pass);
-RcppExport SEXP _greed_fit_greed_init(SEXP modelSEXP, SEXP xpSEXP, SEXP cltSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP) {
+S4 fit_greed_init(S4 model, arma::sp_mat& xp, arma::vec& clt, std::string type, int nb_max_pass, bool verbose);
+RcppExport SEXP _greed_fit_greed_init(SEXP modelSEXP, SEXP xpSEXP, SEXP cltSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -32,7 +33,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
     Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
     Rcpp::traits::input_parameter< int >::type nb_max_pass(nb_max_passSEXP);
-    rcpp_result_gen = Rcpp::wrap(fit_greed_init(model, xp, clt, type, nb_max_pass));
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(fit_greed_init(model, xp, clt, type, nb_max_pass, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -50,8 +52,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 5},
-    {"_greed_fit_greed_init", (DL_FUNC) &_greed_fit_greed_init, 5},
+    {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 6},
+    {"_greed_fit_greed_init", (DL_FUNC) &_greed_fit_greed_init, 6},
     {"_greed_fit_greed_path", (DL_FUNC) &_greed_fit_greed_path, 2},
     {NULL, NULL, 0}
 };

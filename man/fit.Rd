@@ -10,17 +10,21 @@
 \alias{fit,dgCMatrix,numeric,icl_model,km-method}
 \title{Fit a clustering model}
 \usage{
-fit(x, K, model, alg)
+fit(x, K, model, alg, ...)
 
-\S4method{fit}{dgCMatrix,numeric,missing,missing}(x, K)
+\S4method{fit}{dgCMatrix,numeric,missing,missing}(x, K, verbose = FALSE)
 
-\S4method{fit}{dgCMatrix,numeric,icl_model,missing}(x, K, model)
+\S4method{fit}{dgCMatrix,numeric,icl_model,missing}(x, K, model,
+  verbose = FALSE)
 
-\S4method{fit}{dgCMatrix,numeric,icl_model,genetic}(x, K, model, alg)
+\S4method{fit}{dgCMatrix,numeric,icl_model,genetic}(x, K, model, alg,
+  verbose = FALSE)
 
-\S4method{fit}{dgCMatrix,numeric,icl_model,greed}(x, K, model, alg)
+\S4method{fit}{dgCMatrix,numeric,icl_model,greed}(x, K, model, alg,
+  verbose = FALSE)
 
-\S4method{fit}{dgCMatrix,numeric,icl_model,km}(x, K, model, alg)
+\S4method{fit}{dgCMatrix,numeric,icl_model,km}(x, K, model, alg,
+  verbose = FALSE)
 }
 \arguments{
 \item{x}{A sparse Matrix as a \code{dgCMatrix}}

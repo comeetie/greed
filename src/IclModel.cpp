@@ -64,15 +64,11 @@ void IclModel::greedy_swap(int nbpassmax){
       // best swap
       int ncl = delta.index_max();
       if(ncl!=cl(cnode)){
-        /* if(counts(cl(cnode))==1){
-          Rcout << "DEATHHHHHHHHHHHHHH" << std::endl;
-        }
-        Rcout << "icl :" << icl(this->get_obs_stats()) << std::endl;
-        Rcout << "delta :" << delta(ncl) << std::endl; */
+
         // if best swap corresponds to a move
         // update the stats
         this->swap_update(cnode,ncl);
-        /* Rcout << "icl :" << icl(this->get_obs_stats()) << std::endl; */
+
         // update the move counters
         hasMoved=true;
         ++nbmove;
@@ -83,10 +79,11 @@ void IclModel::greedy_swap(int nbpassmax){
     // compute icl after the pass
     icl_value = icl(this->get_obs_stats());
 
-     
-    /* Rcout << "##################################"<< std::endl;
-    Rcout << "Pass N°"<< nbpass << " completed with " << nbmove << " moves, icl :" << icl_value << std::endl;
-    Rcout << "##################################"<< std::endl; */
+    if(verbose){
+      Rcout << "##################################"<< std::endl;
+      Rcout << "Pass N°"<< nbpass << " completed with " << nbmove << " moves, icl :" << icl_value << std::endl;
+      Rcout << "##################################"<< std::endl; 
+    } 
   }
 }
 
@@ -115,9 +112,11 @@ void IclModel::greedy_merge(){
   }
   // compute final icl value
   icl_value = icl(this->get_obs_stats());
-  /* Rcout << "##################################"<< std::endl;
-  Rcout << "Final icl : "<< icl_value << std::endl;
-  Rcout << "##################################"<< std::endl; */
+  if(verbose){
+    Rcout << "##################################"<< std::endl;
+    Rcout << "Final icl : "<< icl_value << std::endl;
+    Rcout << "##################################"<< std::endl; 
+  }
 }
 
 
