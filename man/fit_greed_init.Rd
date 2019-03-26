@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{fit_greed_init}
 \alias{fit_greed_init}
-\title{fit_greed_init_type}
+\title{fit_greed_init}
 \usage{
 fit_greed_init(model, xp, clt, type = "both", nb_max_pass = 50L,
   verbose = FALSE)
@@ -19,5 +19,5 @@ fit_greed_init(model, xp, clt, type = "both", nb_max_pass = 50L,
 \item{nb_max_pass}{: maximum number of pass for greedy swap}
 }
 \description{
-fit_greed_init_type
+fit_greed_init
 }

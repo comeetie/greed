@@ -5,6 +5,56 @@
 #include "Mm.h"
 using namespace Rcpp;
 
+
+//' init
+//' @param model icl_model
+//' @param xp sparseMatrix
+//' @param clt cluster labels {0,...,K-1}
+//' @export
+// [[Rcpp::export]]
+S4 init(S4 model,arma::sp_mat& xp,  arma::vec& clt) {
+  
+  IclModel * M;
+  int Ki = arma::max(clt);
+  int N = clt.n_elem;
+  clt = clt-arma::ones(N);
+  S4 sol("sbm_fit");
+  try{
+    if(strcmp(model.slot("name"),"sbm")!=0 && strcmp(model.slot("name"),"dcsbm")!=0 && strcmp(model.slot("name"),"mm")!=0){
+      stop("Unsuported model");
+    }
+    if(strcmp(model.slot("name"),"sbm")==0){
+      M = new Sbm(xp,Ki,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt,false);
+      S4 solt("sbm_fit");
+      solt.slot("name") = "sbm_fit";
+      sol = solt;
+    }
+    if(strcmp(model.slot("name"),"dcsbm")==0){
+      M = new DcSbm(xp,Ki,model.slot("alpha"),clt,false);
+      S4 solt("dcsbm_fit");
+      solt.slot("name") = "dcsbm_fit";
+      sol = solt;
+    }
+    if(strcmp(model.slot("name"),"mm")==0){
+      M = new Mm(xp,Ki,model.slot("alpha"),model.slot("beta"),clt,false);
+      S4 solt("mm_fit");
+      solt.slot("name") = "mm_fit";
+      sol = solt;
+    }
+
+    
+    List obs_stats = M->get_obs_stats();
+    sol.slot("model") = model;
+    sol.slot("obs_stats") = obs_stats;
+    sol.slot("cl") = M->get_cl()+1 ;
+    sol.slot("icl") = M->icl(obs_stats);
+    sol.slot("K") = M->get_K();
+    return(sol);
+  }catch(std::exception &ex) {	
+    forward_exception_to_r(ex);
+  }
+}
+
 //' fit_greed
 //' @param model icl_model
 //' @param xp sparseMatrix
@@ -54,6 +104,7 @@ S4 fit_greed(S4 model,arma::sp_mat& xp, int Ki, std::string type="both", int nb_
     sol.slot("obs_stats") = obs_stats;
     sol.slot("cl") = M->get_cl()+1 ;
     sol.slot("icl") = M->icl(obs_stats);
+    sol.slot("K") = M->get_K();
     return(sol);
   }catch(std::exception &ex) {	
     forward_exception_to_r(ex);
@@ -62,7 +113,7 @@ S4 fit_greed(S4 model,arma::sp_mat& xp, int Ki, std::string type="both", int nb_
 
 
 
-//' fit_greed_init_type
+//' fit_greed_init
 //' @param model icl_model
 //' @param xp sparseMatrix
 //' @param clt cluster labels {0,...,K-1}
@@ -114,6 +165,7 @@ S4 fit_greed_init(S4 model,arma::sp_mat& xp,  arma::vec& clt, std::string type="
     sol.slot("obs_stats") = obs_stats;
     sol.slot("cl") = M->get_cl()+1 ;
     sol.slot("icl") = M->icl(obs_stats);
+    sol.slot("K") = M->get_K();
     return(sol);
   }catch(std::exception &ex) {	
     forward_exception_to_r(ex);
@@ -161,6 +213,7 @@ S4 fit_greed_path(arma::sp_mat& xp, S4 init) {
      sol.slot("obs_stats") = obs_stats;
      sol.slot("cl") = M->get_cl()+1 ;
      sol.slot("icl") = M->icl(obs_stats);
+     sol.slot("K") = M->get_K();
      sol.slot("path") = M->greedy_merge_path();
      return(sol);
    }catch(std::exception &ex) {	

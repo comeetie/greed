@@ -105,7 +105,11 @@ void IclModel::greedy_merge(){
     
     // perform the merge and update the stats
     this->merge_update(merge_mat.getK(),merge_mat.getL());
-    
+    if(verbose){
+      Rcout << "##################################"<< std::endl;
+      Rcout << "Merge icl : "<< icl(this->get_obs_stats()) << std::endl;
+      Rcout << "##################################"<< std::endl; 
+    }
     // update the merge matrix
     merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL());
 

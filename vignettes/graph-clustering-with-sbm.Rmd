@@ -80,14 +80,14 @@ Eventualy you may change the algorithm genetic (default), greed multiple start o
 One example with the polbooks dataset:
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 data("Xpolbooks")
-solpol=fit(Xpolbooks,5,new("dcsbm"),new("genetic",pop_size=30))
+solpol=fit(Xpolbooks,10,new("dcsbm"),new("hybrid",pop_size=30))
 plot(solpol,type='blocks')
 ```
 
 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 data("Lpolbooks")
-plot(solpol,type='path')
+plot(solpol,type='tree')
 table(Lpolbooks,cut(solpol,3)@cl)
 ```
 
@@ -95,7 +95,7 @@ table(Lpolbooks,cut(solpol,3)@cl)
 One with the polblogs dataset:
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 data("Xpolblogs")
-solblogs=fit(Xpolblogs,25,new("dcsbm"),new("km"))
+solblogs=fit(Xpolblogs,25,new("dcsbm"),new("seed"))
 plot(solblogs,type='blocks')
 ```
 
@@ -107,6 +107,6 @@ table(Lpolblogs,cut(solblogs,2)@cl)
 
 A better fit with a genetic algorithm ?
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-solblogsgen =fit(Xpolblogs,25,new("dcsbm"),new("genetic",pop_size=20))
-solblogsgen@icl-solblogs@icl
+solblogshyb =fit(Xpolblogs,25,new("dcsbm"),new("hybrid",pop_size=20))
+solblogshyb@icl-solblogs@icl
 ```

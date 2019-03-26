@@ -5,7 +5,8 @@
 \alias{algs-classes}
 \alias{alg-class}
 \alias{greed-class}
-\alias{km-class}
+\alias{seed-class}
+\alias{hybrid-class}
 \alias{genetic-class}
 \title{Optimization algorithm classes}
 \description{
@@ -22,6 +23,9 @@ An S4 class to represent a greedy algorithm extends \code{alg} class with initia
 
 genetic
 An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
+
+genetic
+An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
 }
 \section{Slots}{
 
@@ -29,6 +33,10 @@ An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} cl
 \item{\code{name}}{Name of the algorithm}
 
 \item{\code{nb_start}}{number of random starts (default to 10)}
+
+\item{\code{pop_size}}{size of the solutions populations (default to 10)}
+
+\item{\code{nb_max_gen}}{maximal number of generation to produce (default to 4)}
 
 \item{\code{pop_size}}{size of the solutions populations (default to 10)}
 

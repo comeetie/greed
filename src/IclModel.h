@@ -41,6 +41,7 @@ public:
   virtual List get_obs_stats(){};
   arma::vec get_cl(){return cl;};
   arma::vec get_counts(){return counts;};
+  int get_K(){return K;};
   arma::mat get_x_counts(){return x_counts;};
 protected:
   // prior 

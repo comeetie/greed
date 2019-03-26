@@ -38,10 +38,22 @@ setClass("greed",
 #' @title km 
 #' An S4 class to represent a greedy algorithm extends \code{alg} class with initialization with spectral clustering and or k-means.
 #' @export
-setClass("km",
+setClass("seed",
          contains = "alg",
          representation =  list(),
-         prototype(name="km"))
+         prototype(name="seed"))
+
+
+#' @rdname algs-classes
+#' @title genetic
+#' An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
+#' @slot pop_size size of the solutions populations (default to 10)
+#' @slot nb_max_gen maximal number of generation to produce (default to 4) 
+#' @export
+setClass("hybrid",
+         contains = "alg",
+         representation =  list(pop_size = "numeric",nb_max_gen = "numeric"),
+         prototype(name="hybrid",pop_size=10, nb_max_gen = 10))
 
 
 #' @rdname algs-classes
@@ -52,8 +64,8 @@ setClass("km",
 #' @export
 setClass("genetic",
          contains = "alg",
-         representation =  list(pop_size = "numeric",nb_max_gen = "numeric"),
-         prototype(name="genetic",pop_size=10, nb_max_gen = 10))
+         representation =  list(pop_size = "numeric",nb_max_gen = "numeric",prob_mut="numeric",sel_frac="numeric"),
+         prototype(name="geno",pop_size=100, nb_max_gen = 20,prob_mut=0.1,sel_frac=0.75))
 
 
 #' @describeIn fit 
@@ -74,9 +86,9 @@ setMethod(f = "fit",
           definition = function(x,K,verbose=FALSE){
             # only a sparseMatrix and a number check dim to choose between graph models and mm
             if(dim(x)[1]==dim(x)[2]){
-              fit(x,K,new("sbm"),new("genetic"),verbose=verbose)  
+              fit(x,K,new("sbm"),new("hybrid"),verbose=verbose)  
             }else{
-              fit(x,K,new("mm"),new("genetic"),verbose=verbose)
+              fit(x,K,new("mm"),new("hybrid"),verbose=verbose)
             }
           });
 
@@ -85,13 +97,13 @@ setMethod(f = "fit",
 setMethod(f = "fit", 
           signature = signature("dgCMatrix", "numeric","icl_model","missing"),
           definition = function(x,K,model,verbose=FALSE){
-            fit(x,K,model,new("genetic"),verbose=verbose)
+            fit(x,K,model,new("hybrid"),verbose=verbose)
           });
 
 #' @describeIn fit 
 #' @export
 setMethod(f = "fit", 
-          signature = signature("dgCMatrix", "numeric","icl_model","genetic"), 
+          signature = signature("dgCMatrix", "numeric","icl_model","hybrid"), 
           definition = function(x, K,model,alg,verbose=FALSE){
 
             
@@ -125,7 +137,7 @@ setMethod(f = "fit",
               new_solutions = listenv::listenv()
               selected_couples = matrix(selected[sample(1:length(selected),length(selected)*2,replace = TRUE)],ncol=2)
               for (i in 1:nrow(selected_couples)){
-                new_solutions[[i]] %<-% cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],model,x,verbose)
+                new_solutions[[i]] %<-% full_cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],model,x,verbose)
               }
               new_solutions = as.list(new_solutions)
               solutions = c(solutions[selected],new_solutions)
@@ -150,11 +162,124 @@ setMethod(f = "fit",
           })
 
 
-cross_over = function(sol1,sol2,model,x,verbose){
+full_cross_over = function(sol1,sol2,model,x,verbose){
   # cartesian product on the z of the two solution
   ncl = unclass(factor(paste(sol1@cl,sol2@cl)))
   # greedy merge
   fit_greed_init(model,x,ncl,"merge",verbose=verbose)
+}
+
+
+#' @describeIn fit 
+#' @export
+setMethod(f = "fit", 
+          signature = signature("dgCMatrix", "numeric","icl_model","genetic"), 
+          definition = function(x, K,model,alg,verbose=FALSE){
+            
+            train.hist = data.frame(generation=c(),icl=c(),K=c())
+            
+            # multi-start in //
+            #future::plan(future::multiprocess)
+            
+            solutions = listenv::listenv()
+            # first generation of solutions
+            pop_size = alg@pop_size
+            for (i in 1:pop_size){
+              Kc = sample(2:K,1)
+              cl = sample(Kc,nrow(x),replace = TRUE)
+              solutions[[i]] %<-% init(model,x,cl)
+            }
+            solutions = as.list(solutions)
+            icls  = sapply(solutions,function(s){s@icl})
+            # check for errors 
+            solutions=solutions[!is.nan(icls)]
+            icls=icls[!is.nan(icls)]
+
+            nbgen = 1
+
+            
+            while(max(icls)-min(icls)>0 && nbgen < alg@nb_max_gen){
+              
+              train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
+
+              ii = order(icls)
+              Nsel = round(alg@pop_size*alg@sel_frac)
+              ii=ii[(alg@pop_size-Nsel):alg@pop_size]
+              icls =icls[ii]
+              solutions = solutions[ii]
+              bres = solutions[[order(icls,decreasing = TRUE)[1]]]
+              new_solutions = listenv::listenv()
+              children = listenv::listenv()
+              for (i in 1:(alg@pop_size-1)){
+                ip = 1:Nsel
+                i1 = sample(ip,1,prob=ip)
+                i2 = sample(ip[-i1],1,prob=ip[-i1])
+                children[[i]] = cross_over(solutions[[i1]],solutions[[i2]],model,x,verbose)
+              }
+              children = as.list(children)
+              for (i in 1:(alg@pop_size-1)){
+                if(runif(1)<alg@prob_mut){
+                  new_solutions[[i]] %<-% fit_greed_init(model,x,children[[i]]@cl,"swap",1,verbose)
+                }else{
+                  new_solutions[[i]] = children[[i]]
+                }
+              }
+              solutions = c(bres,as.list(new_solutions))
+
+              icls = sapply(solutions,function(s){s@icl})
+              nbgen = nbgen + 1;
+            }
+
+            train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
+    
+            # best solution
+            res = solutions[[order(icls,decreasing = TRUE)[1]]]
+            # compute merge path
+
+            res = fit_greed_init(model,x,res@cl,"both",verbose=verbose)
+            path = fit_greed_path(x,res)
+            # clean the resuts (compute, merge tree,...)
+
+            path = cleanpath(path)
+            # store train history
+            path@train_hist = train.hist
+            path
+          })
+
+cross_over = function(sol1,sol2,model,x,verbose){
+  cl1 = sol1@cl
+  K1 = sol1@K
+  lk1 = 1:K1
+  cl2 = sol2@cl
+  K2=sol2@K
+  lk2=1:K2
+  C=rep(0,length(cl1))
+  K=0
+  while(sum(C==0)>0){
+    if(K1>0  && runif(1)>0.5){
+      kt = sample(K1,1,1)
+      k = lk1[kt]
+      K1=K1-1
+      lk1=lk1[-kt]
+      ink = (cl1==k & C==0)
+      if(sum(ink)>0){
+        K=K+1
+        C[ink]=K
+      }
+    }else if(K2>0){
+        kt = sample(K2,1,1)
+        k = lk2[kt]
+        K2=K2-1
+        lk2=lk2[-kt]
+        ink = (cl2==k & C==0)
+        if(sum(ink)>0){
+          K=K+1
+          C[ink]=K
+        }
+    }
+    
+  }
+  init(model,x,C)
 }
 
 #' @describeIn fit 
@@ -182,7 +307,7 @@ setMethod(f = "fit",
 #' @describeIn fit 
 #' @export
 setMethod(f = "fit", 
-          signature = signature("dgCMatrix", "numeric","icl_model","km"), 
+          signature = signature("dgCMatrix", "numeric","icl_model","seed"), 
           definition = function(x, K,model,alg,verbose=FALSE){
             if(class(model)=="dcsbm" | class(model)=="sbm"){
               cl = spectral(x,K)  
@@ -256,7 +381,7 @@ cleanpath = function(pathsol){
 
   ggtree$Hend = c(-1,ggtree$H[ggtree$tree])
   ggtree$xend = c(-1,ggtree$x[ggtree$tree])
-  #print("ordering...")
+
   or = order(xpos)
   pathsol@obs_stats = reorder(pathsol@model,pathsol@obs_stats,or)
   pathsol@cl=order(or)[pathsol@cl] 
@@ -339,8 +464,12 @@ setMethod(f = "cut",
             
 })
 
-
-# Regularized spectral clustering nips paper 2013
+#' @title spectral
+#' Regularized spectral clustering nips paper 2013
+#' @param x An adjacency matrix in sparse format
+#' @param K Desired number of cluster
+#' @value cl Vector of clsuter labels
+#' @export
 spectral= function(X,K){
   X = X+Matrix::t(X)
   ij=Matrix::which(X>0,arr.ind = T)
@@ -348,9 +477,6 @@ spectral= function(X,K){
   nu = sum(X)/dim(X)[1]
   D  = (Matrix::rowSums(X)+nu)^-0.5
   Ln = Matrix::sparseMatrix(ij[,1],ij[,2],x=D[ij[,1]]*D[ij[,2]])
-  #L = diag((D+nu)^-0.5)%*%X%*%diag((D+nu)^-0.5)
-  #S = eigen(L)
-  #Xp =S$vectors[,1:K]
   V = rARPACK::eigs(Ln,K)
   Xp = V$vectors
   Xpn = Xp/sqrt(rowSums(Xp)^2)

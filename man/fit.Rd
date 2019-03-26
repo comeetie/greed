@@ -5,9 +5,10 @@
 \alias{fit}
 \alias{fit,dgCMatrix,numeric,missing,missing-method}
 \alias{fit,dgCMatrix,numeric,icl_model,missing-method}
+\alias{fit,dgCMatrix,numeric,icl_model,hybrid-method}
 \alias{fit,dgCMatrix,numeric,icl_model,genetic-method}
 \alias{fit,dgCMatrix,numeric,icl_model,greed-method}
-\alias{fit,dgCMatrix,numeric,icl_model,km-method}
+\alias{fit,dgCMatrix,numeric,icl_model,seed-method}
 \title{Fit a clustering model}
 \usage{
 fit(x, K, model, alg, ...)
@@ -17,13 +18,16 @@ fit(x, K, model, alg, ...)
 \S4method{fit}{dgCMatrix,numeric,icl_model,missing}(x, K, model,
   verbose = FALSE)
 
+\S4method{fit}{dgCMatrix,numeric,icl_model,hybrid}(x, K, model, alg,
+  verbose = FALSE)
+
 \S4method{fit}{dgCMatrix,numeric,icl_model,genetic}(x, K, model, alg,
   verbose = FALSE)
 
 \S4method{fit}{dgCMatrix,numeric,icl_model,greed}(x, K, model, alg,
   verbose = FALSE)
 
-\S4method{fit}{dgCMatrix,numeric,icl_model,km}(x, K, model, alg,
+\S4method{fit}{dgCMatrix,numeric,icl_model,seed}(x, K, model, alg,
   verbose = FALSE)
 }
 \arguments{
@@ -44,10 +48,12 @@ Fit a clustering model
 
 \item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = missing}: 
 
+\item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = hybrid}: 
+
 \item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = genetic}: 
 
 \item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = greed}: 
 
-\item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = km}: 
+\item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = seed}: 
 }}
 
