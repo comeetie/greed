@@ -325,7 +325,7 @@ setMethod(f = "fit",
 
 # clean the merge path 
 cleanpath = function(pathsol){
-  K=length(pathsol@obs_stats$counts)
+  K=pathsol@K
   pathsol@logalpha = 0
   path=pathsol@path
   tree =c(0)
@@ -339,7 +339,9 @@ cleanpath = function(pathsol){
   K=1
   for (lev in seq(length(path),1)){
     pl = length(path)-lev
-    path[[lev]] = reorder(pathsol@model,path[[lev]],order(xpos))
+    ord = order(xpos)
+    path[[lev]]$obs_stats = reorder(pathsol@model,path[[lev]]$obs_stats,ord)
+    path[[lev]]$cl  = order(ord)[path[[lev]]$cl] 
     k=path[[lev]]$k
     l=path[[lev]]$l
     tree=c(tree,lab[l],lab[l])
@@ -394,9 +396,6 @@ cleanpath = function(pathsol){
 reorder_sbm = function(obs_stats,or){
   obs_stats$counts = obs_stats$counts[or]
   obs_stats$x_counts = obs_stats$x_counts[or,or]
-  if(!is.null(obs_stats$cl)){
-    obs_stats$cl = order(or)[obs_stats$cl] 
-  }
   obs_stats
 }
 
@@ -405,35 +404,29 @@ reorder_dcsbm = function(obs_stats,or){
   obs_stats$din = obs_stats$din[or]
   obs_stats$dout = obs_stats$dout[or]
   obs_stats$x_counts = obs_stats$x_counts[or,or]
-  if(!is.null(obs_stats$cl)){
-    obs_stats$cl = order(or)[obs_stats$cl] 
-  }
   obs_stats
 }
 
 reorder_mm = function(obs_stats,or){
   obs_stats$counts = obs_stats$counts[or]
   obs_stats$x_counts = obs_stats$x_counts[or,]
-  if(!is.null(obs_stats$cl)){
-    obs_stats$cl = order(or)[obs_stats$cl] 
-  }
   obs_stats
 }
 
 setGeneric("reorder", function(model, obs_stats,order) standardGeneric("reorder")) 
 
 setMethod(f = "reorder", 
-          signature = signature("sbm", "list","numeric"), 
+          signature = signature("sbm", "list","integer"), 
           definition = function(model, obs_stats,order){
             reorder_sbm(obs_stats,order)
           })
 setMethod(f = "reorder", 
-          signature = signature("mm", "list","numeric"), 
+          signature = signature("mm", "list","integer"), 
           definition = function(model, obs_stats,order){
             reorder_mm(obs_stats,order)
           })
 setMethod(f = "reorder", 
-          signature = signature("dcsbm", "list","numeric"), 
+          signature = signature("dcsbm", "list","integer"), 
           definition = function(model, obs_stats,order){
             reorder_dcsbm(obs_stats,order)
           })
@@ -454,9 +447,9 @@ setMethod(f = "cut",
             x@K = K
             x@logalpha=x@path[[i]]$logalpha
             x@icl = x@path[[i]]$icl
-            x@cl = x@path[[i]]$cl
+            x@cl = as.vector(x@path[[i]]$cl)
             for(st in names(x@obs_stats)){
-              x@obs_stats[st] = x@path[[i]][st]
+              x@obs_stats[st] = x@path[[i]]$obs_stats[st]
             }
 
             x@path=x@path[(i+1):length(x@path)]

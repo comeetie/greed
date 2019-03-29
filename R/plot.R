@@ -132,8 +132,26 @@ graph_blocks = function(x){
     ggplot2::scale_x_continuous("",breaks=cumsum(x@obs_stats$counts),labels = ifelse(x@obs_stats$counts/sum(x@obs_stats$counts)>0.05,paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),""),minor_breaks = NULL)+
     ggplot2::scale_y_continuous("",breaks=cumsum(x@obs_stats$counts),labels = ifelse(x@obs_stats$counts/sum(x@obs_stats$counts)>0.05,paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),""),minor_breaks = NULL)+
     ggplot2::coord_fixed()+ggplot2::theme_bw()
-  
 }
+
+graph_blocks_degnorm = function(x){
+  K = length(x@obs_stats$counts)
+  gg=data.frame(kc=rep(cumsum(x@obs_stats$counts),each=K),
+                lc=rep(cumsum(x@obs_stats$counts),K),
+                sizek = rep(x@obs_stats$counts,each=K),
+                sizel = rep(x@obs_stats$counts,K),
+                dk = as.vector(x@obs_stats$dout%*%t(x@obs_stats$din)),
+                count=as.vector(x@obs_stats$x_counts))
+  ggplot2::ggplot(gg[gg$count>0,])+ggplot2::geom_tile(ggplot2::aes(x=kc-sizek/2,y=lc-sizel/2,width=sizek,height=sizel,fill=count/dk,alpha=count/dk))+
+    ggplot2::scale_fill_distiller("Link density",type="seq",direction = 1)+
+    ggplot2::scale_alpha("Link density")+
+    ggplot2::ggtitle(paste0(toupper(x@model@name)," model with : ",max(x@cl)," clusters."))+
+    ggplot2::scale_x_continuous("",breaks=cumsum(x@obs_stats$counts),labels = ifelse(x@obs_stats$counts/sum(x@obs_stats$counts)>0.05,paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),""),minor_breaks = NULL)+
+    ggplot2::scale_y_continuous("",breaks=cumsum(x@obs_stats$counts),labels = ifelse(x@obs_stats$counts/sum(x@obs_stats$counts)>0.05,paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),""),minor_breaks = NULL)+
+    ggplot2::coord_fixed()+ggplot2::theme_bw()
+}
+
+
 
 mat_blocks = function(x){
   K = length(x@obs_stats$counts)
@@ -164,7 +182,7 @@ dendo = function(x){
 
 
 lapath = function(x){
-  gg = data.frame(k=sapply(x@path,function(p){length(p$counts)}),logalpha=sapply(x@path,function(p){p$logalpha}))
+  gg = data.frame(k=sapply(x@path,function(p){p$K}),logalpha=sapply(x@path,function(p){p$logalpha}))
   gg = rbind(gg,data.frame(k=length(x@obs_stats$counts),logalpha=x@logalpha)) 
   ggplot2::ggplot(data=gg)+ggplot2::geom_line(ggplot2::aes(x=k,y=-logalpha))+
   ggplot2::geom_point(ggplot2::aes(x=k,y=-logalpha))+

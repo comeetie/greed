@@ -147,8 +147,7 @@ List IclModel::greedy_merge_path(){
     iclold = icl;
     icl = this->icl(this->get_obs_stats());
     // store current solution
-    path.push_back(List::create(Named("counts") = counts, 
-                                Named("x_counts") = x_counts, 
+    path.push_back(List::create(Named("obs_stats") = this->get_obs_stats(), 
                                 Named("cl") = cl+1, 
                                 Named("K") = K,
                                 Named("icl1")=icl,
