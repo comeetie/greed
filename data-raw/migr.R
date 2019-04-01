@@ -30,8 +30,7 @@ MigComNum = MigCom %>% left_join(ComLab,by=c("from"="idinsee"))%>% rename(ifrom=
 Nc = max(c(MigComNum$ifrom,MigComNum$ito))
 Xmigr.com = sparseMatrix(MigComNum$ifrom,MigComNum$ito,x = MigComNum$vol,dims = c(Nc,Nc))
 colnames(Xmigr.com)=ComLab$idinsee
-
-devtools::use_data(Xmigr.com)
+devtools::use_data(Xmigr.com,overwrite = TRUE)
 
 
 
@@ -48,92 +47,196 @@ DepLab = data.frame(idinsee=unique(c(MigDep$from,MigDep$to)),stringsAsFactors = 
 MigDepNum = MigDep %>% left_join(DepLab,by=c("from"="idinsee"))%>% rename(ifrom=id) %>%
   left_join(DepLab,by=c("to"="idinsee"))%>% rename(ito=id)
 Nd = max(c(MigDepNum$ifrom,MigDepNum$ito))
-MigDepNum = MigDepNum %>% filter(ito!=ifrom)
+MigDepNum = MigDepNum
 Xmigr.dep = sparseMatrix(MigDepNum$ifrom,MigDepNum$ito,x = MigDepNum$vol,dims = c(Nd,Nd))
 colnames(Xmigr.dep)=DepLab$idinsee
-devtools::use_data(Xmigr.dep)
+
+devtools::use_data(Xmigr.dep,overwrite = TRUE)
 
 data("Xmigr.dep")
 DepLab=data.frame(idinsee=colnames(Xmigr.dep),id=1:nrow(Xmigr.dep),stringsAsFactors = FALSE)
 library(greed)
-sol=fit(Xmigr.dep,20,new("dcsbm"),new("hybrid",pop_size=50))
-
-
-
+sol=fit(Xmigr.dep,20,new("dcsbm"))
 plot(sol,type='tree')
 plot(sol,type='path')
-Kf=12
-sol.df = data.frame(code_insee=DepLab$idinsee,cl=cut(sol,Kf)@cl,stringsAsFactors = FALSE)
+Kf=13
+sol.df = data.frame(code_insee=DepLab$idinsee,cl=cut(sol,Kf)@cl,dintern=diag(Xmigr.dep),stringsAsFactors = FALSE)
 plot(cut(sol,Kf),type='nodelink')
-
+plot(cut(sol,Kf))
 DEP2017_sf = loadMap(COG=2017,nivsupra="DEP")
 deps = DEP2017_sf %>% left_join(sol.df,by=c("DEP"="code_insee"))
-typoLayer(x = deps, var = "cl", legend.values.order = 1:max(deps$cl))
+
+cols =c("#777777",
+        "#a6cee3",
+        "#1f78b4",
+        "#b2df8a",
+        "#33a02c",
+        "#fb9a99",
+        "#e31a1c",
+        "#fdbf6f",
+        "#ff7f00",
+        "#cab2d6",
+        "#6a3d9a",
+        "#ffff99",
+        "#b15928",
+        "#8dd3c7")
+
+typoLayer(x = deps, var = "cl", legend.values.order = 1:max(deps$cl),col = cols[2:(Kf+1)],legend.title.txt = "Clusters :")
+
+#Flowmap
+
+xy = DEP2017_sf %>% st_geometry()%>%st_centroid() %>% st_coordinates()
+dep_points = data.frame(x=xy[,1],y=xy[,2],DEP=DEP2017_sf$DEP,name=DEP2017_sf$nom,stringsAsFactors = FALSE)
 
 
+data("Xmigr.dep")
+Xmigr.dep=Xmigr.dep+t(Xmigr.dep)
+Xmigr.dep=tril(Xmigr.dep)
+ij=which(Xmigr.dep>0,arr.ind = TRUE)
+depname=colnames(Xmigr.dep)
 
-# echelle bassin de vie aggregationdes communes
+cl = cut(sol,Kf)@cl
+gg=data.frame(i=depname[ij[,1]],j=depname[ij[,2]],f=Xmigr.dep[ij],col=factor(ifelse(cl[ij[,1]]==cl[ij[,2]],cl[ij[,1]],0),levels=0:max(cl)),stringsAsFactors = FALSE)
+
+ggf = gg %>% left_join(dep_points,by=c("i"="DEP")) %>% rename(from=i,fromx=x,fromy=y) %>%
+  left_join(dep_points,by=c("j"="DEP")) %>% rename(to=j,tox=x,toy=y)
+
+names(cols)=0:max(cl)
+ggplot(ggf%>%arrange(f,col)%>%filter(f>500))+
+  geom_segment(aes(x=fromx,y=fromy,xend=tox,yend=toy,size=f,alpha=log(f),color=col))+
+  geom_point(data=dep_points %>% left_join(sol.df,by=c("DEP"="code_insee")),aes(x=x,y=y,col=factor(cl,levels=1:max(cl))),size=1.5)+
+  coord_equal()+
+  theme_minimal()+
+  scale_size_area("Flux",limits = c(0,35000))+
+  scale_alpha_continuous(guide="none",range = c(0,1),limits=c(log(500),log(35000)))+
+  scale_x_continuous("",breaks = c())+
+  scale_y_continuous("",breaks = c())+
+  scale_color_manual(values = cols,guide='none')# echelle bassin de vie aggregationdes communes
+
+graph_blocks_degnorm(cut(sol,Kf))
+graph_blocks_balance(cut(sol,Kf))
+
 data("Xmigr.com")
 BV2017_sf = loadMap(COG=2017,nivsupra="BV2012")
 ComLab=data.frame(idinsee=colnames(Xmigr.com),id=1:nrow(Xmigr.com),stringsAsFactors = FALSE)
 ComDescr=ComLab %>% left_join(table_supracom_2017%>% select(CODGEO,BV2012,DEP,REG,LIBGEO),by=c("idinsee"="CODGEO")) %>% left_join(sol.df,by=c("DEP"="code_insee"))
 
 # echelle regionale interne
-cldep = 10
+cldep = 8
 ComsF = ComDescr %>% filter(cl==cldep,!is.na(cl)) %>% mutate(BV2012=factor(BV2012)) %>% mutate(bvnum=unclass(BV2012))
 isel = ComDescr$cl==cldep & !is.na(ComDescr$cl)
 X=init(new("dcsbm"),Xmigr.com[isel,isel],ComsF$bvnum)
 X=Matrix(X@obs_stats$x_counts,sparse=TRUE)
 colnames(X)=levels(ComsF$BV2012)
-diag(X)=0
 X=round(X)
-
+diag(X)=0
 BVLab = data.frame(BV2012=colnames(X),id=1:nrow(X),din=colSums(X),dout=rowSums(X),stringsAsFactors = FALSE)
-sol=fit(X,20,new("dcsbm"),new("hybrid",pop_size=10))
+
+
+
+library(future)
+plan(multisession)
+sol=fit(X,20,new("dcsbm"),new("hybrid",pop_size=40))
 sol@icl
-plot(sol,type='path')
+plot(cut(sol,30),type='path')
 plot(sol,type='tree')
-sol.c=cut(sol,20)
+sol.c=cut(sol,10)
 plot(sol.c)
 
-BVLab$cl = sol.c@cl
+cl=sol.c@cl
+BVLab$cl = cl
 bvs = BV2017_sf %>% left_join(BVLab) %>% filter(!is.na(cl))
-typoLayer(x = bvs, var = "cl",legend.values.order = 1:max(bvs$cl))
-bvs %>% filter(cl==3) %>% st_drop_geometry()
 
+
+col20 =c("#777777",
+         "#393b79",
+         "#5254a3",
+         "#6b6ecf",
+         "#9c9ede",
+         "#637939",
+         "#8ca252",
+         "#b5cf6b",
+         "#cedb9c",
+         "#8c6d31",
+         "#bd9e39",
+         "#e7ba52",
+         "#e7cb94",
+         "#843c39",
+         "#ad494a",
+         "#d6616b",
+         "#e7969c",
+         "#7b4173",
+         "#a55194",
+         "#ce6dbd",
+         "#de9ed6")
+cols= col20[1:(max(cl)+1)]
+names(cols)=0:max(cl)
+
+typoLayer(x = bvs, var = "cl",legend.values.order = sort(unique(bvs$cl)), col=cols[sort(unique(bvs$cl))])
+
+
+xy = BV2017_sf %>% st_geometry()%>%st_centroid() %>% st_coordinates()
+bv_points = data.frame(x=xy[,1],y=xy[,2],BV=BV2017_sf$BV2012,name=BV2017_sf$nom,stringsAsFactors = FALSE)
+
+
+
+ij=which(X>0,arr.ind = TRUE)
+depname=colnames(X)
+
+gg=data.frame(i=depname[ij[,1]],j=depname[ij[,2]],f=X[ij],col=factor(ifelse(cl[ij[,1]]==cl[ij[,2]],cl[ij[,1]],0),levels=0:max(cl)),stringsAsFactors = FALSE)
+
+ggf = gg %>% left_join(bv_points,by=c("i"="BV")) %>% rename(from=i,fromx=x,fromy=y) %>%
+  left_join(bv_points,by=c("j"="BV")) %>% rename(to=j,tox=x,toy=y)
+
+vm=max(X-diag(diag(X)))
+fth = vm*0.01
+ggplot(ggf%>%arrange(col,f)%>%filter(f>fth))+
+  geom_segment(aes(x=fromx,y=fromy,xend=tox,yend=toy,size=f,alpha=log(f),color=col))+
+  geom_point(data=bv_points %>% left_join(BVLab,by=c("BV"="BV2012"))%>%filter(!is.na(cl)),aes(x=x,y=y,col=factor(cl,levels=1:max(cl,na.rm=TRUE))),size=2)+
+  coord_equal()+
+  theme_minimal()+
+  scale_size_area("Flux :",limits = c(0,1.1*vm),max_size=6)+
+  scale_alpha_continuous(guide="none",range = c(0,0.8),limits=c(log(fth),log(vm)))+
+  scale_x_continuous("",breaks = c())+
+  scale_y_continuous("",breaks = c())+
+  scale_color_manual(values = cols,guide='none')# echelle bassin de vie aggregationdes communes
+
+graph_blocks_degnorm(sol.c)
+graph_blocks_balance(sol.c)
+
+
+bvs %>% filter(cl==10) %>% st_drop_geometry()
 
 # analyse des résidus et comparaison avec un modèle gravitaire
 cmat = sol.c@obs_stats$x_counts
 cmatn= cmat/(sol.c@obs_stats$din%*%t(sol.c@obs_stats$dout))
 Ep=Matrix(cmatn[sol.c@cl,sol.c@cl]*(colSums(X)%*%t(rowSums(X))))
 diag(Ep)=0
-ggpredflow = data.frame(prediction=Ep[X!=0],reality=X[X!=0])
+ggpredflow = data.frame(prediction=as.vector(Ep),reality=as.vector(X)) 
+mv=max(Ep)
 sum(abs(Ep-X))
-ggplot(ggpredflow)+geom_point(aes(x=reality,y=prediction))+scale_x_log10(limits=c(1,1000))+scale_y_log10(limits=c(1,1000))+geom_abline(color='red')
+ggplot(ggpredflow)+geom_point(aes(x=reality,y=prediction))+geom_abline(color='red')+scale_x_log10(limits=c(1,1.1*mv))+scale_y_log10(limits=c(1,1.1*mv))
 
 
 centers=st_centroid(st_geometry(bvs))
 dists = st_distance(centers,centers)
-metropoles = colnames(X)[order(rowSums(X),decreasing = TRUE)[1:3]]
-metro_fact = colnames(X)
-metro_fact[!metro_fact %in% metropoles]="autres"
-grav_data = data.frame(flow=as.vector(X),d=as.vector(dists),dout=rep(rowSums(X),nrow(X)),din=rep(colSums(X),each=nrow(X)),
-                       metr_fact_in=factor(rep(metro_fact,each=nrow(X))),metr_fact_out=factor(rep(metro_fact,nrow(X))))
-lmfit=glm(flow ~ .,grav_data,family = poisson())
-fp =predict(lmfit,grav_data,type = "response")
-ggpredflow = data.frame(prediction=fp[grav_data$flow!=0],reality=grav_data$flow[grav_data$flow!=0])
-ggplot(ggpredflow)+geom_point(aes(x=reality,y=prediction))+scale_x_log10(limits=c(1,1000))+scale_y_log10(limits=c(1,1000))+geom_abline(color='red')
-sum(abs(fp-grav_data$flow))
+metropoles = colnames(X)[order(rowSums(X)+colSums(X),decreasing = TRUE)[1:2]]
+metro_fact = rep("metropoles",nrow(X))
+metro_fact[!colnames(X) %in% metropoles]="autres"
+grav_data = data.frame(flow=as.vector(X),d=as.vector(dists),
+                       dout=rep(rowSums(X),nrow(X)),din=rep(colSums(X),each=nrow(X)),
+                       cin=rep(metro_fact,each=nrow(X)),cout=rep(metro_fact,nrow(X)))
+grav_nodiag = grav_data %>% filter(d>0 & din>0 & dout>0)
+
+lmfit=glm(flow ~ log(d)+log(dout)+log(din),grav_nodiag,family = poisson())
+fp =predict(lmfit,grav_nodiag,type = "response")
+ggpredflow = data.frame(prediction=fp,reality=grav_nodiag$flow,cin=grav_nodiag$cin,cout=grav_nodiag$cout)
+mv= max(grav_nodiag$flow)
+ggplot(ggpredflow)+geom_point(aes(x=reality,y=prediction,col=cout))+scale_x_log10(limits=c(1,1.1*mv))+scale_y_log10(limits=c(1,1.1*mv))+geom_abline(color='red')
+sum(abs(fp-grav_nodiag$flow))
 summary(lmfit)
-# avec les clusters 
-grav_data = data.frame(flow=as.vector(X),d=as.vector(dists),dout=rep(rowSums(X),nrow(X)),din=rep(colSums(X),each=nrow(X)),
-                       clust_in=factor(rep(sol.c@cl,each=nrow(X))),clust_out=factor(rep(sol.c@cl,nrow(X))))
-lmfit=glm(flow ~ log(d)+log(din)+log(dout),grav_data%>% filter(d!=0),family = poisson())
-fp =predict(lmfit,grav_data%>% filter(d!=0),type = "response")
-ggpredflow = data.frame(prediction=fp[grav_data$flow!=0],reality=grav_data$flow[grav_data$flow!=0])
-ggplot(ggpredflow)+geom_point(aes(x=reality,y=prediction))+scale_x_log10(limits=c(1,1000))+scale_y_log10(limits=c(1,1000))+geom_abline(color='red')
-sum(abs(fp- (grav_data$flow%>% filter(d!=0))))
-summary(lmfit)
+
+
 # echelle bassin de vie descitpiton concentrique + mm
 # liste des poles
 

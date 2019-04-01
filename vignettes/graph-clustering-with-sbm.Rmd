@@ -87,7 +87,7 @@ plot(solpol,type='blocks')
 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 data("Lpolbooks")
-plot(solpol,type='tree')
+plot(solpol,type='path')
 table(Lpolbooks,cut(solpol,3)@cl)
 ```
 
@@ -107,6 +107,8 @@ table(Lpolblogs,cut(solblogs,2)@cl)
 
 A better fit with a genetic algorithm ?
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-solblogshyb =fit(Xpolblogs,25,new("dcsbm"),new("hybrid",pop_size=20))
+solblogshyb =fit(Xpolblogs,25,new("dcsbm"),new("hybrid",pop_size=40))
+plot(solblogshyb,type='path')
+table(Lpolblogs,cut(solblogs,2)@cl)
 solblogshyb@icl-solblogs@icl
 ```
