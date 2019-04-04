@@ -51,6 +51,8 @@ void IclModel::greedy_swap(int nbpassmax){
   // while their are moves
   while (hasMoved && nbpass < nbpassmax ){
     // suffle the index 
+    arma::vec workingset(N);
+    workingset.ones();
     arma::vec pass= as<arma::vec>(sample(N,N))-1;
     // reinit move counter
     hasMoved=false;
@@ -59,19 +61,30 @@ void IclModel::greedy_swap(int nbpassmax){
     for (int i=0;i<N ;++i){
       // current node
       cnode=pass(i);
-      // compute delta swap
-      arma::vec delta = this->delta_swap(cnode);
-      // best swap
-      int ncl = delta.index_max();
-      if(ncl!=cl(cnode)){
-
-        // if best swap corresponds to a move
-        // update the stats
-        this->swap_update(cnode,ncl);
-
-        // update the move counters
-        hasMoved=true;
-        ++nbmove;
+      if (workingset(cnode)==1){
+        // compute delta swap
+        arma::vec delta = this->delta_swap(cnode);
+        // Rcout << delta << std::endl;
+        // best swap
+        int ncl = delta.index_max();
+        if(ncl!=cl(cnode)){
+  
+          // if best swap corresponds to a move
+          // update the stats
+          this->swap_update(cnode,ncl);
+  
+          // update the move counters
+          hasMoved=true;
+          ++nbmove;
+          // workingset(cnode)=1;
+        }else{
+          arma::vec deltaneg = delta.elem(arma::find(delta<0));
+          int bmn= deltaneg.index_max();
+          if(deltaneg(bmn) <  -10 ){
+            workingset(cnode) = 0;
+            //Rcout << "BMN :"<< bmn << "val" << deltaneg(bmn) << std::endl;
+          }
+        }
       }
     }
     // update the pass counter
@@ -81,7 +94,7 @@ void IclModel::greedy_swap(int nbpassmax){
 
     if(verbose){
       Rcout << "##################################"<< std::endl;
-      Rcout << "Pass N°"<< nbpass << " completed with " << nbmove << " moves, icl :" << icl_value << std::endl;
+      Rcout << "Pass N°"<< nbpass << " completed with " << nbmove << " moves, icl :" << icl_value << "working set size :" << arma::accu(workingset)  << std::endl;
       Rcout << "##################################"<< std::endl; 
     } 
   }

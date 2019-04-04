@@ -21,5 +21,7 @@ arma::vec sum_cols(const arma::sp_mat& x);
 arma::vec sum_cols(const arma::mat x);
 arma::vec sum_rows(const arma::mat x);
 
+double sum_lfact(const arma::sp_mat& x);
+
 #endif
 

@@ -105,5 +105,15 @@ arma::vec sum_rows(const arma::mat x){
   return tots;
 }
 
+double sum_lfact(const arma::sp_mat & x){
+  arma::sp_mat::const_iterator start = x.begin();
+  arma::sp_mat::const_iterator end   = x.end();
+  double cst = 0;
+  for(arma::sp_mat::const_iterator it = start; it != end; ++it)
+  {
+     cst += 1; 
+  }
+  return cst;
+}
 
 

@@ -20,6 +20,8 @@ DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai,bool verb){
   dout = sum_rows(x_counts);
   p= arma::accu(x_counts)/(N*N);
   verbose=verb;
+  
+  cst = - sum_lfact(xp);
 }
 
 DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai,arma::vec& clt,bool verb){
@@ -35,6 +37,7 @@ DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai,arma::vec& clt,bool verb){
   dout = sum_rows(x_counts);
   p= arma::accu(x_counts)/(N*N);
   verbose=verb;
+  cst = - sum_lfact(xp);
 }
 
 
@@ -52,7 +55,7 @@ double DcSbm::icl_emiss(const List & obs_stats){
 
   icl_emiss=icl_emiss + arma::accu(lgamma(edges_counts+1)-(edges_counts+1) % log(p*matcount+1));
 
-  return icl_emiss;
+  return icl_emiss+cst;
 }
 
 double DcSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
@@ -80,7 +83,7 @@ double DcSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
     }
     
   }
-  return icl_emiss;
+  return icl_emiss+cst;
 }
 
 

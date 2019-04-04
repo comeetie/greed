@@ -56,7 +56,7 @@ devtools::use_data(Xmigr.dep,overwrite = TRUE)
 data("Xmigr.dep")
 DepLab=data.frame(idinsee=colnames(Xmigr.dep),id=1:nrow(Xmigr.dep),stringsAsFactors = FALSE)
 library(greed)
-sol=fit(Xmigr.dep,20,new("dcsbm"))
+sol=fit(Xmigr.dep,20,new("dcsbm"),new)
 plot(sol,type='tree')
 plot(sol,type='path')
 Kf=13

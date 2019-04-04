@@ -24,6 +24,7 @@ private:
   arma::sp_mat x;
   arma::sp_mat xt;
   double p;
+  double cst; 
   arma::vec din;
   arma::vec dout;
 };

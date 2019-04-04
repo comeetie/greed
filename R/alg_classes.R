@@ -123,10 +123,12 @@ setMethod(f = "fit",
             # check for errors 
             solutions=solutions[!is.nan(icls)]
             icls=icls[!is.nan(icls)]
+            old_best = -Inf
+            best_icl = max(icls)
             nbgen = 1
             # while maximum number of generation // all solutions are equals // no improvements
 
-            while((max(icls)-min(icls))>1 & nbgen < alg@nb_max_gen){
+            while((max(icls)-min(icls))>1 & (best_icl > old_best) & nbgen < alg@nb_max_gen){
               
               
               train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
@@ -142,7 +144,8 @@ setMethod(f = "fit",
               new_solutions = as.list(new_solutions)
               solutions = c(solutions[selected],new_solutions)
               icls = sapply(solutions,function(s){s@icl})
-
+              old_best=best_icl
+              best_icl = max(icls)
               nbgen = nbgen + 1;
             }
             train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
