@@ -63,12 +63,62 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// lm_post
+List lm_post(const arma::mat X, const arma::colvec& y, double regu, double a0, double b0);
+RcppExport SEXP _greed_lm_post(SEXP XSEXP, SEXP ySEXP, SEXP reguSEXP, SEXP a0SEXP, SEXP b0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type regu(reguSEXP);
+    Rcpp::traits::input_parameter< double >::type a0(a0SEXP);
+    Rcpp::traits::input_parameter< double >::type b0(b0SEXP);
+    rcpp_result_gen = Rcpp::wrap(lm_post(X, y, regu, a0, b0));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lm_post_add
+List lm_post_add(List current, const arma::mat X, const arma::colvec& y, double regu, double a0, double b0);
+RcppExport SEXP _greed_lm_post_add(SEXP currentSEXP, SEXP XSEXP, SEXP ySEXP, SEXP reguSEXP, SEXP a0SEXP, SEXP b0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current(currentSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type regu(reguSEXP);
+    Rcpp::traits::input_parameter< double >::type a0(a0SEXP);
+    Rcpp::traits::input_parameter< double >::type b0(b0SEXP);
+    rcpp_result_gen = Rcpp::wrap(lm_post_add(current, X, y, regu, a0, b0));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lm_post_del
+List lm_post_del(List current, const arma::mat X, const arma::colvec& y, double regu, double a0, double b0);
+RcppExport SEXP _greed_lm_post_del(SEXP currentSEXP, SEXP XSEXP, SEXP ySEXP, SEXP reguSEXP, SEXP a0SEXP, SEXP b0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current(currentSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type regu(reguSEXP);
+    Rcpp::traits::input_parameter< double >::type a0(a0SEXP);
+    Rcpp::traits::input_parameter< double >::type b0(b0SEXP);
+    rcpp_result_gen = Rcpp::wrap(lm_post_del(current, X, y, regu, a0, b0));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_greed_init", (DL_FUNC) &_greed_init, 3},
     {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 6},
     {"_greed_fit_greed_init", (DL_FUNC) &_greed_fit_greed_init, 6},
     {"_greed_fit_greed_path", (DL_FUNC) &_greed_fit_greed_path, 2},
+    {"_greed_lm_post", (DL_FUNC) &_greed_lm_post, 5},
+    {"_greed_lm_post_add", (DL_FUNC) &_greed_lm_post_add, 6},
+    {"_greed_lm_post_del", (DL_FUNC) &_greed_lm_post_del, 6},
     {NULL, NULL, 0}
 };
 
