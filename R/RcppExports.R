@@ -40,3 +40,29 @@ fit_greed_path <- function(xp, init) {
     .Call('_greed_fit_greed_path', PACKAGE = 'greed', xp, init)
 }
 
+#' lm_post
+#' @param X
+#' @param y
+#' @param regu
+#' @param a0
+#' @param b0
+#' @export
+lm_post <- function(X, y, regu, a0, b0) {
+    .Call('_greed_lm_post', PACKAGE = 'greed', X, y, regu, a0, b0)
+}
+
+lm_post_add <- function(current, X, y, regu, a0, b0) {
+    .Call('_greed_lm_post_add', PACKAGE = 'greed', current, X, y, regu, a0, b0)
+}
+
+#' lm_post_add
+#' @param X
+#' @param y
+#' @param regu
+#' @param a0
+#' @param b0
+#' @export
+lm_post_del <- function(current, X, y, regu, a0, b0) {
+    .Call('_greed_lm_post_del', PACKAGE = 'greed', current, X, y, regu, a0, b0)
+}
+

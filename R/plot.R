@@ -118,6 +118,32 @@ nodelink = function(sol){
     ggplot2::theme_minimal()
 }
 
+#' nodelinklab
+#' @param sol \code{\link{mm_path-class}} object to be plot
+#' @param labels a vector of cluster labels
+#' @param s threeshold for links
+#' @value a ggplot2 graph
+#' @export 
+nodelinklab = function(sol,labels,s=0){
+  ij = Matrix::which(sol@obs_stats$x_counts>0,arr.ind = TRUE)
+  ld = sol@obs_stats$x_counts
+  #/(sol@obs_stats$counts%*%t(sol@obs_stats$counts))
+  ij = ij[ij[,1]!=ij[,2],]
+  gglink = data.frame(from=ij[,1],to=ij[,2],p=ld[ij])
+  ggnode = data.frame(i=1:length(sol@obs_stats$counts),pi=diag(sol@obs_stats$x_counts))
+  gl = ggplot2::guide_legend()
+  ggplot2::ggplot()+ggplot2::geom_curve(data=gglink %>% filter(p>s),ggplot2::aes(x=from,xend=to,y=ifelse(from<to,-0.3,0.3),yend=ifelse(from<to,-0.3,0.3),size=p,alpha=p),arrow=grid::arrow(length = grid::unit(2,"mm")),curvature = 0.7)+
+    ggplot2::scale_x_continuous("",c())+
+    ggplot2::scale_y_continuous("",c(),limits = c(-6,6))+
+    ggplot2::scale_alpha("Link density:",limits=c(0,max(gglink$p)),guide="none")+
+    ggplot2::scale_size_area("Clusters size:",limits=c(0,max(c(ggnode$pi,gglink$p))),max_size = 4,guide="none")+
+    ggplot2::geom_point(data=ggnode,aes(x=i,y=-0.1,size=pi))+
+    ggplot2::ggtitle(paste0(toupper(sol@model@name)," model with : ",max(sol@cl)," clusters."))+
+    ggplot2::geom_text(data=data.frame(x=1:length(labels),label=labels),aes(x=x,label=label,y=0.05))+
+    ggplot2::theme_minimal()
+}
+
+
 graph_blocks = function(x){
   K = length(x@obs_stats$counts)
   gg=data.frame(kc=rep(cumsum(x@obs_stats$counts),each=K),
@@ -149,8 +175,11 @@ graph_blocks_degnorm = function(x){
     ggplot2::scale_y_continuous("",breaks=cumsum(x@obs_stats$counts),labels = ifelse(x@obs_stats$counts/sum(x@obs_stats$counts)>0.05,paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),""),minor_breaks = NULL)+
     ggplot2::coord_fixed()+ggplot2::theme_bw()
 }
-
-graph_blocks_balance = function(x){
+#' graph_balance
+#' @param sol \code{\link{mm_path-class}} object to be plot
+#' @value a ggplot2 graph
+#' @export 
+graphbalance = function(x){
   K = length(x@obs_stats$counts)
   B=x@obs_stats$x_counts-t(x@obs_stats$x_counts)
   gg=data.frame(kc=rep(cumsum(x@obs_stats$counts),each=K),
