@@ -23,5 +23,13 @@ arma::vec sum_rows(const arma::mat x);
 
 double sum_lfact(const arma::sp_mat& x);
 
+List lm_post(const arma::mat X,const arma::colvec& y,double regu, double a0, double b0);
+
+List lm_post_add(List current, const arma::mat X,const arma::colvec& y,double regu, double a0, double b0);
+
+List lm_post_del(List current, const arma::mat X,const arma::colvec& y,double regu, double a0, double b0);
+
+List lm_post_merge(List current_k,List current_l,double regu, double a0, double b0);
+
 #endif
 

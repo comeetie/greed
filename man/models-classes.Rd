@@ -10,6 +10,7 @@
 \alias{mm}
 \alias{mm-class}
 \alias{dcsbm-class}
+\alias{mreg-class}
 \title{Clustering models classes}
 \description{
 Clustering models classes
@@ -41,6 +42,13 @@ An S4 class to represent a mixture of multinomial also known has mixture of unig
 \itemize{
 \item slots : \code{name,alpha,beta}
 }
+
+mm
+
+An S4 class to represent a mixture of multinomial also known has mixture of unigrams that extends \code{icl_model} class.
+\itemize{
+\item slots : \code{name,alpha,reg,a0,b0}
+}
 }
 \section{Slots}{
 
@@ -58,6 +66,12 @@ An S4 class to represent a mixture of multinomial also known has mixture of unig
 \item{\code{b0}}{a numeric vector of length 1 which define the parameters of the beta prior over the non-edges (default to 1)}
 
 \item{\code{beta}}{a numeric vector of length 1 which define the parameters of the beta prior over the counts (default to 1)}
+
+\item{\code{reg}}{a numeric vector of length 1 which define the variance parameter of the normal prior over the regression parameters (default to 0.1)}
+
+\item{\code{a0}}{a numeric vector of length 1 which define the parameter a0 of the inverse gamma over the regression noise variance parameters (default to 1)}
+
+\item{\code{b0}}{a numeric vector of length 1 which define the parameter b0 of the inverse gamma prior over the regression noise variance parameters (default to 1)}
 }}
 
 \examples{
@@ -67,4 +81,6 @@ new("sbm")
 new("sbm",a0=0.5,b0=0.5,alpha=1)
 new("mm")
 new("mm",alpha=1,beta=1)
+new("mreg")
+new("mreg",alpha=1,reg=0.8,a0=0.5,b0=0.5)
 }

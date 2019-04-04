@@ -40,6 +40,45 @@ fit_greed_path <- function(xp, init) {
     .Call('_greed_fit_greed_path', PACKAGE = 'greed', xp, init)
 }
 
+#' init
+#' @param model icl_model
+#' @param xp sparseMatrix
+#' @param clt cluster labels {0,...,K-1}
+#' @export
+init_cond <- function(model, X, y, clt) {
+    .Call('_greed_init_cond', PACKAGE = 'greed', model, X, y, clt)
+}
+
+#' fit_greed
+#' @param model icl_model
+#' @param xp sparseMatrix
+#' @param Ki initia guess for K
+#' @param type : merge, swap or both (default)  
+#' @param nb_max_pass : maximum number of pass for greedy swap 
+#' @export
+fit_greed_cond <- function(model, X, y, Ki, type = "both", nb_max_pass = 50L, verbose = FALSE) {
+    .Call('_greed_fit_greed_cond', PACKAGE = 'greed', model, X, y, Ki, type, nb_max_pass, verbose)
+}
+
+#' fit_greed_init
+#' @param model icl_model
+#' @param xp sparseMatrix
+#' @param clt cluster labels {0,...,K-1}
+#' @param type : merge, swap or both (default)  
+#' @param nb_max_pass : maximum number of pass for greedy swap 
+#' @export
+fit_greed_init_cond <- function(model, X, y, clt, type = "both", nb_max_pass = 50L, verbose = FALSE) {
+    .Call('_greed_fit_greed_init_cond', PACKAGE = 'greed', model, X, y, clt, type, nb_max_pass, verbose)
+}
+
+#' fit_greed 
+#' @param xp sparseMatrix
+#' @param init initial fit
+#' @export
+fit_greed_path_cond <- function(X, y, init) {
+    .Call('_greed_fit_greed_path_cond', PACKAGE = 'greed', X, y, init)
+}
+
 #' lm_post
 #' @param X
 #' @param y

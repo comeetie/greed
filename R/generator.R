@@ -97,3 +97,34 @@ rdcsbm = function (N,pi,mu,betain,betaout){
   list(cl=cl, x = Matrix::sparseMatrix(links[,1],links[,2], x = x[links]), K=K,N=N,pi=pi,mu=mu)
 }
 
+
+#' Generate X and y with a mixture of regression model
+#'
+#' \code{rmreg} returns an X matrix, a y vector and the cluster labels generated randomly unsig a Mixture of regression model.
+#'
+#' It take the sample size, cluster proportions and regression parameters matrix and variance  as input accordingly
+#'
+#' @param N A numeric value the size of the graph to generate
+#' @param pi A numeric vector of length K with clusters proportions. Must sum up to 1.
+#' @param mu A numeric matrix of dim K x d with the regression parameters.
+#' @param sigma A numeric of length 1 with the target conditional variance.
+#' @return A list with fields:
+#' \itemize{
+#' \item X: the covariate matrix 
+#' \item y: the target feature
+#' \item K: number of generated clusters
+#' \item N: sample size
+#' \item cl: vector of clusters labels
+#' \item pi: clusters proportions
+#' \item mu: regression parameters
+#' \item sigma: conditional variance
+#' }
+#' @export
+rmreg = function (N,pi,mu,sigma,X=cbind(matrix(rnorm(N*(ncol(mu)-1)),N,ncol(mu)-1),rep(1,N))){
+  K  = length(pi)
+  cl = sample(1:K,N,replace=TRUE,prob = pi)
+  yt = X%*%mu+rnorm(N,0,sigma)
+  y  = yt[cbind(1:N,cl)]
+  list(cl=cl, X = X,y=y, K=K,N=N,pi=pi,mu=mu,sigma=sigma)
+}
+

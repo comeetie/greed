@@ -7,10 +7,12 @@
 \alias{sbm_fit-class}
 \alias{dcsbm_fit-class}
 \alias{mm_fit-class}
+\alias{mreg_fit-class}
 \alias{icl_path-class}
 \alias{mm_path-class}
 \alias{sbm_path-class}
 \alias{dcsbm_path-class}
+\alias{mreg_path-class}
 \title{Clustering solutions classes}
 \description{
 Clustering solutions classes
@@ -43,6 +45,13 @@ An S4 class to represent an icl fit of a mixture of multinomials model that exte
 \item slots : \code{name,K,icl,cl,obs_stats,model}
 }
 
+mreg_fit
+
+An S4 class to represent an icl fit of a mixture of multinomials model that extend \code{icl_fit}.
+\itemize{
+\item slots : \code{name,K,icl,cl,obs_stats,model}
+}
+
 icl_path
 
 An S4 class to represent a hierachical path of solution.
@@ -67,6 +76,13 @@ An S4 class to represent a hierachical path of solutions for a SBM model that ex
 dcsbm_path
 
 An S4 class to represent a hierachical path of solutions for a DC-SBM model that extend \code{dcsbm_fit-class} and \code{icl_path-class}.
+\itemize{
+\item slots : \code{name,K,icl,cl,obs_stats, model, path, tree, ggtree, logalpha}
+}
+
+mreg_path
+
+An S4 class to represent a hierachical path of solutions for a Mixture of Regression model that extend \code{mreg_fit-class} and \code{icl_path-class}.
 \itemize{
 \item slots : \code{name,K,icl,cl,obs_stats, model, path, tree, ggtree, logalpha}
 }

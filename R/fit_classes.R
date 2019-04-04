@@ -58,6 +58,17 @@ setClass("dcsbm_fit",slots = list(model="dcsbm"),contains="icl_fit")
 #' @export 
 setClass("mm_fit",slots = list(model="mm"),contains="icl_fit")
 
+#' @rdname fits-classes
+#' @title mreg_fit
+#' 
+#' An S4 class to represent an icl fit of a mixture of multinomials model that extend \code{icl_fit}.
+#' \itemize{
+#' \item slots : \code{name,K,icl,cl,obs_stats,model}
+#' }
+#' @export 
+setClass("mreg_fit",slots = list(model="mreg"),contains="icl_fit")
+
+
 
 #' @rdname fits-classes
 #' @title icl_path
@@ -103,3 +114,14 @@ setClass("sbm_path",contains=c("icl_path","sbm_fit"))
 #' }
 #' @export
 setClass("dcsbm_path",contains=c("icl_path","dcsbm_fit"))
+
+
+#' @rdname fits-classes
+#' @title mreg_path
+#' 
+#' An S4 class to represent a hierachical path of solutions for a Mixture of Regression model that extend \code{mreg_fit-class} and \code{icl_path-class}.
+#' \itemize{
+#' \item slots : \code{name,K,icl,cl,obs_stats, model, path, tree, ggtree, logalpha}
+#' }
+#' @export
+setClass("mreg_path",contains=c("icl_path","mreg_fit"))
