@@ -3,57 +3,50 @@
 \docType{methods}
 \name{fit}
 \alias{fit}
-\alias{fit,dgCMatrix,numeric,missing,missing-method}
-\alias{fit,dgCMatrix,numeric,icl_model,missing-method}
-\alias{fit,dgCMatrix,numeric,icl_model,hybrid-method}
-\alias{fit,dgCMatrix,numeric,icl_model,genetic-method}
-\alias{fit,dgCMatrix,numeric,icl_model,greed-method}
-\alias{fit,dgCMatrix,numeric,icl_model,seed-method}
+\alias{fit,icl_model,hybrid-method}
+\alias{fit,icl_model,genetic-method}
+\alias{fit,icl_model,greed-method}
+\alias{fit,icl_model,seed-method}
 \title{Fit a clustering model}
 \usage{
-fit(x, K, model, alg, ...)
+fit(model, alg, ...)
 
-\S4method{fit}{dgCMatrix,numeric,missing,missing}(x, K, verbose = FALSE)
+\S4method{fit}{icl_model,hybrid}(model, alg, x, K, verbose = FALSE)
 
-\S4method{fit}{dgCMatrix,numeric,icl_model,missing}(x, K, model,
-  verbose = FALSE)
+\S4method{fit}{icl_model,genetic}(model, alg, x, k, verbose = FALSE)
 
-\S4method{fit}{dgCMatrix,numeric,icl_model,hybrid}(x, K, model, alg,
-  verbose = FALSE)
+\S4method{fit}{icl_model,greed}(model, alg, x, K = 20, verbose = FALSE)
 
-\S4method{fit}{dgCMatrix,numeric,icl_model,genetic}(x, K, model, alg,
-  verbose = FALSE)
-
-\S4method{fit}{dgCMatrix,numeric,icl_model,greed}(x, K, model, alg,
-  verbose = FALSE)
-
-\S4method{fit}{dgCMatrix,numeric,icl_model,seed}(x, K, model, alg,
-  verbose = FALSE)
+\S4method{fit}{icl_model,seed}(model, alg, x, K = 20, verbose = FALSE)
 }
 \arguments{
-\item{x}{A sparse Matrix as a \code{dgCMatrix}}
-
-\item{K}{An initial guess of the maximal number of cluster}
-
 \item{model}{An \code{\link{IclModel-class}} such as \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, ...}
 
 \item{alg}{An optimization algorithm such as \code{\link{greed-class}}, \code{\link{genetic-class}} or \code{\link{km-class}}}
+
+\item{x}{A sparse Matrix as a \code{dgCMatrix}}
+
+\item{K}{An initial guess of the maximal number of cluster}
 }
 \description{
 Fit a clustering model
+
+#' @describeIn fit 
+#' @export
+setMethod(f = "fit", 
+          signature = signature("icl_model","missing"), 
+          definition = function(model,x, K=20,verbose=FALSE){
+            fit(model,new("hybrid"),x,K,verbose)
+          })
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{x = dgCMatrix,K = numeric,model = missing,alg = missing}: 
+\item \code{model = icl_model,alg = hybrid}: 
 
-\item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = missing}: 
+\item \code{model = icl_model,alg = genetic}: 
 
-\item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = hybrid}: 
+\item \code{model = icl_model,alg = greed}: 
 
-\item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = genetic}: 
-
-\item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = greed}: 
-
-\item \code{x = dgCMatrix,K = numeric,model = icl_model,alg = seed}: 
+\item \code{model = icl_model,alg = seed}: 
 }}
 

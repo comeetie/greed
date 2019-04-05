@@ -76,35 +76,23 @@ setClass("genetic",
 #' @param model An \code{\link{IclModel-class}} such as \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, ...
 #' @param alg An optimization algorithm such as \code{\link{greed-class}}, \code{\link{genetic-class}} or \code{\link{km-class}}
 #' @export
-setGeneric("fit",signature="...") 
+setGeneric("fit",function(model,alg,...) standardGeneric("fit")) 
+
+
+#' #' @describeIn fit 
+#' #' @export
+#' setMethod(f = "fit", 
+#'           signature = signature("icl_model","missing"), 
+#'           definition = function(model,x, K=20,verbose=FALSE){
+#'             fit(model,new("hybrid"),x,K,verbose)
+#'           })
 
 
 #' @describeIn fit 
 #' @export
 setMethod(f = "fit", 
-          signature = signature("dgCMatrix", "numeric"),
-          definition = function(x,K,verbose=FALSE){
-            # only a sparseMatrix and a number check dim to choose between graph models and mm
-            if(dim(x)[1]==dim(x)[2]){
-              fit(x,K,new("dcsbm"),new("hybrid"),verbose=verbose)  
-            }else{
-              fit(x,K,new("mm"),new("hybrid"),verbose=verbose)
-            }
-          });
-
-#' @describeIn fit 
-#' @export
-setMethod(f = "fit", 
-          signature = signature("dgCMatrix", "numeric","icl_model"),
-          definition = function(x,K,model,verbose=FALSE){
-            fit(x,K,model,new("hybrid"),verbose=verbose)
-          });
-
-#' @describeIn fit 
-#' @export
-setMethod(f = "fit", 
-          signature = signature("dgCMatrix", "numeric","icl_model","hybrid"), 
-          definition = function(x, K,model,alg,verbose=FALSE){
+          signature = signature("icl_model","hybrid"), 
+          definition = function(model,alg,x, K,verbose=FALSE){
             f = function(){
               fit_greed(model,x,K,verbose = verbose)
             }
@@ -115,14 +103,13 @@ setMethod(f = "fit",
               fit_greed_path(x,sol)
             }
             hybrid(f,fi,fp,alg,verbose)
-          })
-
+})
 
 #' @describeIn fit 
 #' @export
 setMethod(f = "fit", 
-          signature = signature("dgCMatrix", "numeric","icl_model","genetic"), 
-          definition = function(x, K,model,alg,verbose=FALSE){
+          signature = signature("icl_model","genetic"), 
+          definition = function(model,alg,x,k,verbose=FALSE){
             init_f = function(cl){
               init(model,x,cl)
             }
@@ -132,29 +119,29 @@ setMethod(f = "fit",
             path_f = function(sol){
               fit_greed_path(x,sol)
             }
-            genetic(x,init_f,greed_f,path_f,alg,verbose=FALSE)
-            })
+            genetic(x,init_f,greed_f,path_f,alg,verbose=verbose)
+          })
 
 
 #' @describeIn fit 
 #' @export
 setMethod(f = "fit", 
-          signature = signature("dgCMatrix", "numeric","icl_model","greed"), 
-          definition = function(x, K,model,alg,verbose=FALSE){
+          signature = signature("icl_model","greed"), 
+          definition = function(model,alg,x, K=20,verbose=FALSE){
             greed_f = function(ncl){
               fit_greed(model,x,K,verbose = verbose)
             }
             path_f = function(sol){
               fit_greed_path(x,sol)
             }
-            multistart(greed_f,path_f,alg,verbose=FALSE)
-         })
+            multistart(greed_f,path_f,alg,verbose)
+          })
 
 #' @describeIn fit 
 #' @export
 setMethod(f = "fit", 
-          signature = signature("dgCMatrix", "numeric","icl_model","seed"), 
-          definition = function(x, K,model,alg,verbose=FALSE){
+          signature = signature("icl_model","seed"), 
+          definition = function(model,alg,x, K=20,verbose=FALSE){
             if(class(model)=="dcsbm" | class(model)=="sbm"){
               cl = spectral(x,K)  
             }
@@ -164,10 +151,98 @@ setMethod(f = "fit",
             res = fit_greed_init(model,x,cl,"both",verbose=verbose)
             path = fit_greed_path(x,res)
             p=cleanpath(path)   
-            
+})
 
+
+
+#' @describeIn fit 
+#' @title Fit a clustering model
+#' 
+#' @param x A sparse Matrix as a \code{dgCMatrix}
+#' @param K An initial guess of the maximal number of cluster
+#' @param model An \code{\link{IclModel-class}} such as \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, ...
+#' @param alg An optimization algorithm such as \code{\link{greed-class}}, \code{\link{genetic-class}} or \code{\link{km-class}}
+#' @export
+setGeneric("fit_cond",function(model,alg,...) standardGeneric("fit_cond")) 
+
+
+#' #' @describeIn fit 
+#' #' @export
+#' setMethod(f = "fit", 
+#'           signature = signature("icl_model","missing"), 
+#'           definition = function(model,x, K=20,verbose=FALSE){
+#'             fit(model,new("hybrid"),x,K,verbose)
+#'           })
+
+
+setMethod(f = "fit_cond", 
+          signature = signature("icl_model","hybrid"), 
+          definition = function(model,alg,x,y, K,verbose=FALSE){
+            f = function(){
+              fit_greed_cond(model,x,y,K,verbose = verbose)
+            }
+            fi = function(ncl){
+              fit_greed_init_cond(model,x,y,ncl,verbose = verbose)
+            }
+            fp = function(sol){
+              fit_greed_path_cond(x,y,sol)
+            }
+            hybrid(f,fi,fp,alg,verbose)
           })
 
+setMethod(f = "fit_cond", 
+          signature = signature("icl_model","genetic"), 
+          definition = function(model,alg,x,y,k,verbose=FALSE){
+            init_f = function(cl){
+              init_cond(model,x,y,cl)
+            }
+            greed_f = function(ncl,type="both",nb_pass=1){
+              fit_greed_init_cond(model,x,y,ncl,type,nb_pass,verbose = verbose)
+            }
+            path_f = function(sol){
+              fit_greed_path_cond(x,y,sol)
+            }
+            genetic(x,init_f,greed_f,path_f,alg,verbose=verbose)
+          })
+
+
+setMethod(f = "fit_cond", 
+          signature = signature("icl_model","greed"), 
+          definition = function(model,alg,x,y, K=20,verbose=FALSE){
+            greed_f = function(ncl){
+              fit_greed_cond(model,x,y,K,verbose = verbose)
+            }
+            path_f = function(sol){
+              fit_greed_path_cond(x,sol)
+            }
+            multistart(greed_f,path_f,alg,verbose)
+          })
+
+
+#' 
+#' #' @describeIn fit 
+#' #' @export
+#' setMethod(f = "fit", 
+#'           signature = signature("dgCMatrix", "numeric"),
+#'           definition = function(x,K,verbose=FALSE){
+#'             # only a sparseMatrix and a number check dim to choose between graph models and mm
+#'             if(dim(x)[1]==dim(x)[2]){
+#'               fit(x,K,new("dcsbm"),new("hybrid"),verbose=verbose)  
+#'             }else{
+#'               fit(x,K,new("mm"),new("hybrid"),verbose=verbose)
+#'             }
+#'           });
+#' 
+#' #' @describeIn fit 
+#' #' @export
+#' setMethod(f = "fit", 
+#'           signature = signature("dgCMatrix", "missing", "numeric","icl_model", "missing"),
+#'           definition = function(x,K,model,verbose=FALSE){
+#'             fit(x,K,model,new("hybrid"),verbose=verbose)
+#'           });
+#' 
+#' 
+#' 
 
 
 reorder_sbm = function(obs_stats,or){
@@ -256,3 +331,37 @@ spectral= function(X,K){
 }
 
 
+
+#' @title greed
+#' @param x An adjacency matrix in sparse format
+#' @param K Desired number of cluster
+#' @value cl Vector of clsuter labels
+#' @export
+greed = function(X,K=20,model=find_model(X),alg=new("hybrid"),verbose=FALSE){
+  fit(model,alg,X,K,verbose)
+}
+
+
+#' @title greed_cond
+#' @param x An adjacency matrix in sparse format
+#' @param K Desired number of cluster
+#' @value cl Vector of clsuter labels
+#' @export
+greed_cond = function(X,y,K=20,model=find_model_cond(X,y),alg=new("hybrid"),verbose=FALSE){
+  fit_cond(model,alg,X,y,K,verbose)
+}
+
+find_model = function(X){
+  if(class(X)=="dgCMatrix"){
+    if(nrow(X)==ncol(X)){
+      model = new("dcsbm")
+    }else{
+      model = new("mm")
+    }
+  }
+  model
+}
+
+find_model_cond = function(X,y){
+  new("mreg")
+}

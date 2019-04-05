@@ -120,7 +120,7 @@ rdcsbm = function (N,pi,mu,betain,betaout){
 #' \item sigma: conditional variance
 #' }
 #' @export
-rmreg = function (N,pi,mu,sigma,X=cbind(matrix(rnorm(N*(ncol(mu)-1)),N,ncol(mu)-1),rep(1,N))){
+rmreg = function (N,pi,mu,sigma,X=cbind(matrix(rnorm(N*(nrow(mu)-1)),N,nrow(mu)-1),rep(1,N))){
   K  = length(pi)
   cl = sample(1:K,N,replace=TRUE,prob = pi)
   yt = X%*%mu+rnorm(N,0,sigma)

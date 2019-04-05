@@ -4,8 +4,8 @@
 \alias{rmreg}
 \title{Generate X and y with a mixture of regression model}
 \usage{
-rmreg(N, pi, mu, sigma, X = cbind(matrix(rnorm(N * (ncol(mu) - 1)), N,
-  ncol(mu) - 1), rep(1, N)))
+rmreg(N, pi, mu, sigma, X = cbind(matrix(rnorm(N * (nrow(mu) - 1)), N,
+  nrow(mu) - 1), rep(1, N)))
 }
 \arguments{
 \item{N}{A numeric value the size of the graph to generate}
