@@ -94,7 +94,7 @@ lm_post_add <- function(current, X, y, regu, a0, b0) {
     .Call('_greed_lm_post_add', PACKAGE = 'greed', current, X, y, regu, a0, b0)
 }
 
-#' lm_post_add
+#' lm_post_del
 #' @param X
 #' @param y
 #' @param regu
@@ -103,5 +103,16 @@ lm_post_add <- function(current, X, y, regu, a0, b0) {
 #' @export
 lm_post_del <- function(current, X, y, regu, a0, b0) {
     .Call('_greed_lm_post_del', PACKAGE = 'greed', current, X, y, regu, a0, b0)
+}
+
+#' lm_post_merge
+#' @param L1
+#' @param L2
+#' @param regu
+#' @param a0
+#' @param b0
+#' @export
+lm_post_merge <- function(current_k, current_l, regu, a0, b0) {
+    .Call('_greed_lm_post_merge', PACKAGE = 'greed', current_k, current_l, regu, a0, b0)
 }
 

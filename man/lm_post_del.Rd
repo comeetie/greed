@@ -2,10 +2,10 @@
 % Please edit documentation in R/RcppExports.R
 \name{lm_post_del}
 \alias{lm_post_del}
-\title{lm_post_add}
+\title{lm_post_del}
 \usage{
 lm_post_del(current, X, y, regu, a0, b0)
 }
 \description{
-lm_post_add
+lm_post_del
 }

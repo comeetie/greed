@@ -138,7 +138,7 @@ List lm_post(const arma::mat X,const arma::colvec& y,double regu, double a0, dou
   double yty = arma::as_scalar(y.t()*y);
   double b = b0+0.5*(yty-arma::as_scalar(mu.t()*S*mu));
   
-  double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*det(S)+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
+  double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*log(det(S))+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
   return List::create(Named("S")  = S,
                       Named("mu") = mu,
                       Named("a")  = a,
@@ -168,7 +168,7 @@ List lm_post(const arma::mat X,const arma::colvec& y,double regu, double a0, dou
     double yty = as<double>(current["yty"])+arma::as_scalar(y.t()*y);
     double a = a0+n/2;
     double b = b0+0.5*(yty-arma::as_scalar(mu.t()*S*mu));
-    double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*det(S)+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
+    double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*log(det(S))+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
     return List::create(Named("S")  = S,
                         Named("mu") = mu,
                         Named("a")  = a,
@@ -181,7 +181,7 @@ List lm_post(const arma::mat X,const arma::colvec& y,double regu, double a0, dou
 
 
 
-//' lm_post_add
+//' lm_post_del
 //' @param X
 //' @param y
 //' @param regu
@@ -199,7 +199,7 @@ List lm_post_del(List current, const arma::mat X,const arma::colvec& y,double re
   double yty = as<double>(current["yty"])-arma::as_scalar(y.t()*y);
   double a = a0+n/2;
   double b = b0+0.5*(yty-arma::as_scalar(mu.t()*S*mu));
-  double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*det(S)+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
+  double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*log(det(S))+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
   return List::create(Named("S")  = S,
                       Named("mu") = mu,
                       Named("a")  = a,
@@ -210,7 +210,14 @@ List lm_post_del(List current, const arma::mat X,const arma::colvec& y,double re
                       Named("log_evidence")=log_evidence);
 }
 
-
+//' lm_post_merge
+//' @param L1
+//' @param L2
+//' @param regu
+//' @param a0
+//' @param b0
+//' @export
+// [[Rcpp::export]]
 List lm_post_merge(List current_k,List current_l,double regu, double a0, double b0) {
   int n = as<int>(current_k["n"])+as<int>(current_l["n"]);
   int d = as<arma::mat>(current_k["S"]).n_cols;
@@ -221,7 +228,7 @@ List lm_post_merge(List current_k,List current_l,double regu, double a0, double 
   double yty = as<double>(current_k["yty"])+as<double>(current_l["yty"]);
   double a = a0+n/2;
   double b = b0+0.5*(yty-arma::as_scalar(mu.t()*S*mu));
-  double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*det(S)+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
+  double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*log(det(S))+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
   return List::create(Named("S")  = S,
                       Named("mu") = mu,
                       Named("a")  = a,

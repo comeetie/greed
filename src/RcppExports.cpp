@@ -171,6 +171,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// lm_post_merge
+List lm_post_merge(List current_k, List current_l, double regu, double a0, double b0);
+RcppExport SEXP _greed_lm_post_merge(SEXP current_kSEXP, SEXP current_lSEXP, SEXP reguSEXP, SEXP a0SEXP, SEXP b0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current_k(current_kSEXP);
+    Rcpp::traits::input_parameter< List >::type current_l(current_lSEXP);
+    Rcpp::traits::input_parameter< double >::type regu(reguSEXP);
+    Rcpp::traits::input_parameter< double >::type a0(a0SEXP);
+    Rcpp::traits::input_parameter< double >::type b0(b0SEXP);
+    rcpp_result_gen = Rcpp::wrap(lm_post_merge(current_k, current_l, regu, a0, b0));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_greed_init", (DL_FUNC) &_greed_init, 3},
@@ -184,6 +199,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_lm_post", (DL_FUNC) &_greed_lm_post, 5},
     {"_greed_lm_post_add", (DL_FUNC) &_greed_lm_post_add, 6},
     {"_greed_lm_post_del", (DL_FUNC) &_greed_lm_post_del, 6},
+    {"_greed_lm_post_merge", (DL_FUNC) &_greed_lm_post_merge, 5},
     {NULL, NULL, 0}
 };
 

@@ -49,7 +49,7 @@ void IclModel::greedy_swap(int nbpassmax){
   // boolean to test if a move occurs
   bool hasMoved = true;
   // while their are moves
-  while (hasMoved && nbpass < nbpassmax ){
+  while (hasMoved && nbpass < nbpassmax){
     // suffle the index 
     arma::vec workingset(N);
     workingset.ones();
@@ -61,10 +61,11 @@ void IclModel::greedy_swap(int nbpassmax){
     for (int i=0;i<N ;++i){
       // current node
       cnode=pass(i);
-      if (workingset(cnode)==1){
+      //Rcout << cnode << "K:" << K << std::endl;
+      if (workingset(cnode)==1 && K>1){
         // compute delta swap
         arma::vec delta = this->delta_swap(cnode);
-        // Rcout << delta << std::endl;
+        //Rcout << delta << std::endl;
         // best swap
         int ncl = delta.index_max();
         if(ncl!=cl(cnode)){
@@ -94,7 +95,7 @@ void IclModel::greedy_swap(int nbpassmax){
 
     if(verbose){
       Rcout << "##################################"<< std::endl;
-      Rcout << "Pass N°"<< nbpass << " completed with " << nbmove << " moves, icl :" << icl_value << "working set size :" << arma::accu(workingset)  << std::endl;
+      Rcout << "Pass N°"<< nbpass << " completed with " << nbmove << " moves, icl :" << icl_value << "K :" << K << ", working set size :" << arma::accu(workingset)  << std::endl;
       Rcout << "##################################"<< std::endl; 
     } 
   }
