@@ -36,6 +36,15 @@ setMethod(f = "plot",
             mat_blocks(x)      
           });
 
+#' @rdname plot
+#' @param x \code{\link{mreg_fit-class}} object to be ploted
+#' @export
+setMethod(f = "plot", 
+          signature = signature("mreg_fit","missing"),
+          definition = function(x,type='blocks'){
+            mat_reg(x)      
+          });
+
 
 #' @rdname plot
 #' @param x \code{\link{dcsbm_path-class}} object to be ploted
@@ -96,6 +105,23 @@ setMethod(f = "plot",
             nodelink={
               callNextMethod()
             })   
+          });
+
+#' @rdname plot
+#' @param x \code{\link{mm_path-class}} object to be plot
+#' @export
+setMethod(f = "plot", 
+          signature = signature("mreg_path","missing"),
+          definition = function(x,type='blocks'){
+            switch(type,tree = {
+              dendo(x)
+            },
+            path ={
+              lapath(x)
+            },
+            blocks ={
+              callNextMethod()
+            })
           });
 
 
@@ -217,6 +243,8 @@ mat_blocks = function(x){
     ggplot2::theme_bw()      
 }
    
+
+
 dendo = function(x){
   ggtree = x@ggtree
   ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes(x=xmin,y=H,xend=xmax,yend=H))+
