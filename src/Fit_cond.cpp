@@ -152,7 +152,7 @@ S4 fit_greed_path_cond(arma::mat& X,arma::colvec & y, S4 init) {
      if(strcmp(model.slot("name"),"mreg")!=0){
        stop("Unsuported model");
      }
-     if(strcmp(model.slot("name"),"sbm")==0){
+     if(strcmp(model.slot("name"),"mreg")==0){
        M = new Mreg(X,y,Ki,model.slot("alpha"),model.slot("reg"),model.slot("a0"),model.slot("b0"),clt);
        S4 solt("mreg_path");
        solt.slot("name") = "mreg_path";

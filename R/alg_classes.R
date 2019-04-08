@@ -265,6 +265,12 @@ reorder_mm = function(obs_stats,or){
   obs_stats
 }
 
+reorder_mreg = function(obs_stats,or){
+  obs_stats$counts = obs_stats$counts[or]
+  obs_stats$regs = obs_stats$regs[or]
+  obs_stats
+}
+
 setGeneric("reorder", function(model, obs_stats,order) standardGeneric("reorder")) 
 
 setMethod(f = "reorder", 
@@ -281,6 +287,12 @@ setMethod(f = "reorder",
           signature = signature("dcsbm", "list","integer"), 
           definition = function(model, obs_stats,order){
             reorder_dcsbm(obs_stats,order)
+          })
+
+setMethod(f = "reorder", 
+          signature = signature("mreg", "list","integer"), 
+          definition = function(model, obs_stats,order){
+            reorder_mreg(obs_stats,order)
           })
 
 #' @describeIn cut

@@ -12,7 +12,7 @@ hybrid = function(f,fi,fp, alg,verbose=FALSE){
             
             
             train.hist = data.frame(generation=c(),icl=c(),K=c())
-            
+
             # multi-start in //
             #future::plan(future::multiprocess)
             
@@ -31,7 +31,7 @@ hybrid = function(f,fi,fp, alg,verbose=FALSE){
             best_icl = max(icls)
             nbgen = 1
             # while maximum number of generation // all solutions are equals // no improvements
-            
+
             while((max(icls)-min(icls))>1 & (best_icl > old_best) & nbgen < alg@nb_max_gen){
               
               
@@ -52,6 +52,8 @@ hybrid = function(f,fi,fp, alg,verbose=FALSE){
               best_icl = max(icls)
               nbgen = nbgen + 1;
             }
+            
+
             train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
             #parallel::stopCluster(cl)
             # best solution

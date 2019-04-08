@@ -221,7 +221,10 @@ List lm_post_del(List current, const arma::mat X,const arma::colvec& y,double re
 List lm_post_merge(List current_k,List current_l,double regu, double a0, double b0) {
   int n = as<int>(current_k["n"])+as<int>(current_l["n"]);
   int d = as<arma::mat>(current_k["S"]).n_cols;
-  arma::mat S = as<arma::mat>(current_k["S"])+as<arma::mat>(current_l["S"]);
+  arma::mat Sprior(d,d);
+  Sprior.zeros();
+  Sprior.diag() = arma::ones<arma::vec>(d)*regu;
+  arma::mat S = as<arma::mat>(current_k["S"])+as<arma::mat>(current_l["S"])-Sprior;
   arma::colvec Xty = as<arma::colvec>(current_k["Xty"])+as<arma::colvec>(current_l["Xty"]);
   arma::colvec mu =  inv_sympd(S)*Xty;
   

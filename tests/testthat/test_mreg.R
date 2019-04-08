@@ -9,7 +9,7 @@ test_that("MReg sim evidence and fit", {
   sK22 = lm_post(mreg_simu$X[mreg_simu$cl==2,],mreg_simu$y[mreg_simu$cl==2],reg,1,1)
   sKm  = lm_post_merge(sK21,sK22,reg,1,1)
   sK1  = lm_post(mreg_simu$X,mreg_simu$y,reg,1,1)
-  expect_lte(abs(sK1$log_evidence-sKm$log_evidence),0.001)
+  expect_equal(abs(sK1$log_evidence-sKm$log_evidence),0)
   
   expect_lte(sK1$log_evidence,  sK21$log_evidence+sK22$log_evidence)
 

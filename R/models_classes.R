@@ -86,7 +86,7 @@ setClass("mm",
 #' @slot b0 a numeric vector of length 1 which define the parameter b0 of the inverse gamma prior over the regression noise variance parameters (default to 1)
 #' @examples
 #' new("mreg")
-#' new("mreg",alpha=1,reg=0.8,a0=0.5,b0=0.5)
+#' new("mreg",alpha=1,reg=5,a0=0.5,b0=0.5)
 #' @export
 setClass("mreg",
          representation = list(reg = "numeric",a0="numeric",b0="numeric"),
