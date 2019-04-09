@@ -170,7 +170,7 @@ List lm_post(const arma::mat X,const arma::colvec& y,double regu, double a0, dou
     arma::mat iSo = as<arma::mat>(current["iS"]);
     // algo de mise a jour sequentiel pour 1 point
     // https://en.wikipedia.org/wiki/Matrix_determinant_lemma
-    double detS = as_scalar(1+X.t()*iSo*X)*as<double>(current["detS"]);
+    double detS = as_scalar(1+X*iSo*X.t())*as<double>(current["detS"]);
     
     // https://en.wikipedia.org/wiki/Woodbury_matrix_identity
     // https://en.wikipedia.org/wiki/Sherman%E2%80%93Morrison_formula
@@ -214,7 +214,7 @@ List lm_post_del1(List current, const arma::rowvec X,double y,double regu, doubl
   arma::mat iSo = as<arma::mat>(current["iS"]);
   // algo de mise a jour sequentiel pour 1 point
   // https://en.wikipedia.org/wiki/Matrix_determinant_lemma
-  double detS = as_scalar(1-X.t()*iSo*X)*as<double>(current["detS"]);
+  double detS = as_scalar(1-X*iSo*X.t())*as<double>(current["detS"]);
   
   // https://en.wikipedia.org/wiki/Woodbury_matrix_identity
   // https://en.wikipedia.org/wiki/Sherman%E2%80%93Morrison_formula
