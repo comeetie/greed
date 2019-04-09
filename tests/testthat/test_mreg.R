@@ -14,9 +14,8 @@ test_that("MReg sim evidence and fit", {
   expect_lte(sK1$log_evidence,  sK21$log_evidence+sK22$log_evidence)
 
   
-  skadd = lm_post_add(sK21,mreg_simu$X[mreg_simu$cl==2,],mreg_simu$y[mreg_simu$cl==2],reg,1,1)
-  expect_equal(sK1$log_evidence,  skadd$log_evidence)
-  skdel = lm_post_del(skadd,mreg_simu$X[mreg_simu$cl==2,],mreg_simu$y[mreg_simu$cl==2],reg,1,1)
+  skadd = lm_post_add1(sK21,mreg_simu$X[1,],mreg_simu$y[1],reg,1,1)
+  skdel = lm_post_del1(skadd,mreg_simu$X[1,],mreg_simu$y[1],reg,1,1)
   
   expect_equal(sK21$log_evidence,  skdel$log_evidence)
   

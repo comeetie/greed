@@ -91,4 +91,4 @@ setClass("mm",
 setClass("mreg",
          representation = list(reg = "numeric",a0="numeric",b0="numeric"),
          contains = "icl_model",
-         prototype(name="mreg",reg=0.1,a0=1,b0=1,alpha=1))
+         prototype(name="mreg",reg=0.01,a0=1,b0=1,alpha=1))

@@ -42,7 +42,7 @@ sbm = rsbm(N,pi,mu)
 Perform the clustering with default model and algorithm. An sbm model is used for squared matrix and a genetic algorithm is selected by default. The second parameter is just an itnitial guess for the number of cluster.
 
 ```{r}
-sol = fit(sbm$x,25)
+sol = greed(sbm$x,model=new("sbm"))
 ```
 Plot the results using a block representation.
 
@@ -70,17 +70,17 @@ plot(sol3,type='blocks')
 
 Other model are availbale dscbm, mm
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-soldc = fit(sbm$x,25,new("dcsbm"))
+soldc = greed(sbm$x,25,new("dcsbm"))
 plot(soldc,type='blocks')
 ```
 
-Eventualy you may change the algorithm genetic (default), greed multiple start of simple greedy and km greed initialized with spectral clustering. See the doc for details on the algorithm parameters. 
+Eventualy you may change the algorithm "hybrid" (default), "multistart" greedy with random multiple start and "seed"" greed initialized with spectral clustering. See the doc for details on the algorithm parameters. 
 
 
 One example with the polbooks dataset:
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 data("Xpolbooks")
-solpol=fit(Xpolbooks,10,new("dcsbm"),new("hybrid",pop_size=30))
+solpol=greed(Xpolbooks,10,new("dcsbm"),new("hybrid",pop_size=30))
 plot(solpol,type='blocks')
 ```
 
@@ -95,7 +95,7 @@ table(Lpolbooks,cut(solpol,3)@cl)
 One with the polblogs dataset:
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 data("Xpolblogs")
-solblogs=fit(Xpolblogs,25,new("dcsbm"),new("seed"))
+solblogs=greed(Xpolblogs)
 plot(solblogs,type='blocks')
 ```
 
@@ -103,12 +103,4 @@ plot(solblogs,type='blocks')
 data("Lpolblogs")
 plot(solblogs,type='tree')
 table(Lpolblogs,cut(solblogs,2)@cl)
-```
-
-A better fit with a genetic algorithm ?
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-solblogshyb =fit(Xpolblogs,25,new("dcsbm"),new("hybrid",pop_size=40))
-plot(solblogshyb,type='path')
-table(Lpolblogs,cut(solblogs,2)@cl)
-solblogshyb@icl-solblogs@icl
 ```

@@ -11,7 +11,8 @@ setMethod(f = "fit",
             fit(model,new("hybrid"),x,K,verbose)
           })}
 \usage{
-\S4method{fit_cond}{icl_model,hybrid}(model, alg, x, K, verbose = FALSE)
+\S4method{fit_cond}{icl_model,hybrid}(model, alg, x, y, K,
+  verbose = FALSE)
 }
 \description{
 #' @describeIn fit 

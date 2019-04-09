@@ -6,9 +6,11 @@
 \alias{plot,sbm_fit,missing-method}
 \alias{plot,dcsbm_fit,missing-method}
 \alias{plot,mm_fit,missing-method}
+\alias{plot,mreg_fit,missing-method}
 \alias{plot,dcsbm_path,missing-method}
 \alias{plot,sbm_path,missing-method}
 \alias{plot,mm_path,missing-method}
+\alias{plot,mreg_path,missing-method}
 \title{Plot a clustering results}
 \usage{
 \S4method{plot}{sbm_fit,missing}(x, type = "blocks")
@@ -17,11 +19,15 @@
 
 \S4method{plot}{mm_fit,missing}(x, type = "blocks")
 
+\S4method{plot}{mreg_fit,missing}(x, type = "blocks")
+
 \S4method{plot}{dcsbm_path,missing}(x, type = "blocks")
 
 \S4method{plot}{sbm_path,missing}(x, type = "blocks")
 
 \S4method{plot}{mm_path,missing}(x, type = "blocks")
+
+\S4method{plot}{mreg_path,missing}(x, type = "blocks")
 }
 \arguments{
 \item{x}{\code{\link{sbm_fit-class}} object to be ploted}
@@ -33,9 +39,13 @@ with respect to the number of clusters.}
 
 \item{x}{\code{\link{mm_fit-class}} object to be ploted}
 
+\item{x}{\code{\link{mreg_fit-class}} object to be ploted}
+
 \item{x}{\code{\link{dcsbm_path-class}} object to be ploted}
 
 \item{x}{\code{\link{sbm_path-class}} object to ploted}
+
+\item{x}{\code{\link{mm_path-class}} object to be plot}
 
 \item{x}{\code{\link{mm_path-class}} object to be plot}
 }

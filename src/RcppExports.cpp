@@ -139,6 +139,53 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// lm_post_add1
+List lm_post_add1(List current, const arma::rowvec X, double y, double regu, double a0, double b0);
+RcppExport SEXP _greed_lm_post_add1(SEXP currentSEXP, SEXP XSEXP, SEXP ySEXP, SEXP reguSEXP, SEXP a0SEXP, SEXP b0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current(currentSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type regu(reguSEXP);
+    Rcpp::traits::input_parameter< double >::type a0(a0SEXP);
+    Rcpp::traits::input_parameter< double >::type b0(b0SEXP);
+    rcpp_result_gen = Rcpp::wrap(lm_post_add1(current, X, y, regu, a0, b0));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lm_post_del1
+List lm_post_del1(List current, const arma::rowvec X, double y, double regu, double a0, double b0);
+RcppExport SEXP _greed_lm_post_del1(SEXP currentSEXP, SEXP XSEXP, SEXP ySEXP, SEXP reguSEXP, SEXP a0SEXP, SEXP b0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current(currentSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type regu(reguSEXP);
+    Rcpp::traits::input_parameter< double >::type a0(a0SEXP);
+    Rcpp::traits::input_parameter< double >::type b0(b0SEXP);
+    rcpp_result_gen = Rcpp::wrap(lm_post_del1(current, X, y, regu, a0, b0));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lm_post_merge
+List lm_post_merge(List current_k, List current_l, double regu, double a0, double b0);
+RcppExport SEXP _greed_lm_post_merge(SEXP current_kSEXP, SEXP current_lSEXP, SEXP reguSEXP, SEXP a0SEXP, SEXP b0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current_k(current_kSEXP);
+    Rcpp::traits::input_parameter< List >::type current_l(current_lSEXP);
+    Rcpp::traits::input_parameter< double >::type regu(reguSEXP);
+    Rcpp::traits::input_parameter< double >::type a0(a0SEXP);
+    Rcpp::traits::input_parameter< double >::type b0(b0SEXP);
+    rcpp_result_gen = Rcpp::wrap(lm_post_merge(current_k, current_l, regu, a0, b0));
+    return rcpp_result_gen;
+END_RCPP
+}
 // lm_post_add
 List lm_post_add(List current, const arma::mat X, const arma::colvec& y, double regu, double a0, double b0);
 RcppExport SEXP _greed_lm_post_add(SEXP currentSEXP, SEXP XSEXP, SEXP ySEXP, SEXP reguSEXP, SEXP a0SEXP, SEXP b0SEXP) {
@@ -171,21 +218,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// lm_post_merge
-List lm_post_merge(List current_k, List current_l, double regu, double a0, double b0);
-RcppExport SEXP _greed_lm_post_merge(SEXP current_kSEXP, SEXP current_lSEXP, SEXP reguSEXP, SEXP a0SEXP, SEXP b0SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type current_k(current_kSEXP);
-    Rcpp::traits::input_parameter< List >::type current_l(current_lSEXP);
-    Rcpp::traits::input_parameter< double >::type regu(reguSEXP);
-    Rcpp::traits::input_parameter< double >::type a0(a0SEXP);
-    Rcpp::traits::input_parameter< double >::type b0(b0SEXP);
-    rcpp_result_gen = Rcpp::wrap(lm_post_merge(current_k, current_l, regu, a0, b0));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_greed_init", (DL_FUNC) &_greed_init, 3},
@@ -197,9 +229,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_fit_greed_init_cond", (DL_FUNC) &_greed_fit_greed_init_cond, 7},
     {"_greed_fit_greed_path_cond", (DL_FUNC) &_greed_fit_greed_path_cond, 3},
     {"_greed_lm_post", (DL_FUNC) &_greed_lm_post, 5},
+    {"_greed_lm_post_add1", (DL_FUNC) &_greed_lm_post_add1, 6},
+    {"_greed_lm_post_del1", (DL_FUNC) &_greed_lm_post_del1, 6},
+    {"_greed_lm_post_merge", (DL_FUNC) &_greed_lm_post_merge, 5},
     {"_greed_lm_post_add", (DL_FUNC) &_greed_lm_post_add, 6},
     {"_greed_lm_post_del", (DL_FUNC) &_greed_lm_post_del, 6},
-    {"_greed_lm_post_merge", (DL_FUNC) &_greed_lm_post_merge, 5},
     {NULL, NULL, 0}
 };
 

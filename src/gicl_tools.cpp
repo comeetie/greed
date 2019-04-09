@@ -146,11 +146,13 @@ List lm_post(const arma::mat X,const arma::colvec& y,double regu, double a0, dou
                       Named("n")  = n,
                       Named("yty")  = yty,
                       Named("Xty")  = Xty,
-                      Named("log_evidence")=log_evidence);
+                      Named("log_evidence")=log_evidence,
+                      Named("detS")=det(S),
+                      Named("iS")=inv_sympd(S));
 }
   
   
-  //' lm_post_add
+  //' lm_post_add1
   //' @param X
   //' @param y
   //' @param regu
@@ -158,17 +160,31 @@ List lm_post(const arma::mat X,const arma::colvec& y,double regu, double a0, dou
   //' @param b0
   //' @export
   // [[Rcpp::export]]
-  List lm_post_add(List current, const arma::mat X,const arma::colvec& y,double regu, double a0, double b0) {
+  List lm_post_add1(List current, const arma::rowvec X,double y,double regu, double a0, double b0) {
+    
+
+    
     int n = as<int>(current["n"])+X.n_rows;
     int d = as<arma::mat>(current["S"]).n_cols;
     arma::mat S = as<arma::mat>(current["S"])+X.t()*X;
-    arma::colvec Xty = as<arma::colvec>(current["Xty"])+X.t()*y;
-    arma::colvec mu =  inv_sympd(S)*Xty;
+    arma::mat iSo = as<arma::mat>(current["iS"]);
+    // algo de mise a jour sequentiel pour 1 point
+    // https://en.wikipedia.org/wiki/Matrix_determinant_lemma
+    double detS = as_scalar(1+X.t()*iSo*X)*as<double>(current["detS"]);
     
-    double yty = as<double>(current["yty"])+arma::as_scalar(y.t()*y);
+    // https://en.wikipedia.org/wiki/Woodbury_matrix_identity
+    // https://en.wikipedia.org/wiki/Sherman%E2%80%93Morrison_formula
+    arma::mat iS = iSo-(iSo*X.t()*X*iSo)/as_scalar(1+X*iSo*X.t()); 
+    arma::colvec Xty = as<arma::colvec>(current["Xty"])+X.t()*y;
+    arma::colvec mu =  iS*Xty;
+    
+    
+    
+    
+    double yty = as<double>(current["yty"])+y*y;
     double a = a0+n/2;
     double b = b0+0.5*(yty-arma::as_scalar(mu.t()*S*mu));
-    double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*log(det(S))+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
+    double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*log(detS)+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
     return List::create(Named("S")  = S,
                         Named("mu") = mu,
                         Named("a")  = a,
@@ -176,12 +192,14 @@ List lm_post(const arma::mat X,const arma::colvec& y,double regu, double a0, dou
                         Named("n")  = n,
                         Named("yty")  = yty,
                         Named("Xty")  = Xty,
-                        Named("log_evidence")=log_evidence);
+                        Named("log_evidence")=log_evidence,
+                        Named("detS")=detS,
+                        Named("iS")=iS);
   }
 
 
 
-//' lm_post_del
+//' lm_post_del1
 //' @param X
 //' @param y
 //' @param regu
@@ -189,17 +207,26 @@ List lm_post(const arma::mat X,const arma::colvec& y,double regu, double a0, dou
 //' @param b0
 //' @export
 // [[Rcpp::export]]
-List lm_post_del(List current, const arma::mat X,const arma::colvec& y,double regu, double a0, double b0) {
+List lm_post_del1(List current, const arma::rowvec X,double y,double regu, double a0, double b0) {
   int n = as<int>(current["n"])-X.n_rows;
   int d = as<arma::mat>(current["S"]).n_cols;
   arma::mat S = as<arma::mat>(current["S"])-X.t()*X;
-  arma::colvec Xty = as<arma::colvec>(current["Xty"])-X.t()*y;
-  arma::colvec mu =  inv_sympd(S)*Xty;
+  arma::mat iSo = as<arma::mat>(current["iS"]);
+  // algo de mise a jour sequentiel pour 1 point
+  // https://en.wikipedia.org/wiki/Matrix_determinant_lemma
+  double detS = as_scalar(1-X.t()*iSo*X)*as<double>(current["detS"]);
   
-  double yty = as<double>(current["yty"])-arma::as_scalar(y.t()*y);
+  // https://en.wikipedia.org/wiki/Woodbury_matrix_identity
+  // https://en.wikipedia.org/wiki/Sherman%E2%80%93Morrison_formula
+  arma::mat Xn = -X;
+  arma::mat iS = iSo-(iSo*X.t()*Xn*iSo)/as_scalar(1+Xn*iSo*X.t()); 
+  arma::colvec Xty = as<arma::colvec>(current["Xty"])-X.t()*y;
+  arma::colvec mu =  iS*Xty;
+  
+  double yty = as<double>(current["yty"])-y*y;
   double a = a0+n/2;
   double b = b0+0.5*(yty-arma::as_scalar(mu.t()*S*mu));
-  double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*log(det(S))+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
+  double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*log(detS)+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
   return List::create(Named("S")  = S,
                       Named("mu") = mu,
                       Named("a")  = a,
@@ -207,7 +234,9 @@ List lm_post_del(List current, const arma::mat X,const arma::colvec& y,double re
                       Named("n")  = n,
                       Named("yty")  = yty,
                       Named("Xty")  = Xty,
-                      Named("log_evidence")=log_evidence);
+                      Named("log_evidence")=log_evidence,
+                      Named("detS")=det(S),
+                      Named("iS")=inv_sympd(S));
 }
 
 //' lm_post_merge
@@ -242,4 +271,65 @@ List lm_post_merge(List current_k,List current_l,double regu, double a0, double 
                       Named("log_evidence")=log_evidence);
   
   
+}
+
+
+//' lm_post_add
+//' @param X
+//' @param y
+//' @param regu
+//' @param a0
+//' @param b0
+//' @export
+// [[Rcpp::export]]
+List lm_post_add(List current, const arma::mat X,const arma::colvec& y,double regu, double a0, double b0) {
+  int n = as<int>(current["n"])+X.n_rows;
+  int d = as<arma::mat>(current["S"]).n_cols;
+  arma::mat S = as<arma::mat>(current["S"])+X.t()*X;
+  arma::colvec Xty = as<arma::colvec>(current["Xty"])+X.t()*y;
+  arma::colvec mu =  inv_sympd(S)*Xty;
+  
+  double yty = as<double>(current["yty"])+arma::as_scalar(y.t()*y);
+  double a = a0+n/2;
+  double b = b0+0.5*(yty-arma::as_scalar(mu.t()*S*mu));
+  double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*log(det(S))+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
+  return List::create(Named("S")  = S,
+                      Named("mu") = mu,
+                      Named("a")  = a,
+                      Named("b")  = b,
+                      Named("n")  = n,
+                      Named("yty")  = yty,
+                      Named("Xty")  = Xty,
+                      Named("log_evidence")=log_evidence);
+}
+
+
+
+//' lm_post_del
+//' @param X
+//' @param y
+//' @param regu
+//' @param a0
+//' @param b0
+//' @export
+// [[Rcpp::export]]
+List lm_post_del(List current, const arma::mat X,const arma::colvec& y,double regu, double a0, double b0) {
+  int n = as<int>(current["n"])-X.n_rows;
+  int d = as<arma::mat>(current["S"]).n_cols;
+  arma::mat S = as<arma::mat>(current["S"])-X.t()*X;
+  arma::colvec Xty = as<arma::colvec>(current["Xty"])-X.t()*y;
+  arma::colvec mu =  inv_sympd(S)*Xty;
+  
+  double yty = as<double>(current["yty"])-arma::as_scalar(y.t()*y);
+  double a = a0+n/2;
+  double b = b0+0.5*(yty-arma::as_scalar(mu.t()*S*mu));
+  double log_evidence = -n/2*log(2*M_PI)-0.5*d*log(regu)+0.5*log(det(S))+a0*log(b0)-a*log(b)+lgamma(a)-lgamma(a0);
+  return List::create(Named("S")  = S,
+                      Named("mu") = mu,
+                      Named("a")  = a,
+                      Named("b")  = b,
+                      Named("n")  = n,
+                      Named("yty")  = yty,
+                      Named("Xty")  = Xty,
+                      Named("log_evidence")=log_evidence);
 }

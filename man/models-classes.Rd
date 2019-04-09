@@ -82,5 +82,5 @@ new("sbm",a0=0.5,b0=0.5,alpha=1)
 new("mm")
 new("mm",alpha=1,beta=1)
 new("mreg")
-new("mreg",alpha=1,reg=0.8,a0=0.5,b0=0.5)
+new("mreg",alpha=1,reg=5,a0=0.5,b0=0.5)
 }

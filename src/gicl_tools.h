@@ -29,6 +29,11 @@ List lm_post_add(List current, const arma::mat X,const arma::colvec& y,double re
 
 List lm_post_del(List current, const arma::mat X,const arma::colvec& y,double regu, double a0, double b0);
 
+List lm_post_add1(List current, const arma::rowvec X,double y,double regu, double a0, double b0);
+
+List lm_post_del1(List current, const arma::rowvec X,double y,double regu, double a0, double b0);
+
+
 List lm_post_merge(List current_k,List current_l,double regu, double a0, double b0);
 
 #endif

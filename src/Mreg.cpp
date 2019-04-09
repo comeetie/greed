@@ -228,7 +228,7 @@ MergeMat Mreg::delta_merge(arma::mat delta, int obk, int obl){
   int bk = 0;
   int bl = 0;
   double bv = -std::numeric_limits<double>::infinity();
-  List old_stats = List::create(Named("counts", counts), Named("regs", x_counts));
+  List old_stats = List::create(Named("counts", counts), Named("regs", regs));
   for(int k = 1; k < K; ++k) {
     for (int l = 0;l<k;++l){
       if(k == obl | l == obl){
@@ -260,6 +260,7 @@ void Mreg::merge_update(int k,int l){
   counts(l) = counts(k)+counts(l);
   counts    = counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
   // update x_counts
+  regs = clone(regs);
   regs[l] = lm_post_merge(regs[k],regs[l],reg,a0,b0);
   IntegerVector idx = seq_len(regs.length()) - 1;
   regs = regs[idx!=k];

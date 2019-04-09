@@ -242,7 +242,43 @@ mat_blocks = function(x){
     ggplot2::scale_y_continuous("Clusters",breaks=cumsum(x@obs_stats$counts),labels = paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),minor_breaks = NULL)+
     ggplot2::theme_bw()      
 }
-   
+
+
+mat_reg = function(x){
+  K = length(x@obs_stats$counts)
+  D = length(x@obs_stats$regs[[1]]$mu)
+  gg=data.frame(kc=rep(cumsum(x@obs_stats$counts),D),
+                lc=rep(1:D,each=K),
+                sizek = rep(x@obs_stats$counts,D),
+                sizel = rep(1,K*D), 
+                count=as.vector(sapply(x@obs_stats$regs,function(reg){reg$mu})))
+  ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes(y=kc-sizek/2,x=lc-sizel/2,height=sizek,width=sizel,fill=count,alpha=count))+
+    ggplot2::scale_fill_distiller(expression(paste(" ",beta," ")),type="seq",direction = 1,palette = 2)+
+    ggplot2::scale_alpha(expression(paste(" ",beta," ")))+
+    ggplot2::ggtitle(paste0("Mixture of Regression Model with : ",max(x@cl)," clusters."))+
+    ggplot2::scale_x_continuous("Features",breaks=1:D,labels=rep("",D),minor_breaks = NULL)+
+    ggplot2::scale_y_continuous("Clusters",breaks=cumsum(x@obs_stats$counts),labels = paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),minor_breaks = NULL)+
+    ggplot2::theme_bw()      
+}
+
+
+
+
+mat_reg_line = function(x,Xd,yd){
+  K = length(x@obs_stats$counts)
+  D = length(x@obs_stats$regs[[1]]$mu)
+  ggp= data.frame(x=Xd[,1],y=yd,K=factor(x@cl,levels=1:K))
+  gg=data.frame(y=as.vector(cbind(seq(min(ggp$x),max(ggp$x),length.out = 20),rep(1,20))%*%sapply(x@obs_stats$regs,function(reg){reg$mu})),
+                x=rep(seq(min(ggp$x),max(ggp$x),length.out = 20),K),K=rep(1:K,each=20))
+  ggplot2::ggplot()+
+    ggplot2::geom_point(data=ggp[,1:2],ggplot2::aes(x=x,y=y),alpha=0.05)+
+    ggplot2::geom_path(data=gg,ggplot2::aes(x=x,y=y,group=K))+
+    ggplot2::geom_point(data=ggp,ggplot2::aes(x=x,y=y,col=K))+
+    ggplot2::ggtitle(paste0("Mixture of Regression Model with : ",max(x@cl)," clusters."))+
+    ggplot2::facet_wrap(~K)+
+    ggplot2::theme_bw()      
+}
+
 
 
 dendo = function(x){
