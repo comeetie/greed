@@ -102,10 +102,9 @@ arma::mat Mreg::delta_swap(int i){
   int oldcl = cl(i);
   
   // extract current row 
-  arma::mat xc = X.row(i);
+  arma::rowvec xc = X.row(i);
 
-  arma::colvec yc(1); 
-  yc = yc.ones()*y(i);
+  double yc = y(i);
   // initialize vecor of delta ICL
   arma::vec delta(K);
   delta.fill(0);
@@ -123,11 +122,11 @@ arma::mat Mreg::delta_swap(int i){
       
       List regk = new_regs[k];
       
-      new_regs[k]=lm_post_add(regk,xc,yc,reg,a0,b0);
+      new_regs[k]=lm_post_add1(regk,xc,yc,reg,a0,b0);
       
       List regold = new_regs[oldcl];
       
-      new_regs[oldcl]=lm_post_del(regold,xc,yc,reg,a0,b0);
+      new_regs[oldcl]=lm_post_del1(regold,xc,yc,reg,a0,b0);
       // update cluster counts
       
  
@@ -151,14 +150,13 @@ void Mreg::swap_update(int i,int newcl){
   // current row
   
 
-  arma::mat x = X.row(i);
-  arma::colvec yc(1); 
-  yc(0) = y(i);
+  arma::rowvec x = X.row(i);
+  double yc = y(i);
   // update regs
   List new_regs = clone(regs);
   // switch row x from cluster oldcl to k
-  new_regs[newcl]=lm_post_add(new_regs[newcl],x,yc,reg,a0,b0);
-  new_regs[oldcl]=lm_post_del(new_regs[oldcl],x,yc,reg,a0,b0);
+  new_regs[newcl]=lm_post_add1(new_regs[newcl],x,yc,reg,a0,b0);
+  new_regs[oldcl]=lm_post_del1(new_regs[oldcl],x,yc,reg,a0,b0);
   // update counts
   arma::mat new_counts = update_count(counts,oldcl,newcl);
   // update cl
