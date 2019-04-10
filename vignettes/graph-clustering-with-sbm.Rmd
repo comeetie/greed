@@ -49,6 +49,15 @@ Plot the results using a block representation.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='blocks')
 ```
+
+Improvement of hybrid algoritithm with respect to multiple start is clearly visible :
+
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+ggplot()+geom_boxplot(data=sol@train_hist,aes(x=generation,group=generation,y=icl))
+```
+
+
+
 Plot the results with a node link diagram.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='nodelink')

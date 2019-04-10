@@ -44,10 +44,10 @@ mat_reg_line = function(x,Xd,yd){
 Simulation of an SBM graph with a hierarchical structure.
 ```{r, fig.show='hold'}
 N=1500
-K=4
+K=6
 pi=rep(1/K,K)
 sig = 0.1
-mu = matrix(rnorm(K*2),2,K)
+mu = matrix(rnorm(K*K),K,K)
 mre = rmreg(N,pi,mu,sig)
 gg = data.frame(x=mre$X[,1],y=mre$y)
 ggplot(gg)+geom_point(aes(x=x,y=y,col=factor(mre$cl)))
@@ -56,12 +56,12 @@ ggplot(gg)+geom_point(aes(x=x,y=y,col=factor(mre$cl)))
 Perform the clustering with default model and algorithm. An sbm model is used for squared matrix and a genetic algorithm is selected by default. The second parameter is just an itnitial guess for the number of cluster.
 
 ```{r}
-sol = greed_cond(mre$X,mre$y,K=20,alg=new('hybrid',pop_size=10),model=new("mreg",reg=0.1))
+sol = greed_cond(mre$X,mre$y/sd(mre$y),K=30,alg=new("seed"))
 ```
 Plot the results using a block representation.
 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-mat_reg_line(sol,mre$X,mre$y)
+mat_reg_line(sol,mre$X[,1:2],mre$y)
 ```
 Plot the results with a node link diagram.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}

@@ -6,6 +6,19 @@
 
 using namespace Rcpp;
 
+// post_probs
+arma:: mat post_probs(S4 model, arma::sp_mat& xp, arma::vec& clt);
+RcppExport SEXP _greed_post_probs(SEXP modelSEXP, SEXP xpSEXP, SEXP cltSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
+    rcpp_result_gen = Rcpp::wrap(post_probs(model, xp, clt));
+    return rcpp_result_gen;
+END_RCPP
+}
 // init
 S4 init(S4 model, arma::sp_mat& xp, arma::vec& clt);
 RcppExport SEXP _greed_init(SEXP modelSEXP, SEXP xpSEXP, SEXP cltSEXP) {
@@ -220,6 +233,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_greed_post_probs", (DL_FUNC) &_greed_post_probs, 3},
     {"_greed_init", (DL_FUNC) &_greed_init, 3},
     {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 6},
     {"_greed_fit_greed_init", (DL_FUNC) &_greed_fit_greed_init, 6},
