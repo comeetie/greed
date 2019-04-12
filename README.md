@@ -2,7 +2,7 @@
 
 Greed enable model based clustering of networks, counts data matrix and much more with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood (which is equivalent to minimizing the description length). 
 
-Their are four models availables : 
+Four generative models are availables currently : 
 
 * sbm : Stochastick Block Models (directed), 
 * dcsbm : degree corected Block Models (directed), 
