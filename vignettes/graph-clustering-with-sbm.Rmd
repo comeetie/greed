@@ -39,7 +39,7 @@ mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,K
 sbm = rsbm(N,pi,mu)
 ```
 
-Perform the clustering with default model and algorithm. An sbm model is used for squared matrix and a genetic algorithm is selected by default. The second parameter is just an itnitial guess for the number of cluster.
+Perform the clustering with default model and algorithm. We specify to choose an sbm model since for squared sparse matrix the default is a dc-sbm model. An hybrid  algorithm is selected by default and the default value for the parameter K is 20.
 
 ```{r}
 sol = greed(sbm$x,model=new("sbm"))
@@ -50,12 +50,16 @@ Plot the results using a block representation.
 plot(sol,type='blocks')
 ```
 
-Improvement of hybrid algoritithm with respect to multiple start is clearly visible :
+Improvement of the hybrid algorithm with respect to multiple start is clearly visible :
 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 ggplot()+geom_boxplot(data=sol@train_hist,aes(x=generation,group=generation,y=icl))
 ```
 
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+ggplot()+geom_line(data=sol@train_hist %>% group_by(generation) %>% summarise(K=mean(K)),aes(x=generation,y=K))+
+  geom_point(data=sol@train_hist %>% group_by(generation,K) %>% summarise(n=n()),aes(x=generation,y=K,size=n))
+```
 
 
 Plot the results with a node link diagram.

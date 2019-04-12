@@ -47,7 +47,8 @@ N=1500
 K=6
 pi=rep(1/K,K)
 sig = 0.1
-mu = matrix(rnorm(K*K),K,K)
+mu = matrix(rnorm(K*K),K,K)*0.3
+diag(mu)=1
 mre = rmreg(N,pi,mu,sig)
 gg = data.frame(x=mre$X[,1],y=mre$y)
 ggplot(gg)+geom_point(aes(x=x,y=y,col=factor(mre$cl)))
@@ -56,13 +57,9 @@ ggplot(gg)+geom_point(aes(x=x,y=y,col=factor(mre$cl)))
 Perform the clustering with default model and algorithm. An sbm model is used for squared matrix and a genetic algorithm is selected by default. The second parameter is just an itnitial guess for the number of cluster.
 
 ```{r}
-sol = greed_cond(mre$X,mre$y/sd(mre$y),K=30,alg=new("seed"))
+sol = greed_cond(mre$X,mre$y/sd(mre$y))
 ```
-Plot the results using a block representation.
 
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-mat_reg_line(sol,mre$X[,1:2],mre$y)
-```
 Plot the results with a node link diagram.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 ggplot(sol@train_hist)+geom_boxplot(aes(x=generation,group=generation,y=icl))
@@ -72,7 +69,6 @@ Or a dendogram for sleecting a smaller value for K.
 library(dplyr)
 sol@train_hist %>% group_by(generation) %>% top_n(1,icl)
 ```
-Eventually study the evolution of $-log(\alpha)$ with respect to $K$.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-plot(sol,type='tree')
+table(sol@cl,mre$cl)
 ```
