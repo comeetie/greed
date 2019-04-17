@@ -97,7 +97,7 @@ setMethod(f = "fit",
               fit_greed(model,x,K,verbose = verbose)
             }
             fi = function(ncl){
-              fit_greed_init(model,x,ncl,verbose = verbose)
+              fit_greed_init(model,x,ncl,type='merge',verbose = verbose)
             }
             fp = function(sol){
               fit_greed_path(x,sol)
@@ -184,7 +184,7 @@ setMethod(f = "fit_cond",
               fit_greed_cond(model,x,y,K,verbose = verbose)
             }
             fi = function(ncl){
-              fit_greed_init_cond(model,x,y,ncl,verbose = verbose)
+              fit_greed_init_cond(model,x,y,ncl,type='merge',verbose = verbose)
             }
             fp = function(sol){
               fit_greed_path_cond(x,y,sol)

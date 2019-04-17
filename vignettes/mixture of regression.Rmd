@@ -57,7 +57,11 @@ ggplot(gg)+geom_point(aes(x=x,y=y,col=factor(mre$cl)))
 Perform the clustering with default model and algorithm. An sbm model is used for squared matrix and a genetic algorithm is selected by default. The second parameter is just an itnitial guess for the number of cluster.
 
 ```{r}
-sol = greed_cond(mre$X,mre$y/sd(mre$y))
+sol = greed_cond(mre$X,mre$y/sd(mre$y),alg=new("seed"),verbose = TRUE)
+```
+
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+plot(sol,type='tree')
 ```
 
 Plot the results with a node link diagram.

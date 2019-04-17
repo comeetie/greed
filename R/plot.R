@@ -58,6 +58,9 @@ setMethod(f = "plot",
             path ={
               lapath(x)
             },
+            front = {
+              plot_front(x)
+            },
             blocks ={
               callNextMethod()
             },
@@ -79,6 +82,9 @@ setMethod(f = "plot",
             path ={
               lapath(x)
             },
+            front = {
+              plot_front(x)
+            },
             blocks ={
               callNextMethod()
             },
@@ -99,6 +105,9 @@ setMethod(f = "plot",
             path ={
               lapath(x)
             },
+            front = {
+              plot_front(x)
+            },
             blocks ={
               callNextMethod()
             },
@@ -118,6 +127,9 @@ setMethod(f = "plot",
             },
             path ={
               lapath(x)
+            },
+            front = {
+              plot_front(x)
             },
             blocks ={
               callNextMethod()
@@ -336,6 +348,26 @@ spy = function(x){
     ggplot2::scale_y_continuous("",c())+
     ggplot2::scale_size_area(max_size=1,guide='none')
 }
+
+
+plot_front = function(sol){
+  icl = c(sol@icl,sapply(sol@path,function(v){v$icl1}))
+  ggicl = data.frame(icl = icl[length(icl):1], K  = 1:length(icl))
+  #ggfront= sol@ggtree %>% mutate(x=-H) %>% select(x,K) %>% arrange(x) %>% head(sol@K) %>% left_join(ggicl) %>% mutate(xp=lag(x)) 
+  ggfront = merge(sol@ggtree[,c("H","K")],ggicl)
+  ggfront$x = -ggfront$H
+  ggfront = ggfront[order(ggfront$x)[1:sol@K],]
+  ggfront$xp = c(min(ggfront$x)-0.05*diff(range(ggfront$x)), ggfront$x[1:(nrow(ggfront)-1)])
+  ggfront = ggfront[ggfront$x!=ggfront$xp,]
+  ggplot2::ggplot()+ggplot2::geom_abline(data=ggicl,ggplot2::aes(intercept=icl,slope=K-1),alpha=0.2)+
+    ggplot2::geom_point(data=ggfront,ggplot2::aes(x=x,y=icl+x*(K-1)))+
+    ggplot2::geom_segment(data=ggfront,ggplot2::aes(x=x,y=icl+x*(K-1),xend=xp,yend=icl+xp*(K-1)))+
+    ggplot2::scale_x_continuous(expression(paste("log(",alpha,")")),limits = c(min(ggfront$xp),0))+
+    ggplot2::ylab("ICL")+
+    ggplot2::ggtitle(paste0(toupper(sol@model@name)," model with : ",max(sol@cl)," clusters."))
+}
+
+
 
 #' @rdname print
 #' @param x \code{\link{icl_path-class}} object to print
