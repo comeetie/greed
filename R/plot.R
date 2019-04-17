@@ -364,7 +364,8 @@ plot_front = function(sol){
     ggplot2::geom_segment(data=ggfront,ggplot2::aes(x=x,y=icl+x*(K-1),xend=xp,yend=icl+xp*(K-1)))+
     ggplot2::scale_x_continuous(expression(paste("log(",alpha,")")),limits = c(min(ggfront$xp),0))+
     ggplot2::ylab("ICL")+
-    ggplot2::ggtitle(paste0(toupper(sol@model@name)," model with : ",max(sol@cl)," clusters."))
+    ggplot2::ggtitle(paste0(toupper(sol@model@name)," model with : ",max(sol@cl)," clusters."))+
+    ggplot2::theme_bw()
 }
 
 

@@ -57,22 +57,33 @@ ggplot(gg)+geom_point(aes(x=x,y=y,col=factor(mre$cl)))
 Perform the clustering with default model and algorithm. An sbm model is used for squared matrix and a genetic algorithm is selected by default. The second parameter is just an itnitial guess for the number of cluster.
 
 ```{r}
-sol = greed_cond(mre$X,mre$y/sd(mre$y),alg=new("seed"),verbose = TRUE)
+sol = greed_cond(mre$X,mre$y/sd(mre$y),model=new("mreg",reg=0.1))
 ```
 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='tree')
 ```
 
-Plot the results with a node link diagram.
+Plot the results with a front diagram
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-ggplot(sol@train_hist)+geom_boxplot(aes(x=generation,group=generation,y=icl))
+plot(sol,type='front')
 ```
-Or a dendogram for sleecting a smaller value for K.
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-library(dplyr)
-sol@train_hist %>% group_by(generation) %>% top_n(1,icl)
-```
+
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 table(sol@cl,mre$cl)
+```
+
+```{r, fig.show='hold'}
+N=1500
+K=4
+pi=rep(1/K,K)
+sig = 0.1
+mu = matrix(rnorm(K*2),2,K)
+mre = rmreg(N,pi,mu,sig)
+gg = data.frame(x=mre$X[,1],y=mre$y)
+ggplot(gg)+geom_point(aes(x=x,y=y,col=factor(mre$cl)))
+```
+```{r, fig.show='hold'}
+sol = greed_cond(mre$X,mre$y/sd(mre$y),model=new("mreg",reg=0.1))
+mat_reg_line(sol,mre$X,mre$y)
 ```

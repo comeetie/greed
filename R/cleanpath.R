@@ -156,12 +156,19 @@ extract_front_height=function(sol){
       while(din > cdi & length(Front)>1){
         Front=Front[-length(Front)]
         H[bestline]=-1
-        
         bestline = Front[length(Front)]
+        
         
         di = (icl[l]-icl[bestline])
         din = di/(l-bestline)
-        cdi = H[bestline]
+        if(length(Front)>1){
+          cdi = (icl[bestline]-icl[Front[length(Front)-1]])/(bestline-Front[length(Front)-1])
+        }else{
+          cdi = H[1] 
+        }
+        
+        #print(Front)
+        #print(paste0("T : ",din," / ",cdi," :",bestline))
         
       }
       H[Front[length(Front)]]=din
@@ -172,6 +179,8 @@ extract_front_height=function(sol){
     }else{
       H[l]= -1
     }
+    #print(Front)
+    print(H)
   }
   
   for(l in 2:length(icl)){

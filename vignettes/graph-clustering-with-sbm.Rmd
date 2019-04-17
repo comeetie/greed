@@ -119,7 +119,7 @@ plot(solblogs,type='blocks')
 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 data("Lpolblogs")
-plot(solblogs,type='tree')
+plot(solblogs,type='front')
 table(Lpolblogs,cut(solblogs,2)@cl)
 ```
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
