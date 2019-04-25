@@ -59,5 +59,8 @@ plot(cut(sol,Kf),type='nodelink')
 deps=DEP2017_sf %>% left_join(sol.df,by=c("DEP"="code_insee")) 
 typoLayer(x = deps, var = "cl")
 
+is = sample(33000,200)
+Xs = Xmigr.com[is,is]
+na=colnames(Xs)
 
 

@@ -6,6 +6,38 @@
 using namespace Rcpp;
 
 
+//' post_probs
+//' @param model icl_model
+//' @param xp sparseMatrix
+//' @param clt cluster labels {0,...,K-1}
+//' @export
+// [[Rcpp::export]]
+arma:: mat post_probs(S4 model,arma::sp_mat& xp,  arma::vec& clt) {
+  
+  IclModel * M;
+  int Ki = arma::max(clt);
+  int N = clt.n_elem;
+  clt = clt-arma::ones(N);
+  try{
+    if(strcmp(model.slot("name"),"sbm")!=0 && strcmp(model.slot("name"),"dcsbm")!=0 && strcmp(model.slot("name"),"mm")!=0){
+      stop("Unsuported model");
+    }
+    if(strcmp(model.slot("name"),"sbm")==0){
+      M = new Sbm(xp,Ki,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt,false);
+    }
+    if(strcmp(model.slot("name"),"dcsbm")==0){
+      M = new DcSbm(xp,Ki,model.slot("alpha"),clt,false);
+    }
+    if(strcmp(model.slot("name"),"mm")==0){
+      M = new Mm(xp,Ki,model.slot("alpha"),model.slot("beta"),clt,false);
+    }
+  
+    return(M->get_probs());
+  }catch(std::exception &ex) {	
+    forward_exception_to_r(ex);
+  }
+}
+
 //' init
 //' @param model icl_model
 //' @param xp sparseMatrix

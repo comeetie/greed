@@ -35,7 +35,7 @@ data("Xpol")
 clustering 
 
 ```{r}
-sol = fit(Xpol,25,new("dcsbm"),new("hybrid",pop_size=50))
+sol = greed(Xpol,25,model=new("dcsbm"),alg=new("hybrid",pop_size=50))
 ```
 
 
@@ -50,7 +50,8 @@ plot(sol,type='tree')
 ```
 Or a dendogram for sleecting a smaller value for K.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-rl=data.frame(size=colnames(Xpol),cl=sol@cl,dout=rowSums(Xpol),din=colSums(Xpol))
+probs = post_probs(new("dcsbm"),Xpol,sol@cl)
+rl=data.frame(size=colnames(Xpol),cl=sol@cl,dout=rowSums(Xpol),din=colSums(Xpol),p=apply(probs,1,max))
 rl %>% group_by(cl) %>% top_n(3,din) %>% arrange(cl)
 ```
 Eventually study the evolution of $-log(\alpha)$ with respect to $K$.

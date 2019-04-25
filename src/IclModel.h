@@ -35,8 +35,10 @@ public:
   virtual void merge_update(const int k,const int l){};
   // main method for greedy swaping
   void greedy_merge();
-  // ain method for greedy merge
+  // main method for greedy merge
   List greedy_merge_path();
+  // get posterior probs p(Zi|X,Z-i)
+  arma::mat get_probs();
   // accessors
   virtual List get_obs_stats(){};
   arma::vec get_cl(){return cl;};

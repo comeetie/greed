@@ -101,6 +101,24 @@ void IclModel::greedy_swap(int nbpassmax){
   }
 }
 
+
+// get p(z_i|X,z-i)
+arma::mat IclModel::get_probs(){
+
+  // perform a pass
+   arma::mat probs(N,K);
+   
+  for (int i=0;i<N ;++i){
+    // compute delta swap
+    arma::vec delta = this->delta_swap(i);
+    // transform to probabilities
+    arma::rowvec pr =  (exp(delta)/arma::accu(exp(delta))).t();
+    probs.row(i) = pr;
+  } 
+  return probs;
+}
+
+
 // main function for greedy merging
 void IclModel::greedy_merge(){
   

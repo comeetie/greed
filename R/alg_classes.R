@@ -97,7 +97,7 @@ setMethod(f = "fit",
               fit_greed(model,x,K,verbose = verbose)
             }
             fi = function(ncl){
-              fit_greed_init(model,x,ncl,verbose = verbose)
+              fit_greed_init(model,x,ncl,type='merge',verbose = verbose)
             }
             fp = function(sol){
               fit_greed_path(x,sol)
@@ -155,6 +155,8 @@ setMethod(f = "fit",
 
 
 
+
+
 #' @describeIn fit 
 #' @title Fit a clustering model
 #' 
@@ -182,7 +184,7 @@ setMethod(f = "fit_cond",
               fit_greed_cond(model,x,y,K,verbose = verbose)
             }
             fi = function(ncl){
-              fit_greed_init_cond(model,x,y,ncl,verbose = verbose)
+              fit_greed_init_cond(model,x,y,ncl,type='merge',verbose = verbose)
             }
             fp = function(sol){
               fit_greed_path_cond(x,y,sol)
@@ -218,6 +220,20 @@ setMethod(f = "fit_cond",
             multistart(greed_f,path_f,alg,verbose)
           })
 
+#' @describeIn fit_cond 
+#' @export
+setMethod(f = "fit_cond", 
+          signature = signature("icl_model","seed"), 
+          definition = function(model,alg,x,y, K=20,verbose=FALSE){
+            if(class(model)=="mreg"){
+              Xc=cbind(x[,-ncol(x)],y)
+              Xcn = t(t(Xc)/sd(Xc))
+              cl = kmeans(Xcn,K)$cl  
+            }
+            res = fit_greed_init_cond(model,x,y,cl,"both",verbose=verbose)
+            path = fit_greed_path_cond(x,y,res)
+            p=cleanpath(path)   
+          })
 
 #' 
 #' #' @describeIn fit 

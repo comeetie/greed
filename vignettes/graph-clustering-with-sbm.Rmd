@@ -24,6 +24,7 @@ library(future)
 library(Matrix)
 library(ggplot2)
 library(greed)
+library(dplyr)
 plan(multisession)
 ```
 
@@ -39,7 +40,7 @@ mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,K
 sbm = rsbm(N,pi,mu)
 ```
 
-Perform the clustering with default model and algorithm. An sbm model is used for squared matrix and a genetic algorithm is selected by default. The second parameter is just an itnitial guess for the number of cluster.
+Perform the clustering with default model and algorithm. We specify to choose an sbm model since for squared sparse matrix the default is a dc-sbm model. An hybrid  algorithm is selected by default and the default value for the parameter K is 20.
 
 ```{r}
 sol = greed(sbm$x,model=new("sbm"))
@@ -49,17 +50,35 @@ Plot the results using a block representation.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='blocks')
 ```
+
+Improvement of the hybrid algorithm with respect to multiple start is clearly visible :
+
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+ggplot()+geom_boxplot(data=sol@train_hist,aes(x=generation,group=generation,y=icl))
+```
+
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+ggplot()+geom_line(data=sol@train_hist %>% group_by(generation) %>% summarise(K=mean(K)),aes(x=generation,y=K))+
+  geom_point(data=sol@train_hist %>% group_by(generation,K) %>% summarise(n=n()),aes(x=generation,y=K,size=n))
+```
+
+
 Plot the results with a node link diagram.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='nodelink')
 ```
-Or a dendogram for sleecting a smaller value for K.
+Or a dendogram for selecting a smaller value for K.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='tree')
 ```
 Eventually study the evolution of $-log(\alpha)$ with respect to $K$.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='path')
+```
+
+Or of ICL with respect to $log(\alpha)$
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+plot(sol,type='front')
 ```
 
 And select a smaller value to extract a new solution.
@@ -74,8 +93,7 @@ soldc = greed(sbm$x,25,new("dcsbm"))
 plot(soldc,type='blocks')
 ```
 
-Eventualy you may change the algorithm "hybrid" (default), "multistart" greedy with random multiple start and "seed"" greed initialized with spectral clustering. See the doc for details on the algorithm parameters. 
-
+Eventualy you may change the algorithm "hybrid" (default), "multistart" for greedy with random multiple start and "seed"" for greedy initialized with spectral clustering. See the doc for details on the algorithm parameters. 
 
 One example with the polbooks dataset:
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
@@ -87,7 +105,7 @@ plot(solpol,type='blocks')
 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 data("Lpolbooks")
-plot(solpol,type='path')
+plot(solpol,type='tree')
 table(Lpolbooks,cut(solpol,3)@cl)
 ```
 
@@ -101,6 +119,11 @@ plot(solblogs,type='blocks')
 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 data("Lpolblogs")
-plot(solblogs,type='tree')
+plot(solblogs,type='front')
 table(Lpolblogs,cut(solblogs,2)@cl)
+```
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+data("Xfoot")
+solfoot=greed(Xfoot)
+plot(solfoot,type='blocks')
 ```
