@@ -4,7 +4,7 @@
 \name{algs-classes}
 \alias{algs-classes}
 \alias{alg-class}
-\alias{greed-class}
+\alias{multistarts-class}
 \alias{seed-class}
 \alias{hybrid-class}
 \alias{genetic-class}

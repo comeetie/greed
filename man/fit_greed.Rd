@@ -2,22 +2,22 @@
 % Please edit documentation in R/RcppExports.R
 \name{fit_greed}
 \alias{fit_greed}
-\title{fit_greed}
+\title{fit_greed_init}
 \usage{
-fit_greed(model, xp, Ki, type = "both", nb_max_pass = 50L,
+fit_greed(model, data, clt, type = "both", nb_max_pass = 50L,
   verbose = FALSE)
 }
 \arguments{
 \item{model}{icl_model}
 
-\item{xp}{sparseMatrix}
+\item{clt}{cluster labels {0,...,K-1}}
 
-\item{Ki}{initia guess for K}
-
-\item{type}{: merge, swap or both (default)}
+\item{type}{: merge, swap, none, or both (default)}
 
 \item{nb_max_pass}{: maximum number of pass for greedy swap}
+
+\item{xp}{sparseMatrix}
 }
 \description{
-fit_greed
+fit_greed_init
 }

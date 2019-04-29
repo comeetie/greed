@@ -5,39 +5,33 @@
 \alias{fit}
 \alias{fit,icl_model,hybrid-method}
 \alias{fit,icl_model,genetic-method}
-\alias{fit,icl_model,greed-method}
+\alias{fit,icl_model,multistarts-method}
 \alias{fit,icl_model,seed-method}
 \title{Fit a clustering model}
 \usage{
 fit(model, alg, ...)
 
-\S4method{fit}{icl_model,hybrid}(model, alg, x, K, verbose = FALSE)
+\S4method{fit}{icl_model,hybrid}(model, alg, data, K, verbose = FALSE)
 
-\S4method{fit}{icl_model,genetic}(model, alg, x, k, verbose = FALSE)
+\S4method{fit}{icl_model,genetic}(model, alg, data, k, verbose = FALSE)
 
-\S4method{fit}{icl_model,greed}(model, alg, x, K = 20, verbose = FALSE)
+\S4method{fit}{icl_model,multistarts}(model, alg, data, K = 20,
+  verbose = FALSE)
 
-\S4method{fit}{icl_model,seed}(model, alg, x, K = 20, verbose = FALSE)
+\S4method{fit}{icl_model,seed}(model, alg, data, K = 20,
+  verbose = FALSE)
 }
 \arguments{
 \item{model}{An \code{\link{IclModel-class}} such as \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, ...}
 
 \item{alg}{An optimization algorithm such as \code{\link{greed-class}}, \code{\link{genetic-class}} or \code{\link{km-class}}}
 
-\item{x}{A sparse Matrix as a \code{dgCMatrix}}
-
 \item{K}{An initial guess of the maximal number of cluster}
+
+\item{x}{A sparse Matrix as a \code{dgCMatrix}}
 }
 \description{
 Fit a clustering model
-
-#' @describeIn fit 
-#' @export
-setMethod(f = "fit", 
-          signature = signature("icl_model","missing"), 
-          definition = function(model,x, K=20,verbose=FALSE){
-            fit(model,new("hybrid"),x,K,verbose)
-          })
 }
 \section{Methods (by class)}{
 \itemize{
@@ -45,7 +39,7 @@ setMethod(f = "fit",
 
 \item \code{model = icl_model,alg = genetic}: 
 
-\item \code{model = icl_model,alg = greed}: 
+\item \code{model = icl_model,alg = multistarts}: 
 
 \item \code{model = icl_model,alg = seed}: 
 }}

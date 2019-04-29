@@ -8,17 +8,17 @@ NULL
 #' @import Matrix
 NULL
 
-multistart = function(greed_f,path_f,alg,verbose=FALSE){
+multistart = function(model,alg,data,K,verbose=FALSE){
   
   solutions = listenv::listenv()
   for (i in 1:alg@nb_start){
-    solutions[[i]] %<-% greed_f()
+    solutions[[i]] %<-% fit_greed(model,data,sample(1:K,data$N,replace = TRUE))
   }
   solutions = as.list(solutions)
   icls = sapply(solutions,function(s){s@icl})
   
   res = solutions[[order(icls,decreasing = TRUE)[1]]]
-  path = path_f(res)
+  path = fit_greed_path(data,res)
   cleanpath(path)
   path@train_hist = data.frame(icl=icls,K= sapply(solutions,function(s){max(s@cl)}))
   

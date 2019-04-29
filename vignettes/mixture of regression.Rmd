@@ -41,7 +41,7 @@ mat_reg_line = function(x,Xd,yd){
 }
 ```
 
-Simulation of an SBM graph with a hierarchical structure.
+Simulation 
 ```{r, fig.show='hold'}
 N=1500
 K=6

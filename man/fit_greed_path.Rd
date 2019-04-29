@@ -4,7 +4,7 @@
 \alias{fit_greed_path}
 \title{fit_greed}
 \usage{
-fit_greed_path(xp, init)
+fit_greed_path(data, init_fit)
 }
 \arguments{
 \item{xp}{sparseMatrix}

@@ -4,14 +4,14 @@
 \alias{post_probs}
 \title{post_probs}
 \usage{
-post_probs(model, xp, clt)
+post_probs(model, data, clt)
 }
 \arguments{
 \item{model}{icl_model}
 
-\item{xp}{sparseMatrix}
-
 \item{clt}{cluster labels {0,...,K-1}}
+
+\item{xp}{sparseMatrix}
 }
 \description{
 post_probs

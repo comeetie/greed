@@ -8,9 +8,9 @@ NULL
 #' @import Matrix
 NULL
 
-hybrid = function(f,fi,fp, alg,verbose=FALSE){
+hybrid = function(model,alg,data,K, verbose=FALSE){
             
-            
+            fi = function(ncl){ fit_greed(model,data,ncl,type="merge") }
             train.hist = data.frame(generation=c(),icl=c(),K=c())
 
             # multi-start in //
@@ -20,7 +20,7 @@ hybrid = function(f,fi,fp, alg,verbose=FALSE){
             # first generation of solutions
             pop_size = alg@pop_size
             for (i in 1:pop_size){
-              solutions[[i]] %<-% f()
+              solutions[[i]] %<-% fit_greed(model,data,sample(1:K,data$N,replace = TRUE),verbose = verbose)
             }
             solutions = as.list(solutions)
             icls  = sapply(solutions,function(s){s@icl})
@@ -59,7 +59,7 @@ hybrid = function(f,fi,fp, alg,verbose=FALSE){
             # best solution
             res = solutions[[order(icls,decreasing = TRUE)[1]]]
             # compute merge path
-            path = fp(res)
+            path = fit_greed_path(data,res)
             # clean the resuts (compute, merge tree,...)
             path = cleanpath(path)
             # store train history

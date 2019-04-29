@@ -8,8 +8,10 @@ NULL
 #' @import Matrix
 NULL
 
-genetic = function(x,init_f,greed_f,path_f,alg,verbose=FALSE){
+genetic = function(model,alg,data,K,verbose=FALSE){
   
+  
+  init_f =  function(C){fit_greed(model,data,C,"none")}
   train.hist = data.frame(generation=c(),icl=c(),K=c())
   
   # multi-start in //
@@ -20,8 +22,8 @@ genetic = function(x,init_f,greed_f,path_f,alg,verbose=FALSE){
   pop_size = alg@pop_size
   for (i in 1:pop_size){
     Kc = sample(2:K,1)
-    cl = sample(Kc,nrow(x),replace = TRUE)
-    solutions[[i]] %<-% init_f(cl)
+    cl = sample(Kc,data$N,replace = TRUE)
+    solutions[[i]] %<-% fit_greed(model,data,cl,type="none")
   }
   solutions = as.list(solutions)
   icls  = sapply(solutions,function(s){s@icl})
@@ -53,7 +55,7 @@ genetic = function(x,init_f,greed_f,path_f,alg,verbose=FALSE){
     children = as.list(children)
     for (i in 1:(alg@pop_size-1)){
       if(runif(1)<alg@prob_mut){
-        new_solutions[[i]] %<-% greed_f(children[[i]]@cl,"swap",1)
+        new_solutions[[i]] %<-% fit_greed(model,data,children[[i]]@cl,"swap",1)
       }else{
         new_solutions[[i]] = children[[i]]
       }
@@ -70,8 +72,8 @@ genetic = function(x,init_f,greed_f,path_f,alg,verbose=FALSE){
   res = solutions[[order(icls,decreasing = TRUE)[1]]]
   # compute merge path
   
-  res = greed_f(res@cl,"both")
-  path = path_f(res)
+  res = fit_greed(model,data,res@cl,"both")
+  path = fit_greed_path(data,res)
   # clean the resuts (compute, merge tree,...)
   
   path = cleanpath(path)

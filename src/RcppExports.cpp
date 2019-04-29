@@ -7,133 +7,43 @@
 using namespace Rcpp;
 
 // post_probs
-arma:: mat post_probs(S4 model, arma::sp_mat& xp, arma::vec& clt);
-RcppExport SEXP _greed_post_probs(SEXP modelSEXP, SEXP xpSEXP, SEXP cltSEXP) {
+arma::mat post_probs(S4 model, List data, arma::vec& clt);
+RcppExport SEXP _greed_post_probs(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
-    rcpp_result_gen = Rcpp::wrap(post_probs(model, xp, clt));
-    return rcpp_result_gen;
-END_RCPP
-}
-// init
-S4 init(S4 model, arma::sp_mat& xp, arma::vec& clt);
-RcppExport SEXP _greed_init(SEXP modelSEXP, SEXP xpSEXP, SEXP cltSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type xp(xpSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
-    rcpp_result_gen = Rcpp::wrap(init(model, xp, clt));
+    rcpp_result_gen = Rcpp::wrap(post_probs(model, data, clt));
     return rcpp_result_gen;
 END_RCPP
 }
 // fit_greed
-S4 fit_greed(S4 model, arma::sp_mat& xp, int Ki, std::string type, int nb_max_pass, bool verbose);
-RcppExport SEXP _greed_fit_greed(SEXP modelSEXP, SEXP xpSEXP, SEXP KiSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
+S4 fit_greed(S4 model, List data, arma::vec& clt, std::string type, int nb_max_pass, bool verbose);
+RcppExport SEXP _greed_fit_greed(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type xp(xpSEXP);
-    Rcpp::traits::input_parameter< int >::type Ki(KiSEXP);
-    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
-    Rcpp::traits::input_parameter< int >::type nb_max_pass(nb_max_passSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(fit_greed(model, xp, Ki, type, nb_max_pass, verbose));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fit_greed_init
-S4 fit_greed_init(S4 model, arma::sp_mat& xp, arma::vec& clt, std::string type, int nb_max_pass, bool verbose);
-RcppExport SEXP _greed_fit_greed_init(SEXP modelSEXP, SEXP xpSEXP, SEXP cltSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
     Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
     Rcpp::traits::input_parameter< int >::type nb_max_pass(nb_max_passSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(fit_greed_init(model, xp, clt, type, nb_max_pass, verbose));
+    rcpp_result_gen = Rcpp::wrap(fit_greed(model, data, clt, type, nb_max_pass, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // fit_greed_path
-S4 fit_greed_path(arma::sp_mat& xp, S4 init);
-RcppExport SEXP _greed_fit_greed_path(SEXP xpSEXP, SEXP initSEXP) {
+S4 fit_greed_path(List data, S4 init_fit);
+RcppExport SEXP _greed_fit_greed_path(SEXP dataSEXP, SEXP init_fitSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type xp(xpSEXP);
-    Rcpp::traits::input_parameter< S4 >::type init(initSEXP);
-    rcpp_result_gen = Rcpp::wrap(fit_greed_path(xp, init));
-    return rcpp_result_gen;
-END_RCPP
-}
-// init_cond
-S4 init_cond(S4 model, arma::mat& X, arma::colvec& y, arma::vec& clt);
-RcppExport SEXP _greed_init_cond(SEXP modelSEXP, SEXP XSEXP, SEXP ySEXP, SEXP cltSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
-    rcpp_result_gen = Rcpp::wrap(init_cond(model, X, y, clt));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fit_greed_cond
-S4 fit_greed_cond(S4 model, arma::mat& X, arma::colvec& y, int Ki, std::string type, int nb_max_pass, bool verbose);
-RcppExport SEXP _greed_fit_greed_cond(SEXP modelSEXP, SEXP XSEXP, SEXP ySEXP, SEXP KiSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type Ki(KiSEXP);
-    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
-    Rcpp::traits::input_parameter< int >::type nb_max_pass(nb_max_passSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(fit_greed_cond(model, X, y, Ki, type, nb_max_pass, verbose));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fit_greed_init_cond
-S4 fit_greed_init_cond(S4 model, arma::mat& X, arma::colvec& y, arma::vec& clt, std::string type, int nb_max_pass, bool verbose);
-RcppExport SEXP _greed_fit_greed_init_cond(SEXP modelSEXP, SEXP XSEXP, SEXP ySEXP, SEXP cltSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
-    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
-    Rcpp::traits::input_parameter< int >::type nb_max_pass(nb_max_passSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(fit_greed_init_cond(model, X, y, clt, type, nb_max_pass, verbose));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fit_greed_path_cond
-S4 fit_greed_path_cond(arma::mat& X, arma::colvec& y, S4 init);
-RcppExport SEXP _greed_fit_greed_path_cond(SEXP XSEXP, SEXP ySEXP, SEXP initSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< arma::colvec& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< S4 >::type init(initSEXP);
-    rcpp_result_gen = Rcpp::wrap(fit_greed_path_cond(X, y, init));
+    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< S4 >::type init_fit(init_fitSEXP);
+    rcpp_result_gen = Rcpp::wrap(fit_greed_path(data, init_fit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -234,14 +144,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_greed_post_probs", (DL_FUNC) &_greed_post_probs, 3},
-    {"_greed_init", (DL_FUNC) &_greed_init, 3},
     {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 6},
-    {"_greed_fit_greed_init", (DL_FUNC) &_greed_fit_greed_init, 6},
     {"_greed_fit_greed_path", (DL_FUNC) &_greed_fit_greed_path, 2},
-    {"_greed_init_cond", (DL_FUNC) &_greed_init_cond, 4},
-    {"_greed_fit_greed_cond", (DL_FUNC) &_greed_fit_greed_cond, 7},
-    {"_greed_fit_greed_init_cond", (DL_FUNC) &_greed_fit_greed_init_cond, 7},
-    {"_greed_fit_greed_path_cond", (DL_FUNC) &_greed_fit_greed_path_cond, 3},
     {"_greed_lm_post", (DL_FUNC) &_greed_lm_post, 5},
     {"_greed_lm_post_add1", (DL_FUNC) &_greed_lm_post_add1, 6},
     {"_greed_lm_post_del1", (DL_FUNC) &_greed_lm_post_del1, 6},
