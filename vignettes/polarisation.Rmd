@@ -50,7 +50,7 @@ plot(sol,type='tree')
 ```
 Or a dendogram for sleecting a smaller value for K.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-probs = post_probs(new("dcsbm"),Xpol,sol@cl)
+probs = post_probs(new("dcsbm"),list(X=Xpol),sol@cl)
 rl=data.frame(size=colnames(Xpol),cl=sol@cl,dout=rowSums(Xpol),din=colSums(Xpol),p=apply(probs,1,max))
 rl %>% group_by(cl) %>% top_n(3,din) %>% arrange(cl)
 ```

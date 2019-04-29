@@ -1,4 +1,4 @@
-# GREED : Bayesian greedy clustering <img src="greed.png" width=200 align="right" />
+# GREED : Bayesian greedy clustering <img src="./inst/exdata/greed.png" width=200 align="right" />
 
 Greed enable model based clustering of networks, counts data matrix and much more with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood (which is equivalent to minimizing the description length). 
 

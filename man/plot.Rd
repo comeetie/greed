@@ -30,27 +30,12 @@
 \S4method{plot}{sbm_path,missing}(x, type = "blocks")
 }
 \arguments{
-\item{x}{\code{\link{dcsbm_fit-class}} object to be ploted}
+\item{x}{\code{\link{icl_fit-class}} object to be ploted}
 
-\item{type}{'blocks' for a block matrix view, 'nodelink' for a node link graph, 'tree' for a dendogram, 'path' to show the evolution of -log(alpha) 
-with respect to the number of clusters.}
-
-\item{x}{\code{\link{dcsbm_path-class}} object to be ploted}
-
-\item{x}{\code{\link{mm_fit-class}} object to be ploted}
-
-\item{x}{\code{\link{mm_path-class}} object to be plot}
-
-\item{x}{\code{\link{mreg_fit-class}} object to be ploted}
-
-\item{x}{\code{\link{mm_path-class}} object to be plot}
-
-\item{x}{\code{\link{sbm_fit-class}} object to be ploted}
-
-\item{x}{\code{\link{sbm_path-class}} object to ploted}
+\item{type}{type of desired graphics : tree,pathy, blocks, nodelink, front}
 }
 \value{
-A ggplot2 graphics which summarize the results.
+a ggplot2 object to visualize the results
 }
 \description{
 Main methods to explore clusterings results visualy.

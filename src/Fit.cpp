@@ -58,8 +58,8 @@ S4 init_sol(S4 model,String type="fit") {
 
 //' post_probs
 //' @param model icl_model
-//' @param xp sparseMatrix
-//' @param clt cluster labels {0,...,K-1}
+//' @param data list with clustering data (fileds depend on model type)
+//' @param clt cluster labels in 1,..,K
 //' @export
 // [[Rcpp::export]]
 arma::mat post_probs(S4 model,List data,  arma::vec& clt) {
@@ -69,10 +69,12 @@ arma::mat post_probs(S4 model,List data,  arma::vec& clt) {
 
 //' fit_greed_init
 //' @param model icl_model
-//' @param xp sparseMatrix
+//' @param data list with clustering data (fileds depend on model type)
 //' @param clt cluster labels {0,...,K-1}
-//' @param type : merge, swap, none, or both (default)  
-//' @param nb_max_pass : maximum number of pass for greedy swap 
+//' @param type merge, swap, none, or both (default)  
+//' @param nb_max_pass maximum number of pass for greedy swap
+//' @param verbose boolean for verbose mode default to false
+//' @return a model_fit object  
 //' @export
 // [[Rcpp::export]]
 S4 fit_greed(S4 model,List data,  arma::vec& clt, std::string type="both", int nb_max_pass = 50,bool verbose=false) {
@@ -99,9 +101,10 @@ S4 fit_greed(S4 model,List data,  arma::vec& clt, std::string type="both", int n
 
 
 
-//' fit_greed 
-//' @param xp sparseMatrix
-//' @param init initial fit
+//' fit_greed_path
+//' @param data list with clustering data depnds on model type
+//' @param init_fit initial fit object
+//' @return a model_path object
 //' @export
 // [[Rcpp::export]]
 S4 fit_greed_path(List data, S4 init_fit) {

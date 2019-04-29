@@ -6,13 +6,22 @@
 \alias{greed-package}
 \title{greed}
 \usage{
-greed(X, K = 20, model = find_model(X), alg = new("hybrid"),
+greed(X, K = 20, model = find_model(X), alg = methods::new("hybrid"),
   verbose = FALSE)
 }
 \arguments{
+\item{X}{data to cluster sparseMatrix or matrix}
+
 \item{K}{Desired number of cluster}
 
-\item{x}{An adjacency matrix in sparse format}
+\item{model}{a dcsbm, sbm or mm model}
+
+\item{alg}{an optimisation algorithm hybrid, mutlistarts, seed or genetic}
+
+\item{verbose}{boolean for verbose mode}
+}
+\value{
+an icl_path object
 }
 \description{
 Greed enable the clustering of networks and counts data such as document/term matrix with different model. 
@@ -26,5 +35,5 @@ Their are four models availables :
 \item Multivariate mixture of poissons
 }
 The optimization is performed thanks to a combination of greedy local search and a genetic algorithm. 
-The main entry point is the \code{\link{fit}} function to perfom the clustering.
+The main entry point is the \code{\link{greed}} function to perfom the clustering.
 }

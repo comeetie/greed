@@ -9,9 +9,9 @@ post_probs(model, data, clt)
 \arguments{
 \item{model}{icl_model}
 
-\item{clt}{cluster labels {0,...,K-1}}
+\item{data}{list with clustering data (fileds depend on model type)}
 
-\item{xp}{sparseMatrix}
+\item{clt}{cluster labels in 1,..,K}
 }
 \description{
 post_probs

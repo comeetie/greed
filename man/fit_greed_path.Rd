@@ -2,15 +2,18 @@
 % Please edit documentation in R/RcppExports.R
 \name{fit_greed_path}
 \alias{fit_greed_path}
-\title{fit_greed}
+\title{fit_greed_path}
 \usage{
 fit_greed_path(data, init_fit)
 }
 \arguments{
-\item{xp}{sparseMatrix}
+\item{data}{list with clustering data depnds on model type}
 
-\item{init}{initial fit}
+\item{init_fit}{initial fit object}
+}
+\value{
+a model_path object
 }
 \description{
-fit_greed
+fit_greed_path
 }

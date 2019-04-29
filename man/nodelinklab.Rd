@@ -13,6 +13,9 @@ nodelinklab(sol, labels, s = 0)
 
 \item{s}{threeshold for links}
 }
+\value{
+a ggplot2 graph
+}
 \description{
 nodelinklab
 }

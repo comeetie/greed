@@ -3,8 +3,8 @@
 
 #' post_probs
 #' @param model icl_model
-#' @param xp sparseMatrix
-#' @param clt cluster labels {0,...,K-1}
+#' @param data list with clustering data (fileds depend on model type)
+#' @param clt cluster labels in 1,..,K
 #' @export
 post_probs <- function(model, data, clt) {
     .Call('_greed_post_probs', PACKAGE = 'greed', model, data, clt)
@@ -12,29 +12,32 @@ post_probs <- function(model, data, clt) {
 
 #' fit_greed_init
 #' @param model icl_model
-#' @param xp sparseMatrix
+#' @param data list with clustering data (fileds depend on model type)
 #' @param clt cluster labels {0,...,K-1}
-#' @param type : merge, swap, none, or both (default)  
-#' @param nb_max_pass : maximum number of pass for greedy swap 
+#' @param type merge, swap, none, or both (default)  
+#' @param nb_max_pass maximum number of pass for greedy swap
+#' @param verbose boolean for verbose mode default to false
+#' @return a model_fit object  
 #' @export
 fit_greed <- function(model, data, clt, type = "both", nb_max_pass = 50L, verbose = FALSE) {
     .Call('_greed_fit_greed', PACKAGE = 'greed', model, data, clt, type, nb_max_pass, verbose)
 }
 
-#' fit_greed 
-#' @param xp sparseMatrix
-#' @param init initial fit
+#' fit_greed_path
+#' @param data list with clustering data depnds on model type
+#' @param init_fit initial fit object
+#' @return a model_path object
 #' @export
 fit_greed_path <- function(data, init_fit) {
     .Call('_greed_fit_greed_path', PACKAGE = 'greed', data, init_fit)
 }
 
 #' lm_post
-#' @param X
-#' @param y
-#' @param regu
-#' @param a0
-#' @param b0
+#' @param X data matrix of covariates Nxd
+#' @param y target Nx1
+#' @param regu prior precision parameter
+#' @param a0 prior parameter
+#' @param b0 prior parameter
 #' @export
 lm_post <- function(X, y, regu, a0, b0) {
     .Call('_greed_lm_post', PACKAGE = 'greed', X, y, regu, a0, b0)
@@ -45,44 +48,47 @@ lm_post_add1 <- function(current, X, y, regu, a0, b0) {
 }
 
 #' lm_post_del1
-#' @param X
-#' @param y
-#' @param regu
-#' @param a0
-#' @param b0
+#' @param current gaussian linear model to update
+#' @param X data matrix of covariates 1xd
+#' @param y target 1x1
+#' @param regu prior precision parameter
+#' @param a0 prior parameter
+#' @param b0 prior parameter
 #' @export
 lm_post_del1 <- function(current, X, y, regu, a0, b0) {
     .Call('_greed_lm_post_del1', PACKAGE = 'greed', current, X, y, regu, a0, b0)
 }
 
 #' lm_post_merge
-#' @param L1
-#' @param L2
-#' @param regu
-#' @param a0
-#' @param b0
+#' @param current_k gaussian linear model to merge
+#' @param current_l gaussian linear model to merge
+#' @param regu prior precision parameter
+#' @param a0 prior parameter
+#' @param b0 prior parameter
 #' @export
 lm_post_merge <- function(current_k, current_l, regu, a0, b0) {
     .Call('_greed_lm_post_merge', PACKAGE = 'greed', current_k, current_l, regu, a0, b0)
 }
 
 #' lm_post_add
-#' @param X
-#' @param y
-#' @param regu
-#' @param a0
-#' @param b0
+#' @param current gaussian linear model to update
+#' @param X data matrix of covariates Ntxd
+#' @param y target Ntx1
+#' @param regu prior precision parameter
+#' @param a0 prior parameter
+#' @param b0 prior parameter
 #' @export
 lm_post_add <- function(current, X, y, regu, a0, b0) {
     .Call('_greed_lm_post_add', PACKAGE = 'greed', current, X, y, regu, a0, b0)
 }
 
 #' lm_post_del
-#' @param X
-#' @param y
-#' @param regu
-#' @param a0
-#' @param b0
+#' @param current gaussian linear model to update
+#' @param X data matrix of covariates Ntxd
+#' @param y target Ntx1
+#' @param regu prior precision parameter
+#' @param a0 prior parameter
+#' @param b0 prior parameter
 #' @export
 lm_post_del <- function(current, X, y, regu, a0, b0) {
     .Call('_greed_lm_post_del', PACKAGE = 'greed', current, X, y, regu, a0, b0)

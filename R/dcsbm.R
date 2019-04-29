@@ -13,7 +13,6 @@ NULL
 #' @slot b0 a numeric vector of length 1 which define the parameters of the beta prior over the non-edges (default to 1)
 #' @examples 
 #' new("dcsbm")
-#' new("dcsbm",a0=0.5,b0=0.5,alpha=1)
 #' @export
 setClass("dcsbm",
          representation = list(),
@@ -62,8 +61,14 @@ setMethod(f = "reorder",
           })
 
 
+setMethod(f = "seed", 
+          signature = signature("dcsbm","list","integer"), 
+          definition = function(model,data, K){
+            spectral(data$X,K)
+          })
+
+
 #' @rdname plot
-#' @param x \code{\link{dcsbm_fit-class}} object to be ploted
 #' @export
 setMethod(f = "plot", 
           signature = signature("dcsbm_fit","missing"),
@@ -72,7 +77,6 @@ setMethod(f = "plot",
           })
 
 #' @rdname plot
-#' @param x \code{\link{dcsbm_path-class}} object to be ploted
 #' @export
 setMethod(f = "plot", 
           signature = signature("dcsbm_path","missing"),
@@ -87,9 +91,9 @@ setMethod(f = "plot",
               plot_front(x)
             },
             blocks ={
-              callNextMethod()
+              methods::callNextMethod()
             },
             nodelink={
-              callNextMethod()
+              methods::callNextMethod()
             })   
           })

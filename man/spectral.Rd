@@ -8,9 +8,12 @@ Regularized spectral clustering nips paper 2013}
 spectral(X, K)
 }
 \arguments{
-\item{K}{Desired number of cluster}
+\item{X}{An adjacency matrix in sparse format}
 
-\item{x}{An adjacency matrix in sparse format}
+\item{K}{Desired number of cluster}
+}
+\value{
+cl Vector of clsuter labels
 }
 \description{
 spectral

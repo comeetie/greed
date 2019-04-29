@@ -6,6 +6,17 @@
 \usage{
 lm_post_merge(current_k, current_l, regu, a0, b0)
 }
+\arguments{
+\item{current_k}{gaussian linear model to merge}
+
+\item{current_l}{gaussian linear model to merge}
+
+\item{regu}{prior precision parameter}
+
+\item{a0}{prior parameter}
+
+\item{b0}{prior parameter}
+}
 \description{
 lm_post_merge
 }

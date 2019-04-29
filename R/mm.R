@@ -54,8 +54,19 @@ setMethod(f = "reorder",
             reorder_mm(obs_stats,order)
           })
 
+
+setMethod(f = "seed", 
+          signature = signature("mm","list","integer"), 
+          definition = function(model,data, K){
+            km=stats::kmeans(data$X,K)
+            km$clusters
+          })
+
+
 #' @rdname plot
-#' @param x \code{\link{mm_fit-class}} object to be ploted
+#' @param x \code{\link{icl_fit-class}} object to be ploted
+#' @param type type of desired graphics : tree,pathy, blocks, nodelink, front
+#' @return a ggplot2 object to visualize the results
 #' @export
 setMethod(f = "plot", 
           signature = signature("mm_fit","missing"),
@@ -65,7 +76,6 @@ setMethod(f = "plot",
 
 
 #' @rdname plot
-#' @param x \code{\link{mm_path-class}} object to be plot
 #' @export
 setMethod(f = "plot", 
           signature = signature("mm_path","missing"),
@@ -80,9 +90,9 @@ setMethod(f = "plot",
               plot_front(x)
             },
             blocks ={
-              callNextMethod()
+              methods::callNextMethod()
             },
             nodelink={
-              callNextMethod()
+              methods::callNextMethod()
             })   
-          });
+          })

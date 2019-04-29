@@ -1,0 +1,1016 @@
+\nonstopmode{}
+\documentclass[letterpaper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\usepackage[utf8,latin1]{inputenc}
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `greed'}}
+\par\bigskip{\large \today}
+\end{center}
+\begin{description}
+\raggedright{}
+\item[Type]\AsIs{Package}
+\item[Title]\AsIs{greed: clustering and model selection for graphs and counts data}
+\item[Version]\AsIs{1.0}
+\item[Date]\AsIs{2019-02-27}
+\item[Author]\AsIs{Etienne Come}
+\item[Maintainer]\AsIs{Etienne Come }\email{etienne.come@ifsttar.fr}\AsIs{}
+\item[Description]\AsIs{Greed enable the clustering of networks and counts data matrix such as document/term matrix with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood (which is equivalent to minimizing the description length). Their are four models availables : SBM degree corected SBM, Mixture of Multinomials, Multivariate mixture of poisson. The optimization is performed thanks to a combination of greedy local search and a genetic algorithm.}
+\item[License]\AsIs{GPL}
+\item[Depends]\AsIs{R (>= 2.10)}
+\item[Imports]\AsIs{Rcpp (>= 1.0.0), Matrix, future, listenv, ggplot2, graphics,
+methods, stats,rARPACK}
+\item[LinkingTo]\AsIs{Rcpp, RcppArmadillo}
+\item[Suggests]\AsIs{testthat, knitr, rmarkdown, igraph}
+\item[VignetteBuilder]\AsIs{knitr}
+\item[RoxygenNote]\AsIs{6.1.1}
+\item[Collate]\AsIs{'RcppExports.R' 'models\_classes.R' 'fit\_classes.R'
+'cleanpath.R' 'genetic\_alg.R' 'hybrid\_alg.R' 'alg\_classes.R'
+'dcsbm.R' 'generator.R' 'greed.R' 'misc.R' 'mm.R' 'mreg.R'
+'multistart\_alg.R' 'plot.R' 'sbm.R'}
+\end{description}
+\Rdcontents{\R{} topics documented:}
+\inputencoding{utf8}
+\HeaderA{algs-classes}{Optimization algorithm classes}{algs.Rdash.classes}
+\aliasA{alg-class}{algs-classes}{alg.Rdash.class}
+\aliasA{genetic-class}{algs-classes}{genetic.Rdash.class}
+\aliasA{hybrid-class}{algs-classes}{hybrid.Rdash.class}
+\aliasA{multistarts-class}{algs-classes}{multistarts.Rdash.class}
+\aliasA{seed-class}{algs-classes}{seed.Rdash.class}
+%
+\begin{Description}\relax
+Optimization algorithm classes
+
+alg 
+An S4 class to represent an abstract optimisation algorithm.
+
+gree 
+An S4 class to represent a greedy algorithm extends \code{alg} class with multiple start.
+
+seed 
+An S4 class to represent a greedy algorithm extends \code{alg} class with initialization with spectral clustering and or k-means.
+
+genetic
+An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
+
+genetic
+An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
+\end{Description}
+%
+\begin{Section}{Slots}
+
+\begin{description}
+
+\item[\code{name}] Name of the algorithm
+
+\item[\code{nb\_start}] number of random starts (default to 10)
+
+\item[\code{pop\_size}] size of the solutions populations (default to 10)
+
+\item[\code{nb\_max\_gen}] maximal number of generation to produce (default to 4)
+
+\item[\code{pop\_size}] size of the solutions populations (default to 10)
+
+\item[\code{nb\_max\_gen}] maximal number of generation to produce (default to 4)
+
+\end{description}
+\end{Section}
+\inputencoding{utf8}
+\HeaderA{cut,icl\_path-method}{Cut cut a path to a desired number of cluster}{cut,icl.Rul.path.Rdash.method}
+%
+\begin{Description}\relax
+Cut
+cut a path to a desired number of cluster
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S4 method for signature 'icl_path'
+cut(x, K)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] A an \code{icl\_path} solution
+
+\item[\code{K}] Desired number of cluster
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+an icl\_path obejct with the desired number of cluster
+\end{Value}
+%
+\begin{Section}{Methods (by class)}
+\begin{itemize}
+
+\item \code{icl\_path}: method to cut a fit to a desired number of cluster
+
+\end{itemize}
+\end{Section}
+\inputencoding{utf8}
+\HeaderA{fits-classes}{Clustering solutions classes}{fits.Rdash.classes}
+\aliasA{dcsbm\_fit-class}{fits-classes}{dcsbm.Rul.fit.Rdash.class}
+\aliasA{dcsbm\_path-class}{fits-classes}{dcsbm.Rul.path.Rdash.class}
+\aliasA{icl\_fit-class}{fits-classes}{icl.Rul.fit.Rdash.class}
+\aliasA{icl\_path-class}{fits-classes}{icl.Rul.path.Rdash.class}
+\aliasA{mm\_fit-class}{fits-classes}{mm.Rul.fit.Rdash.class}
+\aliasA{mm\_path-class}{fits-classes}{mm.Rul.path.Rdash.class}
+\aliasA{mreg\_fit-class}{fits-classes}{mreg.Rul.fit.Rdash.class}
+\aliasA{mreg\_path-class}{fits-classes}{mreg.Rul.path.Rdash.class}
+\aliasA{sbm\_fit-class}{fits-classes}{sbm.Rul.fit.Rdash.class}
+\aliasA{sbm\_path-class}{fits-classes}{sbm.Rul.path.Rdash.class}
+%
+\begin{Description}\relax
+Clustering solutions classes
+
+icl\_fit
+
+An S4 abstract class to represent an icl fit of a clustering model.
+\begin{itemize}
+
+\item slots : \code{name,K,icl,cl,count}
+
+\end{itemize}
+
+
+icl\_path
+
+An S4 class to represent a hierachical path of solution.
+\begin{itemize}
+
+\item slots : \code{path,tree,ggtree,logalpha}
+
+\end{itemize}
+
+
+dcsbm\_fit
+
+An S4 class to represent a fit of a stochastick block model that extend \code{icl\_fit}.
+\begin{itemize}
+
+\item slots : \code{name,K,icl,cl,obs\_stats,model}
+
+\end{itemize}
+
+
+dcsbm\_path
+
+An S4 class to represent a hierachical path of solutions for a DC-SBM model that extend \code{dcsbm\_fit-class} and \code{icl\_path-class}.
+\begin{itemize}
+
+\item slots : \code{name,K,icl,cl,obs\_stats, model, path, tree, ggtree, logalpha}
+
+\end{itemize}
+
+
+mm\_fit
+
+An S4 class to represent an icl fit of a mixture of multinomials model that extend \code{icl\_fit}.
+\begin{itemize}
+
+\item slots : \code{name,K,icl,cl,obs\_stats,model}
+
+\end{itemize}
+
+
+mm\_path
+
+An S4 class to represent a hierachical path of solutions for a mixture of mutinomials model that extend \code{mm\_fit-class} and \code{icl\_path-class}.
+\begin{itemize}
+
+\item slots : \code{name,K,icl,cl,obs\_stats, model, path, tree, ggtree, logalpha}
+
+\end{itemize}
+
+
+mreg\_fit
+
+An S4 class to represent an icl fit of a mixture of multinomials model that extend \code{icl\_fit}.
+\begin{itemize}
+
+\item slots : \code{name,K,icl,cl,obs\_stats,model}
+
+\end{itemize}
+
+
+mreg\_path
+
+An S4 class to represent a hierachical path of solutions for a Mixture of Regression model that extend \code{mreg\_fit-class} and \code{icl\_path-class}.
+\begin{itemize}
+
+\item slots : \code{name,K,icl,cl,obs\_stats, model, path, tree, ggtree, logalpha}
+
+\end{itemize}
+
+
+sbm\_fit
+
+An S4 class to represent a fit of a stochastick block model that extend \code{icl\_fit}.
+\begin{itemize}
+
+\item slots : \code{name,K,icl,cl,obs\_stats,model}
+
+\end{itemize}
+
+
+sbm\_path
+
+An S4 class to represent a hierachical path of solutions for a SBM model that extend \code{sbm\_fit-class} and \code{icl\_path-class}.
+\begin{itemize}
+
+\item slots : \code{name,K,icl,cl,obs\_stats, model, path, tree, ggtree, logalpha}
+
+\end{itemize}
+
+\end{Description}
+%
+\begin{Section}{Slots}
+
+\begin{description}
+
+\item[\code{name}] of the fit
+
+\item[\code{K}] a numeric vector of length 1 which correspond to the number of clusters
+
+\item[\code{icl}] a numeric vector of length 1 which store the the icl value
+
+\item[\code{cl}] a numeric vector of length N which store the clusters labels
+
+\item[\code{obs\_stats}] a list to store the observed statistics of the model needed to compute ICL.
+
+\item[\code{train\_hist}] a data.frame to store training history (format depends on the used algorithm used).
+
+\item[\code{path}] a list of merge moves describing the hierachie of merge followed to complete totaly the merge path.
+
+\item[\code{tree}] a tree representation of the merges.
+
+\item[\code{ggtree}] a data.frame for easy ploting of the dendogram
+
+\item[\code{logalpha}] a numeric value which corresponds to the starting value of log(alpha).
+
+\item[\code{model}] an \code{\LinkA{icl\_model}{icl.Rul.model}} to store the model fitted
+
+\item[\code{model}] an \code{\LinkA{icl\_model}{icl.Rul.model}} to store the model fitted
+
+\end{description}
+\end{Section}
+\inputencoding{utf8}
+\HeaderA{fit\_greed}{fit\_greed\_init}{fit.Rul.greed}
+%
+\begin{Description}\relax
+fit\_greed\_init
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+fit_greed(model, data, clt, type = "both", nb_max_pass = 50L,
+  verbose = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] icl\_model
+
+\item[\code{data}] list with clustering data (fileds depend on model type)
+
+\item[\code{clt}] cluster labels 0,...,K-1
+
+\item[\code{type}] merge, swap, none, or both (default)
+
+\item[\code{nb\_max\_pass}] maximum number of pass for greedy swap
+
+\item[\code{verbose}] boolean for verbose mode default to false
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+a model\_fit object
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{fit\_greed\_path}{fit\_greed\_path}{fit.Rul.greed.Rul.path}
+%
+\begin{Description}\relax
+fit\_greed\_path
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+fit_greed_path(data, init_fit)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{data}] list with clustering data depnds on model type
+
+\item[\code{init\_fit}] initial fit object
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+a model\_path object
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{graphbalance}{graph\_balance}{graphbalance}
+%
+\begin{Description}\relax
+graph\_balance
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+graphbalance(x)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] a \code{\LinkA{sbm\_fit-class}{sbm.Rul.fit.Rdash.class}} object to be plot
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+a ggplot2 graph
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{greed}{greed}{greed}
+\aliasA{greed-package}{greed}{greed.Rdash.package}
+%
+\begin{Description}\relax
+Greed enable the clustering of networks and counts data such as document/term matrix with different model. 
+Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood 
+(which is equivalent to minimizing the description length). 
+Their are four models availables : 
+\begin{itemize}
+
+\item Stochastic Block Model (directed)
+\item Degree corected Stochastic Block Model (directed)
+\item Mixture of Multinomials
+\item Multivariate mixture of poissons
+
+\end{itemize}
+
+The optimization is performed thanks to a combination of greedy local search and a genetic algorithm. 
+The main entry point is the \code{\LinkA{greed}{greed}} function to perfom the clustering.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+greed(X, K = 20, model = find_model(X), alg = methods::new("hybrid"),
+  verbose = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{X}] data to cluster sparseMatrix or matrix
+
+\item[\code{K}] Desired number of cluster
+
+\item[\code{model}] a dcsbm, sbm or mm model
+
+\item[\code{alg}] an optimisation algorithm hybrid, mutlistarts, seed or genetic
+
+\item[\code{verbose}] boolean for verbose mode
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+an icl\_path object
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{greed\_cond}{greed\_cond}{greed.Rul.cond}
+%
+\begin{Description}\relax
+greed\_cond
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+greed_cond(X, y, K = 20, model = find_model_cond(X, y),
+  alg = methods::new("hybrid"), verbose = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{X}] covariable data
+
+\item[\code{y}] target variable
+
+\item[\code{K}] Desired number of cluster
+
+\item[\code{model}] an mreg model
+
+\item[\code{alg}] an optimisation algorithm hybrid, mutlistarts, seed or genetic
+
+\item[\code{verbose}] boolean for verbose mode
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+an icl\_path object
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{lm\_post}{lm\_post}{lm.Rul.post}
+%
+\begin{Description}\relax
+lm\_post
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+lm_post(X, y, regu, a0, b0)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{X}] data matrix of covariates Nxd
+
+\item[\code{y}] target Nx1
+
+\item[\code{regu}] prior precision parameter
+
+\item[\code{a0}] prior parameter
+
+\item[\code{b0}] prior parameter
+\end{ldescription}
+\end{Arguments}
+\inputencoding{utf8}
+\HeaderA{lm\_post\_add}{lm\_post\_add}{lm.Rul.post.Rul.add}
+%
+\begin{Description}\relax
+lm\_post\_add
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+lm_post_add(current, X, y, regu, a0, b0)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{current}] gaussian linear model to update
+
+\item[\code{X}] data matrix of covariates Ntxd
+
+\item[\code{y}] target Ntx1
+
+\item[\code{regu}] prior precision parameter
+
+\item[\code{a0}] prior parameter
+
+\item[\code{b0}] prior parameter
+\end{ldescription}
+\end{Arguments}
+\inputencoding{utf8}
+\HeaderA{lm\_post\_del}{lm\_post\_del}{lm.Rul.post.Rul.del}
+%
+\begin{Description}\relax
+lm\_post\_del
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+lm_post_del(current, X, y, regu, a0, b0)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{current}] gaussian linear model to update
+
+\item[\code{X}] data matrix of covariates Ntxd
+
+\item[\code{y}] target Ntx1
+
+\item[\code{regu}] prior precision parameter
+
+\item[\code{a0}] prior parameter
+
+\item[\code{b0}] prior parameter
+\end{ldescription}
+\end{Arguments}
+\inputencoding{utf8}
+\HeaderA{lm\_post\_del1}{lm\_post\_del1}{lm.Rul.post.Rul.del1}
+%
+\begin{Description}\relax
+lm\_post\_del1
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+lm_post_del1(current, X, y, regu, a0, b0)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{current}] gaussian linear model to update
+
+\item[\code{X}] data matrix of covariates 1xd
+
+\item[\code{y}] target 1x1
+
+\item[\code{regu}] prior precision parameter
+
+\item[\code{a0}] prior parameter
+
+\item[\code{b0}] prior parameter
+\end{ldescription}
+\end{Arguments}
+\inputencoding{utf8}
+\HeaderA{lm\_post\_merge}{lm\_post\_merge}{lm.Rul.post.Rul.merge}
+%
+\begin{Description}\relax
+lm\_post\_merge
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+lm_post_merge(current_k, current_l, regu, a0, b0)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{current\_k}] gaussian linear model to merge
+
+\item[\code{current\_l}] gaussian linear model to merge
+
+\item[\code{regu}] prior precision parameter
+
+\item[\code{a0}] prior parameter
+
+\item[\code{b0}] prior parameter
+\end{ldescription}
+\end{Arguments}
+\inputencoding{utf8}
+\HeaderA{models-classes}{Clustering models classes}{models.Rdash.classes}
+\aliasA{dcsbm-class}{models-classes}{dcsbm.Rdash.class}
+\aliasA{icl\_model}{models-classes}{icl.Rul.model}
+\aliasA{icl\_model-class}{models-classes}{icl.Rul.model.Rdash.class}
+\aliasA{mm}{models-classes}{mm}
+\aliasA{mm-class}{models-classes}{mm.Rdash.class}
+\aliasA{mreg-class}{models-classes}{mreg.Rdash.class}
+\aliasA{sbm}{models-classes}{sbm}
+\aliasA{sbm-class}{models-classes}{sbm.Rdash.class}
+%
+\begin{Description}\relax
+Clustering models classes
+
+icl\_model
+
+An S4 class to represent an abstract clustering model
+\begin{itemize}
+
+\item slots : \code{name,alpha}
+
+\end{itemize}
+
+
+dcsbm
+
+An S4 class to represent a stochastick block model that extends \code{icl\_model} class.
+\begin{itemize}
+
+\item slots : \code{name,alpha,a0,b0}
+
+\end{itemize}
+
+
+mm
+
+An S4 class to represent a mixture of multinomial also known has mixture of unigrams that extends \code{icl\_model} class.
+\begin{itemize}
+
+\item slots : \code{name,alpha,beta}
+
+\end{itemize}
+
+
+mreg
+
+An S4 class to represent a mixture of multinomial also known has mixture of unigrams that extends \code{icl\_model} class.
+\begin{itemize}
+
+\item slots : \code{name,alpha,reg,a0,b0}
+
+\end{itemize}
+
+
+sbm
+
+An S4 class to represent a stochastick block model that extends \code{icl\_model} class.
+\begin{itemize}
+
+\item slots : \code{name,alpha,a0,b0}
+
+\end{itemize}
+
+\end{Description}
+%
+\begin{Section}{Slots}
+
+\begin{description}
+
+\item[\code{name}] a character vector
+
+\item[\code{alpha}] a numeric vector of length 1 which define the parameters of the dirichlet over the cluster proportions (default to 1)
+
+\item[\code{a0}] a numeric vector of length 1 which define the parameters of the beta prior over the edges (default to 1)
+
+\item[\code{b0}] a numeric vector of length 1 which define the parameters of the beta prior over the non-edges (default to 1)
+
+\item[\code{beta}] a numeric vector of length 1 which define the parameters of the beta prior over the counts (default to 1)
+
+\item[\code{reg}] a numeric vector of length 1 which define the variance parameter of the normal prior over the regression parameters (default to 0.1)
+
+\item[\code{a0}] a numeric vector of length 1 which define the parameter a0 of the inverse gamma over the regression noise variance parameters (default to 1)
+
+\item[\code{b0}] a numeric vector of length 1 which define the parameter b0 of the inverse gamma prior over the regression noise variance parameters (default to 1)
+
+\item[\code{a0}] a numeric vector of length 1 which define the parameters of the beta prior over the edges (default to 1)
+
+\item[\code{b0}] a numeric vector of length 1 which define the parameters of the beta prior over the non-edges (default to 1)
+
+\end{description}
+\end{Section}
+%
+\begin{Examples}
+\begin{ExampleCode}
+new("dcsbm")
+new("mm")
+new("mm",alpha=1,beta=1)
+new("mreg")
+new("mreg",alpha=1,reg=5,a0=0.5,b0=0.5)
+new("sbm")
+new("sbm",a0=0.5,b0=0.5,alpha=1)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{nodelinklab}{nodelinklab}{nodelinklab}
+%
+\begin{Description}\relax
+nodelinklab
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+nodelinklab(sol, labels, s = 0)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{sol}] \code{\LinkA{mm\_path-class}{mm.Rul.path.Rdash.class}} object to be plot
+
+\item[\code{labels}] a vector of cluster labels
+
+\item[\code{s}] threeshold for links
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+a ggplot2 graph
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{plot,dcsbm\_fit,missing-method}{Plot a clustering results}{plot,dcsbm.Rul.fit,missing.Rdash.method}
+\aliasA{plot}{plot,dcsbm\_fit,missing-method}{plot}
+\aliasA{plot,dcsbm\_path,missing-method}{plot,dcsbm\_fit,missing-method}{plot,dcsbm.Rul.path,missing.Rdash.method}
+\aliasA{plot,mm\_fit,missing-method}{plot,dcsbm\_fit,missing-method}{plot,mm.Rul.fit,missing.Rdash.method}
+\aliasA{plot,mm\_path,missing-method}{plot,dcsbm\_fit,missing-method}{plot,mm.Rul.path,missing.Rdash.method}
+\aliasA{plot,mreg\_fit,missing-method}{plot,dcsbm\_fit,missing-method}{plot,mreg.Rul.fit,missing.Rdash.method}
+\aliasA{plot,mreg\_path,missing-method}{plot,dcsbm\_fit,missing-method}{plot,mreg.Rul.path,missing.Rdash.method}
+\aliasA{plot,sbm\_fit,missing-method}{plot,dcsbm\_fit,missing-method}{plot,sbm.Rul.fit,missing.Rdash.method}
+\aliasA{plot,sbm\_path,missing-method}{plot,dcsbm\_fit,missing-method}{plot,sbm.Rul.path,missing.Rdash.method}
+%
+\begin{Description}\relax
+Main methods to explore clusterings results visualy.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S4 method for signature 'dcsbm_fit,missing'
+plot(x, type = "blocks")
+
+## S4 method for signature 'dcsbm_path,missing'
+plot(x, type = "blocks")
+
+## S4 method for signature 'mm_fit,missing'
+plot(x, type = "blocks")
+
+## S4 method for signature 'mm_path,missing'
+plot(x, type = "blocks")
+
+## S4 method for signature 'mreg_fit,missing'
+plot(x, type = "blocks")
+
+## S4 method for signature 'mreg_path,missing'
+plot(x, type = "blocks")
+
+## S4 method for signature 'sbm_fit,missing'
+plot(x, type = "blocks")
+
+## S4 method for signature 'sbm_path,missing'
+plot(x, type = "blocks")
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] \code{\LinkA{icl\_fit-class}{icl.Rul.fit.Rdash.class}} object to be ploted
+
+\item[\code{type}] type of desired graphics : tree,pathy, blocks, nodelink, front
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+a ggplot2 object to visualize the results
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{post\_probs}{post\_probs}{post.Rul.probs}
+%
+\begin{Description}\relax
+post\_probs
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+post_probs(model, data, clt)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] icl\_model
+
+\item[\code{data}] list with clustering data (fileds depend on model type)
+
+\item[\code{clt}] cluster labels in 1,..,K
+\end{ldescription}
+\end{Arguments}
+\inputencoding{utf8}
+\HeaderA{print,icl\_path-method}{print print an icl\_path object}{print,icl.Rul.path.Rdash.method}
+%
+\begin{Description}\relax
+print
+print an icl\_path object
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S4 method for signature 'icl_path'
+print(x)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] \code{\LinkA{icl\_path-class}{icl.Rul.path.Rdash.class}} object to print
+\end{ldescription}
+\end{Arguments}
+\inputencoding{utf8}
+\HeaderA{rdcsbm}{Generate graph adjacency matrix using a degree corrected SBM}{rdcsbm}
+%
+\begin{Description}\relax
+\code{rmm} returns a count matrix and the cluster labels generated randomly unsig a Mixture of Multinomial model.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+rdcsbm(N, pi, mu, betain, betaout)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{N}] A numeric value the size of the graph to generate
+
+\item[\code{pi}] A numeric vector of length K with clusters proportions. Must sum up to 1.
+
+\item[\code{mu}] A numeric matrix of dim K x K with the connectivity pattern to generate, elements in [0,1].
+
+\item[\code{betain}] A numeric vector of length N which specify the in-degree correction will be normalized per cluster during the generation.
+
+\item[\code{betaout}] A numeric vector of length N which specify the out-degree correction will be normalized per cluster during the generation.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+It take the sample size, cluster proportions and emission matrix, and  as input and sample a graph accordingly together with the clusters labels.
+\end{Details}
+%
+\begin{Value}
+A list with fields:
+\begin{itemize}
+
+\item x: the count matrix as a \code{dgCMatrix}
+\item K: number of generated clusters
+\item N: number of vertex
+\item cl: vector of clusters labels
+\item pi: clusters proportions
+\item mu: connectivity matrix
+\item betain: normalized in-degree parameters 
+\item betaout: normalized out-degree parameters
+
+\end{itemize}
+
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{rmm}{Generate graph adjacency matrix using a Multinomial Mixture}{rmm}
+%
+\begin{Description}\relax
+\code{rmm} returns a count matrix and the cluster labels generated randomly unsig a Mixture of Multinomial model.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+rmm(N, pi, mu, lambda)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{N}] A numeric value the size of the graph to generate
+
+\item[\code{pi}] A numeric vector of length K with clusters proportions. Must sum up to 1.
+
+\item[\code{mu}] A numeric matrix of dim k x D with the clusters patterns to generate, all elements in [0,1].
+
+\item[\code{lambda}] A numeric value which specify the expectation for the row sums.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+It take the sample size, cluster proportions and emission matrix, and  as input and sample a graph accordingly together with the clusters labels.
+\end{Details}
+%
+\begin{Value}
+A list with fields:
+\begin{itemize}
+
+\item x: the count matrix as a \code{dgCMatrix}
+\item K: number of generated clusters
+\item N: number of vertex
+\item cl: vector of clusters labels
+\item pi: clusters proportions
+\item mu: connectivity matrix
+\item lambda: expectation of row sums
+
+\end{itemize}
+
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{rmreg}{Generate X and y with a mixture of regression model}{rmreg}
+%
+\begin{Description}\relax
+\code{rmreg} returns an X matrix, a y vector and the cluster labels generated randomly unsig a Mixture of regression model.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+rmreg(N, pi, mu, sigma, X = cbind(matrix(stats::rnorm(N * (nrow(mu) -
+  1)), N, nrow(mu) - 1), rep(1, N)))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{N}] A numeric value the size of the graph to generate
+
+\item[\code{pi}] A numeric vector of length K with clusters proportions (must sum up to 1)
+
+\item[\code{mu}] A numeric matrix of dim K x d with the regression parameters
+
+\item[\code{sigma}] A numeric of length 1 with the target conditional variance
+
+\item[\code{X}] A matrix of covariate
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+It take the sample size, cluster proportions and regression parameters matrix and variance  as input accordingly
+\end{Details}
+%
+\begin{Value}
+A list with fields:
+\begin{itemize}
+
+\item X: the covariate matrix 
+\item y: the target feature
+\item K: number of generated clusters
+\item N: sample size
+\item cl: vector of clusters labels
+\item pi: clusters proportions
+\item mu: regression parameters
+\item sigma: conditional variance
+
+\end{itemize}
+
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{rsbm}{Generate graph adjacency matrix using a SBM}{rsbm}
+%
+\begin{Description}\relax
+\code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Stochastick Block Model.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+rsbm(N, pi, mu)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{N}] A numeric value the size of the graph to generate
+
+\item[\code{pi}] A numeric vector of length K with clusters proportions. Must sum up to 1.
+
+\item[\code{mu}] A numeric matrix of dim K x K with the connectivity pattern to generate. elements in [0,1].
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+This function take graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
+\end{Details}
+%
+\begin{Value}
+A list with fields:
+\begin{itemize}
+
+\item x: the graph adjacency matrix as a \code{dgCMatrix}
+\item K: number of generated clusters
+\item N: number of vertex
+\item cl: vector of clusters labels
+\item pi: clusters proportions
+\item mu: connectivuty matrix
+
+\end{itemize}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+simu = rsbm(100,rep(1/5,5),diag(rep(0.1,5))+0.001)
+x  = simu$x
+xl = simu$cl
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{show,icl\_path-method}{show show an icl\_path object}{show,icl.Rul.path.Rdash.method}
+%
+\begin{Description}\relax
+show
+show an icl\_path object
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S4 method for signature 'icl_path'
+show(object)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{object}] \code{\LinkA{icl\_path-class}{icl.Rul.path.Rdash.class}} object to print
+\end{ldescription}
+\end{Arguments}
+\inputencoding{utf8}
+\HeaderA{spectral}{spectral Regularized spectral clustering nips paper 2013}{spectral}
+%
+\begin{Description}\relax
+spectral
+Regularized spectral clustering nips paper 2013
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+spectral(X, K)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{X}] An adjacency matrix in sparse format
+
+\item[\code{K}] Desired number of cluster
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+cl Vector of clsuter labels
+\end{Value}
+\printindex{}
+\end{document}

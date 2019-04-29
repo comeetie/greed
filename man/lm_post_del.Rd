@@ -6,6 +6,19 @@
 \usage{
 lm_post_del(current, X, y, regu, a0, b0)
 }
+\arguments{
+\item{current}{gaussian linear model to update}
+
+\item{X}{data matrix of covariates Ntxd}
+
+\item{y}{target Ntx1}
+
+\item{regu}{prior precision parameter}
+
+\item{a0}{prior parameter}
+
+\item{b0}{prior parameter}
+}
 \description{
 lm_post_del
 }

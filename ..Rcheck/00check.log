@@ -1,0 +1,156 @@
+* using log directory ‘/data/Projets/greed/..Rcheck’
+* using R version 3.4.4 (2018-03-15)
+* using platform: x86_64-pc-linux-gnu (64-bit)
+* using session charset: UTF-8
+* using option ‘--as-cran’
+* checking for file ‘./DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘greed’ version ‘1.0’
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: ‘Etienne Come <etienne.come@ifsttar.fr>’
+
+New submission
+
+Package has a VignetteBuilder field but no prebuilt vignette index.
+
+The Title field starts with the package name.
+The Title field should be in title case, current version then in title case:
+‘greed: clustering and model selection for graphs and counts data’
+‘Greed: Clustering and Model Selection for Graphs and Counts Data’
+
+The Description field should not start with the package name,
+  'This package' or similar.
+
+The Date field is over a month old.
+
+The build time stamp is missing.
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... WARNING
+Subdirectory ‘greed/src’ contains apparent object files/libraries
+  DcSbm.o Fit.o IclModel.o MergeMat.o Mm.o Mreg.o RcppExports.o Sbm.o
+  gicl_tools.o greed.so
+Object files/libraries should not be included in a source package.
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .Rhistory
+  .gitignore
+  vignettes/.Rhistory
+  vignettes/.gitignore
+  ..Rcheck
+  .Rproj.user
+  .git
+These were most likely included in error. See section ‘Package
+structure’ in the ‘Writing R Extensions’ manual.
+
+CRAN-pack does not know about
+  ..Rcheck
+  .git
+* checking for portable file names ... NOTE
+Found the following non-portable file paths:
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/c22w7zn3mziwq/000004.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/c3ho3iubuat1x/000002.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/c3pgtls4qnv7n/000002.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/c6fvn9u30d27w/000002.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/c6ht6ib4rl4ac/000002.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/cbvbpgydbsdty/000002.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/cjzfsfhjmdz4d/000002.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/ckpner7g3cdnw/000003.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/cldnhw6q0ebra/000002.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/cnndq7jc5o4ga/000002.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/cpmeozp0mzqsn/000002.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/csy4dzltwvsjz/000004.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/cvcxvxknyo2y9/000002.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/cwq2affvlehcr/000005.metadata
+  greed/.Rproj.user/shared/notebooks/8DF21E1B-graph-clustering-with-sbm/1/s/cxg9ibnxnrwy8/000002.metadata
+
+Tarballs are only required to store paths of up to 100 bytes and cannot
+store those of more than 256 bytes, with restrictions including to 100
+bytes for the final component.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘greed’ can be installed ... OK
+* checking installed package size ... NOTE
+  installed size is 14.5Mb
+  sub-directories of 1Mb or more:
+    data   4.6Mb
+    libs   9.6Mb
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Checking should be performed on sources prepared by ‘R CMD build’.
+* checking top-level files ... NOTE
+Files ‘README.md’ or ‘NEWS.md’ cannot be checked without ‘pandoc’ being installed.
+Non-standard files/directories found at top level:
+  ‘data-raw’ ‘greed.Rproj’
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... WARNING
+Found the following directory with the name of a check directory:
+  ./..Rcheck
+Most likely, these were included erroneously.
+Found the following directory with the name of a version control directory:
+  ./.git
+These should not be in a package tarball.
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented data sets:
+  ‘L20news’ ‘Lfoot’ ‘Lpolblogs’ ‘Lpolbooks’ ‘Marvel’ ‘X20news’
+  ‘XMarvel’ ‘Xfoot’ ‘Xjazz’ ‘Xmigr.com’ ‘Xmigr.dep’ ‘Xnetsc’ ‘Xpol’
+  ‘Xpolblogs’ ‘Xpolbooks’
+All user-level objects in a package should have documentation entries.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of ‘data’ directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking line endings in C/C++/Fortran sources/headers ... OK
+* checking line endings in Makefiles ... OK
+* checking compilation flags in Makevars ... OK
+* checking for GNU extensions in Makefiles ... OK
+* checking for portable use of $(BLAS_LIBS) and $(LAPACK_LIBS) ... OK
+* checking compiled code ... OK
+* checking files in ‘vignettes’ ... WARNING
+Files in the 'vignettes' directory but no files in 'inst/doc':
+  ‘graph-clustering-with-sbm.Rmd’, ‘mixture-of-regression.Rmd’,
+    ‘polarisation.Rmd’
+* checking examples ... OK
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... OK
+  Running ‘testthat.R’
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes in ‘inst/doc’ ... WARNING
+Package vignettes without corresponding PDF/HTML:
+   ‘graph-clustering-with-sbm.Rmd’
+   ‘mixture-of-regression.Rmd’
+   ‘polarisation.Rmd’
+
+* checking re-building of vignette outputs ... OK
+* checking PDF version of manual ... WARNING
+LaTeX errors when creating PDF version.
+This typically indicates Rd problems.
+* checking PDF version of manual without hyperrefs or index ... OK
+* DONE
+Status: 6 WARNINGs, 6 NOTEs

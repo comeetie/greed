@@ -11,7 +11,7 @@
 #' \item Multivariate mixture of poissons
 #' }
 #' The optimization is performed thanks to a combination of greedy local search and a genetic algorithm. 
-#' The main entry point is the \code{\link{fit}} function to perfom the clustering.
+#' The main entry point is the \code{\link{greed}} function to perfom the clustering.
 #' 
 #' 
 #'

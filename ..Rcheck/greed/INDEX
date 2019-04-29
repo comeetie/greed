@@ -1,0 +1,29 @@
+algs-classes            Optimization algorithm classes
+cut,icl_path-method     Cut cut a path to a desired number of cluster
+fit_greed               fit_greed_init
+fit_greed_path          fit_greed_path
+fits-classes            Clustering solutions classes
+graphbalance            graph_balance
+greed                   greed
+greed_cond              greed_cond
+lm_post                 lm_post
+lm_post_add             lm_post_add
+lm_post_del             lm_post_del
+lm_post_del1            lm_post_del1
+lm_post_merge           lm_post_merge
+models-classes          Clustering models classes
+nodelinklab             nodelinklab
+plot,dcsbm_fit,missing-method
+                        Plot a clustering results
+post_probs              post_probs
+print,icl_path-method   print print an icl_path object
+rdcsbm                  Generate graph adjacency matrix using a degree
+                        corrected SBM
+rmm                     Generate graph adjacency matrix using a
+                        Multinomial Mixture
+rmreg                   Generate X and y with a mixture of regression
+                        model
+rsbm                    Generate graph adjacency matrix using a SBM
+show,icl_path-method    show show an icl_path object
+spectral                spectral Regularized spectral clustering nips
+                        paper 2013

@@ -77,7 +77,6 @@ An S4 class to represent a stochastick block model that extends \code{icl_model}
 
 \examples{
 new("dcsbm")
-new("dcsbm",a0=0.5,b0=0.5,alpha=1)
 new("mm")
 new("mm",alpha=1,beta=1)
 new("mreg")

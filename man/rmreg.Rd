@@ -4,17 +4,19 @@
 \alias{rmreg}
 \title{Generate X and y with a mixture of regression model}
 \usage{
-rmreg(N, pi, mu, sigma, X = cbind(matrix(rnorm(N * (nrow(mu) - 1)), N,
-  nrow(mu) - 1), rep(1, N)))
+rmreg(N, pi, mu, sigma, X = cbind(matrix(stats::rnorm(N * (nrow(mu) -
+  1)), N, nrow(mu) - 1), rep(1, N)))
 }
 \arguments{
 \item{N}{A numeric value the size of the graph to generate}
 
-\item{pi}{A numeric vector of length K with clusters proportions. Must sum up to 1.}
+\item{pi}{A numeric vector of length K with clusters proportions (must sum up to 1)}
 
-\item{mu}{A numeric matrix of dim K x d with the regression parameters.}
+\item{mu}{A numeric matrix of dim K x d with the regression parameters}
 
-\item{sigma}{A numeric of length 1 with the target conditional variance.}
+\item{sigma}{A numeric of length 1 with the target conditional variance}
+
+\item{X}{A matrix of covariate}
 }
 \value{
 A list with fields:

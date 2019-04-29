@@ -20,7 +20,7 @@ test_that("MReg sim evidence and fit", {
   expect_equal(sK21$log_evidence,  skdel$log_evidence)
   
   
-  sol=fit_greed_init_cond(new("mreg"),mreg_simu$X,mreg_simu$y,mreg_simu$cl,type = "both")
+  sol=fit_greed(new("mreg"),list(X=mreg_simu$X,y=mreg_simu$y),mreg_simu$cl,type = "both")
   tcf=table(sol@cl,mreg_simu$cl)
   
   
@@ -28,7 +28,7 @@ test_that("MReg sim evidence and fit", {
   expect_lte(nb_malcl,  100)
   
   
-  sol=fit_greed_cond(new("mreg",alpha=1,a0=1,b0=1,reg=1),mreg_simu$X,mreg_simu$y,5)
+  sol=fit_greed(new("mreg",alpha=1,a0=1,b0=1,reg=0.1),list(X=mreg_simu$X,y=mreg_simu$y),sample(1:5,length(mreg_simu$y),replace = TRUE))
   tcf= table(sol@cl,mreg_simu$cl)
   nb_malcl = sum(apply(tcf,1,min))
   expect_lte(nb_malcl,  100)

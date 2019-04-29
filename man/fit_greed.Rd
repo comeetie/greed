@@ -10,13 +10,18 @@ fit_greed(model, data, clt, type = "both", nb_max_pass = 50L,
 \arguments{
 \item{model}{icl_model}
 
+\item{data}{list with clustering data (fileds depend on model type)}
+
 \item{clt}{cluster labels {0,...,K-1}}
 
-\item{type}{: merge, swap, none, or both (default)}
+\item{type}{merge, swap, none, or both (default)}
 
-\item{nb_max_pass}{: maximum number of pass for greedy swap}
+\item{nb_max_pass}{maximum number of pass for greedy swap}
 
-\item{xp}{sparseMatrix}
+\item{verbose}{boolean for verbose mode default to false}
+}
+\value{
+a model_fit object
 }
 \description{
 fit_greed_init

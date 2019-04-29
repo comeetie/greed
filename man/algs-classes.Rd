@@ -18,7 +18,7 @@ An S4 class to represent an abstract optimisation algorithm.
 gree 
 An S4 class to represent a greedy algorithm extends \code{alg} class with multiple start.
 
-km 
+seed 
 An S4 class to represent a greedy algorithm extends \code{alg} class with initialization with spectral clustering and or k-means.
 
 genetic

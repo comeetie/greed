@@ -6,6 +6,17 @@
 \usage{
 lm_post(X, y, regu, a0, b0)
 }
+\arguments{
+\item{X}{data matrix of covariates Nxd}
+
+\item{y}{target Nx1}
+
+\item{regu}{prior precision parameter}
+
+\item{a0}{prior parameter}
+
+\item{b0}{prior parameter}
+}
 \description{
 lm_post
 }

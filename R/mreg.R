@@ -58,8 +58,19 @@ setMethod(f = "reorder",
           })
 
 
+setMethod(f = "seed", 
+          signature = signature("mm","list","integer"), 
+          definition = function(model,data, K){
+            X=cbind(data$X,data$y)
+            sds=apply(X,2,stats::sd)
+            X=X[,sds!=0]
+            X=t(t(X)/sds[sds!=0])
+            km=stats::kmeans(X,K)
+            km$clusters
+          })
+
+
 #' @rdname plot
-#' @param x \code{\link{mreg_fit-class}} object to be ploted
 #' @export
 setMethod(f = "plot", 
           signature = signature("mreg_fit","missing"),
@@ -73,7 +84,6 @@ setMethod(f = "plot",
 
 
 #' @rdname plot
-#' @param x \code{\link{mm_path-class}} object to be plot
 #' @export
 setMethod(f = "plot", 
           signature = signature("mreg_path","missing"),
@@ -88,6 +98,6 @@ setMethod(f = "plot",
               plot_front(x)
             },
             blocks ={
-              callNextMethod()
+              methods::callNextMethod()
             })
-          });
+          })

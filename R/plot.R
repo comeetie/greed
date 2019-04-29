@@ -13,14 +13,15 @@ nodelink = function(sol){
   #/(sol@obs_stats$counts%*%t(sol@obs_stats$counts))
   ij = ij[ij[,1]!=ij[,2],]
   gglink = data.frame(from=ij[,1],to=ij[,2],p=ld[ij])
+  gglink$y=ifelse(gglink$from<gglink$to,-0.3,0.3)
   ggnode = data.frame(i=1:length(sol@obs_stats$counts),pi=diag(sol@obs_stats$x_counts))
   gl = ggplot2::guide_legend()
-  ggplot2::ggplot()+ggplot2::geom_curve(data=gglink,ggplot2::aes(x=from,xend=to,y=ifelse(from<to,-0.3,0.3),yend=ifelse(from<to,-0.3,0.3),size=p,alpha=p),arrow=grid::arrow(length = grid::unit(2,"mm")),curvature = 0.7)+
+  ggplot2::ggplot()+ggplot2::geom_curve(data=gglink,ggplot2::aes_(x=~from,xend=~to,y=~y,yend=~y,size=~p,alpha=~p),arrow=grid::arrow(length = grid::unit(2,"mm")),curvature = 0.7)+
     ggplot2::scale_x_continuous("",c())+
     ggplot2::scale_y_continuous("",c(),limits = c(-5,5))+
     ggplot2::scale_alpha("Link density:",limits=c(0,max(gglink$p)),guide="none")+
     ggplot2::scale_size_area("Clusters size:",limits=c(0,max(ggnode$pi)),max_size = 4,guide="none")+
-    ggplot2::geom_point(data=ggnode,aes(x=i,y=0,size=pi))+
+    ggplot2::geom_point(data=ggnode,ggplot2::aes_(x=~i,y=~0,size=~pi))+
     ggplot2::ggtitle(paste0(toupper(sol@model@name)," model with : ",max(sol@cl)," clusters."))+
     ggplot2::theme_minimal()
 }
@@ -29,7 +30,7 @@ nodelink = function(sol){
 #' @param sol \code{\link{mm_path-class}} object to be plot
 #' @param labels a vector of cluster labels
 #' @param s threeshold for links
-#' @value a ggplot2 graph
+#' @return a ggplot2 graph
 #' @export 
 nodelinklab = function(sol,labels,s=0){
   ij = Matrix::which(sol@obs_stats$x_counts>0,arr.ind = TRUE)
@@ -37,16 +38,17 @@ nodelinklab = function(sol,labels,s=0){
   #/(sol@obs_stats$counts%*%t(sol@obs_stats$counts))
   ij = ij[ij[,1]!=ij[,2],]
   gglink = data.frame(from=ij[,1],to=ij[,2],p=ld[ij])
+  gglink$y=ifelse(gglink$from<gglink$to,-0.3,0.3)
   ggnode = data.frame(i=1:length(sol@obs_stats$counts),pi=diag(sol@obs_stats$x_counts))
   gl = ggplot2::guide_legend()
-  ggplot2::ggplot()+ggplot2::geom_curve(data=gglink %>% filter(p>s),ggplot2::aes(x=from,xend=to,y=ifelse(from<to,-0.3,0.3),yend=ifelse(from<to,-0.3,0.3),size=p,alpha=p),arrow=grid::arrow(length = grid::unit(2,"mm")),curvature = 0.7)+
+  ggplot2::ggplot()+ggplot2::geom_curve(data=gglink[gglink$p>s,],ggplot2::aes_(x=~from,xend=~to,y=~y,yend=~y,size=~p,alpha=~p),arrow=grid::arrow(length = grid::unit(2,"mm")),curvature = 0.7)+
     ggplot2::scale_x_continuous("",c())+
     ggplot2::scale_y_continuous("",c(),limits = c(-6,6))+
     ggplot2::scale_alpha("Link density:",limits=c(0,max(gglink$p)),guide="none")+
     ggplot2::scale_size_area("Clusters size:",limits=c(0,max(c(ggnode$pi,gglink$p))),max_size = 4,guide="none")+
-    ggplot2::geom_point(data=ggnode,aes(x=i,y=-0.1,size=pi))+
+    ggplot2::geom_point(data=ggnode,ggplot2::aes_(x=~i,y=~-0.1,size=~pi))+
     ggplot2::ggtitle(paste0(toupper(sol@model@name)," model with : ",max(sol@cl)," clusters."))+
-    ggplot2::geom_text(data=data.frame(x=1:length(labels),label=labels),aes(x=x,label=label,y=0.05))+
+    ggplot2::geom_text(data=data.frame(x=1:length(labels),label=labels),ggplot2::aes_(x=~x,label=~label,y=~0.05))+
     ggplot2::theme_minimal()
 }
 
@@ -58,7 +60,7 @@ graph_blocks = function(x){
                 sizek = rep(x@obs_stats$counts,each=K),
                 sizel = rep(x@obs_stats$counts,K), 
                 count=as.vector(x@obs_stats$x_counts))
-  ggplot2::ggplot(gg[gg$count>0,])+ggplot2::geom_tile(ggplot2::aes(x=kc-sizek/2,y=lc-sizel/2,width=sizek,height=sizel,fill=count/(sizek*sizel),alpha=count/(sizek*sizel)))+
+  ggplot2::ggplot(gg[gg$count>0,])+ggplot2::geom_tile(ggplot2::aes_(x=~kc-sizek/2,y=~lc-sizel/2,width=~sizek,height=~sizel,fill=~count/(sizek*sizel),alpha=~count/(sizek*sizel)))+
     ggplot2::scale_fill_distiller("Link density",type="seq",direction = 1)+
     ggplot2::scale_alpha("Link density")+
     ggplot2::ggtitle(paste0(toupper(x@model@name)," model with : ",max(x@cl)," clusters."))+
@@ -75,7 +77,7 @@ graph_blocks_degnorm = function(x){
                 sizel = rep(x@obs_stats$counts,K),
                 dk = as.vector(x@obs_stats$dout%*%t(x@obs_stats$din)),
                 count=as.vector(x@obs_stats$x_counts))
-  ggplot2::ggplot(gg[gg$count>0,])+ggplot2::geom_tile(ggplot2::aes(x=kc-sizek/2,y=lc-sizel/2,width=sizek,height=sizel,fill=count),alpha=0.8)+
+  ggplot2::ggplot(gg[gg$count>0,])+ggplot2::geom_tile(ggplot2::aes_(x=~kc-sizek/2,y=~lc-sizel/2,width=~sizek,height=~sizel,fill=~count),alpha=0.8)+
     ggplot2::scale_fill_distiller("Flow :",type="seq",direction = 1,palette="YlGnBu")+
     ggplot2::ggtitle(paste0(toupper(x@model@name)," model with : ",max(x@cl)," clusters."))+
     ggplot2::scale_x_continuous("",breaks=cumsum(x@obs_stats$counts),labels = ifelse(x@obs_stats$counts/sum(x@obs_stats$counts)>0.05,paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),""),minor_breaks = NULL)+
@@ -83,8 +85,8 @@ graph_blocks_degnorm = function(x){
     ggplot2::coord_fixed()+ggplot2::theme_bw()
 }
 #' graph_balance
-#' @param sol \code{\link{mm_path-class}} object to be plot
-#' @value a ggplot2 graph
+#' @param x a \code{\link{sbm_fit-class}} object to be plot
+#' @return a ggplot2 graph
 #' @export 
 graphbalance = function(x){
   K = length(x@obs_stats$counts)
@@ -96,7 +98,7 @@ graphbalance = function(x){
                 dk = as.vector(x@obs_stats$dout%*%t(x@obs_stats$din)),
                 count=as.vector(B))
   vm =max(abs(gg$count))
-  ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes(x=kc-sizek/2,y=lc-sizel/2,width=sizek,height=sizel,fill=count),alpha=0.7)+
+  ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(x=~kc-sizek/2,y=~lc-sizel/2,width=~sizek,height=~sizel,fill=~count),alpha=0.7)+
     ggplot2::scale_fill_distiller("Balance :",direction = 1,palette="RdBu",limits=c(-vm,vm))+
     ggplot2::ggtitle(paste0(toupper(x@model@name)," model with : ",max(x@cl)," clusters."))+
     ggplot2::scale_x_continuous("",breaks=cumsum(x@obs_stats$counts),labels = ifelse(x@obs_stats$counts/sum(x@obs_stats$counts)>0.05,paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),""),minor_breaks = NULL)+
@@ -115,7 +117,7 @@ mat_blocks = function(x){
                 sizek = rep(x@obs_stats$counts,D),
                 sizel = rep(1,K*D), 
                 count=as.vector(x@obs_stats$x_counts))
-  ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes(y=kc-sizek/2,x=lc-sizel/2,height=sizek,width=sizel,fill=count/sizek,alpha=count/sizek))+
+  ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~count/sizek,alpha=~count/sizek))+
     ggplot2::scale_fill_distiller("E[X]",type="seq",direction = 1)+
     ggplot2::scale_alpha("E[X]")+
     ggplot2::ggtitle(paste0("MM Model with : ",max(x@cl)," clusters."))+
@@ -133,7 +135,7 @@ mat_reg = function(x){
                 sizek = rep(x@obs_stats$counts,D),
                 sizel = rep(1,K*D), 
                 count=as.vector(sapply(x@obs_stats$regs,function(reg){reg$mu})))
-  ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes(y=kc-sizek/2,x=lc-sizel/2,height=sizek,width=sizel,fill=count,alpha=count))+
+  ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~count,alpha=~count))+
     ggplot2::scale_fill_distiller(expression(paste(" ",beta," ")),type="seq",direction = 1,palette = 2)+
     ggplot2::scale_alpha(expression(paste(" ",beta," ")))+
     ggplot2::ggtitle(paste0("Mixture of Regression Model with : ",max(x@cl)," clusters."))+
@@ -152,9 +154,9 @@ mat_reg_line = function(x,Xd,yd){
   gg=data.frame(y=as.vector(cbind(seq(min(ggp$x),max(ggp$x),length.out = 20),rep(1,20))%*%sapply(x@obs_stats$regs,function(reg){reg$mu})),
                 x=rep(seq(min(ggp$x),max(ggp$x),length.out = 20),K),K=rep(1:K,each=20))
   ggplot2::ggplot()+
-    ggplot2::geom_point(data=ggp[,1:2],ggplot2::aes(x=x,y=y),alpha=0.05)+
-    ggplot2::geom_path(data=gg,ggplot2::aes(x=x,y=y,group=K))+
-    ggplot2::geom_point(data=ggp,ggplot2::aes(x=x,y=y,col=K))+
+    ggplot2::geom_point(data=ggp[,1:2],ggplot2::aes_(x=~x,y=~y),alpha=0.05)+
+    ggplot2::geom_path(data=gg,ggplot2::aes_(x=~x,y=~y,group=~K))+
+    ggplot2::geom_point(data=ggp,ggplot2::aes_(x=~x,y=~y,col=~K))+
     ggplot2::ggtitle(paste0("Mixture of Regression Model with : ",max(x@cl)," clusters."))+
     ggplot2::facet_wrap(~K)+
     ggplot2::theme_bw()      
@@ -164,8 +166,8 @@ mat_reg_line = function(x,Xd,yd){
 
 dendo = function(x){
   ggtree = x@ggtree
-  ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes(x=xmin,y=H,xend=xmax,yend=H))+
-    ggplot2::geom_segment(data=ggtree[-1,],ggplot2::aes(x=x,y=H,xend=x,yend=Hend))+
+  ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
+    ggplot2::geom_segment(data=ggtree[-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
     ggplot2::scale_x_continuous("",breaks=c())+
     ggplot2::ylab(expression(paste("-log(",alpha,")")))+
     ggplot2::ggtitle(paste0(toupper(x@model@name)," ",length(x@obs_stats$counts)," clusters, dendogram"))+
@@ -176,8 +178,8 @@ dendo = function(x){
 lapath = function(x){
   gg = data.frame(k=sapply(x@path,function(p){p$K}),logalpha=sapply(x@path,function(p){p$logalpha}))
   gg = rbind(gg,data.frame(k=length(x@obs_stats$counts),logalpha=x@logalpha)) 
-  ggplot2::ggplot(data=gg)+ggplot2::geom_line(ggplot2::aes(x=k,y=-logalpha))+
-  ggplot2::geom_point(ggplot2::aes(x=k,y=-logalpha))+
+  ggplot2::ggplot(data=gg)+ggplot2::geom_line(ggplot2::aes_(x=~k,y=~-logalpha))+
+  ggplot2::geom_point(ggplot2::aes_(x=~k,y=~-logalpha))+
   ggplot2::ylab(expression(paste("-log(",alpha,")")))+
   ggplot2::ggtitle(paste0(toupper(x@model@name)," ",length(x@obs_stats$counts)," clusters"))+
   ggplot2::theme_bw()
@@ -187,8 +189,8 @@ lapath = function(x){
 iclpath = function(x){
   gg = data.frame(k=sapply(x@path,function(p){length(p$counts)}),icl=sapply(x@path,function(p){p$icl}))
   gg = rbind(gg,data.frame(k=length(x@obs_stats$counts),icl=x@icl)) 
-  ggplot2::ggplot(data=gg)+ggplot2::geom_line(ggplot2::aes(x=k,y=icl))+
-    ggplot2::geom_point(ggplot2::aes(x=k,y=icl))+
+  ggplot2::ggplot(data=gg)+ggplot2::geom_line(ggplot2::aes_(x=~k,y=~icl))+
+    ggplot2::geom_point(ggplot2::aes_(x=~k,y=~icl))+
     ggplot2::ylab(expression(paste("ICL")))+
     ggplot2::ggtitle(paste0(toupper(x@model@name)," ",length(x@obs_stats$counts)," clusters"))+
     ggplot2::theme_bw()
@@ -200,9 +202,6 @@ pprint =function(x,M,l){
   na = colnames(M)
   D=Matrix::rowSums(M)
   for (k in 1:K){
-    print("###########################")
-    print(paste0("#########",k, "#########"))
-    print("###########################")
     ii=which(x@cl==k)
     topk=order(D[ii],decreasing = TRUE)[1:l]
     print(na[ii[topk]])
@@ -212,7 +211,7 @@ pprint =function(x,M,l){
 spy = function(x){
   ij=Matrix::which(x!=0,arr.ind = TRUE)
   gg=data.frame(i=ij[,1],j=ij[,2],v=x[ij])
-  ggplot2::ggplot(gg)+ggplot2::geom_point(aes(y=-i,x=j,size=v))+
+  ggplot2::ggplot(gg)+ggplot2::geom_point(ggplot2::aes_(y=~-i,x=~j,size=~v))+
     ggplot2::scale_x_continuous("",c())+
     ggplot2::scale_y_continuous("",c())+
     ggplot2::scale_size_area(max_size=1,guide='none')
@@ -228,9 +227,9 @@ plot_front = function(sol){
   ggfront = ggfront[order(ggfront$x)[1:sol@K],]
   ggfront$xp = c(min(ggfront$x)-0.05*diff(range(ggfront$x)), ggfront$x[1:(nrow(ggfront)-1)])
   ggfront = ggfront[ggfront$x!=ggfront$xp,]
-  ggplot2::ggplot()+ggplot2::geom_abline(data=ggicl,ggplot2::aes(intercept=icl,slope=K-1),alpha=0.2)+
-    ggplot2::geom_point(data=ggfront,ggplot2::aes(x=x,y=icl+x*(K-1)))+
-    ggplot2::geom_segment(data=ggfront,ggplot2::aes(x=x,y=icl+x*(K-1),xend=xp,yend=icl+xp*(K-1)))+
+  ggplot2::ggplot()+ggplot2::geom_abline(data=ggicl,ggplot2::aes_(intercept=~icl,slope=~K-1),alpha=0.2)+
+    ggplot2::geom_point(data=ggfront,ggplot2::aes_(x=~x,y=~icl+x*(K-1)))+
+    ggplot2::geom_segment(data=ggfront,ggplot2::aes_(x=~x,y=~icl+x*(K-1),xend=~xp,yend=~icl+xp*(K-1)))+
     ggplot2::scale_x_continuous(expression(paste("log(",alpha,")")),limits = c(min(ggfront$xp),0))+
     ggplot2::ylab("ICL")+
     ggplot2::ggtitle(paste0(toupper(sol@model@name)," model with : ",max(sol@cl)," clusters."))+
@@ -240,6 +239,8 @@ plot_front = function(sol){
 
 
 #' @rdname print
+#' @title print
+#' print an icl_path object
 #' @param x \code{\link{icl_path-class}} object to print
 #' @export
 setMethod(f = "print", 
@@ -249,6 +250,8 @@ setMethod(f = "print",
           })
 
 #' @rdname show
+#' @title show
+#' show an icl_path object
 #' @param object \code{\link{icl_path-class}} object to print
 #' @export
 setMethod(f = "show", 

@@ -5,12 +5,23 @@
 \title{greed_cond}
 \usage{
 greed_cond(X, y, K = 20, model = find_model_cond(X, y),
-  alg = new("hybrid"), verbose = FALSE)
+  alg = methods::new("hybrid"), verbose = FALSE)
 }
 \arguments{
+\item{X}{covariable data}
+
+\item{y}{target variable}
+
 \item{K}{Desired number of cluster}
 
-\item{x}{An adjacency matrix in sparse format}
+\item{model}{an mreg model}
+
+\item{alg}{an optimisation algorithm hybrid, mutlistarts, seed or genetic}
+
+\item{verbose}{boolean for verbose mode}
+}
+\value{
+an icl_path object
 }
 \description{
 greed_cond

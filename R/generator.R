@@ -72,7 +72,8 @@ rmm = function (N,pi,mu,lambda){
 #' @param N A numeric value the size of the graph to generate
 #' @param pi A numeric vector of length K with clusters proportions. Must sum up to 1.
 #' @param mu A numeric matrix of dim K x K with the connectivity pattern to generate, elements in [0,1].
-#' @param betain A numeric vector of length N which specify the degree-correction will be normalized per cluster during the generation.
+#' @param betain A numeric vector of length N which specify the in-degree correction will be normalized per cluster during the generation.
+#' @param betaout A numeric vector of length N which specify the out-degree correction will be normalized per cluster during the generation.
 #' @return A list with fields:
 #' \itemize{
 #' \item x: the count matrix as a \code{dgCMatrix}
@@ -88,9 +89,9 @@ rmm = function (N,pi,mu,lambda){
 rdcsbm = function (N,pi,mu,betain,betaout){
   K  = length(pi)
   cl = sample(1:K,N,replace=TRUE,prob = pi)
-  betain_cl = aggregate(betain,list(cl),mean)$x
+  betain_cl = stats::aggregate(betain,list(cl),mean)$x
   betain = betain/betain_cl[cl]
-  betaout_cl = aggregate(betaout,list(cl),mean)$x
+  betaout_cl = stats::aggregate(betaout,list(cl),mean)$x
   betaout = betaout/betaout_cl[cl]
   x  = matrix(stats::rpois(N*N,mu[cbind(rep(cl,N),rep(cl,each=N))]*rep(betain,N)*rep(betaout,each=N)),N,N)
   links = Matrix::which(x>0,arr.ind = TRUE)
@@ -105,9 +106,10 @@ rdcsbm = function (N,pi,mu,betain,betaout){
 #' It take the sample size, cluster proportions and regression parameters matrix and variance  as input accordingly
 #'
 #' @param N A numeric value the size of the graph to generate
-#' @param pi A numeric vector of length K with clusters proportions. Must sum up to 1.
-#' @param mu A numeric matrix of dim K x d with the regression parameters.
-#' @param sigma A numeric of length 1 with the target conditional variance.
+#' @param pi A numeric vector of length K with clusters proportions (must sum up to 1)
+#' @param mu A numeric matrix of dim K x d with the regression parameters
+#' @param sigma A numeric of length 1 with the target conditional variance
+#' @param X A matrix of covariate
 #' @return A list with fields:
 #' \itemize{
 #' \item X: the covariate matrix 
@@ -120,10 +122,10 @@ rdcsbm = function (N,pi,mu,betain,betaout){
 #' \item sigma: conditional variance
 #' }
 #' @export
-rmreg = function (N,pi,mu,sigma,X=cbind(matrix(rnorm(N*(nrow(mu)-1)),N,nrow(mu)-1),rep(1,N))){
+rmreg = function (N,pi,mu,sigma,X=cbind(matrix(stats::rnorm(N*(nrow(mu)-1)),N,nrow(mu)-1),rep(1,N))){
   K  = length(pi)
   cl = sample(1:K,N,replace=TRUE,prob = pi)
-  yt = X%*%mu+rnorm(N,0,sigma)
+  yt = X%*%mu+stats::rnorm(N,0,sigma)
   y  = yt[cbind(1:N,cl)]
   list(cl=cl, X = X,y=y, K=K,N=N,pi=pi,mu=mu,sigma=sigma)
 }

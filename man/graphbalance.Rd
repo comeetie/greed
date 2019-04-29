@@ -7,7 +7,10 @@
 graphbalance(x)
 }
 \arguments{
-\item{sol}{\code{\link{mm_path-class}} object to be plot}
+\item{x}{a \code{\link{sbm_fit-class}} object to be plot}
+}
+\value{
+a ggplot2 graph
 }
 \description{
 graph_balance

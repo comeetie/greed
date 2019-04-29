@@ -13,7 +13,9 @@ rdcsbm(N, pi, mu, betain, betaout)
 
 \item{mu}{A numeric matrix of dim K x K with the connectivity pattern to generate, elements in [0,1].}
 
-\item{betain}{A numeric vector of length N which specify the degree-correction will be normalized per cluster during the generation.}
+\item{betain}{A numeric vector of length N which specify the in-degree correction will be normalized per cluster during the generation.}
+
+\item{betaout}{A numeric vector of length N which specify the out-degree correction will be normalized per cluster during the generation.}
 }
 \value{
 A list with fields:

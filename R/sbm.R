@@ -57,11 +57,14 @@ setMethod(f = "reorder",
             reorder_sbm(obs_stats,order)
           })
 
+setMethod(f = "seed", 
+          signature = signature("sbm","list","integer"), 
+          definition = function(model,data, K){
+            spectral(data$X,K)
+          })
+
+
 #' @rdname plot
-#' @param x \code{\link{sbm_fit-class}} object to be ploted
-#' @param type 'blocks' for a block matrix view, 'nodelink' for a node link graph, 'tree' for a dendogram, 'path' to show the evolution of -log(alpha) 
-#' with respect to the number of clusters.
-#' @return A ggplot2 graphics which summarize the results.
 #' @export
 setMethod(f = "plot", 
           signature = signature("sbm_fit","missing"),
@@ -70,7 +73,6 @@ setMethod(f = "plot",
           });
 
 #' @rdname plot
-#' @param x \code{\link{sbm_path-class}} object to ploted
 #' @export
 setMethod(f = "plot", 
           signature = signature("sbm_path","missing"),
@@ -85,9 +87,9 @@ setMethod(f = "plot",
               plot_front(x)
             },
             blocks ={
-              callNextMethod()
+              methods::callNextMethod()
             },
             nodelink={
-              callNextMethod()
+              methods::callNextMethod()
             })   
-          });
+          })

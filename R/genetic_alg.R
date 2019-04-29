@@ -54,7 +54,7 @@ genetic = function(model,alg,data,K,verbose=FALSE){
     }
     children = as.list(children)
     for (i in 1:(alg@pop_size-1)){
-      if(runif(1)<alg@prob_mut){
+      if(stats::runif(1)<alg@prob_mut){
         new_solutions[[i]] %<-% fit_greed(model,data,children[[i]]@cl,"swap",1)
       }else{
         new_solutions[[i]] = children[[i]]
@@ -93,7 +93,7 @@ cross_over = function(sol1,sol2,init_f){
   C=rep(0,length(cl1))
   K=0
   while(sum(C==0)>0){
-    if(K1>0  && runif(1)>0.5){
+    if(K1>0  && stats::runif(1)>0.5){
       kt = sample(K1,1,1)
       k = lk1[kt]
       K1=K1-1
