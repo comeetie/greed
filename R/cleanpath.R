@@ -180,7 +180,6 @@ extract_front_height=function(sol){
       H[l]= -1
     }
     #print(Front)
-    print(H)
   }
   
   for(l in 2:length(icl)){

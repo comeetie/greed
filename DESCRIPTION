@@ -25,6 +25,7 @@ Collate:
     'genetic_alg.R'
     'hybrid_alg.R'
     'alg_classes.R'
+    'data.R'
     'dcsbm.R'
     'generator.R'
     'greed.R'

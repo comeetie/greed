@@ -24,18 +24,17 @@ library(future)
 library(Matrix)
 library(ggplot2)
 library(greed)
-library(dplyr)
 plan(multisession)
 ```
 
 Simulation of an SBM graph with a hierarchical structure.
 ```{r, fig.show='hold'}
-N=1500
-K=15
+N=800
+K=8
 pi=rep(1/K,K)
 lambda  = 0.1
 lambda_o = 0.01
-Ks=5
+Ks=4
 mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
 sbm = rsbm(N,pi,mu)
 ```
@@ -51,16 +50,6 @@ Plot the results using a block representation.
 plot(sol,type='blocks')
 ```
 
-Improvement of the hybrid algorithm with respect to multiple start is clearly visible :
-
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-ggplot()+geom_boxplot(data=sol@train_hist,aes(x=generation,group=generation,y=icl))
-```
-
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-ggplot()+geom_line(data=sol@train_hist %>% group_by(generation) %>% summarise(K=mean(K)),aes(x=generation,y=K))+
-  geom_point(data=sol@train_hist %>% group_by(generation,K) %>% summarise(n=n()),aes(x=generation,y=K,size=n))
-```
 
 
 Plot the results with a node link diagram.
@@ -83,47 +72,40 @@ plot(sol,type='front')
 
 And select a smaller value to extract a new solution.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-sol3 = cut(sol,3)
-plot(sol3,type='blocks')
+sol2 = cut(sol,2)
+plot(sol2,type='blocks')
 ```
 
-Other model are availbale dscbm, mm
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-soldc = greed(sbm$x,25,new("dcsbm"))
-plot(soldc,type='blocks')
-```
 
 Eventualy you may change the algorithm "hybrid" (default), "multistart" for greedy with random multiple start and "seed"" for greedy initialized with spectral clustering. See the doc for details on the algorithm parameters. 
 
 One example with the polbooks dataset:
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-data("Xpolbooks")
-solpol=greed(Xpolbooks,10,new("dcsbm"),new("hybrid",pop_size=30))
-plot(solpol,type='blocks')
+data("Books")
+solbooks=greed(Books$X,10,new("dcsbm"),new("hybrid",pop_size=30))
+plot(solbooks,type='blocks')
 ```
 
 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-data("Lpolbooks")
-plot(solpol,type='tree')
-table(Lpolbooks,cut(solpol,3)@cl)
+plot(solbooks,type='tree')
+table(Books$label,cut(solbooks,3)@cl)
 ```
 
 
 One with the polblogs dataset:
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-data("Xpolblogs")
-solblogs=greed(Xpolblogs)
+data("Blogs")
+solblogs=greed(Blogs$X)
 plot(solblogs,type='blocks')
 ```
 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-data("Lpolblogs")
 plot(solblogs,type='front')
-table(Lpolblogs,cut(solblogs,2)@cl)
+table(Blogs$label,cut(solblogs,2)@cl)
 ```
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-data("Xfoot")
-solfoot=greed(Xfoot)
+data("Football")
+solfoot=greed(Football$X)
 plot(solfoot,type='blocks')
 ```

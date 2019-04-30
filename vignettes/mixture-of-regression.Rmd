@@ -1,5 +1,5 @@
 ---
-title: "Graph clustering with SBM"
+title: "Mixture of regression"
 author: "Etienne Côme"
 date: "`r Sys.Date()`"
 fig_caption: yes
@@ -43,8 +43,8 @@ mat_reg_line = function(x,Xd,yd){
 
 Simulation 
 ```{r, fig.show='hold'}
-N=1500
-K=6
+N=800
+K=3
 pi=rep(1/K,K)
 sig = 0.1
 mu = matrix(rnorm(K*K),K,K)*0.3
@@ -74,8 +74,8 @@ table(sol@cl,mre$cl)
 ```
 
 ```{r, fig.show='hold'}
-N=1500
-K=4
+N=800
+K=2
 pi=rep(1/K,K)
 sig = 0.1
 mu = matrix(rnorm(K*2),2,K)
@@ -94,14 +94,16 @@ mat_reg_line(sol,mre$X,mre$y/sd(mre$y))
 probs=post_probs(new("mreg",reg=0.1),list(X=mre$X,y=mre$y/sd(mre$y)),sol@cl)
 entropy=apply(probs,1,function(p){-sum(p*log(p))})
 pm=apply(probs,1,function(p){max(p)})
-ggplot(data.frame(entropy=entropy,x=mre$X[,1],y=mre$y/sd(mre$y),pm=pm) %>% arrange(desc(pm)))+
+ggp = data.frame(entropy=entropy,x=mre$X[,1],y=mre$y/sd(mre$y),pm=pm) 
+ggp = ggp[order(ggp$pm),]
+ggplot(ggp)+
   geom_point(aes(x=x,y=y,color=pm))+
   scale_color_distiller(palette="YlOrRd")
 ```
 
 
 ```{r, fig.show='hold'}
-ggplot(data.frame(entropy=entropy,x=mre$X[,1],y=mre$y/sd(mre$y),pm=pm) %>% arrange(desc(pm)))+
+ggplot(ggp)+
   geom_point(aes(x=x,y=y,color=pm))+
   scale_color_distiller(palette="YlOrRd")
 ```
