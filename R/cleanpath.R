@@ -25,6 +25,7 @@ cleanpath = function(pathsol){
       pathsol@obs_stats = path[[im]]$obs_stats
       pathsol@icl = path[[im]]$icl1
       pathsol@cl = as.vector(path[[im]]$cl)
+      # if it exist cut from there
       if(im>1){
         path=path[(im-1):1]  
       }else{
@@ -35,8 +36,10 @@ cleanpath = function(pathsol){
     
     
     
-    
+    # check for non empty path
     if(length(path)>0){
+      
+      # compute the pareto front and extract the height as -log(alpha) of each merge in the front
       Hfront = extract_front_height(pathsol)
       # initialisation
       # vector with the tree information
@@ -57,8 +60,6 @@ cleanpath = function(pathsol){
       w = 0.5
       K=1
       # go back from the tree root
-      # is there a tree here ?
-      
       best_merge = length(path)
       # for each merge
       for (lev in seq(length(path),1)){
@@ -78,17 +79,21 @@ cleanpath = function(pathsol){
         tree=c(tree,lab[l],lab[l])
         
         
-        #H[lab[l]]=-path[[lev]]$logalpha
-        #if(tree[lab[l]]!=0 && H[lab[l]]>H[tree[lab[l]]]){
-        #  H[lab[l]]=H[tree[lab[l]]]
-        #}
+        # update height and K vectors 
         Kc[lab[l]]=K
         H[lab[l]]=Hfront[K]
         
+        # update lab[l] to onbe of the two new nodes
         lab[l]=cn+1
+        
+        # current father position
         fpos = xpos[l]
+        
+        # update xtree position
         xtree=c(xtree,fpos-w^pl,fpos+w^pl)
-        # choisir + ou - en fonctionde la taille ?
+        # better to take size in account for left/right to avoid random effects ?
+        
+        # update xpos and lab for the two new nodes
         xpos[l]=fpos-w^pl
         if(k>K){
           xpos = c(xpos,fpos+w^pl)
@@ -97,17 +102,23 @@ cleanpath = function(pathsol){
           xpos = c(xpos[1:(k-1)],fpos+w^pl,xpos[k:length(lab)])
           lab=c(lab[1:(k-1)],cn+2,lab[k:length(lab)])
         }
+        # update K
         K  = K+1
+        # update cn
         cn = cn + 2
         
       }
       
 
+      #prepare the data.frame to store the tree
       ggtree=data.frame(H=H,tree=tree,x=xtree,node=1:length(tree),xmin=0,xmax=0,K=Kc)
       # recompute the x bottom to top for constant spacing of leafs
+      # leafs ordering from x
       leafs = which(ggtree$H==0)
       or = order(ggtree[leafs,"x"])
+      # equidistant spacing
       ggtree$x[leafs[or]]=seq(-1,1,length.out = length(leafs))
+      # update x position from leafs to root is easy since leafs are now ordered
       others = ggtree$node[ggtree$H!=0]
       for(n in others[seq(length(others),1)]){
         sons=which(ggtree$tree==n)
@@ -116,72 +127,97 @@ cleanpath = function(pathsol){
         ggtree$xmax[n] = max(ggtree$x[sons])
       }
       
-      
-      
+      # store height and xpos of father
       ggtree$Hend = c(-1,ggtree$H[ggtree$tree])
       ggtree$xend = c(-1,ggtree$x[ggtree$tree])
       
+      # ordering of initial solution
       or = order(xpos)
       pathsol@obs_stats = reorder(pathsol@model,pathsol@obs_stats,or)
-      pathsol@cl=order(or)[pathsol@cl] 
+      pathsol@cl=order(or)[pathsol@cl]
+      
+      # store upated path and tree
       pathsol@path = path
       pathsol@tree = tree
       pathsol@ggtree = ggtree 
     }else{
+      # deals with empty path
       pathsol@tree=c(0)
       pathsol@ggtree = data.frame(H=0,tree=0,x=0,node=1,xmin=0,max=0)
     }
   }else{
+    # deals with empty path
     pathsol@tree=c(0)
     pathsol@ggtree = data.frame(H=0,tree=0,x=0,node=1,xmin=0,max=0)
   }
   pathsol
 } 
 
-
+# extract the pareto front
 extract_front_height=function(sol){
+  
+  # vector of icls value from root to leaves
   icl=c(sol@icl,sapply(sol@path,function(v){v$icl1}))
   icl = icl[length(icl):1]
+  # K
   K = 1:length(icl)
   
+  # init H
   H=rep(0,length(icl))
+  
+  # current merge position 
   cdi = Inf
+  # current best line
   bestline = 1
+  # vector with indexes of solutions that belong to the pareto front
   Front = c(1)
   
+  # from root to leaves
   for (l in 2:length(icl)){
+    
+    # merge value with current bestline
     di = (icl[l]-icl[bestline])
     din = di/(l-bestline)
+    
+    # is their a potential merge ?
     if (di > 0){
+      
+      # if this merge did not occurs after the current one update the front
       while(din > cdi & length(Front)>1){
+        
+        # remove the last solution from the front 
         Front=Front[-length(Front)]
         H[bestline]=-1
+        
+        # update bestline
         bestline = Front[length(Front)]
         
-        
+        # update merge position
         di = (icl[l]-icl[bestline])
         din = di/(l-bestline)
+        # update previous merge position
         if(length(Front)>1){
           cdi = (icl[bestline]-icl[Front[length(Front)-1]])/(bestline-Front[length(Front)-1])
         }else{
           cdi = H[1] 
         }
         
-        #print(Front)
-        #print(paste0("T : ",din," / ",cdi," :",bestline))
         
       }
+      
+      # add the extracted solution to the front
       H[Front[length(Front)]]=din
       cdi = din
       bestline = l
       Front=c(Front,l)
       
     }else{
+      # if solution not in front  
       H[l]= -1
     }
-    #print(Front)
   }
   
+  # copy from left previous value
   for(l in 2:length(icl)){
     if(H[l]==-1){
       H[l]=H[l-1]

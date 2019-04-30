@@ -10,11 +10,11 @@ greed(X, K = 20, model = find_model(X), alg = methods::new("hybrid"),
   verbose = FALSE)
 }
 \arguments{
-\item{X}{data to cluster sparseMatrix or matrix}
+\item{X}{data to cluster}
 
 \item{K}{Desired number of cluster}
 
-\item{model}{a dcsbm, sbm or mm model}
+\item{model}{a dcsbm, sbm, mm or mreg model}
 
 \item{alg}{an optimisation algorithm hybrid, mutlistarts, seed or genetic}
 

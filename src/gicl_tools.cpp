@@ -116,13 +116,7 @@ double sum_lfact(const arma::sp_mat & x){
   return cst;
 }
 
-//' lm_post
-//' @param X data matrix of covariates Nxd
-//' @param y target Nx1
-//' @param regu prior precision parameter
-//' @param a0 prior parameter
-//' @param b0 prior parameter
-//' @export
+
 // [[Rcpp::export]]
 List lm_post(const arma::mat X,const arma::colvec& y,double regu, double a0, double b0) {
   int n = X.n_rows, d = X.n_cols;
@@ -152,14 +146,6 @@ List lm_post(const arma::mat X,const arma::colvec& y,double regu, double a0, dou
 }
   
   
-  //' lm_post_add1
-  //' @param current gaussian linear model to update
-  //' @param X data matrix of covariates 1xd
-  //' @param y target 1x1
-  //' @param regu prior precision parameter
-  //' @param a0 prior parameter
-  //' @param b0 prior parameter
-  //' @export
   // [[Rcpp::export]]
   List lm_post_add1(List current, const arma::rowvec X,double y,double regu, double a0, double b0) {
     
@@ -200,14 +186,7 @@ List lm_post(const arma::mat X,const arma::colvec& y,double regu, double a0, dou
 
 
 
-//' lm_post_del1
-//' @param current gaussian linear model to update
-//' @param X data matrix of covariates 1xd
-//' @param y target 1x1
-//' @param regu prior precision parameter
-//' @param a0 prior parameter
-//' @param b0 prior parameter
-//' @export
+
 // [[Rcpp::export]]
 List lm_post_del1(List current, const arma::rowvec X,double y,double regu, double a0, double b0) {
   int n = as<int>(current["n"])-X.n_rows;
@@ -241,13 +220,7 @@ List lm_post_del1(List current, const arma::rowvec X,double y,double regu, doubl
                       Named("iS")=inv_sympd(S));
 }
 
-//' lm_post_merge
-//' @param current_k gaussian linear model to merge
-//' @param current_l gaussian linear model to merge
-//' @param regu prior precision parameter
-//' @param a0 prior parameter
-//' @param b0 prior parameter
-//' @export
+
 // [[Rcpp::export]]
 List lm_post_merge(List current_k,List current_l,double regu, double a0, double b0) {
   int n = as<int>(current_k["n"])+as<int>(current_l["n"]);
@@ -276,14 +249,7 @@ List lm_post_merge(List current_k,List current_l,double regu, double a0, double 
 }
 
 
-//' lm_post_add
-//' @param current gaussian linear model to update
-//' @param X data matrix of covariates Ntxd
-//' @param y target Ntx1
-//' @param regu prior precision parameter
-//' @param a0 prior parameter
-//' @param b0 prior parameter
-//' @export
+
 // [[Rcpp::export]]
 List lm_post_add(List current, const arma::mat X,const arma::colvec& y,double regu, double a0, double b0) {
   int n = as<int>(current["n"])+X.n_rows;
@@ -308,14 +274,7 @@ List lm_post_add(List current, const arma::mat X,const arma::colvec& y,double re
 
 
 
-//' lm_post_del
-//' @param current gaussian linear model to update
-//' @param X data matrix of covariates Ntxd
-//' @param y target Ntx1
-//' @param regu prior precision parameter
-//' @param a0 prior parameter
-//' @param b0 prior parameter
-//' @export
+
 // [[Rcpp::export]]
 List lm_post_del(List current, const arma::mat X,const arma::colvec& y,double regu, double a0, double b0) {
   int n = as<int>(current["n"])-X.n_rows;

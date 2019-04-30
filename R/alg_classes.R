@@ -162,9 +162,9 @@ spectral= function(X,K){
 
 
 #' @title greed
-#' @param X data to cluster sparseMatrix or matrix
+#' @param X data to cluster 
 #' @param K Desired number of cluster
-#' @param model a dcsbm, sbm or mm model
+#' @param model a dcsbm, sbm, mm or mreg model
 #' @param alg an optimisation algorithm hybrid, mutlistarts, seed or genetic
 #' @param verbose boolean for verbose mode 
 #' @return an icl_path object

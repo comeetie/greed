@@ -32,13 +32,6 @@ fit_greed_path <- function(data, init_fit) {
     .Call('_greed_fit_greed_path', PACKAGE = 'greed', data, init_fit)
 }
 
-#' lm_post
-#' @param X data matrix of covariates Nxd
-#' @param y target Nx1
-#' @param regu prior precision parameter
-#' @param a0 prior parameter
-#' @param b0 prior parameter
-#' @export
 lm_post <- function(X, y, regu, a0, b0) {
     .Call('_greed_lm_post', PACKAGE = 'greed', X, y, regu, a0, b0)
 }
@@ -47,49 +40,18 @@ lm_post_add1 <- function(current, X, y, regu, a0, b0) {
     .Call('_greed_lm_post_add1', PACKAGE = 'greed', current, X, y, regu, a0, b0)
 }
 
-#' lm_post_del1
-#' @param current gaussian linear model to update
-#' @param X data matrix of covariates 1xd
-#' @param y target 1x1
-#' @param regu prior precision parameter
-#' @param a0 prior parameter
-#' @param b0 prior parameter
-#' @export
 lm_post_del1 <- function(current, X, y, regu, a0, b0) {
     .Call('_greed_lm_post_del1', PACKAGE = 'greed', current, X, y, regu, a0, b0)
 }
 
-#' lm_post_merge
-#' @param current_k gaussian linear model to merge
-#' @param current_l gaussian linear model to merge
-#' @param regu prior precision parameter
-#' @param a0 prior parameter
-#' @param b0 prior parameter
-#' @export
 lm_post_merge <- function(current_k, current_l, regu, a0, b0) {
     .Call('_greed_lm_post_merge', PACKAGE = 'greed', current_k, current_l, regu, a0, b0)
 }
 
-#' lm_post_add
-#' @param current gaussian linear model to update
-#' @param X data matrix of covariates Ntxd
-#' @param y target Ntx1
-#' @param regu prior precision parameter
-#' @param a0 prior parameter
-#' @param b0 prior parameter
-#' @export
 lm_post_add <- function(current, X, y, regu, a0, b0) {
     .Call('_greed_lm_post_add', PACKAGE = 'greed', current, X, y, regu, a0, b0)
 }
 
-#' lm_post_del
-#' @param current gaussian linear model to update
-#' @param X data matrix of covariates Ntxd
-#' @param y target Ntx1
-#' @param regu prior precision parameter
-#' @param a0 prior parameter
-#' @param b0 prior parameter
-#' @export
 lm_post_del <- function(current, X, y, regu, a0, b0) {
     .Call('_greed_lm_post_del', PACKAGE = 'greed', current, X, y, regu, a0, b0)
 }
