@@ -1,0 +1,192 @@
+---
+title: "ICL maximisation for discrete latent variable models"
+author: "Etienne Côme"
+date: "23 mai 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(greed)
+library(Matrix)
+library(ggpubr)
+library(dplyr)
+library(future)
+plan(multicore)
+```
+
+## Introduction
+
+
+
+## ICL maximisation 
+$$
+\begin{equation}
+\pi \sim \mathcal{D}(\alpha)\\
+Z|\pi &\sim& \mathcal{M}(1,\pi)\\
+\theta &\sim& \mathcal{P}(\eta)\\
+X|Z_{k}=1,\theta &\sim& \mathcal{L}(\theta_k)\\ 
+\end{equation}
+$$
+
+$$
+\begin{equation}
+ICL(\mathbf{Z})&=&\int_{\pi}
+\end{equation}
+$$
+
+### Models 
+
+#### Mixture models
+
+#### Stochastich block models
+
+#### Mixture of regression
+
+### Algorithms
+
+### Regularisation path and hierarchical clustering
+
+## Experiments
+
+### Simulated data
+
+```{r}
+N=1500
+K=15
+pi=rep(1/K,K)
+lambda  = 0.1
+lambda_o = 0.025
+Ks=5
+mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
+sbm = rsbm(N,pi,mu)
+```
+
+```{r}
+fit = greed(sbm$x,model=new("sbm"),alg = new("hybrid",pop_size=50))
+fit_o = greed::fit_greed(new("sbm"),list(X=sbm$x),sample(1:20,nrow(sbm$x),replace = TRUE))
+fit_perm=fit
+perm = sample(1:fit_perm@K)
+fit_perm@obs_stats$counts=fit_perm@obs_stats$counts[perm]
+fit_perm@obs_stats$x_counts=fit_perm@obs_stats$x_counts[perm,perm]
+cl=spectral(sbm$x,15)
+fit_sp=greed::fit_greed(new("sbm"),list(X=sbm$x),cl,type="none")
+fit_sp_init=greed(sbm$x,model=new("sbm"),alg=new("seed"))
+```
+
+```{r,fig.height=8,fig.width=15}
+p1=plot(fit_o)+ggtitle("greedy")
+p2=plot(fit_perm)+ggtitle("hybrid")
+p3=plot(fit)+ggtitle("hybrid + hierarchical ordering")
+p4=plot(fit_o,type='nodelink')+ggtitle("")
+p5=plot(fit_perm,type='nodelink')+ggtitle("")
+p6=plot(fit,type='nodelink')+ggtitle("")
+ggarrange(p1,p2,p3,p4,p5,p6,nrow = 2,ncol=3,common.legend = TRUE,legend="left")
+```
+
+```{r,fig.height=5,fig.width=10}
+gen=ggplot(fit@train_hist)+geom_boxplot(aes(x=generation,y=icl,group=generation))+geom_point(aes(x=generation,y=icl,group=generation))+
+  ggtitle("Evolution of ICL with respect generation")+
+  theme_bw()
+tree=plot(fit,type='tree')+ggtitle("Dendogramme derived from the best solution")
+ggarrange(gen,tree)
+```
+
+```{r, cache=TRUE}
+
+Nbsim = 100
+S=matrix(0,1500,Nbsim)
+Fi=matrix(0,1500,Nbsim)
+Fi_o=matrix(0,1500,Nbsim)
+Fi_s=matrix(0,1500,Nbsim)
+Fi_si=matrix(0,1500,Nbsim)
+Fi_ms=matrix(0,1500,Nbsim)
+Xlist = list()
+for (s in 1:Nbsim){
+  N=1500
+  K=15
+  pi=rep(1/K,K)
+  lambda  = 0.1
+  lambda_o = 0.025
+  Ks=5
+  mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
+  sbm = rsbm(N,pi,mu)  
+  S[,s]=sbm$cl
+  Xlist[[s]]=sbm
+  fit = greed(sbm$x,model=new("sbm"),alg = new("hybrid",pop_size=50))
+  Fi[,s]=fit@cl
+  fit_o = greed::fit_greed(new("sbm"),list(X=sbm$x),sample(1:20,nrow(sbm$x),replace = TRUE))
+  Fi_o[,s] = fit_o@cl 
+  cl=spectral(sbm$x,15)
+  Fi_s[,s] = cl 
+  fit_sp_init=greed(sbm$x,model=new("sbm"),alg=new("seed"))
+  Fi_si[,s] = fit_sp_init@cl
+  fit_ms = greed(sbm$x,model=new("sbm"),alg = new("multistarts",nb_start=50))
+  Fi_ms[,s]=fit_ms@cl
+}
+```
+
+```{r}
+rFi = tibble(alg="Hybrid",nmi=sapply(1:Nbsim,function(s){NMI(Fi[,s],S[,s])}))
+rFi_o = tibble(alg="Greedy",nmi=sapply(1:Nbsim,function(s){NMI(Fi_o[,s],S[,s])}))
+rFi_s = tibble(alg="Spectral",nmi=sapply(1:Nbsim,function(s){NMI(Fi_s[,s],S[,s])}))
+rFi_si = tibble(alg="Seed",nmi=sapply(1:Nbsim,function(s){NMI(Fi_si[,s],S[,s])}))
+rFi_ms = tibble(alg="Multistart",nmi=sapply(1:Nbsim,function(s){NMI(Fi_ms[,s],S[,s])}))
+resSim = rFi %>% bind_rows(rFi_o) %>% bind_rows(rFi_s)%>% bind_rows(rFi_si)%>% bind_rows(rFi_ms) %>% mutate(alg=factor(alg,levels=c("Greedy","Multistart","Spectral","Seed","Hybrid")))
+```
+
+
+```{r,fig.width=5,fig.height=5}
+ggplot(resSim)+geom_boxplot(aes(x=alg,y=nmi,group=alg))+geom_point(aes(x=alg,y=nmi))+xlab("")+ylab("Normalized mutual information")+theme_bw()
+```
+
+
+
+
+### Real data
+
+
+```{r, cache=TRUE}
+data("Blogs")
+fit_blogs = greed(Blogs$X,model=new("dcsbm"))
+data("Books")
+fit_books = greed(Books$X,model=new("dcsbm"))
+data("Football")
+fit_foot = greed(Football$X,model=new("dcsbm"))
+data("Jazz")
+fit_jazz = greed(Jazz,model=new("dcsbm"))
+```
+
+
+```{r, fig.height=16,fig.width=16}
+
+p1=plot(fit_blogs)+ggtitle("Blogs")
+p2=plot(fit_books)+ggtitle("Books")
+p3=plot(fit_foot)+ggtitle("Football")
+p4=plot(fit_jazz)+ggtitle("Jazz")
+
+p5=plot(fit_blogs,type='nodelink')+ggtitle("")
+p6=plot(fit_books,type='nodelink')+ggtitle("")
+p7=plot(fit_foot,type='nodelink')+ggtitle("")
+p8=plot(fit_jazz,type='nodelink')+ggtitle("")
+
+p9=plot(fit_blogs,type='tree')+ggtitle("")
+p10=plot(fit_books,type='tree')+ggtitle("")
+p11=plot(fit_foot,type='tree')+ggtitle("")
+p12=plot(fit_jazz,type='tree')+ggtitle("")
+
+
+p13=plot(cut(fit_blogs,2))+ggtitle("")
+p14=plot(cut(fit_books,3))+ggtitle("")
+p15=plot(cut(fit_foot,10))+ggtitle("")
+p16=plot(cut(fit_jazz,4))+ggtitle("")
+
+
+ggarrange(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,nrow = 4,ncol=4,common.legend = TRUE)
+
+```
+
+## Conclusion

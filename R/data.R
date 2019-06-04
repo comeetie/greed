@@ -109,3 +109,22 @@
 "Jazz"
 
 
+#' French Parliament votes
+#' 
+#' 
+#'  
+#' 
+#' @docType data
+#'
+#' @usage data(FrenchParliament)
+#'
+#' @format An object of class \code{"list"} with two fields; 
+#'  \describe{
+#'   \item{X}{matrix of deputy votes a \cite{sparseMatrix} of size 593x570}
+#'   \item{labels}{a data frame of deputy meta-data}
+#' }
+#' @examples
+#' data(FrenchParliament)
+"FrenchParliament"
+
+

@@ -59,7 +59,7 @@ setMethod(f = "reorder",
 
 
 setMethod(f = "seed", 
-          signature = signature("mm","list","integer"), 
+          signature = signature("mm","list","numeric"), 
           definition = function(model,data, K){
             X=cbind(data$X,data$y)
             sds=apply(X,2,stats::sd)

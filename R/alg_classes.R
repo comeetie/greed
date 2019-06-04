@@ -151,7 +151,7 @@ spectral= function(X,K){
   nu = sum(X)/dim(X)[1]
   D  = (Matrix::rowSums(X)+nu)^-0.5
   Ln = Matrix::sparseMatrix(ij[,1],ij[,2],x=D[ij[,1]]*D[ij[,2]])
-  V = rARPACK::eigs(Ln,K)
+  V = RSpectra::eigs(Ln,K)
   Xp = V$vectors
   Xpn = Xp/sqrt(rowSums(Xp)^2)
   Xpn[rowSums(Xp)==0,]=0

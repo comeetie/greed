@@ -58,7 +58,7 @@ setMethod(f = "reorder",
           })
 
 setMethod(f = "seed", 
-          signature = signature("sbm","list","integer"), 
+          signature = signature("sbm","list","numeric"), 
           definition = function(model,data, K){
             spectral(data$X,K)
           })

@@ -10,7 +10,7 @@ NULL
 
 hybrid = function(model,alg,data,K, verbose=FALSE){
             
-            fi = function(ncl){ fit_greed(model,data,ncl,type="merge") }
+            fi = function(ncl){ fit_greed(model,data,ncl,type="merge",verbose=verbose) }
             train.hist = data.frame(generation=c(),icl=c(),K=c())
 
             # multi-start in //

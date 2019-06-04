@@ -217,6 +217,17 @@ spy = function(x){
     ggplot2::scale_size_area(max_size=1,guide='none')
 }
 
+groupspy = function(x,clust){
+  x=x[order(clust),order(clust)]
+  lims = c(1,cumsum(table(clust)))
+  ij=Matrix::which(x!=0,arr.ind = TRUE)
+  gg=data.frame(i=ij[,1],j=ij[,2],v=x[ij])
+  ggplot2::ggplot(gg)+ggplot2::geom_point(ggplot2::aes_(y=~-i,x=~j,size=~v),alpha=0.5)+
+    ggplot2::scale_x_continuous("",breaks = lims,labels = c(),minor_breaks = c(),)+
+    ggplot2::scale_y_continuous("",breaks = -lims,labels = c(),minor_breaks = c())+
+    ggplot2::scale_size_area(max_size=1,guide='none')
+}
+
 
 plot_front = function(sol){
   icl = c(sol@icl,sapply(sol@path,function(v){v$icl1}))
