@@ -169,14 +169,14 @@ List IclModel::greedy_merge_path(){
   double icl = this->icl(this->get_obs_stats());
   double iclold = icl;
   while(K>1){
-    arma::mat mm = this->delta_merge().getMergeMat();
-    Rcout << mm << std::endl;
+    // arma::mat mm = this->delta_merge().getMergeMat();
+    // Rcout << mm << std::endl;
     ++nbmerge;
     // get best merge
     int k = merge_mat.getK();
     int l = merge_mat.getL();
     // update stats
-    Rcout << k<< l << ":  "<< mm(k,l) << std::endl;
+    // Rcout << k<< l << ":  "<< mm(k,l) << std::endl;
     this->merge_update(k,l);
     // compute new icl
     iclold = icl;

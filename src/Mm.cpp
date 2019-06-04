@@ -214,12 +214,13 @@ MergeMat Mm::delta_merge(arma::mat delta, int obk, int obl){
         List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec));
         delta(k,l)=icl(new_stats,k,l)-icl(old_stats,k,l);
         delta(l,k)=delta(k,l);
-        if(delta(k,l)>bv){
-          bk=k;
-          bl=l;
-          bv=delta(k,l);
-        }
       }
+      if(delta(k,l)>bv){
+        bk=k;
+        bl=l;
+        bv=delta(k,l);
+      }
+      
     }
   }
   return MergeMat(bk,bl,bv,delta);
