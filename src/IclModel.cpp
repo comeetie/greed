@@ -81,7 +81,7 @@ void IclModel::greedy_swap(int nbpassmax){
         }else{
           arma::vec deltaneg = delta.elem(arma::find(delta<0));
           int bmn= deltaneg.index_max();
-          if(deltaneg(bmn) <  -10 ){
+          if(deltaneg(bmn) <  -10000 ){
             workingset(cnode) = 0;
             //Rcout << "BMN :"<< bmn << "val" << deltaneg(bmn) << std::endl;
           }

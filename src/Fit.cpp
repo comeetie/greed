@@ -5,10 +5,11 @@
 #include "DcSbm.h"
 #include "Mm.h"
 #include "Mreg.h"
+#include "Mvmreg.h"
 using namespace Rcpp;
 
 
-IclModel * init(S4 model,List data, arma::vec& clt) {
+IclModel * init(S4 model,List data, arma::vec& clt, bool verbose) {
   
   IclModel * M;
   int Ki = arma::max(clt);
@@ -18,26 +19,33 @@ IclModel * init(S4 model,List data, arma::vec& clt) {
   try{
     if(strcmp(model.slot("name"),"sbm")!=0 && 
        strcmp(model.slot("name"),"dcsbm")!=0 && 
-       strcmp(model.slot("name"),"mm")!=0 && 
+       strcmp(model.slot("name"),"mm")!=0 &&
+       strcmp(model.slot("name"),"mvmreg")!=0 &&
        strcmp(model.slot("name"),"mreg")!=0){
       stop("Unsuported model");
     }
     if(strcmp(model.slot("name"),"sbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
-      M = new Sbm(xp,Ki,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt,false);
+      M = new Sbm(xp,Ki,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt,verbose);
     }
     if(strcmp(model.slot("name"),"dcsbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
-      M = new DcSbm(xp,Ki,model.slot("alpha"),clt,false);
+      M = new DcSbm(xp,Ki,model.slot("alpha"),clt,verbose);
     }
     if(strcmp(model.slot("name"),"mm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
-      M = new Mm(xp,Ki,model.slot("alpha"),model.slot("beta"),clt,false);
+      M = new Mm(xp,Ki,model.slot("alpha"),model.slot("beta"),clt,verbose);
     }
     if(strcmp(model.slot("name"),"mreg")==0){
       arma::mat X = as<arma::mat>(data["X"]);
       arma::colvec y = as<arma::colvec>(data["y"]);
-      M = new Mreg(X,y,Ki,model.slot("alpha"),model.slot("reg"),model.slot("a0"),model.slot("b0"),clt);
+      M = new Mreg(X,y,Ki,model.slot("alpha"),model.slot("reg"),model.slot("a0"),model.slot("b0"),clt,verbose);
+    }
+    
+    if(strcmp(model.slot("name"),"mvmreg")==0){
+      arma::mat X = as<arma::mat>(data["X"]);
+      arma::mat Y = as<arma::mat>(data["Y"]);
+      M = new Mvmreg(X,Y,Ki,model.slot("alpha"),model.slot("beta"),model.slot("N0"),clt,verbose);
     }
     
     
@@ -63,7 +71,7 @@ S4 init_sol(S4 model,String type="fit") {
 //' @export
 // [[Rcpp::export]]
 arma::mat post_probs(S4 model,List data,  arma::vec& clt) {
-  IclModel * M = init(model,data,clt);
+  IclModel * M = init(model,data,clt,false);
   return(M->get_probs());
 }
 
@@ -78,7 +86,7 @@ arma::mat post_probs(S4 model,List data,  arma::vec& clt) {
 //' @export
 // [[Rcpp::export]]
 S4 fit_greed(S4 model,List data,  arma::vec& clt, std::string type="both", int nb_max_pass = 50,bool verbose=false) {
-  IclModel * M = init(model,data,clt);
+  IclModel * M = init(model,data,clt,verbose);
   S4 sol = init_sol(model);
   if(type!="merge" && type!="swap" && type!="both" && type!="none"){
     stop("Unsuported algorithm");
@@ -110,7 +118,7 @@ S4 fit_greed(S4 model,List data,  arma::vec& clt, std::string type="both", int n
 S4 fit_greed_path(List data, S4 init_fit) {
   S4 model = init_fit.slot("model");
   arma::vec clt = init_fit.slot("cl");
-  IclModel * M = init(model,data,clt);
+  IclModel * M = init(model,data,clt,false);
   S4 sol = init_sol(model,"path");
   List obs_stats = M->get_obs_stats();
   sol.slot("obs_stats") = obs_stats;

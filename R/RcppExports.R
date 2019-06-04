@@ -56,3 +56,19 @@ lm_post_del <- function(current, X, y, regu, a0, b0) {
     .Call('_greed_lm_post_del', PACKAGE = 'greed', current, X, y, regu, a0, b0)
 }
 
+mvlm_post <- function(X, Y, alpha, N0) {
+    .Call('_greed_mvlm_post', PACKAGE = 'greed', X, Y, alpha, N0)
+}
+
+mvlm_post_add1 <- function(current, X, Y, alpha, N0) {
+    .Call('_greed_mvlm_post_add1', PACKAGE = 'greed', current, X, Y, alpha, N0)
+}
+
+mvlm_post_del1 <- function(current, X, Y, alpha, N0) {
+    .Call('_greed_mvlm_post_del1', PACKAGE = 'greed', current, X, Y, alpha, N0)
+}
+
+mvlm_post_merge <- function(current1, current2, alpha, N0) {
+    .Call('_greed_mvlm_post_merge', PACKAGE = 'greed', current1, current2, alpha, N0)
+}
+

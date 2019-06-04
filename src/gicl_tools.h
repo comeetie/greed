@@ -33,8 +33,16 @@ List lm_post_add1(List current, const arma::rowvec X,double y,double regu, doubl
 
 List lm_post_del1(List current, const arma::rowvec X,double y,double regu, double a0, double b0);
 
-
 List lm_post_merge(List current_k,List current_l,double regu, double a0, double b0);
+
+List mvlm_post(const arma::mat X,const arma::mat Y,double alpha, double N0);
+
+List mvlm_post_add1(List current, const arma::rowvec X,const arma::rowvec Y,double alpha, double N0);
+
+List mvlm_post_del1(List current, const arma::rowvec X,const arma::rowvec Y,double alpha, double N0);
+
+List mvlm_post_merge(List current1,List current2,double alpha, double N0);
+
 
 #endif
 

@@ -33,5 +33,6 @@ Collate:
     'mm.R'
     'mreg.R'
     'multistart_alg.R'
+    'mvmreg.R'
     'plot.R'
     'sbm.R'
