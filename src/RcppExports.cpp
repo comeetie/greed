@@ -141,6 +141,64 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mvlm_post
+List mvlm_post(const arma::mat X, const arma::mat Y, double alpha, double N0);
+RcppExport SEXP _greed_mvlm_post(SEXP XSEXP, SEXP YSEXP, SEXP alphaSEXP, SEXP N0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type N0(N0SEXP);
+    rcpp_result_gen = Rcpp::wrap(mvlm_post(X, Y, alpha, N0));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mvlm_post_add1
+List mvlm_post_add1(List current, const arma::rowvec X, const arma::rowvec Y, double alpha, double N0);
+RcppExport SEXP _greed_mvlm_post_add1(SEXP currentSEXP, SEXP XSEXP, SEXP YSEXP, SEXP alphaSEXP, SEXP N0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current(currentSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type N0(N0SEXP);
+    rcpp_result_gen = Rcpp::wrap(mvlm_post_add1(current, X, Y, alpha, N0));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mvlm_post_del1
+List mvlm_post_del1(List current, const arma::rowvec X, const arma::rowvec Y, double alpha, double N0);
+RcppExport SEXP _greed_mvlm_post_del1(SEXP currentSEXP, SEXP XSEXP, SEXP YSEXP, SEXP alphaSEXP, SEXP N0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current(currentSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type N0(N0SEXP);
+    rcpp_result_gen = Rcpp::wrap(mvlm_post_del1(current, X, Y, alpha, N0));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mvlm_post_merge
+List mvlm_post_merge(List current1, List current2, double alpha, double N0);
+RcppExport SEXP _greed_mvlm_post_merge(SEXP current1SEXP, SEXP current2SEXP, SEXP alphaSEXP, SEXP N0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current1(current1SEXP);
+    Rcpp::traits::input_parameter< List >::type current2(current2SEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type N0(N0SEXP);
+    rcpp_result_gen = Rcpp::wrap(mvlm_post_merge(current1, current2, alpha, N0));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_greed_post_probs", (DL_FUNC) &_greed_post_probs, 3},
@@ -152,6 +210,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_lm_post_merge", (DL_FUNC) &_greed_lm_post_merge, 5},
     {"_greed_lm_post_add", (DL_FUNC) &_greed_lm_post_add, 6},
     {"_greed_lm_post_del", (DL_FUNC) &_greed_lm_post_del, 6},
+    {"_greed_mvlm_post", (DL_FUNC) &_greed_mvlm_post, 4},
+    {"_greed_mvlm_post_add1", (DL_FUNC) &_greed_mvlm_post_add1, 5},
+    {"_greed_mvlm_post_del1", (DL_FUNC) &_greed_mvlm_post_del1, 5},
+    {"_greed_mvlm_post_merge", (DL_FUNC) &_greed_mvlm_post_merge, 4},
     {NULL, NULL, 0}
 };
 
