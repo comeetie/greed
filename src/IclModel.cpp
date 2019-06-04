@@ -49,10 +49,10 @@ void IclModel::greedy_swap(int nbpassmax){
   // boolean to test if a move occurs
   bool hasMoved = true;
   // while their are moves
+  arma::vec workingset(N);
+  workingset.ones();
   while (hasMoved && nbpass < nbpassmax){
     // suffle the index 
-    arma::vec workingset(N);
-    workingset.ones();
     arma::vec pass= as<arma::vec>(sample(N,N))-1;
     // reinit move counter
     hasMoved=false;
@@ -81,7 +81,7 @@ void IclModel::greedy_swap(int nbpassmax){
         }else{
           arma::vec deltaneg = delta.elem(arma::find(delta<0));
           int bmn= deltaneg.index_max();
-          if(deltaneg(bmn) <  -10000 ){
+          if(deltaneg(bmn) <  -10 ){
             workingset(cnode) = 0;
             //Rcout << "BMN :"<< bmn << "val" << deltaneg(bmn) << std::endl;
           }

@@ -52,8 +52,8 @@ setClass("seed",
 #' @export
 setClass("hybrid",
          contains = "alg",
-         representation =  list(pop_size = "numeric",nb_max_gen = "numeric"),
-         prototype(name="hybrid",pop_size=10, nb_max_gen = 10))
+         representation =  list(pop_size = "numeric",nb_max_gen = "numeric",prob_mutation = "numeric"),
+         prototype(name="hybrid",pop_size=20, nb_max_gen = 10,prob_mutation=0.25))
 
 
 #' @rdname algs-classes
@@ -170,7 +170,43 @@ spectral= function(X,K){
 #' @return an icl_path object
 #' @export
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
-  fit(model,alg,list(X=X,N=dim(X)[1]),K,verbose)
+  data = preprocess(X,model)
+  fit(model,alg,data,K,verbose)
+}
+
+find_model = function(X){
+  if(class(X)=="dgCMatrix" | class(X)=="matrix"){
+    if(nrow(X)==ncol(X)){
+      model = methods::new("dcsbm")
+    }else{
+      if(all(round(X)==X)){
+        model = methods::new("mm")  
+      }else{
+        model = methods::new("mvmreg")
+      }
+    }
+  }
+  model
+}
+
+
+as.sparse = function(X){
+  S = X
+  if(class(X)=="matrix"){
+    ij=which(X!=0,arr.ind=TRUE)
+    S = Matrix::sparseMatrix(ij[,1],ij[,1],x = X[ij]) 
+  }
+  S
+}
+
+preprocess = function(X,model){
+  
+  switch(class(model),
+         mm = list(X=as.sparse(X) ,N=nrow(X)),
+         dcsbm = list(X=as.sparse(X),N=nrow(X)),
+         sbm = list(X=as.sparse(X),N=nrow(X)),
+         mvmreg = list(X=matrix(1,nrow = nrow(X)),Y=as.matrix(X),N=nrow(X))
+         )
 }
 
 
@@ -187,16 +223,7 @@ greed_cond = function(X,y,K=20,model=find_model_cond(X,y),alg=methods::new("hybr
   fit(model,alg,list(X=X,y=y,N=dim(X)[1]),K,verbose)
 }
 
-find_model = function(X){
-  if(class(X)=="dgCMatrix"){
-    if(nrow(X)==ncol(X)){
-      model = methods::new("dcsbm")
-    }else{
-      model = methods::new("mm")
-    }
-  }
-  model
-}
+
 
 find_model_cond = function(X,y){
   methods::new("mreg")

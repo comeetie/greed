@@ -51,14 +51,14 @@ reorder_mvmreg = function(obs_stats,or){
 
 
 setMethod(f = "reorder", 
-          signature = signature("mreg", "list","integer"), 
+          signature = signature("mvmreg", "list","integer"), 
           definition = function(model, obs_stats,order){
             reorder_mvmreg(obs_stats,order)
           })
 
 
 setMethod(f = "seed", 
-          signature = signature("mm","list","integer"), 
+          signature = signature("mvmreg","list","integer"), 
           definition = function(model,data, K){
             X=cbind(data$X,data$Y)
             sds=apply(X,2,stats::sd)
@@ -76,7 +76,7 @@ setMethod(f = "seed",
 #' @rdname plot
 #' @export
 setMethod(f = "plot", 
-          signature = signature("mreg_path","missing"),
+          signature = signature("mvmreg_path","missing"),
           definition = function(x,type='blocks'){
             switch(type,tree = {
               dendo(x)

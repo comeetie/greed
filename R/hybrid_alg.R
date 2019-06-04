@@ -10,7 +10,7 @@ NULL
 
 hybrid = function(model,alg,data,K, verbose=FALSE){
             
-            fi = function(ncl){ fit_greed(model,data,ncl,type="merge",verbose=verbose) }
+            fi = function(ncl,type){ fit_greed(model,data,ncl,type=type,verbose=verbose) }
             train.hist = data.frame(generation=c(),icl=c(),K=c())
 
             # multi-start in //
@@ -43,7 +43,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
               new_solutions = listenv::listenv()
               selected_couples = matrix(selected[sample(1:length(selected),length(selected)*2,replace = TRUE)],ncol=2)
               for (i in 1:nrow(selected_couples)){
-                new_solutions[[i]] %<-% full_cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],fi)
+                new_solutions[[i]] %<-% full_cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],fi,alg@prob_mutation)
               }
               new_solutions = as.list(new_solutions)
               solutions = c(solutions[selected],new_solutions)
@@ -71,11 +71,17 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
           }
 
 
-full_cross_over = function(sol1,sol2,fi){
+full_cross_over = function(sol1,sol2,fi,pmutation){
   # cartesian product on the z of the two solution
   ncl = unclass(factor(paste(sol1@cl,sol2@cl)))
+  type="merge"
+  if(runif(1)<pmutation){
+    sp_cl=sample(max(ncl),1)
+    ncl[ncl==sp_cl]=sample((max(ncl)+1):(max(ncl)+2),sum(ncl==sp_cl),replace=TRUE)
+    type="both"
+  }
   # greedy merge
-  fi(ncl)
+  fi(ncl,type)
 }
 
 

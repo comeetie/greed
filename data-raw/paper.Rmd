@@ -18,11 +18,50 @@ library(future)
 plan(multicore)
 ```
 
+
+
 ## Introduction
 
+Model based clustering is a principled approach for clustering \cite{Raftery}, that has already proved to be very usefull in a variety of context thanks to it's capability of dealing with particular data structure. Such approaches encompass gaussian mixture models, mixture of regression and graph clustering models like stochastic block models for example. In their basic form such models assume that the observations $\{x_1,...x_n\}$ are drawn as follow :
 
+
+$$
+\begin{eqnarray}
+\mathbf{z}_i|\pi&\sim& \mathcal{M}(1,\pi)\\
+x_i|\mathbf{z}_{ik}=1&\sim& \mathcal{F}(\theta_{k})
+\end{eqnarray}
+$$
+
+where the $\mathbf{z}_i$ is the so-called altent variable encoding cluster membership. In such setting the natural 
+
+From a computational perspective ther are two natural way to deals with such type of models. From a frequentist perspective it's natural to ressort to maximum likelihood estimation and model selection criteria for chosong   When the number of groups is unknown.
 
 ## ICL maximisation 
+
+
+
+
+$$
+\begin{eqnarray}
+\pi&\sim& \mathcal{D}(\mathbf{\alpha})
+\mathbf{z}_i|\pi&\sim& \mathcal{M}(1,\pi)\\
+\theta_{k}&\sim&P(\mathbf{\beta})
+x_i|\mathbf{z}_{ik}=1&\sim& \mathcal{F}(\theta_{k})
+\end{eqnarray}
+$$
+
+
+
+$$
+p(X,Z) = \int_{\theta_1,...,\theta_k}\int_{pi}p(x|z,\theta)p(\theta)p(z|\pi)p(\pi)d\theta_1...d\theta_k d\pi
+$$
+
+- We propose and test several generic algorithm for solving
+- We propose a general heuristic for getting extracting a regularization path with respect to \alpha. This strategie enable the extraction of a dendogramme and a partial ordering of the clsuter which is interesting on real datasets.
+
+
+
+
 $$
 \begin{equation}
 \pi \sim \mathcal{D}(\alpha)\\
@@ -53,6 +92,20 @@ $$
 ## Experiments
 
 ### Simulated data
+
+
+```{r}
+N=1500
+K=15
+pi=rep(1/K,K)
+lambda  = 0.1
+lambda_o = 0.025
+Ks=5
+mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
+sbm = rsbm(N,pi,mu)
+```
+
+
 
 ```{r}
 N=1500
