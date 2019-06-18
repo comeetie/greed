@@ -23,6 +23,8 @@ public:
 private:
   arma::sp_mat x;
   arma::sp_mat xt;
+  // matrix of observed counts for each clusters
+  arma::mat x_counts;
   double a0;
   double b0;
 };

@@ -24,6 +24,11 @@ arma::mat submatcross(int oldcl,int newcl,int K){
   return result;
 }
 
+
+
+
+
+
 arma::vec count(arma::vec cl,int K){
   arma::vec result(K);
   result.fill(0);
@@ -52,10 +57,9 @@ arma::mat gsum_mm(arma::vec cl,const arma::sp_mat& x,int K) {
   return result;
 }
 
-arma::mat gsum_col(arma::vec cl,const arma::sp_mat& x,int i, int K) {
+arma::sp_mat gsum_col(arma::vec cl,const arma::sp_mat& x,int i, int K) {
   arma::sp_mat ccol = x.col(i);
-  arma::mat result(K,1);
-  result.fill(0);
+  arma::sp_mat result(K,1);
   for (arma::sp_mat::const_iterator i = ccol.begin(); i != ccol.end(); ++i) {
     result(cl(i.row()),0) += *i;
   }
@@ -70,51 +74,7 @@ arma::mat update_count(arma::vec counts,int oldcl,int newcl) {
 }
 
 
-arma::vec sum_cols(const arma::sp_mat& x){
-  arma::vec tots(x.n_cols);
-  tots.fill(0);
-  for (arma::sp_mat::const_iterator i = x.begin(); i != x.end(); ++i)  {
-    tots(i.col()) += *i;
-  }
-  return tots;
-}
 
-arma::vec sum_cols(const arma::mat x){
-  int nbcols = x.n_cols;
-  int nbrows = x.n_rows;
-  arma::vec tots(x.n_cols);
-  tots.fill(0);
-  for (int j=0;j<nbcols;++j)  {
-    for (int i=0;i<nbrows;++i)  {
-      tots(j) += x(i,j);
-    }
-  }
-  return tots;
-}
-
-arma::vec sum_rows(const arma::mat x){
-  int nbcols = x.n_cols;
-  int nbrows = x.n_rows;
-  arma::vec tots(x.n_cols);
-  tots.fill(0);
-  for (int i=0;i<nbrows;++i) {
-    for (int j=0;j<nbcols;++j) {
-      tots(i) += x(i,j);
-    }
-  }
-  return tots;
-}
-
-double sum_lfact(const arma::sp_mat & x){
-  arma::sp_mat::const_iterator start = x.begin();
-  arma::sp_mat::const_iterator end   = x.end();
-  double cst = 0;
-  for(arma::sp_mat::const_iterator it = start; it != end; ++it)
-  {
-     cst += 1; 
-  }
-  return cst;
-}
 
 
 // [[Rcpp::export]]

@@ -27,7 +27,7 @@ cleanpath = function(pathsol){
       pathsol@cl = as.vector(path[[im]]$cl)
       # if it exist cut from there
       if(im>1){
-        path=path[(im-1):1]  
+        path=path[(im+1):length(path)]  
       }else{
         path=list()
       }

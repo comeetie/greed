@@ -17,10 +17,14 @@ public:
   double icl(const List & obs_stats);
   // compute icl optimized for deltas
   double icl(const List & obs_stats,int oldcl,int newcl);
+  // compute icl optimized for deltas and sparse updates
+  double icl(const List & obs_stats,const List & up_stats,int oldcl,int newcl);
   // virtual methods to be implemented by models to compute log(p(X|Z))
   virtual double icl_emiss(const List & obs_stats){};
   // virtual methods to be implemented by models to compute log(p(X|Z)) optimized for deltas
   virtual double icl_emiss(const List & obs_stats,int oldcl,int newcl){};
+  // virtual methods to be implemented by models to compute log(p(X|Z)) optimized for deltas and sparse updates
+  virtual double icl_emiss(const List & obs_stats,const List & up_stats,int oldcl,int newcl){};
   // compute the delta for each possible swap of a node
   virtual arma::mat delta_swap(const int i){};
   // update the stats when a node is swaped
@@ -44,7 +48,6 @@ public:
   arma::vec get_cl(){return cl;};
   arma::vec get_counts(){return counts;};
   int get_K(){return K;};
-  arma::mat get_x_counts(){return x_counts;};
 protected:
   // prior 
   double alpha;
@@ -57,8 +60,7 @@ protected:
   // stats
   // vector of cluster counts
   arma::vec counts;
-  // matrix of observed counts for each clusters
-  arma::mat x_counts;
+
   double icl_value;
   // verbose ?
   bool verbose;

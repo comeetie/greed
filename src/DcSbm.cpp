@@ -6,23 +6,6 @@
 using namespace Rcpp;
 
 
-DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai,bool verb){
-  alpha = alphai;
-  x  = xp;
-  xt = xp.t();
-  N  = x.n_rows;
-  K  = Ki;
-  cl = as<arma::vec>(sample(K,N,true));
-  cl = cl -1;
-  x_counts = gsum_mat(cl,x,K);
-  counts = count(cl,K);
-  din = sum_cols(x_counts);
-  dout = sum_rows(x_counts);
-  p= arma::accu(x_counts)/(N*N);
-  verbose=verb;
-  
-  cst = - sum_lfact(xp);
-}
 
 DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai,arma::vec& clt,bool verb){
   alpha = alphai;
@@ -33,11 +16,12 @@ DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai,arma::vec& clt,bool verb){
   cl = clt;
   x_counts = gsum_mat(cl,x,K);
   counts = count(cl,K);
-  din = sum_cols(x_counts);
-  dout = sum_rows(x_counts);
+  din = sum(x_counts).t();
+  dout = sum(x_counts.t()).t();
   p= arma::accu(x_counts)/(N*N);
   verbose=verb;
-  cst = - sum_lfact(xp);
+  // cst to add 
+  cst = 0;
 }
 
 
@@ -86,6 +70,35 @@ double DcSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
   return icl_emiss+cst;
 }
 
+double DcSbm::icl_emiss(const List & obs_stats,const List & up_stats,int oldcl,int newcl){
+  arma::vec counts =as<arma::vec>(obs_stats["counts"]);
+  arma::vec din =as<arma::vec>(obs_stats["din"]);
+  arma::vec dout =as<arma::vec>(obs_stats["dout"]);
+  arma::mat edges_counts =as<arma::mat>(obs_stats["x_counts"]);
+  arma::mat si = submatcross(oldcl,newcl,counts.n_rows);
+  double icl_emiss = lgamma(counts(newcl))-lgamma(counts(newcl)+din(newcl))+din(newcl)*log(counts(newcl));
+  icl_emiss += lgamma(counts(newcl))-lgamma(counts(newcl)+dout(newcl))+dout(newcl)*log(counts(newcl));
+  if(counts(oldcl)!=0){
+    icl_emiss += lgamma(counts(oldcl))-lgamma(counts(oldcl)+dout(oldcl))+dout(oldcl)*log(counts(oldcl));
+    icl_emiss += lgamma(counts(oldcl))-lgamma(counts(oldcl)+din(oldcl))+din(oldcl)*log(counts(oldcl));
+  }
+  int k = 0;
+  int l = 0;
+  int cc = 0;
+  for (int i = 0;i<si.n_rows;++i){
+    k=si(i,0);
+    l=si(i,1);
+    if(counts(k)*counts(l)!=0){
+      cc = counts(k)*counts(l);
+      // lets go
+      icl_emiss += lgamma(edges_counts(k,l)+1)-(edges_counts(k,l)+1)*log(p*cc+1);
+    }
+    
+  }
+  return icl_emiss+cst;
+}
+
+
 
 List DcSbm::get_obs_stats(){
   return List::create(Named("counts", counts), Named("din", din),Named("dout", dout),Named("x_counts", x_counts));
@@ -94,9 +107,9 @@ List DcSbm::get_obs_stats(){
 arma::mat DcSbm::delta_swap(int i){
   int self=x(i,i);
   int oldcl = cl(i);
-  arma::mat col_sum = gsum_col(cl,x,i,K);
+  arma::sp_mat col_sum = gsum_col(cl,x,i,K);
   col_sum(oldcl)=col_sum(oldcl)-self;
-  arma::mat row_sum = gsum_col(cl,xt,i,K);
+  arma::sp_mat row_sum = gsum_col(cl,xt,i,K);
   row_sum(oldcl)=row_sum(oldcl)-self;
   arma::vec delta(K);
   delta.fill(0);
@@ -130,9 +143,9 @@ arma::mat DcSbm::delta_swap(int i){
 void DcSbm::swap_update(const int i,const int newcl){
   int self=x(i,i);
   int oldcl = cl(i);
-  arma::mat col_sum = gsum_col(cl,x,i,K);
+  arma::sp_mat col_sum = gsum_col(cl,x,i,K);
   col_sum(oldcl)=col_sum(oldcl)-self;
-  arma::mat row_sum = gsum_col(cl,xt,i,K);
+  arma::sp_mat row_sum = gsum_col(cl,xt,i,K);
   row_sum(oldcl)=row_sum(oldcl)-self;
   arma::mat new_ec = x_counts;
   int cdin = arma::accu(col_sum)+self;

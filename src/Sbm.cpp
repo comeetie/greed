@@ -6,20 +6,6 @@
 using namespace Rcpp;
 
 
-Sbm::Sbm(arma::sp_mat& xp,int Ki,double alphai,double a0i,double b0i,bool verb){
-  alpha = alphai;
-  a0 = a0i;
-  b0 = b0i;
-  x  = xp;
-  xt = xp.t();
-  N  = x.n_rows;
-  K  = Ki;
-  cl = as<arma::vec>(sample(K,N,true));
-  cl = cl -1;
-  x_counts = gsum_mat(cl,x,K);
-  counts = count(cl,K);
-  verbose=verb;
-}
 
 Sbm::Sbm(arma::sp_mat& xp,int Ki,double alphai,double a0i,double b0i,arma::vec& clt,bool verb){
   alpha = alphai;
@@ -74,9 +60,9 @@ List Sbm::get_obs_stats(){
 arma::mat Sbm::delta_swap(int i){
   int self=x(i,i);
   int oldcl = cl(i);
-  arma::mat col_sum = gsum_col(cl,x,i,K);
+  arma::sp_mat col_sum = gsum_col(cl,x,i,K);
   col_sum(oldcl)=col_sum(oldcl)-self;
-  arma::mat row_sum = gsum_col(cl,xt,i,K);
+  arma::sp_mat row_sum = gsum_col(cl,xt,i,K);
   row_sum(oldcl)=row_sum(oldcl)-self;
   arma::vec delta(K);
   delta.fill(0);
@@ -102,9 +88,9 @@ arma::mat Sbm::delta_swap(int i){
 void Sbm::swap_update(const int i,const int newcl){
   int self=x(i,i);
   int oldcl = cl(i);
-  arma::mat col_sum = gsum_col(cl,x,i,K);
+  arma::sp_mat col_sum = gsum_col(cl,x,i,K);
   col_sum(oldcl)=col_sum(oldcl)-self;
-  arma::mat row_sum = gsum_col(cl,xt,i,K);
+  arma::sp_mat row_sum = gsum_col(cl,xt,i,K);
   row_sum(oldcl)=row_sum(oldcl)-self;
   arma::mat new_ec = x_counts;
   new_ec.col(newcl) = new_ec.col(newcl)+col_sum;

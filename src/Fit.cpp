@@ -72,7 +72,9 @@ S4 init_sol(S4 model,String type="fit") {
 // [[Rcpp::export]]
 arma::mat post_probs(S4 model,List data,  arma::vec& clt) {
   IclModel * M = init(model,data,clt,false);
-  return(M->get_probs());
+  arma::mat probs = M->get_probs();
+  delete M;
+  return(probs);
 }
 
 //' fit_greed_init
@@ -104,6 +106,7 @@ S4 fit_greed(S4 model,List data,  arma::vec& clt, std::string type="both", int n
   sol.slot("cl") = M->get_cl()+1 ;
   sol.slot("icl") = M->icl(obs_stats);
   sol.slot("K") = M->get_K();
+  delete M;
   return(sol);
 }
 
@@ -126,6 +129,7 @@ S4 fit_greed_path(List data, S4 init_fit) {
   sol.slot("icl") = M->icl(obs_stats);
   sol.slot("K") = M->get_K();
   sol.slot("path") = M->greedy_merge_path();
+  delete M;
   return(sol);
   
 }

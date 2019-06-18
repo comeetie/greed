@@ -10,10 +10,10 @@ using namespace Rcpp;
 class DcSbm : public IclModel
 {
 public:
-  DcSbm(arma::sp_mat& xp,int K,double alpha,bool verb=false);
   DcSbm(arma::sp_mat& xp,int K,double alpha,arma::vec& cl,bool verb=false);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
+  double icl_emiss(const List & obs_stats,const List & up_stats,int oldcl,int newcl);
   arma::mat delta_swap(int i);
   void swap_update(int i, int newcl);
   MergeMat delta_merge();
@@ -23,6 +23,8 @@ public:
 private:
   arma::sp_mat x;
   arma::sp_mat xt;
+  // matrix of observed counts for each clusters
+  arma::mat x_counts;
   double p;
   double cst; 
   arma::vec din;

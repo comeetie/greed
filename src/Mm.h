@@ -11,7 +11,6 @@ using namespace Rcpp;
 class Mm : public IclModel
 {
 public:
-  Mm(arma::sp_mat& xp,int K,double alpha,double beta,bool verb=false);
   Mm(arma::sp_mat& xp,int K,double alpha,double beta,arma::vec& cl,bool verb=false);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
@@ -24,6 +23,8 @@ public:
 private:
   arma::sp_mat x;
   arma::sp_mat xt;
+  // matrix of observed counts for each clusters
+  arma::mat x_counts;
   double beta;
   double norm_fact;
 };
