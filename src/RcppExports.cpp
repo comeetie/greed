@@ -47,6 +47,55 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// add_sppat
+arma::sp_mat add_sppat(const arma::sp_mat& a, const arma::sp_mat& b);
+RcppExport SEXP _greed_add_sppat(SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(add_sppat(a, b));
+    return rcpp_result_gen;
+END_RCPP
+}
+// delcol
+arma::sp_mat delcol(const arma::sp_mat& a, int ci);
+RcppExport SEXP _greed_delcol(SEXP aSEXP, SEXP ciSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< int >::type ci(ciSEXP);
+    rcpp_result_gen = Rcpp::wrap(delcol(a, ci));
+    return rcpp_result_gen;
+END_RCPP
+}
+// delrowcol
+arma::sp_mat delrowcol(const arma::sp_mat& a, int ci);
+RcppExport SEXP _greed_delrowcol(SEXP aSEXP, SEXP ciSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< int >::type ci(ciSEXP);
+    rcpp_result_gen = Rcpp::wrap(delrowcol(a, ci));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gsum_mm
+arma::sp_mat gsum_mm(arma::vec cl, const arma::sp_mat& x, int K);
+RcppExport SEXP _greed_gsum_mm(SEXP clSEXP, SEXP xSEXP, SEXP KSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type cl(clSEXP);
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type K(KSEXP);
+    rcpp_result_gen = Rcpp::wrap(gsum_mm(cl, x, K));
+    return rcpp_result_gen;
+END_RCPP
+}
 // lm_post
 List lm_post(const arma::mat X, const arma::colvec& y, double regu, double a0, double b0);
 RcppExport SEXP _greed_lm_post(SEXP XSEXP, SEXP ySEXP, SEXP reguSEXP, SEXP a0SEXP, SEXP b0SEXP) {
@@ -204,6 +253,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_post_probs", (DL_FUNC) &_greed_post_probs, 3},
     {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 6},
     {"_greed_fit_greed_path", (DL_FUNC) &_greed_fit_greed_path, 2},
+    {"_greed_add_sppat", (DL_FUNC) &_greed_add_sppat, 2},
+    {"_greed_delcol", (DL_FUNC) &_greed_delcol, 2},
+    {"_greed_delrowcol", (DL_FUNC) &_greed_delrowcol, 2},
+    {"_greed_gsum_mm", (DL_FUNC) &_greed_gsum_mm, 3},
     {"_greed_lm_post", (DL_FUNC) &_greed_lm_post, 5},
     {"_greed_lm_post_add1", (DL_FUNC) &_greed_lm_post_add1, 6},
     {"_greed_lm_post_del1", (DL_FUNC) &_greed_lm_post_del1, 6},

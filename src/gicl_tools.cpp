@@ -24,8 +24,51 @@ arma::mat submatcross(int oldcl,int newcl,int K){
   return result;
 }
 
+// [[Rcpp::export]]
+arma::sp_mat add_sppat(const arma::sp_mat & a, const arma::sp_mat & b){
+  arma::sp_mat result(a.n_rows,1);
+  for (arma::sp_mat::const_iterator i = b.begin(); i != b.end(); ++i) {
+    result(i.row(),0) = a(i.row(),0)+*i;
+  }
+  return result;
+}
 
+// [[Rcpp::export]]
+arma::sp_mat delcol(const arma::sp_mat & a, int ci){
+  arma::sp_mat result(a.n_rows,a.n_cols-1);
+  for (arma::sp_mat::const_iterator i = a.begin(); i != a.end(); ++i) {
+    if(i.col()<ci){
+      result(i.row(),i.col()) = a(i.row(),i.col());
+    }
+    if(i.col()>ci){
+      result(i.row(),i.col()-1) = a(i.row(),i.col());
+    }    
 
+  }
+  return result;
+}
+
+// [[Rcpp::export]]
+arma::sp_mat delrowcol(const arma::sp_mat & a, int ci){
+  arma::sp_mat result(a.n_rows-1,a.n_cols-1);
+  int k=0;
+  int l=0;
+  for (arma::sp_mat::const_iterator i = a.begin(); i != a.end(); ++i) {
+    k = i.row();
+    if(i.row()>ci){
+      k --; 
+    }
+    l=i.col();
+    if(i.col()>ci){
+      l--;
+    }
+    if(i.row()!=ci & i.col()!=ci){
+      result(k,l) = a(i.row(),i.col());
+    }
+    
+  }
+  return result;
+}
 
 
 
@@ -47,12 +90,11 @@ arma::mat gsum_mat(arma::vec cl,const arma::sp_mat& x,int K) {
   return result;
 }
 
-
-arma::mat gsum_mm(arma::vec cl,const arma::sp_mat& x,int K) {
-  arma::mat result(K,x.n_cols);
-  result.fill(0);
+// [[Rcpp::export]]
+arma::sp_mat gsum_mm(arma::vec cl,const arma::sp_mat& x,int K) {
+  arma::sp_mat result(x.n_rows,K);
   for (arma::sp_mat::const_iterator i = x.begin(); i != x.end(); ++i) {
-    result(cl(i.row()),i.col()) += *i;
+    result(i.row(),cl(i.col())) += *i;
   }
   return result;
 }

@@ -9,6 +9,7 @@
 \alias{plot,mm_path,missing-method}
 \alias{plot,mreg_fit,missing-method}
 \alias{plot,mreg_path,missing-method}
+\alias{plot,mvmreg_path,missing-method}
 \alias{plot}
 \alias{plot,sbm_fit,missing-method}
 \alias{plot,sbm_path,missing-method}
@@ -26,7 +27,7 @@
 
 \S4method{plot}{mreg_path,missing}(x, type = "blocks")
 
-\S4method{plot}{mreg_path,missing}(x, type = "blocks")
+\S4method{plot}{mvmreg_path,missing}(x, type = "blocks")
 
 \S4method{plot}{sbm_fit,missing}(x, type = "blocks")
 

@@ -1,6 +1,5 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include "gicl_tools.h"
-#include "MergeMat.h"
 #include "IclModel.h"
 #include "Mm.h"
 using namespace Rcpp;
@@ -13,18 +12,17 @@ Mm::Mm(arma::sp_mat& xp,int Ki,double alphai,double betai,arma::vec& clt,bool ve
   // dirichlet prior parameter on proportion
   beta = betai;
   // data
-  x  = xp;
-  // store also transpose for fast colum acces
-  xt = x.t();
+  // store transpose for fast colum acces
+  xt = xp.t();
   // Number of individuals
-  N  = x.n_rows;
+  N  = xp.n_rows;
   // First value for K
   K  = Ki;
   // init Z
   cl = clt;
   // construct oberved stats 
   // x_counts : col sums for each cluster
-  x_counts = gsum_mm(cl,x,K);
+  x_counts = gsum_mm(cl,xt,K);
   // counts : number of row in each cluster
   counts = count(cl,K);
   // TODO : add a filed to store the icl const ?
@@ -39,29 +37,33 @@ List Mm::get_obs_stats(){
 
 double Mm::icl_emiss(const List & obs_stats){
   // compute log(p(X|Z))
-  arma::mat x_counts =as<arma::mat>(obs_stats["x_counts"]);
-  int K = x_counts.n_rows;
-  int d = x_counts.n_cols;
+  arma::sp_mat x_counts =as<arma::sp_mat>(obs_stats["x_counts"]);
+  int d = x_counts.n_rows;
+  int K = x_counts.n_cols;
   double icl_emiss = 0;
   for (int k = 0;k<K;++k){
     // B(X+beta)/B(beta)
-    icl_emiss += lgamma(d*beta)+arma::accu(lgamma(x_counts.row(k)+beta))-d*lgamma(beta)-lgamma(arma::accu(x_counts.row(k)+beta));
+    // ! sparse + double -> dense : x_counts.col(k)+beta
+    icl_emiss += lgamma(d*beta)+arma::accu(lgamma(x_counts.col(k)+beta))-d*lgamma(beta)-lgamma(arma::accu(x_counts.col(k)+beta));
   }
   return icl_emiss;
 }
 
 double Mm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
   // compute log(p(X|Z)) but only for the 2 classes which haved changed (oldcl,newcl)
-  arma::mat x_counts =as<arma::mat>(obs_stats["x_counts"]);
+  arma::sp_mat x_counts =as<arma::sp_mat>(obs_stats["x_counts"]);
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
+  arma::rowvec col_sums =as<arma::rowvec>(obs_stats["col_sums"]);
   double icl_emiss = 0;
-  int d = x_counts.n_cols;
-  for (int k = 0;k<x_counts.n_rows;++k){
-    // only for the 2 classes which haved changed (oldcl,newcl) and not empty
-    if((k==oldcl || k ==newcl) && counts(k)>0){
-      // compute log(p(X|Z))
-      icl_emiss += lgamma(d*beta)+arma::accu(lgamma(x_counts.row(k)+beta))-d*lgamma(beta)-lgamma(arma::accu(x_counts.row(k)+beta));
-    }
+  int d = x_counts.n_rows;
+  // only for the 2 classes which haved changed (oldcl,newcl) and not empty
+  if(counts(oldcl)>0){
+    // compute log(p(X|Z))
+    icl_emiss += lgamma(d*beta)+arma::accu(lgamma(x_counts.col(oldcl)+beta))-d*lgamma(beta)-lgamma(col_sums(oldcl)+d*beta);
+  }
+  if(counts(newcl)>0){
+    // compute log(p(X|Z))
+    icl_emiss += lgamma(d*beta)+arma::accu(lgamma(x_counts.col(newcl)+beta))-d*lgamma(beta)-lgamma(col_sums(newcl)+d*beta);
   }
   return icl_emiss;
 }
@@ -73,26 +75,47 @@ arma::mat Mm::delta_swap(int i){
   int oldcl = cl(i);
   
   // extract current row 
-  arma::sp_mat crow = xt.col(i).t();
+  arma::sp_mat ccol = xt.col(i);
 
   // initialize vecor of delta ICL
   arma::vec delta(K);
   delta.fill(0);
   // old stats
-  List old_stats = List::create(Named("counts", counts), Named("x_counts", x_counts));
   
+                                  
+  arma::rowvec col_sums(sum(x_counts));   
+  arma::sp_mat old_ec = x_counts;
+  // if cluster will die do not sparsify the counts
+  if(counts(oldcl)>1){
+    old_ec.col(oldcl) = add_sppat(add_sppat(old_ec.col(oldcl),ccol),-ccol);
+  }
+
   // for each possible move
   for(int k = 0; k < K; ++k) {
     if(k!=oldcl){
       // construct new stats
-      arma::mat new_ec = x_counts;
+      arma::sp_mat new_ec = x_counts;
       // siwtch current row
-      new_ec.row(k) = new_ec.row(k)+crow;
-      new_ec.row(oldcl) = new_ec.row(oldcl)-crow;
+      //new_ec.col(k) = new_ec.col(k)+ccol;
+      //new_ec.col(oldcl) = new_ec.col(oldcl)-ccol;
+      
+      // sparcify the counts and move current doc
+      new_ec.col(k) = add_sppat(new_ec.col(k),ccol);
+      new_ec.col(oldcl) = add_sppat(new_ec.col(oldcl),-ccol);
+      old_ec.col(k) = add_sppat(add_sppat(old_ec.col(k),ccol),-ccol);
+      
       // update cluster counts
       arma::vec new_counts = update_count(counts,oldcl,k);
+      
+      // update colsums
+      arma::rowvec new_col_sums = col_sums;
+      double nbt = arma::accu(ccol);
+      new_col_sums(k)=new_col_sums(k)+nbt;
+      new_col_sums(oldcl)=new_col_sums(oldcl)-nbt;
+      //Rcout << new_col_sums << std::endl;
       // new stats and delta
-      List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec));
+      List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec),Named("col_sums",new_col_sums));
+      List old_stats = List::create(Named("counts", counts), Named("x_counts", old_ec),Named("col_sums",col_sums));
       delta(k)=icl(new_stats,oldcl,k)-icl(old_stats,oldcl,k);
     }
   }
@@ -106,13 +129,13 @@ void Mm::swap_update(int i,int newcl){
   // old cluster
   int oldcl = cl(i);
   // current row
-  arma::sp_mat crow = xt.col(i).t();
+  arma::sp_mat ccol = xt.col(i);
   // update x_counts
-  arma::mat new_ec = x_counts;
-  new_ec.row(newcl) = new_ec.row(newcl)+crow;
-  new_ec.row(oldcl) = new_ec.row(oldcl)-crow;
+  arma::sp_mat new_ec = x_counts;
+  new_ec.col(newcl) = new_ec.col(newcl)+ccol;
+  new_ec.col(oldcl) = new_ec.col(oldcl)-ccol;
   // update counts
-  arma::mat new_counts = update_count(counts,oldcl,newcl);
+  arma::vec new_counts = update_count(counts,oldcl,newcl);
   // update cl
   cl(i)=newcl;
   // if a cluster is dead
@@ -120,7 +143,9 @@ void Mm::swap_update(int i,int newcl){
     // remove from counts
     counts = new_counts.elem(arma::find(arma::linspace(0,K-1,K)!=oldcl));
     // remove from x_counts
-    x_counts = new_ec.rows(arma::find(arma::linspace(0,K-1,K)!=oldcl));
+    x_counts = delcol(new_ec,oldcl);
+      
+    // oldies : .rows(arma::find(arma::linspace(0,K-1,K)!=oldcl));
     // update cl to take into account de dead cluster
     cl.elem(arma::find(cl>oldcl))=cl.elem(arma::find(cl>oldcl))-1;
     // upate K
@@ -135,72 +160,33 @@ void Mm::swap_update(int i,int newcl){
 }
 
 
-MergeMat Mm::delta_merge(){
-  // inititalize delta merge matrix
-  arma::mat delta(K,K);
-  delta.fill(0);
-  // index to store current best merge
-  int bk = 0;
-  int bl = 0;
-  // initialize bv found to -infty
-  double bv = -std::numeric_limits<double>::infinity();
-  // store cuurent stats
-  List old_stats = List::create(Named("counts", counts), Named("x_counts", x_counts));
-  for(int k = 1; k < K; ++k) {
-    for (int l = 0;l<k;++l){
-      // for each possible merge
-      arma::mat new_ec = x_counts;
-      arma::mat new_counts = counts;
-      // counts after merge
-      new_counts(l) = new_counts(k)+new_counts(l);
-      new_counts(k) = 0;
-      // x_counts after merge on l
-      // row/col k will not be taken into account since counts(k)==0
-      new_ec.row(l) = new_ec.row(l)+new_ec.row(k);
-      List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec));
-      // delta
-      delta(k,l)=icl(new_stats,k,l)-icl(old_stats,k,l);
-      delta(l,k)=delta(k,l);
-      // best merge ?
-      if(delta(k,l)>bv){
-        bk=k;
-        bl=l;
-        bv=delta(k,l);
-      }
-    }
-  }
-  return MergeMat(bk,bl,bv,delta);
+double Mm::delta_merge(int k,int l){
+  // optim a calculer uniquement lors de l'init et des update 
+  arma::rowvec col_sums(sum(x_counts));   
+  arma::sp_mat new_ec = x_counts;
+  arma::vec new_counts = counts;
+  // counts after merge
+  new_counts(l) = new_counts(k)+new_counts(l);
+  new_counts(k) = 0;
+  // x_counts after merge on l
+  // row/col k will not be taken into account since counts(k)==0
+  new_ec.col(l) = new_ec.col(l)+new_ec.col(k);
+  
+  // colsums changes
+  arma::rowvec new_col_sums = col_sums;
+  new_col_sums(l)=new_col_sums(k)+new_col_sums(l);
+  new_col_sums(k)=0;
+  List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec),Named("col_sums",new_col_sums));
+  List old_stats = List::create(Named("counts", counts), Named("x_counts", x_counts),Named("col_sums",col_sums));
+  
+  // small optim possible by only tacking into account values that change un new_ec.col(l) // x_counts.col(l)
+  
+  // delta
+  double delta=icl(new_stats,k,l)-icl(old_stats,k,l);
+  return delta;
 }
 
-MergeMat Mm::delta_merge(arma::mat delta, int obk, int obl){
-  // optimized version to compute only new values of the merge mat
-  delta = delta(arma::find(arma::linspace(0,K,K+1)!=obk),arma::find(arma::linspace(0,K,K+1)!=obk));
-  int bk = 0;
-  int bl = 0;
-  double bv = -std::numeric_limits<double>::infinity();
-  List old_stats = List::create(Named("counts", counts), Named("x_counts", x_counts));
-  for(int k = 1; k < K; ++k) {
-    for (int l = 0;l<k;++l){
-      if(k == obl | l == obl){
-        arma::mat new_ec = x_counts;
-        arma::mat new_counts = counts;
-        new_counts(l) = new_counts(k)+new_counts(l);
-        new_counts(k) = 0;
-        new_ec.row(l) = new_ec.row(l)+new_ec.row(k);
-        List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec));
-        delta(k,l)=icl(new_stats,k,l)-icl(old_stats,k,l);
-        delta(l,k)=delta(k,l);
-      }
-      if(delta(k,l)>bv){
-        bk=k;
-        bl=l;
-        bv=delta(k,l);
-      }
-      
-    }
-  }
-  return MergeMat(bk,bl,bv,delta);
-}
+
 
 // Merge update between k and l
 void Mm::merge_update(int k,int l){
@@ -211,8 +197,8 @@ void Mm::merge_update(int k,int l){
   counts(l) = counts(k)+counts(l);
   counts    = counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
   // update x_counts
-  x_counts.row(l) = x_counts.row(k)+x_counts.row(l);
-  x_counts = x_counts.rows(arma::find(arma::linspace(0,K-1,K)!=k));
+  x_counts.col(l) = x_counts.col(k)+x_counts.col(l);
+  x_counts = delcol(x_counts,k);
   // update K
   --K;
 }

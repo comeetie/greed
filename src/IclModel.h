@@ -5,6 +5,7 @@
 #include <Rcpp.h>
 #include <RcppArmadillo.h>
 #include "MergeMat.h"
+#include "SpMergeMat.h"
 using namespace Rcpp;
 
 
@@ -31,12 +32,15 @@ public:
   virtual void swap_update(const int i,const int newcl){};
   // main method for greedy swaping
   void greedy_swap(int nbpassmax);
-  // virtual methods to be implemented by models to compute merge matrix deltas
-  virtual MergeMat delta_merge(){};
-  // virtual methods to be implemented by models to compute merge matrix deltas update version
-  virtual MergeMat delta_merge(arma::mat delta, int obk, int obl){};
+  // virtual methods to be implemented by models to compute merge deltas
+  virtual double delta_merge(int k, int l){};
   // update the stats when two clusters are merged
   virtual void merge_update(const int k,const int l){};
+  // methods  to compute merge matrix deltas update version
+  MergeMat delta_merge();
+  MergeMat delta_merge(arma::mat delta, int obk, int obl);
+  SpMergeMat delta_merge(const arma::sp_mat & merge_graph);
+  SpMergeMat delta_merge(const arma::sp_mat & merge_graph, int obk, int obl);
   // main method for greedy swaping
   void greedy_merge();
   // main method for greedy merge

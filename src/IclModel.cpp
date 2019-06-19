@@ -1,7 +1,9 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include "gicl_tools.h"
 #include "MergeMat.h"
+#include "SpMergeMat.h"
 #include "IclModel.h"
+
 using namespace Rcpp;
 
 
@@ -101,7 +103,7 @@ void IclModel::greedy_swap(int nbpassmax){
         }else{
           arma::vec deltaneg = delta.elem(arma::find(delta<0));
           int bmn= deltaneg.index_max();
-          if(deltaneg(bmn) <  -10 ){
+          if(deltaneg(bmn) <  -5 ){
             workingset(cnode) = 0;
             //Rcout << "BMN :"<< bmn << "val" << deltaneg(bmn) << std::endl;
           }
@@ -137,6 +139,101 @@ arma::mat IclModel::get_probs(){
   } 
   return probs;
 }
+
+
+// init merge matrix
+MergeMat IclModel::delta_merge(){
+  // inititalize delta merge matrix
+  arma::mat delta(K,K);
+  delta.fill(0);
+  // index to store current best merge
+  int bk = 0;
+  int bl = 0;
+  // initialize bv found to -infty
+  double bv = -std::numeric_limits<double>::infinity();
+  for(int k = 1; k < K; ++k) {
+    for (int l = 0;l<k;++l){
+      // for each possible merge
+      delta(k,l)=this->delta_merge(k,l);
+      // best merge ?
+      if(delta(k,l)>bv){
+        bk=k;
+        bl=l;
+        bv=delta(k,l);
+      }
+    }
+  }
+  return MergeMat(bk,bl,bv,delta);
+}
+
+// update merge matrix after merge of obk/obl
+MergeMat IclModel::delta_merge(arma::mat delta, int obk, int obl){
+  // optimized version to compute only new values of the merge mat
+  delta = delta(arma::find(arma::linspace(0,K,K+1)!=obk),arma::find(arma::linspace(0,K,K+1)!=obk));
+  int bk = 0;
+  int bl = 0;
+  double bv = -std::numeric_limits<double>::infinity();
+  for(int k = 1; k < K; ++k) {
+    for (int l = 0;l<k;++l){
+      if(k == obl | l == obl){
+        delta(k,l)=this->delta_merge(k,l);
+      }
+      if(delta(k,l)>bv){
+        bk=k;
+        bl=l;
+        bv=delta(k,l);
+      }
+      
+    }
+  }
+  return MergeMat(bk,bl,bv,delta);
+}
+
+// init merge matrix sparse
+SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph){
+  // inititalize delta merge matrix
+  arma::sp_mat delta = merge_graph;
+  // index to store current best merge
+  int bk = 0;
+  int bl = 0;
+  // initialize bv found to -infty
+  double bv = -std::numeric_limits<double>::infinity();
+  // store cuurent stats
+  for (arma::sp_mat::iterator i = delta.begin(); i != delta.end(); ++i) {
+    delta(i.row(),i.col())=this->delta_merge(i.row(),i.col());
+    // best merge ?
+    if(delta(i.row(),i.col())>bv){
+      bk=i.row();
+      bl=i.col();
+      bv=delta(i.row(),i.col());
+    }
+  }
+  
+  return SpMergeMat(bk,bl,bv,delta);
+}
+
+// update merge matrix after merge of obk/obl sparse
+SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int obl){
+  // optimized version to compute only new values of the merge mat
+  //delta = delta(arma::find(arma::linspace(0,K,K+1)!=obk),arma::find(arma::linspace(0,K,K+1)!=obk));
+  arma::sp_mat delta = merge_graph;
+  delta = delrowcol(delta,obk);
+  int bk = 0;
+  int bl = 0;
+  double bv = -std::numeric_limits<double>::infinity();
+  for (arma::sp_mat::iterator i = delta.begin(); i != delta.end(); ++i) {
+    delta(i.row(),i.col())=this->delta_merge(i.row(),i.col());
+    
+    if(delta(i.row(),i.col())>bv){
+      bk=i.row();
+      bl=i.col();
+      bv=delta(i.row(),i.col());
+    }
+  }
+  
+  return SpMergeMat(bk,bl,bv,delta);
+}
+
 
 
 // main function for greedy merging

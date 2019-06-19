@@ -32,6 +32,22 @@ fit_greed_path <- function(data, init_fit) {
     .Call('_greed_fit_greed_path', PACKAGE = 'greed', data, init_fit)
 }
 
+add_sppat <- function(a, b) {
+    .Call('_greed_add_sppat', PACKAGE = 'greed', a, b)
+}
+
+delcol <- function(a, ci) {
+    .Call('_greed_delcol', PACKAGE = 'greed', a, ci)
+}
+
+delrowcol <- function(a, ci) {
+    .Call('_greed_delrowcol', PACKAGE = 'greed', a, ci)
+}
+
+gsum_mm <- function(cl, x, K) {
+    .Call('_greed_gsum_mm', PACKAGE = 'greed', cl, x, K)
+}
+
 lm_post <- function(X, y, regu, a0, b0) {
     .Call('_greed_lm_post', PACKAGE = 'greed', X, y, regu, a0, b0)
 }

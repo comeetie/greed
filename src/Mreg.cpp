@@ -182,73 +182,27 @@ void Mreg::swap_update(int i,int newcl){
 }
 
 
-MergeMat Mreg::delta_merge(){
-  // inititalize delta merge matrix
-  arma::mat delta(K,K);
-  delta.fill(0);
-  // index to store current best merge
-  int bk = 0;
-  int bl = 0;
-  // initialize bv found to -infty
-  double bv = -std::numeric_limits<double>::infinity();
-  // store cuurent stats
+double Mreg::delta_merge(int k, int l){
+  
   List old_stats = List::create(Named("counts", counts), Named("regs", regs));
-  for(int k = 1; k < K; ++k) {
-    for (int l = 0;l<k;++l){
-      // for each possible merge
-      List new_regs = clone(regs);
-      arma::mat new_counts = counts;
-      // counts after merge
-      new_counts(l) = new_counts(k)+new_counts(l);
-      new_counts(k) = 0;
-      // x_counts after merge on l
-      // row/col k will not be taken into account since counts(k)==0
-      new_regs[l] = lm_post_merge(regs[k],regs[l],reg,a0,b0);
-      
-      List new_stats = List::create(Named("counts", new_counts), Named("regs", new_regs));
-      // delta
-      delta(k,l)=icl(new_stats,k,l)-icl(old_stats,k,l);
-      delta(l,k)=delta(k,l);
-      // best merge ?
-      if(delta(k,l)>bv){
-        bk=k;
-        bl=l;
-        bv=delta(k,l);
-      }
-    }
-  }
-  return MergeMat(bk,bl,bv,delta);
+  
+  List new_regs = clone(regs);
+  arma::mat new_counts = counts;
+  // counts after merge
+  new_counts(l) = new_counts(k)+new_counts(l);
+  new_counts(k) = 0;
+  // x_counts after merge on l
+  // row/col k will not be taken into account since counts(k)==0
+  new_regs[l] = lm_post_merge(regs[k],regs[l],reg,a0,b0);
+  
+  List new_stats = List::create(Named("counts", new_counts), Named("regs", new_regs));
+  // delta
+  double delta=icl(new_stats,k,l)-icl(old_stats,k,l);
+  
+  return delta;
 }
 
-MergeMat Mreg::delta_merge(arma::mat delta, int obk, int obl){
-  // optimized version to compute only new values of the merge mat
-  delta = delta(arma::find(arma::linspace(0,K,K+1)!=obk),arma::find(arma::linspace(0,K,K+1)!=obk));
-  int bk = 0;
-  int bl = 0;
-  double bv = -std::numeric_limits<double>::infinity();
-  List old_stats = List::create(Named("counts", counts), Named("regs", regs));
-  for(int k = 1; k < K; ++k) {
-    for (int l = 0;l<k;++l){
-      if(k == obl | l == obl){
-        List new_regs = clone(regs);
-        arma::mat new_counts = counts;
-        new_counts(l) = new_counts(k)+new_counts(l);
-        new_counts(k) = 0;
-        new_regs[l] = lm_post_merge(new_regs[k],new_regs[l],reg,a0,b0);
-        List new_stats = List::create(Named("counts", new_counts), Named("regs", new_regs));
-        delta(k,l)=icl(new_stats,k,l)-icl(old_stats,k,l);
-        delta(l,k)=delta(k,l);
-      }
-      if(delta(k,l)>bv){
-        bk=k;
-        bl=l;
-        bv=delta(k,l);
-      }
-      
-    }
-  }
-  return MergeMat(bk,bl,bv,delta);
-}
+
 
 // Merge update between k and l
 void Mreg::merge_update(int k,int l){

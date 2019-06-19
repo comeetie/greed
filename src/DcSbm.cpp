@@ -182,70 +182,26 @@ void DcSbm::swap_update(const int i,const int newcl){
 }
 
 
-MergeMat DcSbm::delta_merge(){
-  arma::mat delta(K,K);
-  delta.fill(0);
-  int bk = 0;
-  int bl = 0;
-  double bv = -std::numeric_limits<double>::infinity();
+double DcSbm::delta_merge(int k, int l){
+  
   List old_stats = List::create(Named("counts", counts), Named("din", din),Named("dout", dout),Named("x_counts", x_counts));
-  for(int k = 1 ; k < K ; ++k) {
-    for (int l = 0 ; l<k ; ++l){
-      arma::mat new_ec = x_counts;
-      arma::mat new_counts = counts;
-      new_counts(l)=new_counts(k)+new_counts(l);
-      new_counts(k)=0;
-      new_ec.col(l) = new_ec.col(k)+new_ec.col(l);
-      new_ec.row(l) = new_ec.row(k)+new_ec.row(l);
-      arma::vec new_din = din;
-      new_din(l) = new_din(k)+new_din(l);
-      arma::vec new_dout = dout;
-      new_dout(l) = new_dout(k)+new_dout(l);
-      List new_stats = List::create(Named("counts", new_counts),Named("din", new_din),Named("dout", new_dout), Named("x_counts", new_ec));
-      delta(k,l)=icl(new_stats,k,l)-icl(old_stats,k,l);
-      delta(l,k)=delta(k,l);
-      if(delta(k,l)>bv){
-        bk=k;
-        bl=l;
-        bv=delta(k,l);
-      }
-    }
-  }
-  return MergeMat(bk,bl,bv,delta);
+  
+  arma::mat new_ec = x_counts;
+  arma::mat new_counts = counts;
+  new_counts(l)=new_counts(k)+new_counts(l);
+  new_counts(k)=0;
+  new_ec.col(l) = new_ec.col(k)+new_ec.col(l);
+  new_ec.row(l) = new_ec.row(k)+new_ec.row(l);
+  arma::vec new_din = din;
+  new_din(l) = new_din(k)+new_din(l);
+  arma::vec new_dout = dout;
+  new_dout(l) = new_dout(k)+new_dout(l);
+  List new_stats = List::create(Named("counts", new_counts),Named("din", new_din),Named("dout", new_dout), Named("x_counts", new_ec));
+  double delta=icl(new_stats,k,l)-icl(old_stats,k,l);
+  
+  return delta;
 }
 
-MergeMat DcSbm::delta_merge(arma::mat delta, int obk, int obl){
-  delta = delta(arma::find(arma::linspace(0,K,K+1)!=obk),arma::find(arma::linspace(0,K,K+1)!=obk));
-  int bk = 0;
-  int bl = 0;
-  double bv = -std::numeric_limits<double>::infinity();
-  List old_stats = List::create(Named("counts", counts), Named("din", din),Named("dout", dout),Named("x_counts", x_counts));
-  for(int k = 1; k < K; ++k) {
-    for (int l = 0;l<k;++l){
-      if(k == obl | l == obl){
-        arma::mat new_ec = x_counts;
-        arma::mat new_counts = counts;
-        new_counts(l)=new_counts(k)+new_counts(l);
-        new_counts(k)=0;
-        new_ec.col(l) = new_ec.col(k)+new_ec.col(l);
-        new_ec.row(l) = new_ec.row(k)+new_ec.row(l);
-        arma::vec new_din = din;
-        new_din(l) = new_din(k)+new_din(l);
-        arma::vec new_dout = dout;
-        new_dout(l) = new_dout(k)+new_dout(l);
-        List new_stats = List::create(Named("counts", new_counts),Named("din", new_din),Named("dout", new_dout), Named("x_counts", new_ec));
-        delta(k,l)=icl(new_stats,k,l)-icl(old_stats,k,l);
-        delta(l,k)=delta(k,l);
-      }
-      if(delta(k,l)>bv){
-        bk=k;
-        bl=l;
-        bv=delta(k,l);
-      }
-    }
-  }
-  return MergeMat(bk,bl,bv,delta);
-}
 
 void DcSbm::merge_update(int k,int l){
   cl(arma::find(cl==k))=arma::ones(counts(k),1)*l;
