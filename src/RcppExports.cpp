@@ -19,6 +19,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fit_greed_cstr
+S4 fit_greed_cstr(S4 model, List data, arma::vec& clt, arma::uvec iclust, arma::vec workingset, std::string type, int nb_max_pass, bool verbose);
+RcppExport SEXP _greed_fit_greed_cstr(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP, SEXP iclustSEXP, SEXP workingsetSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
+    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
+    Rcpp::traits::input_parameter< arma::uvec >::type iclust(iclustSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type workingset(workingsetSEXP);
+    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
+    Rcpp::traits::input_parameter< int >::type nb_max_pass(nb_max_passSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(fit_greed_cstr(model, data, clt, iclust, workingset, type, nb_max_pass, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// merge_cstr
+S4 merge_cstr(S4 model, List data, arma::vec& clt, arma::sp_mat& merge_graph, bool verbose);
+RcppExport SEXP _greed_merge_cstr(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP, SEXP merge_graphSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
+    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type merge_graph(merge_graphSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(merge_cstr(model, data, clt, merge_graph, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fit_greed
 S4 fit_greed(S4 model, List data, arma::vec& clt, std::string type, int nb_max_pass, bool verbose);
 RcppExport SEXP _greed_fit_greed(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
@@ -251,6 +284,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_greed_post_probs", (DL_FUNC) &_greed_post_probs, 3},
+    {"_greed_fit_greed_cstr", (DL_FUNC) &_greed_fit_greed_cstr, 8},
+    {"_greed_merge_cstr", (DL_FUNC) &_greed_merge_cstr, 5},
     {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 6},
     {"_greed_fit_greed_path", (DL_FUNC) &_greed_fit_greed_path, 2},
     {"_greed_add_sppat", (DL_FUNC) &_greed_add_sppat, 2},

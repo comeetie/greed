@@ -17,7 +17,7 @@ icc=greed:::gsum_mm(cl-1,t(X20news),60)
 
 cl=sample(1:10,2500,replace = TRUE)
 
-sol1=greed:::fit_greed(new("mm"),list(X=X20news[1:2500,1:500]),sample(1:10,2500,replace = TRUE),verbose = TRUE,type = "swap")
+sol1=greed:::fit_greed(new("mm"),list(X=X20news[1:2500,1:500]),sample(1:15,2500,replace = TRUE),verbose = TRUE,type = "swap")
 sol2=greed:::fit_greed(new("mm"),list(X=X20news[1:2500,1:500]),sample(1:10,2500,replace = TRUE),verbose = TRUE,type = "swap")
 
 ij=which(table(sol1@cl,sol2@cl)>0,arr.ind = TRUE)

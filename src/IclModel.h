@@ -27,22 +27,26 @@ public:
   // virtual methods to be implemented by models to compute log(p(X|Z)) optimized for deltas and sparse updates
   virtual double icl_emiss(const List & obs_stats,const List & up_stats,int oldcl,int newcl){};
   // compute the delta for each possible swap of a node
-  virtual arma::mat delta_swap(const int i){};
+  virtual arma::mat delta_swap(const int i,arma::uvec iclust){};
   // update the stats when a node is swaped
   virtual void swap_update(const int i,const int newcl){};
   // main method for greedy swaping
-  void greedy_swap(int nbpassmax);
+  void greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust);
   // virtual methods to be implemented by models to compute merge deltas
   virtual double delta_merge(int k, int l){};
   // update the stats when two clusters are merged
   virtual void merge_update(const int k,const int l){};
-  // methods  to compute merge matrix deltas update version
+  // methods  to compute merge matrix deltas 
   MergeMat delta_merge();
+  // update version
   MergeMat delta_merge(arma::mat delta, int obk, int obl);
+  // method  to compute merge matrix deltas with constraints on possible merge
   SpMergeMat delta_merge(const arma::sp_mat & merge_graph);
+  // method  to compute merge matrix deltas with constraints on possible merge (update version)
   SpMergeMat delta_merge(const arma::sp_mat & merge_graph, int obk, int obl);
   // main method for greedy swaping
   void greedy_merge();
+  void greedy_merge(const arma::sp_mat & merge_graph);
   // main method for greedy merge
   List greedy_merge_path();
   // get posterior probs p(Zi|X,Z-i)

@@ -10,7 +10,24 @@ post_probs <- function(model, data, clt) {
     .Call('_greed_post_probs', PACKAGE = 'greed', model, data, clt)
 }
 
-#' fit_greed_init
+#' fit_greed
+#' @param model icl_model
+#' @param data list with clustering data (fileds depend on model type)
+#' @param clt cluster labels {0,...,K-1}
+#' @param type merge, swap, none, or both (default)  
+#' @param nb_max_pass maximum number of pass for greedy swap
+#' @param verbose boolean for verbose mode default to false
+#' @return a model_fit object  
+#' @export
+fit_greed_cstr <- function(model, data, clt, iclust, workingset, type = "both", nb_max_pass = 50L, verbose = FALSE) {
+    .Call('_greed_fit_greed_cstr', PACKAGE = 'greed', model, data, clt, iclust, workingset, type, nb_max_pass, verbose)
+}
+
+merge_cstr <- function(model, data, clt, merge_graph, verbose = FALSE) {
+    .Call('_greed_merge_cstr', PACKAGE = 'greed', model, data, clt, merge_graph, verbose)
+}
+
+#' fit_greed
 #' @param model icl_model
 #' @param data list with clustering data (fileds depend on model type)
 #' @param clt cluster labels {0,...,K-1}

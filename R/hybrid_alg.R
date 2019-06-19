@@ -10,7 +10,8 @@ NULL
 
 hybrid = function(model,alg,data,K, verbose=FALSE){
             
-            fi = function(ncl,type){ fit_greed(model,data,ncl,type=type,verbose=verbose) }
+            fimerge = function(ncl,merge_graph){ merge_cstr(model,data,ncl,merge_graph,verbose)}
+            fiswap = function(ncl,ws,iclust){ fit_greed_cstr(model,data,ncl,ws,iclust,type="swap",verbose = verbose)}
             train.hist = data.frame(generation=c(),icl=c(),K=c())
 
             # multi-start in //
@@ -27,6 +28,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             # check for errors 
             solutions=solutions[!is.nan(icls)]
             icls=icls[!is.nan(icls)]
+            print(icls)
             old_best = -Inf
             best_icl = max(icls)
             nbgen = 1
@@ -43,11 +45,12 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
               new_solutions = listenv::listenv()
               selected_couples = matrix(selected[sample(1:length(selected),length(selected)*2,replace = TRUE)],ncol=2)
               for (i in 1:nrow(selected_couples)){
-                new_solutions[[i]] %<-% full_cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],fi,alg@prob_mutation)
+                new_solutions[[i]] %<-% full_cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],fimerge,fiswap,alg@prob_mutation)
               }
               new_solutions = as.list(new_solutions)
               solutions = c(solutions[selected],new_solutions)
               icls = sapply(solutions,function(s){s@icl})
+              print(icls)
               old_best=best_icl
               best_icl = max(icls)
               nbgen = nbgen + 1;
@@ -71,17 +74,37 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
           }
 
 
-full_cross_over = function(sol1,sol2,fi,pmutation){
+full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
   # cartesian product on the z of the two solution
-  ncl = unclass(factor(paste(sol1@cl,sol2@cl)))
-  type="merge"
-  if(runif(1)<pmutation){
-    sp_cl=sample(max(ncl),1)
-    ncl[ncl==sp_cl]=sample((max(ncl)+1):(max(ncl)+2),sum(ncl==sp_cl),replace=TRUE)
-    type="both"
+  #ncl = unclass(factor(paste(sol1@cl,sol2@cl)))
+
+  # matrix of possible merge
+  ij=which(table(sol1@cl,sol2@cl)>0,arr.ind = TRUE)
+  ncl = as.numeric(factor(paste(sol1@cl,"_",sol2@cl,sep=""),levels=paste(ij[,1],"_",ij[,2],sep="")))
+  M=matrix(0,nrow(ij),nrow(ij))
+  for(k in 1:sol1@K){
+    M[ij[,1]==k,ij[,1]==k]=1
   }
-  # greedy merge
-  fi(ncl,type)
+  for(k in 1:sol2@K){
+    M[ij[,2]==k,ij[,2]==k]=1
+  }
+  ijAm=which(tril(M,-1)>0,arr.ind = TRUE)
+  Am=sparseMatrix(ijAm[,1],ijAm[,2],x=rep(1,nrow(ijAm)),dims = c(max(ncl),max(ncl)))
+  
+
+  
+  sol=fimerge(ncl,Am)
+  
+  if(runif(1)<pmutation){
+    ncl = sol@cl
+    sp_cl=sample(max(ncl),1)
+    ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)
+    ws = as.numeric(ncl==sp_cl)
+    iclust  = c(sp_cl,max(ncl)+1)
+    sol= fiswap(ncl,ws,iclust)
+  }
+  
+  sol
 }
 
 

@@ -104,7 +104,7 @@ List DcSbm::get_obs_stats(){
   return List::create(Named("counts", counts), Named("din", din),Named("dout", dout),Named("x_counts", x_counts));
 }
 
-arma::mat DcSbm::delta_swap(int i){
+arma::mat DcSbm::delta_swap(int i,arma::uvec iclust){
   int self=x(i,i);
   int oldcl = cl(i);
   arma::sp_mat col_sum = gsum_col(cl,x,i,K);
@@ -112,11 +112,15 @@ arma::mat DcSbm::delta_swap(int i){
   arma::sp_mat row_sum = gsum_col(cl,xt,i,K);
   row_sum(oldcl)=row_sum(oldcl)-self;
   arma::vec delta(K);
-  delta.fill(0);
+  delta.fill(-std::numeric_limits<double>::infinity());
+  delta(oldcl)=0;
   int cdin = arma::accu(col_sum)+self;
   int cdout = arma::accu(row_sum)+self;
   List old_stats = List::create(Named("counts", counts),Named("din", din),Named("dout", dout), Named("x_counts", x_counts));
-  for(int k = 0; k < K; ++k) {
+  int k = 0;
+  // for each possible move
+  for(int j = 0; j < iclust.n_elem; ++j) {
+    k=iclust(j);
     if(k!=oldcl){
       arma::mat new_ec = x_counts;
       new_ec.col(k) = new_ec.col(k)+col_sum;

@@ -69,7 +69,7 @@ double Mm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
 }
 
 
-arma::mat Mm::delta_swap(int i){
+arma::mat Mm::delta_swap(int i,arma::uvec iclust){
   
   // old cluster
   int oldcl = cl(i);
@@ -79,7 +79,8 @@ arma::mat Mm::delta_swap(int i){
 
   // initialize vecor of delta ICL
   arma::vec delta(K);
-  delta.fill(0);
+  delta.fill(-std::numeric_limits<double>::infinity());
+  delta(oldcl)=0;
   // old stats
   
                                   
@@ -90,8 +91,10 @@ arma::mat Mm::delta_swap(int i){
     old_ec.col(oldcl) = add_sppat(add_sppat(old_ec.col(oldcl),ccol),-ccol);
   }
 
+  int k = 0;
   // for each possible move
-  for(int k = 0; k < K; ++k) {
+  for(int j = 0; j < iclust.n_elem; ++j) {
+    k=iclust(j);
     if(k!=oldcl){
       // construct new stats
       arma::sp_mat new_ec = x_counts;
