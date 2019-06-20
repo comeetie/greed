@@ -94,13 +94,15 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
 
   
   sol=fimerge(ncl,Am)
-  
+  #sol=sol1
   if(runif(1)<pmutation){
     ncl = sol@cl
     sp_cl=sample(max(ncl),1)
-    ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)
     ws = as.numeric(ncl==sp_cl)
-    iclust  = c(sp_cl,max(ncl)+1)
+    print(ws)
+    ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)
+
+    iclust  = c(sp_cl,max(ncl))
     sol= fiswap(ncl,ws,iclust)
   }
   

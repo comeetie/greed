@@ -171,7 +171,8 @@ MergeMat IclModel::delta_merge(){
 }
 
 // update merge matrix after merge of obk/obl
-MergeMat IclModel::delta_merge(arma::mat delta, int obk, int obl){
+// obl < obk so didn't change when removing row/col obk
+MergeMat IclModel::delta_merge(arma::mat delta, int obk, int obl, const List & old_stats){
   // optimized version to compute only new values of the merge mat
   delta = delta(arma::find(arma::linspace(0,K,K+1)!=obk),arma::find(arma::linspace(0,K,K+1)!=obk));
   int bk = 0;
@@ -181,6 +182,11 @@ MergeMat IclModel::delta_merge(arma::mat delta, int obk, int obl){
     for (int l = 0;l<k;++l){
       if(k == obl | l == obl){
         delta(k,l)=this->delta_merge(k,l);
+      }else{
+        //Rcout << k <<" : " <<l << " - " << obk <<" : " << obl <<std::endl;
+        //Rcout << delta(k,l) << std::endl;
+        delta(k,l)=delta(k,l)+this->delta_merge_correction(k,l,obk,obl,old_stats);
+        //Rcout << delta(k,l) << std::endl;
       }
       if(delta(k,l)>bv){
         bk=k;
@@ -217,21 +223,29 @@ SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph){
 }
 
 // update merge matrix after merge of obk/obl sparse
-SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int obl){
+SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int obl,const List & old_stats){
   // optimized version to compute only new values of the merge mat
   //delta = delta(arma::find(arma::linspace(0,K,K+1)!=obk),arma::find(arma::linspace(0,K,K+1)!=obk));
   arma::sp_mat delta = merge_graph;
   delta = delrowcol(delta,obk);
   int bk = 0;
   int bl = 0;
+  int k,l;
   double bv = -std::numeric_limits<double>::infinity();
   for (arma::sp_mat::iterator i = delta.begin(); i != delta.end(); ++i) {
-    delta(i.row(),i.col())=this->delta_merge(i.row(),i.col());
+    k=i.row();
+    l=i.col();
+    if(k == obl | l == obl){
+      delta(k,l)=this->delta_merge(k,l);
+    }else{
+      delta(k,l)=delta(k,l)+this->delta_merge_correction(k,l,obk,obl,old_stats);
+    }
+
     
-    if(delta(i.row(),i.col())>bv){
-      bk=i.row();
-      bl=i.col();
-      bv=delta(i.row(),i.col());
+    if(delta(k,l)>bv){
+      bk=k;
+      bl=l;
+      bv=delta(k,l);
     }
   }
   
@@ -253,7 +267,7 @@ void IclModel::greedy_merge(const arma::sp_mat & merge_graph){
     
     // increment 
     ++nbmerge;
-    
+    List old_stats = this->get_obs_stats();
     // perform the merge and update the stats
     this->merge_update(merge_mat.getK(),merge_mat.getL());
     if(verbose){
@@ -262,7 +276,7 @@ void IclModel::greedy_merge(const arma::sp_mat & merge_graph){
       Rcout << "##################################"<< std::endl; 
     }
     // update the merge matrix
-    merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL());
+    merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL(),old_stats);
 
   }
   // compute final icl value
@@ -288,8 +302,8 @@ void IclModel::greedy_merge(){
     // increment 
     ++nbmerge;
     
-    
-    
+    //Rcout << merge_mat.getValue()<< std::endl;
+    List old_stats = this->get_obs_stats();
     // perform the merge and update the stats
     this->merge_update(merge_mat.getK(),merge_mat.getL());
     if(verbose){
@@ -298,7 +312,12 @@ void IclModel::greedy_merge(){
       Rcout << "##################################"<< std::endl; 
     }
     // update the merge matrix
-    merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL());
+    merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL(),old_stats);
+    //Rcout << merge_mat.getValue()<< std::endl;
+    // check test
+    //MergeMat merge_mat_comp = this->delta_merge();
+    //Rcout << arma::max(merge_mat.getMergeMat()-merge_mat_comp.getMergeMat()) << std::endl;
+    //Rcout << arma::min(merge_mat.getMergeMat()-merge_mat_comp.getMergeMat()) << std::endl;
     
   }
   // compute final icl value
@@ -332,6 +351,7 @@ List IclModel::greedy_merge_path(){
     int l = merge_mat.getL();
     // update stats
     // Rcout << k<< l << ":  "<< mm(k,l) << std::endl;
+    List old_stats = this->get_obs_stats();
     this->merge_update(k,l);
     // compute new icl
     iclold = icl;
@@ -345,7 +365,7 @@ List IclModel::greedy_merge_path(){
                                 Named("k")=k+1,
                                 Named("l")=l+1));
     // update merge matrix
-    merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL());
+    merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL(),old_stats);
   }
   return path;
 }

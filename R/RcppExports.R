@@ -19,8 +19,8 @@ post_probs <- function(model, data, clt) {
 #' @param verbose boolean for verbose mode default to false
 #' @return a model_fit object  
 #' @export
-fit_greed_cstr <- function(model, data, clt, iclust, workingset, type = "both", nb_max_pass = 50L, verbose = FALSE) {
-    .Call('_greed_fit_greed_cstr', PACKAGE = 'greed', model, data, clt, iclust, workingset, type, nb_max_pass, verbose)
+fit_greed_cstr <- function(model, data, clt, workingset, iclust, type = "both", nb_max_pass = 50L, verbose = FALSE) {
+    .Call('_greed_fit_greed_cstr', PACKAGE = 'greed', model, data, clt, workingset, iclust, type, nb_max_pass, verbose)
 }
 
 merge_cstr <- function(model, data, clt, merge_graph, verbose = FALSE) {

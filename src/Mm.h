@@ -22,6 +22,8 @@ private:
   arma::sp_mat xt;
   // matrix of observed counts for each clusters
   arma::sp_mat x_counts;
+  // col_sums of x_counts
+  arma::rowvec col_sums;  
   double beta;
   double norm_fact;
 };

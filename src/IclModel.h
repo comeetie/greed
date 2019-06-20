@@ -36,14 +36,16 @@ public:
   virtual double delta_merge(int k, int l){};
   // update the stats when two clusters are merged
   virtual void merge_update(const int k,const int l){};
+  // compute correction if needed to merge matrix
+  virtual double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats){};
   // methods  to compute merge matrix deltas 
   MergeMat delta_merge();
   // update version
-  MergeMat delta_merge(arma::mat delta, int obk, int obl);
+  MergeMat delta_merge(arma::mat delta, int obk, int obl,const List & old_stats);
   // method  to compute merge matrix deltas with constraints on possible merge
   SpMergeMat delta_merge(const arma::sp_mat & merge_graph);
   // method  to compute merge matrix deltas with constraints on possible merge (update version)
-  SpMergeMat delta_merge(const arma::sp_mat & merge_graph, int obk, int obl);
+  SpMergeMat delta_merge(const arma::sp_mat & merge_graph, int obk, int obl,const List & old_stats);
   // main method for greedy swaping
   void greedy_merge();
   void greedy_merge(const arma::sp_mat & merge_graph);

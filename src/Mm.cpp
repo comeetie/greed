@@ -23,6 +23,8 @@ Mm::Mm(arma::sp_mat& xp,int Ki,double alphai,double betai,arma::vec& clt,bool ve
   // construct oberved stats 
   // x_counts : col sums for each cluster
   x_counts = gsum_mm(cl,xt,K);
+  arma::rowvec col_sums_dense(sum(x_counts));
+  col_sums = col_sums_dense;
   // counts : number of row in each cluster
   counts = count(cl,K);
   // TODO : add a filed to store the icl const ?
@@ -83,8 +85,7 @@ arma::mat Mm::delta_swap(int i,arma::uvec iclust){
   delta(oldcl)=0;
   // old stats
   
-                                  
-  arma::rowvec col_sums(sum(x_counts));   
+                                
   arma::sp_mat old_ec = x_counts;
   // if cluster will die do not sparsify the counts
   if(counts(oldcl)>1){
@@ -142,12 +143,18 @@ void Mm::swap_update(int i,int newcl){
   // update cl
   cl(i)=newcl;
   // if a cluster is dead
+  // update col_sums
+  double nbt = arma::accu(ccol);
+  col_sums(newcl)=col_sums(newcl)+nbt;
+  col_sums(oldcl)=col_sums(oldcl)-nbt;
+  
   if(new_counts(oldcl)==0){
     // remove from counts
     counts = new_counts.elem(arma::find(arma::linspace(0,K-1,K)!=oldcl));
     // remove from x_counts
     x_counts = delcol(new_ec,oldcl);
-      
+    // remove from col_sums
+    col_sums = col_sums.elem(arma::find(arma::linspace(0,K-1,K)!=oldcl));
     // oldies : .rows(arma::find(arma::linspace(0,K-1,K)!=oldcl));
     // update cl to take into account de dead cluster
     cl.elem(arma::find(cl>oldcl))=cl.elem(arma::find(cl>oldcl))-1;
@@ -202,6 +209,9 @@ void Mm::merge_update(int k,int l){
   // update x_counts
   x_counts.col(l) = x_counts.col(k)+x_counts.col(l);
   x_counts = delcol(x_counts,k);
+  // update col_sums
+  col_sums(l) = col_sums(l) + col_sums(k);
+  col_sums= col_sums.elem(arma::find(arma::linspace(0,K-1,K)!=k));
   // update K
   --K;
 }

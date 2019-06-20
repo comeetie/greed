@@ -9,7 +9,7 @@
 using namespace Rcpp;
 
 
-IclModel * init(S4 model,List data, arma::vec& clt, bool verbose) {
+IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
   
   IclModel * M;
   int Ki = arma::max(clt);
@@ -87,14 +87,14 @@ arma::mat post_probs(S4 model,List data,  arma::vec& clt) {
 //' @return a model_fit object  
 //' @export
 // [[Rcpp::export]]
-S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::uvec iclust,arma::vec workingset, std::string type="both", int nb_max_pass = 50,bool verbose=false) {
+S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::vec workingset,arma::uvec iclust, std::string type="both", int nb_max_pass = 50,bool verbose=false) {
   IclModel * M = init(model,data,clt,verbose);
   S4 sol = init_sol(model);
   if(type!="merge" && type!="swap" && type!="both" && type!="none"){
     stop("Unsuported algorithm");
   }
   if(type=="swap" || type=="both"){
-    M->greedy_swap(nb_max_pass,workingset,iclust);
+    M->greedy_swap(nb_max_pass,workingset,iclust-1);
   }
   if(type=="merge" || type=="both"){
     M->greedy_merge();
@@ -142,8 +142,8 @@ S4 fit_greed(S4 model,List data,  arma::vec& clt,std::string type="both", int nb
   int N = clt.n_elem;
   arma::vec workingset = arma::ones(N);
   int Ki = arma::max(clt);
-  arma::uvec iclust = arma::find(arma::ones(Ki));
-  S4 sol = fit_greed_cstr(model,data,clt,iclust,workingset,type,nb_max_pass,verbose);
+  arma::uvec iclust = arma::find(arma::ones(Ki))+1;
+  S4 sol = fit_greed_cstr(model,data,clt,workingset,iclust,type,nb_max_pass,verbose);
   return(sol);
 }
 

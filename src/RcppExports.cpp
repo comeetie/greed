@@ -20,20 +20,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // fit_greed_cstr
-S4 fit_greed_cstr(S4 model, List data, arma::vec& clt, arma::uvec iclust, arma::vec workingset, std::string type, int nb_max_pass, bool verbose);
-RcppExport SEXP _greed_fit_greed_cstr(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP, SEXP iclustSEXP, SEXP workingsetSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
+S4 fit_greed_cstr(S4 model, List data, arma::vec& clt, arma::vec workingset, arma::uvec iclust, std::string type, int nb_max_pass, bool verbose);
+RcppExport SEXP _greed_fit_greed_cstr(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP, SEXP workingsetSEXP, SEXP iclustSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
     Rcpp::traits::input_parameter< List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
-    Rcpp::traits::input_parameter< arma::uvec >::type iclust(iclustSEXP);
     Rcpp::traits::input_parameter< arma::vec >::type workingset(workingsetSEXP);
+    Rcpp::traits::input_parameter< arma::uvec >::type iclust(iclustSEXP);
     Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
     Rcpp::traits::input_parameter< int >::type nb_max_pass(nb_max_passSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(fit_greed_cstr(model, data, clt, iclust, workingset, type, nb_max_pass, verbose));
+    rcpp_result_gen = Rcpp::wrap(fit_greed_cstr(model, data, clt, workingset, iclust, type, nb_max_pass, verbose));
     return rcpp_result_gen;
 END_RCPP
 }

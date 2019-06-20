@@ -146,3 +146,83 @@ void Sbm::merge_update(int k,int l){
   x_counts = x_counts(arma::find(arma::linspace(0,K-1,K)!=k),arma::find(arma::linspace(0,K-1,K)!=k));
   --K;
 }
+
+double Sbm::delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats){
+  // here old refers to the stats before the fusion between obk and obl
+  //Rcout << "Je calculs des corrections !!" << std::endl;
+  //Rcout << obk << "---- " << obl << std::endl;
+  int a,b,ao,bo,lo;
+  double icl_cor = 0;
+  int cc, cc_old;
+  double oxc,xc;
+  arma::vec old_counts =as<arma::vec>(old_stats["counts"]);
+  arma::mat old_x_counts =as<arma::mat>(old_stats["x_counts"]);
+  cc = counts(k)*counts(l);
+  arma::uvec kl;
+  kl << k << l << arma::endr;
+  arma::uvec mkl;
+  mkl << obk << obl << arma::endr;
+  if(l>=obk){
+    lo=l+1;
+  }else{
+    lo=l;
+  }
+  for(int i=0;i<2;i++){
+    for (int j=0;j<2;j++){
+
+      
+      a = kl(i);
+      b = mkl(j);
+      if(b>=obk){
+        b=b-1;
+      }
+      
+
+      
+      // new stats no fusion k/l
+      if(j==1){
+        cc = counts(a)*counts(b);
+        icl_cor -= lgamma(a0+x_counts(a,b))+lgamma(b0+cc-x_counts(a,b))+lgamma(a0+b0)-lgamma(a0)-lgamma(b0)-lgamma(a0+b0+cc);
+        icl_cor -= lgamma(a0+x_counts(b,a))+lgamma(b0+cc-x_counts(b,a))+lgamma(a0+b0)-lgamma(a0)-lgamma(b0)-lgamma(a0+b0+cc);
+      }
+      
+      // new stats fusion k/l
+      if(j==1 & i==0){
+        cc = (counts(k)+counts(l))*counts(b);
+        xc    = x_counts(k,b)+x_counts(l,b);
+        icl_cor += lgamma(a0+xc)+lgamma(b0+cc-xc)+lgamma(a0+b0)-lgamma(a0)-lgamma(b0)-lgamma(a0+b0+cc);
+        xc    = x_counts(b,k)+x_counts(b,l);
+        icl_cor += lgamma(a0+xc)+lgamma(b0+cc-xc)+lgamma(a0+b0)-lgamma(a0)-lgamma(b0)-lgamma(a0+b0+cc); 
+      }
+      
+      // handling matrix sizes differences
+      ao = kl(i);
+      bo = mkl(j);
+      if(ao>=obk){
+        ao=ao+1;
+      }
+
+      // old stats no fusion k/l
+      cc_old = old_counts(ao)*old_counts(bo);
+      icl_cor += lgamma(a0+old_x_counts(ao,bo))+lgamma(b0+cc_old-old_x_counts(ao,bo))+lgamma(a0+b0)-lgamma(a0)-lgamma(b0)-lgamma(a0+b0+cc_old);
+      icl_cor += lgamma(a0+old_x_counts(bo,ao))+lgamma(b0+cc_old-old_x_counts(bo,ao))+lgamma(a0+b0)-lgamma(a0)-lgamma(b0)-lgamma(a0+b0+cc_old);
+      // old stats fusion k/l
+      if(i==0){
+        cc_old = (old_counts(ao)+old_counts(lo))*old_counts(bo);
+        oxc    = old_x_counts(ao,bo)+old_x_counts(lo,bo);
+        icl_cor -= lgamma(a0+oxc)+lgamma(b0+cc_old-oxc)+lgamma(a0+b0)-lgamma(a0)-lgamma(b0)-lgamma(a0+b0+cc_old);
+        oxc    = old_x_counts(bo,ao)+old_x_counts(bo,lo);
+        icl_cor -= lgamma(a0+oxc)+lgamma(b0+cc_old-oxc)+lgamma(a0+b0)-lgamma(a0)-lgamma(b0)-lgamma(a0+b0+cc_old);
+      }
+      
+      
+    }
+  }
+
+  return icl_cor;
+  
+  
+}
+
+
+
