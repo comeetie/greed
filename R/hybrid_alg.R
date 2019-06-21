@@ -16,11 +16,12 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
 
             # multi-start in //
             #future::plan(future::multiprocess)
-            
+
             solutions = listenv::listenv()
             # first generation of solutions
             pop_size = alg@pop_size
             for (i in 1:pop_size){
+
               solutions[[i]] %<-% fit_greed(model,data,sample(1:K,data$N,replace = TRUE),verbose = verbose)
             }
             solutions = as.list(solutions)
@@ -28,7 +29,6 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             # check for errors 
             solutions=solutions[!is.nan(icls)]
             icls=icls[!is.nan(icls)]
-            print(icls)
             old_best = -Inf
             best_icl = max(icls)
             nbgen = 1
@@ -50,10 +50,14 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
               new_solutions = as.list(new_solutions)
               solutions = c(solutions[selected],new_solutions)
               icls = sapply(solutions,function(s){s@icl})
-              print(icls)
+              solutions=solutions[!is.nan(icls)]
+              icls=icls[!is.nan(icls)]
               old_best=best_icl
               best_icl = max(icls)
               nbgen = nbgen + 1;
+              #print("#################")
+              #print(paste0("Generation N",nbgen, " best solution with an ICL of ",round(solutions[[which.max(icls)]]@icl)," and ",solutions[[which.max(icls)]]@K," clusters."))
+              #print("#################")
             }
             
 
@@ -89,7 +93,7 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
     M[ij[,2]==k,ij[,2]==k]=1
   }
   ijAm=which(tril(M,-1)>0,arr.ind = TRUE)
-  Am=sparseMatrix(ijAm[,1],ijAm[,2],x=rep(1,nrow(ijAm)),dims = c(max(ncl),max(ncl)))
+  Am=Matrix::sparseMatrix(ijAm[,1],ijAm[,2],x=rep(1,nrow(ijAm)),dims = c(max(ncl),max(ncl)))
   
 
   
@@ -99,7 +103,7 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
     ncl = sol@cl
     sp_cl=sample(max(ncl),1)
     ws = as.numeric(ncl==sp_cl)
-    print(ws)
+
     ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)
 
     iclust  = c(sp_cl,max(ncl))

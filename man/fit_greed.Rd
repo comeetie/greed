@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{fit_greed}
 \alias{fit_greed}
-\title{fit_greed_init}
+\title{fit_greed}
 \usage{
 fit_greed(model, data, clt, type = "both", nb_max_pass = 50L,
   verbose = FALSE)
@@ -24,5 +24,5 @@ fit_greed(model, data, clt, type = "both", nb_max_pass = 50L,
 a model_fit object
 }
 \description{
-fit_greed_init
+fit_greed
 }

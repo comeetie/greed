@@ -23,8 +23,10 @@ Mm::Mm(arma::sp_mat& xp,int Ki,double alphai,double betai,arma::vec& clt,bool ve
   // construct oberved stats 
   // x_counts : col sums for each cluster
   x_counts = gsum_mm(cl,xt,K);
+
   arma::rowvec col_sums_dense(sum(x_counts));
   col_sums = col_sums_dense;
+
   // counts : number of row in each cluster
   counts = count(cl,K);
   // TODO : add a filed to store the icl const ?
@@ -154,7 +156,7 @@ void Mm::swap_update(int i,int newcl){
     // remove from x_counts
     x_counts = delcol(new_ec,oldcl);
     // remove from col_sums
-    col_sums = col_sums.elem(arma::find(arma::linspace(0,K-1,K)!=oldcl));
+    col_sums = col_sums.cols(arma::find(arma::linspace(0,K-1,K)!=oldcl));
     // oldies : .rows(arma::find(arma::linspace(0,K-1,K)!=oldcl));
     // update cl to take into account de dead cluster
     cl.elem(arma::find(cl>oldcl))=cl.elem(arma::find(cl>oldcl))-1;
@@ -172,7 +174,7 @@ void Mm::swap_update(int i,int newcl){
 
 double Mm::delta_merge(int k,int l){
   // optim a calculer uniquement lors de l'init et des update 
-  arma::rowvec col_sums(sum(x_counts));   
+  //arma::rowvec col_sums(sum(x_counts));   
   arma::sp_mat new_ec = x_counts;
   arma::vec new_counts = counts;
   // counts after merge
@@ -211,7 +213,7 @@ void Mm::merge_update(int k,int l){
   x_counts = delcol(x_counts,k);
   // update col_sums
   col_sums(l) = col_sums(l) + col_sums(k);
-  col_sums= col_sums.elem(arma::find(arma::linspace(0,K-1,K)!=k));
+  col_sums= col_sums.cols(arma::find(arma::linspace(0,K-1,K)!=k));
   // update K
   --K;
 }

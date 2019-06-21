@@ -170,7 +170,7 @@ spectral= function(X,K){
 #' @return an icl_path object
 #' @export
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
-  data = preprocess(X,model)
+  data = preprocess(model,X)
   fit(model,alg,data,K,verbose)
 }
 
@@ -180,11 +180,13 @@ find_model = function(X){
       model = methods::new("dcsbm")
     }else{
       if(all(round(X)==X)){
-        model = methods::new("mm")  
+        model = methods::new("co_dcsbm")  
       }else{
         model = methods::new("mvmreg")
       }
     }
+  }else{
+    stop(paste0("Unsupported data type :", class(X) ," use matrix or sparse dgCMatrix."))
   }
   model
 }
@@ -193,21 +195,33 @@ find_model = function(X){
 as.sparse = function(X){
   S = X
   if(class(X)=="matrix"){
-    ij=which(X!=0,arr.ind=TRUE)
+    ij= which(X!=0,arr.ind=TRUE)
     S = Matrix::sparseMatrix(ij[,1],ij[,1],x = X[ij]) 
   }
   S
 }
 
-preprocess = function(X,model){
-  
-  switch(class(model),
-         mm = list(X=as.sparse(X) ,N=nrow(X)),
-         dcsbm = list(X=as.sparse(X),N=nrow(X)),
-         sbm = list(X=as.sparse(X),N=nrow(X)),
-         mvmreg = list(X=matrix(1,nrow = nrow(X)),Y=as.matrix(X),N=nrow(X))
-         )
-}
+setGeneric("preprocess", function(model, ...) standardGeneric("preprocess")) 
+
+#' @title preprocess
+#' @param model an icl_model
+#' @param X input data to prepare
+setMethod(f = "preprocess", 
+          signature = signature("icl_model"), 
+          definition = function(model, data){
+            list(X=as.sparse(data),N=nrow(data))
+})
+
+setGeneric("postprocess", function(path, ...) standardGeneric("postprocess")) 
+
+#' @title preprocess
+#' @param path an icl_path object
+setMethod(f = "postprocess", 
+          signature = signature("icl_path"), 
+          definition = function(path){
+            path    
+})
+
 
 
 #' @title greed_cond

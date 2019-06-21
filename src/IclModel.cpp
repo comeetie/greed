@@ -119,12 +119,14 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
     // compute icl after the pass
     icl_value = icl(this->get_obs_stats());
 
-    if(verbose){
-      Rcout << "##################################"<< std::endl;
-      Rcout << "Pass N°"<< nbpass << " completed with " << nbmove << " moves, icl :" << icl_value << "K :" << K << ", working set size :" << arma::accu(workingset)  << std::endl;
-      Rcout << "##################################"<< std::endl; 
-    } 
+
   }
+  if(verbose){
+    Rcout << "##################################"<< std::endl;
+    //plaRcout << "Swap convergence in " << nbpass << " epochs with " << nbmove << " moves, icl :" << icl_value << "K :" << K << ", working set size :" << arma::accu(workingset)  << std::endl;
+    Rcout << "swap convergence, with an ICL of "<< icl_value << " and " << K << " clusters." << std::endl;
+    Rcout << "##################################"<< std::endl; 
+  } 
 }
 
 
@@ -270,11 +272,11 @@ void IclModel::greedy_merge(const arma::sp_mat & merge_graph){
     List old_stats = this->get_obs_stats();
     // perform the merge and update the stats
     this->merge_update(merge_mat.getK(),merge_mat.getL());
-    if(verbose){
-      Rcout << "##################################"<< std::endl;
-      Rcout << "Merge icl : "<< icl(this->get_obs_stats()) << std::endl;
-      Rcout << "##################################"<< std::endl; 
-    }
+    // if(verbose){
+    //   Rcout << "##################################"<< std::endl;
+    //   Rcout << "Merge icl : "<< icl(this->get_obs_stats()) << std::endl;
+    //   Rcout << "##################################"<< std::endl; 
+    // }
     // update the merge matrix
     merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL(),old_stats);
 
@@ -283,7 +285,7 @@ void IclModel::greedy_merge(const arma::sp_mat & merge_graph){
   icl_value = icl(this->get_obs_stats());
   if(verbose){
     Rcout << "##################################"<< std::endl;
-    Rcout << "Final icl : "<< icl_value << std::endl;
+    Rcout << "Merge convergence, with an ICL of "<< icl_value << " and " << K << " clusters." << std::endl;
     Rcout << "##################################"<< std::endl; 
   }
 }
@@ -306,11 +308,11 @@ void IclModel::greedy_merge(){
     List old_stats = this->get_obs_stats();
     // perform the merge and update the stats
     this->merge_update(merge_mat.getK(),merge_mat.getL());
-    if(verbose){
-      Rcout << "##################################"<< std::endl;
-      Rcout << "Merge icl : "<< icl(this->get_obs_stats()) << std::endl;
-      Rcout << "##################################"<< std::endl; 
-    }
+    // if(verbose){
+    //   Rcout << "##################################"<< std::endl;
+    //   Rcout << "Merge icl : "<< icl(this->get_obs_stats()) << std::endl;
+    //   Rcout << "##################################"<< std::endl; 
+    // }
     // update the merge matrix
     merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL(),old_stats);
     //Rcout << merge_mat.getValue()<< std::endl;
@@ -324,7 +326,7 @@ void IclModel::greedy_merge(){
   icl_value = icl(this->get_obs_stats());
   if(verbose){
     Rcout << "##################################"<< std::endl;
-    Rcout << "Final icl : "<< icl_value << std::endl;
+    Rcout << "Merge convergence, with an ICL of "<< icl_value << " and " << K << " clusters." << std::endl;
     Rcout << "##################################"<< std::endl; 
   }
 }

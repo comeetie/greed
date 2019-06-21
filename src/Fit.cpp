@@ -19,6 +19,7 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
   try{
     if(strcmp(model.slot("name"),"sbm")!=0 && 
        strcmp(model.slot("name"),"dcsbm")!=0 && 
+       strcmp(model.slot("name"),"co_dcsbm")!=0 && 
        strcmp(model.slot("name"),"mm")!=0 &&
        strcmp(model.slot("name"),"mvmreg")!=0 &&
        strcmp(model.slot("name"),"mreg")!=0){
@@ -29,6 +30,10 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       M = new Sbm(xp,Ki,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt,verbose);
     }
     if(strcmp(model.slot("name"),"dcsbm")==0){
+      arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
+      M = new DcSbm(xp,Ki,model.slot("alpha"),clt,verbose);
+    }
+    if(strcmp(model.slot("name"),"co_dcsbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       M = new DcSbm(xp,Ki,model.slot("alpha"),clt,verbose);
     }

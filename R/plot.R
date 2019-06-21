@@ -174,6 +174,25 @@ dendo = function(x){
     ggplot2::theme_bw()
 }
 
+codendo = function(x){
+  ggtree = x@ggtreerow
+  rowt = ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
+    ggplot2::geom_segment(data=ggtree[-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
+    ggplot2::scale_x_continuous("",breaks=c())+
+    ggplot2::ylab(expression(paste("-log(",alpha,")")))+
+    ggplot2::ggtitle(paste0(toupper(x@model@name)," rows ",x@Krow," clusters, dendogram"))+
+    ggplot2::theme_bw()
+  ggtree = x@ggtreecol
+  colt = ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
+    ggplot2::geom_segment(data=ggtree[-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
+    ggplot2::scale_x_continuous("",breaks=c())+
+    ggplot2::ylab(expression(paste("-log(",alpha,")")))+
+    ggplot2::ggtitle(paste0(toupper(x@model@name)," cols ",x@Kcol," clusters, dendogram"))+
+    ggplot2::theme_bw()
+  ggpubr::ggarrange(rowt,colt)
+}
+
+
 
 lapath = function(x){
   gg = data.frame(k=sapply(x@path,function(p){p$K}),logalpha=sapply(x@path,function(p){p$logalpha}))
