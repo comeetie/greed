@@ -122,7 +122,7 @@ S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,boo
   S4 sol = init_sol(model);
   Rcout << "Merge" << std::endl;
   M->nasty_delta_merge(merge_graph);
-  List path = M->greedy_merge_path();
+
   List obs_stats = M->get_obs_stats();
   double bicl = M->icl(obs_stats);
   sol.slot("model") = model;
@@ -130,16 +130,17 @@ S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,boo
   sol.slot("cl") = M->get_cl()+1 ;
   sol.slot("icl") = bicl;
   sol.slot("K") = M->get_K();
-  for(int i=0;i<path.length();++i){
-    List cp = path[i];
-    if(as<double>(cp["icl1"])>bicl){
-      bicl = as<double>(cp["icl1"]);
-      sol.slot("obs_stats") = as<List>(cp["obs_stats"]);
-      sol.slot("cl") = as<arma::vec>(cp["cl"]) ;
-      sol.slot("icl") = bicl;
-      sol.slot("K") = as<int>(cp["K"]);
-    }
-  }
+  // List path = M->greedy_merge_path();
+  // for(int i=0;i<path.length();++i){
+  //   List cp = path[i];
+  //   if(as<double>(cp["icl1"])>bicl){
+  //     bicl = as<double>(cp["icl1"]);
+  //     sol.slot("obs_stats") = as<List>(cp["obs_stats"]);
+  //     sol.slot("cl") = as<arma::vec>(cp["cl"]) ;
+  //     sol.slot("icl") = bicl;
+  //     sol.slot("K") = as<int>(cp["K"]);
+  //   }
+  // }
 
 
   delete M;
