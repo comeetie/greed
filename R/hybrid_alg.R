@@ -109,7 +109,7 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
     ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)
 
     iclust  = c(sp_cl,max(ncl))
-    sol= fiswap(ncl,rep(1,length(ncl)),1:max(ncl))
+    sol= fiswap(ncl,ws,iclust)
   }
   
   sol

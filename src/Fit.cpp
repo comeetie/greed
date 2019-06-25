@@ -122,13 +122,25 @@ S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,boo
   S4 sol = init_sol(model);
   Rcout << "Merge" << std::endl;
   M->nasty_delta_merge(merge_graph);
-
+  List path = M->greedy_merge_path();
   List obs_stats = M->get_obs_stats();
+  double bicl = M->icl(obs_stats);
   sol.slot("model") = model;
   sol.slot("obs_stats") = obs_stats;
   sol.slot("cl") = M->get_cl()+1 ;
-  sol.slot("icl") = M->icl(obs_stats);
+  sol.slot("icl") = bicl;
   sol.slot("K") = M->get_K();
+  for(int i=0;i<path.length();++i){
+    if(path[i]["icl1"]>bicl){
+      bicl = path[i]["icl1"];
+      sol.slot("obs_stats") = path[i]["icl1"];
+      sol.slot("cl") = path[i]["cl"] ;
+      sol.slot("icl") = bicl;
+      sol.slot("K") = path[i]["K"];
+    }
+  }
+
+
   delete M;
   return(sol);
 }
