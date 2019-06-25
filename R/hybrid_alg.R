@@ -44,7 +44,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
               new_solutions = listenv::listenv()
               selected_couples = matrix(selected[sample(1:length(selected),length(selected)*2,replace = TRUE)],ncol=2)
               for (i in 1:nrow(selected_couples)){
-                new_solutions[[i]] = full_cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],fimerge,fiswap,alg@prob_mutation)
+                new_solutions[[i]] %<-% full_cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],fimerge,fiswap,alg@prob_mutation)
               }
               solutions = c(solutions[selected],as.list(new_solutions))
               icls = sapply(solutions,function(s){s@icl})
