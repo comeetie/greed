@@ -10,7 +10,7 @@ using namespace Rcpp;
 class DcSbm : public IclModel
 {
 public:
-  DcSbm(arma::sp_mat& xp,int K,double alpha,arma::vec& cl,bool verb=false);
+  DcSbm(const arma::sp_mat& xp,int K,double alpha,arma::vec& cl,bool verb=false);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
   arma::mat delta_swap(int i,arma::uvec iclust);
@@ -20,8 +20,8 @@ public:
   void merge_update(int k, int l);
   List get_obs_stats();
 private:
-  arma::sp_mat x;
-  arma::sp_mat xt;
+  arma::sp_mat  x;
+  arma::sp_mat  xt;
   // matrix of observed counts for each clusters
   arma::mat x_counts;
   double p;

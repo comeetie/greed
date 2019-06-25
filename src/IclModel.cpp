@@ -118,7 +118,10 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
     ++nbpass;
     // compute icl after the pass
     icl_value = icl(this->get_obs_stats());
-
+    Rcout << "##################################"<< std::endl;
+    Rcout << "Swap convergence in " << nbpass << " epochs with " << nbmove << " moves, icl :" << icl_value << "K :" << K << ", working set size :" << arma::accu(workingset)  << std::endl;
+    //Rcout << "swap convergence, with an ICL of "<< icl_value << " and " << K << " clusters." << std::endl;
+    Rcout << "##################################"<< std::endl; 
 
   }
   if(verbose){
@@ -224,6 +227,47 @@ SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph){
   return SpMergeMat(bk,bl,bv,delta);
 }
 
+
+// init merge matrix sparse
+SpMergeMat IclModel::nasty_delta_merge(const arma::sp_mat & merge_graph){
+  // inititalize delta merge matrix
+  arma::sp_mat delta = merge_graph;
+  arma::sp_mat delta_pattern = merge_graph;
+  // index to store current best merge
+  int bk = 0;
+  int bl = 0;
+  // initialize bv found to -infty
+  double bv = -std::numeric_limits<double>::infinity();
+  // store cuurent stats
+  arma::sp_mat::iterator i= delta.begin();
+  bool move = true;
+  while(move){
+    move = false;
+    for (int d=0;d<delta.n_cols;++d ){
+      bv = -std::numeric_limits<double>::infinity();
+      for (arma::sp_mat::iterator i = delta.begin_col(d); i != delta.end_col(d); ++i) {
+        delta(i.row(),i.col())=this->delta_merge(i.row(),i.col());
+        delta(i.col(),i.row())=delta(i.row(),i.col());
+        // best merge ?
+        if(delta(i.row(),i.col())>bv){
+          bv=delta(i.row(),i.col());
+          bk=i.row();
+          bl=i.col();
+        }
+      }
+      if(bv>0){
+        this->merge_update(bk,bl);
+        delta=delrowcol(delta,bk);
+        move=true;
+      }
+    }
+
+    
+  }
+  
+  return SpMergeMat(bk,bl,bv,delta);
+}
+
 // update merge matrix after merge of obk/obl sparse
 SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int obl,const List & old_stats){
   // optimized version to compute only new values of the merge mat
@@ -272,11 +316,11 @@ void IclModel::greedy_merge(const arma::sp_mat & merge_graph){
     List old_stats = this->get_obs_stats();
     // perform the merge and update the stats
     this->merge_update(merge_mat.getK(),merge_mat.getL());
-    // if(verbose){
-    //   Rcout << "##################################"<< std::endl;
-    //   Rcout << "Merge icl : "<< icl(this->get_obs_stats()) << std::endl;
-    //   Rcout << "##################################"<< std::endl; 
-    // }
+    if(verbose){
+       Rcout << "##################################"<< std::endl;
+       Rcout << "Merge icl : "<< icl(this->get_obs_stats()) << std::endl;
+       Rcout << "##################################"<< std::endl; 
+    }
     // update the merge matrix
     merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL(),old_stats);
 

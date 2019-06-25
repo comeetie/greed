@@ -9,6 +9,7 @@
 using namespace Rcpp;
 
 
+
 IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
   
   IclModel * M;
@@ -119,8 +120,8 @@ S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::vec workingset,arma:
 S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,bool verbose=false) {
   IclModel * M = init(model,data,clt,verbose);
   S4 sol = init_sol(model);
-
-  M->greedy_merge(merge_graph);
+  Rcout << "Merge" << std::endl;
+  M->nasty_delta_merge(merge_graph);
 
   List obs_stats = M->get_obs_stats();
   sol.slot("model") = model;
@@ -173,3 +174,7 @@ S4 fit_greed_path(List data, S4 init_fit) {
   return(sol);
   
 }
+
+
+
+

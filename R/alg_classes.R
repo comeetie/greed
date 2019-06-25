@@ -171,7 +171,9 @@ spectral= function(X,K){
 #' @export
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
   data = preprocess(model,X)
-  fit(model,alg,data,K,verbose)
+  sol=fit(model,alg,data,K,verbose)
+  #postprocess(sol,data)
+  sol
 }
 
 find_model = function(X){
@@ -214,7 +216,7 @@ setMethod(f = "preprocess",
 
 setGeneric("postprocess", function(path, ...) standardGeneric("postprocess")) 
 
-#' @title preprocess
+#' @title postprocess
 #' @param path an icl_path object
 setMethod(f = "postprocess", 
           signature = signature("icl_path"), 
@@ -222,6 +224,15 @@ setMethod(f = "postprocess",
             path    
 })
 
+
+setGeneric("sample_cl", function(model, data,K) standardGeneric("sample_cl")) 
+
+
+setMethod(f = "sample_cl", 
+          signature = signature("icl_model","list","numeric"), 
+          definition = function(model,data,K){
+            sample(1:K,data$N,replace = TRUE)
+          })
 
 
 #' @title greed_cond

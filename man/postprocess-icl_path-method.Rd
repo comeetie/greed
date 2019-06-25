@@ -3,7 +3,7 @@
 \docType{methods}
 \name{postprocess,icl_path-method}
 \alias{postprocess,icl_path-method}
-\title{preprocess}
+\title{postprocess}
 \usage{
 \S4method{postprocess}{icl_path}(path)
 }
@@ -11,5 +11,5 @@
 \item{path}{an icl_path object}
 }
 \description{
-preprocess
+postprocess
 }

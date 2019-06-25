@@ -43,6 +43,7 @@ public:
   // update version
   MergeMat delta_merge(arma::mat delta, int obk, int obl,const List & old_stats);
   // method  to compute merge matrix deltas with constraints on possible merge
+  SpMergeMat nasty_delta_merge(const arma::sp_mat & merge_graph);
   SpMergeMat delta_merge(const arma::sp_mat & merge_graph);
   // method  to compute merge matrix deltas with constraints on possible merge (update version)
   SpMergeMat delta_merge(const arma::sp_mat & merge_graph, int obk, int obl,const List & old_stats);
@@ -58,6 +59,7 @@ public:
   arma::vec get_cl(){return cl;};
   arma::vec get_counts(){return counts;};
   int get_K(){return K;};
+  virtual ~IclModel(){};
 protected:
   // prior 
   double alpha;

@@ -29,7 +29,7 @@ setClass("co_dcsbm",
 #' }
 #' @slot model an \code{\link{icl_model}} to store the model fitted
 #' @export 
-setClass("co_dcsbm_fit",slots = list(model="co_dcsbm",clrow="numeric",clcol="numeric",Krow="numeric",Kcol="numeric"),contains="icl_fit")
+setClass("co_dcsbm_fit",slots = list(model="co_dcsbm",clrow="numeric",clcol="numeric",Krow="numeric",Kcol="numeric",Nrow="numeric",Ncol="numeric"),contains="icl_fit")
 
 
 
@@ -84,19 +84,24 @@ setMethod(f = "preprocess",
 
 setMethod(f = "postprocess", 
           signature = signature("co_dcsbm_path"), 
-          definition = function(path,data){
+          definition = function(path,data=NULL){
+
+            sol = path
+            if(!is.null(data)){
+              sol@Nrow = data$Nrows
+              sol@Ncol = data$Ncols
+            }
+            clusters_type = apply(table(sol@cl,c(rep(1,sol@Nrow),rep(2,sol@Ncol))),1,which.max)
+            clust_rows = which(clusters_type==1)
+            clust_cols = which(clusters_type==2)
             if(!(max(clust_cols)<min(clust_rows) | max(clust_rows)<min(clust_cols))){
               stop("Co clustering failed bi partite structure not found")
             }
-            sol = path
-            clusters_type = apply(table(sol@cl,c(rep(1,data$Nrows),rep(2,data$Ncols))),1,which.max)
-            clust_rows = which(clusters_type==1)
-            clust_cols = which(clusters_type==2)
-            icol = (data$Nrows+1):data$N
-            irow = 1:data$Nrows
+            icol = (sol@Nrow+1):length(sol@cl)
+            irow = 1:sol@Nrow
             row_problems = !sol@cl[irow] %in% which(clusters_type==1)
             col_problems = !sol@cl[icol] %in% which(clusters_type==2)
-            if(sum(row_problems)>0 | sum(col_problems)>0 ){
+            if((sum(row_problems)>0 | sum(col_problems)>0) & !is.null(data)){
             probas=greed:::post_probs(sol@model,data,sol@cl)
             if(sum(row_problems)>0){
               row_probas = probas[irow,]
@@ -113,31 +118,39 @@ setMethod(f = "postprocess",
             sol@Kcol = max(sol@clcol)
             sol@obs_stats$co_x_counts=sol@obs_stats$x_counts[clust_rows,clust_cols]
             
-           
-            leafs = sol@ggtree[sol@ggtree$H==0,]
+            tree= sol@ggtree
+            tree=tree[tree$tree!=0,]
+            leafs = tree[tree$H==0,]
             leafs = leafs[order(leafs$x),]
             # cols first
             if(max(clust_cols)<min(clust_rows)){
               xsplit = leafs$x[length(clust_cols)]
-              coltree = sol@ggtree[sol@ggtree$x<=xsplit,]
-              rowtree = sol@ggtree[sol@ggtree$x>xsplit,]
+              coltree = tree[tree$x<=xsplit,]
+              rowtree = tree[tree$x>xsplit,]
             # rows first
             }else{
               xsplit = leafs$x[length(clust_rows)]
-              rowtree = sol@ggtree[sol@ggtree$x<=xsplit,]
-              coltree = sol@ggtree[sol@ggtree$x>xsplit,]
+              rowtree = tree[tree$x<=xsplit,]
+              coltree = tree[tree$x>xsplit,]
             }
             sol@ggtreecol = coltree #coltree[2:nrow(coltree),]
             sol@ggtreerow = rowtree #rowtree[2:nrow(rowtree),]
             sol
           })
 
+# setMethod(f = "sample_cl", 
+#           signature = signature("co_dcsbm","list","numeric"), 
+#           definition = function(model,data,K){
+#             c(sample(1:floor(K/2),data$Nrows,replace = TRUE),sample((floor(K/2)+1):K,data$Ncols,replace = TRUE))
+#           })
+
+
 #' @rdname plot
 #' @export
 setMethod(f = "plot", 
           signature = signature("co_dcsbm_fit","missing"),
           definition = function(x,type="blocks"){
-            switch(type,blocks=graph_blocks(x),nodelink=nodelink(x))
+            switch(type,blocks=co_blocks(x),nodelink=co_nodelink(x))
           })
 
 #' @rdname plot
@@ -146,7 +159,7 @@ setMethod(f = "plot",
           signature = signature("co_dcsbm_path","missing"),
           definition = function(x,type='blocks'){
             switch(type,tree = {
-              dendo(x)
+              co_dendo(x)
             },
             path ={
               lapath(x)

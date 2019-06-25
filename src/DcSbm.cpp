@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 
 
-DcSbm::DcSbm(arma::sp_mat& xp,int Ki,double alphai,arma::vec& clt,bool verb){
+DcSbm::DcSbm(const arma::sp_mat& xp,int Ki,double alphai,arma::vec& clt,bool verb){
   alpha = alphai;
   x  = xp;
   xt = xp.t();

@@ -174,24 +174,66 @@ dendo = function(x){
     ggplot2::theme_bw()
 }
 
-codendo = function(x){
+co_dendo = function(x){
   ggtree = x@ggtreerow
   rowt = ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
     ggplot2::geom_segment(data=ggtree[-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
     ggplot2::scale_x_continuous("",breaks=c())+
     ggplot2::ylab(expression(paste("-log(",alpha,")")))+
-    ggplot2::ggtitle(paste0(toupper(x@model@name)," rows ",x@Krow," clusters, dendogram"))+
+    ggplot2::ggtitle(paste0(x@Krow," row clusters"))+
     ggplot2::theme_bw()
   ggtree = x@ggtreecol
   colt = ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
     ggplot2::geom_segment(data=ggtree[-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
     ggplot2::scale_x_continuous("",breaks=c())+
     ggplot2::ylab(expression(paste("-log(",alpha,")")))+
-    ggplot2::ggtitle(paste0(toupper(x@model@name)," cols ",x@Kcol," clusters, dendogram"))+
+    ggplot2::ggtitle(paste0(x@Kcol," column clusters"))+
     ggplot2::theme_bw()
   ggpubr::ggarrange(rowt,colt)
 }
 
+co_blocks = function(x){
+  K = x@Krow
+  D = x@Kcol
+  ccrow = cumsum(table(x@clrow))
+  cccol = cumsum(table(x@clcol))
+  gg=data.frame(kc=rep(ccrow,D),
+                lc=rep(cccol,each=K),
+                sizek = rep(table(x@clrow),D),
+                sizel = rep(table(x@clcol),each=K), 
+                count=as.vector(x@obs_stats$co_x_counts))
+  ylab  = round(100*table(x@clcol)/sum(table(x@clcol)))
+  xlab = round(100*table(x@clrow)/sum(table(x@clrow)))
+                
+  ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~count/(sizek*sizel),alpha=~count/(sizek*sizel)))+
+    ggplot2::scale_fill_distiller("E[X]",type="seq",direction = 1)+
+    ggplot2::scale_alpha("E[X]")+
+    ggplot2::ggtitle(paste0("Co clustering with : ",max(x@cl)," clusters."))+
+    ggplot2::scale_x_continuous("Col clusters",breaks=cccol,labels=ifelse(ylab>5,paste0(ylab,"%"),""),minor_breaks = NULL)+
+    ggplot2::scale_y_continuous("Row clusters",breaks=ccrow,labels =ifelse(xlab>5,paste0(xlab,"%"),""),minor_breaks = NULL)+
+    ggplot2::theme_bw()      
+}
+
+
+co_nodelink = function(sol){
+  ij = Matrix::which(sol@obs_stats$co_x_counts>0,arr.ind = TRUE)
+  ld = sol@obs_stats$co_x_counts
+  cccol = as.numeric(table(sol@clcol))
+  ccrow = as.numeric(table(sol@clrow))
+  
+  gglink = data.frame(from=ij[,1],to=ij[,2],p=ld[ij]) %>% mutate(nrow = ccrow[from],ncol=cccol[to],pn=p/(nrow*ncol)) %>% arrange(pn)
+  ggnode = data.frame(type="col",n=cccol,i=1:sol@Kcol) %>% bind_rows(data.frame(type="row",n=ccrow,i=1:sol@Krow) )
+  
+  
+  ggplot2::ggplot()+ggplot2::geom_curve(data=gglink,ggplot2::aes_(y=~from,yend=~max(from)+1,x=-5,xend=~to,size=~p,alpha=~p),curvature = 0.35)+
+    ggplot2::geom_point(data=ggnode,ggplot2::aes_(x=~ifelse(type=="row",-5,i),y=~ifelse(type=="row",i,max(gglink$from)+1),size=~n^2))+
+    ggplot2::theme_minimal()+
+    ggplot2::scale_size_area("Clusters size:",limits=c(0,max(ggnode$n)^2),max_size = 7,guide="none")+
+    ggplot2::scale_y_continuous("",c())+
+    ggplot2::scale_x_continuous("",c())+
+    ggplot2::scale_alpha("Link density:",limits=c(0,max(gglink$p)),guide="none")+
+    ggplot2::ggtitle("Poisson, co-clustering")
+}
 
 
 lapath = function(x){

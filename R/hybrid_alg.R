@@ -10,7 +10,7 @@ NULL
 
 hybrid = function(model,alg,data,K, verbose=FALSE){
             
-            fimerge = function(ncl,merge_graph){ merge_cstr(model,data,ncl,merge_graph,verbose)}
+            fimerge = function(ncl,merge_graph){ greed:::merge_cstr(model,data,ncl,merge_graph,verbose)}
             fiswap = function(ncl,ws,iclust){ fit_greed_cstr(model,data,ncl,ws,iclust,type="swap",verbose = verbose)}
             train.hist = data.frame(generation=c(),icl=c(),K=c())
 
@@ -21,8 +21,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             # first generation of solutions
             pop_size = alg@pop_size
             for (i in 1:pop_size){
-
-              solutions[[i]] %<-% fit_greed(model,data,sample(1:K,data$N,replace = TRUE),verbose = verbose)
+              solutions[[i]] %<-% fit_greed(model,data,sample_cl(model,data,K),verbose = verbose)
             }
             solutions = as.list(solutions)
             icls  = sapply(solutions,function(s){s@icl})
@@ -33,10 +32,10 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             best_icl = max(icls)
             nbgen = 1
             # while maximum number of generation // all solutions are equals // no improvements
+            print(icls)
+            while((max(icls)-min(icls))>1  & nbgen < alg@nb_max_gen){
+              
 
-            while((max(icls)-min(icls))>1 & (best_icl > old_best) & nbgen < alg@nb_max_gen){
-              
-              
               train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
               # selection keep the top half solutions
               icl_order = order(icls,decreasing = TRUE)
@@ -45,16 +44,17 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
               new_solutions = listenv::listenv()
               selected_couples = matrix(selected[sample(1:length(selected),length(selected)*2,replace = TRUE)],ncol=2)
               for (i in 1:nrow(selected_couples)){
-                new_solutions[[i]] %<-% full_cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],fimerge,fiswap,alg@prob_mutation)
+                new_solutions[[i]] = full_cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],fimerge,fiswap,alg@prob_mutation)
               }
-              new_solutions = as.list(new_solutions)
-              solutions = c(solutions[selected],new_solutions)
+              solutions = c(solutions[selected],as.list(new_solutions))
               icls = sapply(solutions,function(s){s@icl})
               solutions=solutions[!is.nan(icls)]
               icls=icls[!is.nan(icls)]
+              print(icls)
               old_best=best_icl
               best_icl = max(icls)
               nbgen = nbgen + 1;
+              
               #print("#################")
               #print(paste0("Generation N",nbgen, " best solution with an ICL of ",round(solutions[[which.max(icls)]]@icl)," and ",solutions[[which.max(icls)]]@K," clusters."))
               #print("#################")
@@ -68,7 +68,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             # compute merge path
             path = fit_greed_path(data,res)
             # clean the resuts (compute, merge tree,...)
-            path = cleanpath(path)
+            path = greed:::cleanpath(path)
             # store train history
             path@train_hist = train.hist
             # stop future plan
@@ -92,13 +92,15 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
   for(k in 1:sol2@K){
     M[ij[,2]==k,ij[,2]==k]=1
   }
-  ijAm=which(tril(M,-1)>0,arr.ind = TRUE)
-  Am=Matrix::sparseMatrix(ijAm[,1],ijAm[,2],x=rep(1,nrow(ijAm)),dims = c(max(ncl),max(ncl)))
+  ijAm=which(M>0,arr.ind = TRUE)
+  ijAm=ijAm[ijAm[,1]!=ijAm[,2],]
+  if(nrow(ijAm)>0){
+    Am=Matrix::sparseMatrix(ijAm[,1],ijAm[,2],x=rep(1,nrow(ijAm)),dims = c(max(ncl),max(ncl)))
+    sol=fimerge(ncl,Am)
+  }else{
+    sol=sol1;
+  }
   
-
-  
-  sol=fimerge(ncl,Am)
-  #sol=sol1
   if(runif(1)<pmutation){
     ncl = sol@cl
     sp_cl=sample(max(ncl),1)
@@ -107,7 +109,7 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
     ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)
 
     iclust  = c(sp_cl,max(ncl))
-    sol= fiswap(ncl,ws,iclust)
+    sol= fiswap(ncl,rep(1,length(ncl)),1:max(ncl))
   }
   
   sol
