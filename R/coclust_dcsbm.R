@@ -56,9 +56,10 @@ setMethod(f = "reorder",
 setMethod(f = "seed", 
           signature = signature("co_dcsbm","list","numeric"), 
           definition = function(model,data, K){
-            kmrow = kmeans(data,floor(K/2));
-            kmcol = kmeans(t(data),floor(K/2));
+            kmrow = kmeans(data$X[1:data$Nrows,(data$Nrows+1):data$N],floor(K/2));
+            kmcol = kmeans(t(data$X[1:data$Nrows,(data$Nrows+1):data$N]),floor(K/2));
             c(kmrow$cluster,kmcol$cluster+max(kmrow$cluster))
+            #spectral(data$X,K)
           })
 
 setMethod(f = "preprocess", 
@@ -138,11 +139,11 @@ setMethod(f = "postprocess",
             sol
           })
 
-# setMethod(f = "sample_cl", 
-#           signature = signature("co_dcsbm","list","numeric"), 
-#           definition = function(model,data,K){
-#             c(sample(1:floor(K/2),data$Nrows,replace = TRUE),sample((floor(K/2)+1):K,data$Ncols,replace = TRUE))
-#           })
+ setMethod(f = "sample_cl", 
+           signature = signature("co_dcsbm","list","numeric"), 
+           definition = function(model,data,K){
+             c(sample(1:floor(K/2),data$Nrows,replace = TRUE),sample((floor(K/2)+1):K,data$Ncols,replace = TRUE))
+           })
 
 
 #' @rdname plot

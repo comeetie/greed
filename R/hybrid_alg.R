@@ -21,7 +21,8 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             # first generation of solutions
             pop_size = alg@pop_size
             for (i in 1:pop_size){
-              solutions[[i]] %<-% fit_greed(model,data,sample_cl(model,data,K),verbose = verbose)
+              cli = sample_cl(model,data,K)
+              solutions[[i]] %<-% fit_greed(model,data,cli,verbose = verbose) %globals% c("model","data","cli","verbose","fit_greed")
             }
             solutions = as.list(solutions)
             icls  = sapply(solutions,function(s){s@icl})
@@ -33,6 +34,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             nbgen = 1
             # while maximum number of generation // all solutions are equals // no improvements
             print(icls)
+            pmut = alg@prob_mutation
             while((max(icls)-min(icls))>1  & nbgen < alg@nb_max_gen){
               
 
@@ -44,7 +46,9 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
               new_solutions = listenv::listenv()
               selected_couples = matrix(selected[sample(1:length(selected),length(selected)*2,replace = TRUE)],ncol=2)
               for (i in 1:nrow(selected_couples)){
-                new_solutions[[i]] %<-% full_cross_over(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],fimerge,fiswap,alg@prob_mutation)
+                s1 = solutions[[selected_couples[i,1]]]
+                s2 = solutions[[selected_couples[i,2]]]
+                new_solutions[[i]] %<-% full_cross_over(s1,s2,fimerge,fiswap,pmut) %globals% c("s1","s2","fimerge","fiswap","pmut","full_cross_over")
               }
               solutions = c(solutions[selected],as.list(new_solutions))
               icls = sapply(solutions,function(s){s@icl})
