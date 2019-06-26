@@ -40,17 +40,22 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
 
               train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
               # selection keep the top half solutions
-              icl_order = order(icls,decreasing = TRUE)
-              selected  = icl_order[1:(pop_size/2)]
-              # cross_over between the kept solution
+              ii = order(icls)
+              Nsel = round(alg@pop_size*0.8)
+              ii=ii[(alg@pop_size-Nsel):alg@pop_size]
+              icls =icls[ii]
+              solutions = solutions[ii]
+              bres = solutions[[order(icls,decreasing = TRUE)[1]]]
               new_solutions = listenv::listenv()
-              selected_couples = matrix(selected[sample(1:length(selected),length(selected)*2,replace = TRUE)],ncol=2)
-              for (i in 1:nrow(selected_couples)){
-                s1 = solutions[[selected_couples[i,1]]]
-                s2 = solutions[[selected_couples[i,2]]]
+              for (i in 1:(alg@pop_size-1)){
+                ip = 1:Nsel
+                i1 = sample(ip,1,prob=ip)
+                i2 = sample(ip[-i1],1,prob=ip[-i1])
+                s1 = solutions[[i1]]
+                s2 = solutions[[i2]]
                 new_solutions[[i]] %<-% full_cross_over(s1,s2,fimerge,fiswap,pmut) %globals% c("s1","s2","fimerge","fiswap","pmut","full_cross_over")
               }
-              solutions = c(solutions[selected],as.list(new_solutions))
+              solutions = c(bres,as.list(new_solutions))
               icls = sapply(solutions,function(s){s@icl})
               solutions=solutions[!is.nan(icls)]
               icls=icls[!is.nan(icls)]
