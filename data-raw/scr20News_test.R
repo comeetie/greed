@@ -22,11 +22,22 @@ system.time({
 })
 library(future)
 plan(multisession)
+library(Matrix)
+
+N=10000
+K=90
+pi=rep(1/K,K)
+lambda  = 0.1
+lambda_o = 0.005
+Ks=10
+mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.0001
+sbm = rsbm(N,pi,mu)
+image(sbm$mu)
 
 deb=as.POSIXct(Sys.time())
-mod=new("co_dcsbm")
-data=greed:::preprocess(mod,X20news)
-sols=greed:::multi_swap(mod,new("multistarts",nb_start=20),data,30,verbose=TRUE)
+mod=new("sbm")
+data=greed:::preprocess(mod,sbm$x)
+sols=greed:::multi_swap(mod,new("multistarts",nb_start=10),data,30,verbose=TRUE)
 fin=as.POSIXct(Sys.time())
 fin-deb
 
@@ -53,23 +64,18 @@ fin-deb
 
 
 
-sol1=solutions[[11]]
-sol2=solutions[[12]]
-ij=which(table(sol1@cl,sol2@cl)>0,arr.ind = TRUE)
-ncl = as.numeric(factor(paste(sol1@cl,"_",sol2@cl,sep=""),levels=paste(ij[,1],"_",ij[,2],sep="")))
-M=matrix(0,nrow(ij),nrow(ij))
-for(k in 1:sol1@K){
-  M[ij[,1]==k,ij[,1]==k]=1
-}
-for(k in 1:sol2@K){
-  M[ij[,2]==k,ij[,2]==k]=1
-}
-ijAm=which(tril(M,-1)>0,arr.ind = TRUE)
-Am=Matrix::sparseMatrix(ijAm[,1],ijAm[,2],x=rep(1,nrow(ijAm)),dims = c(max(ncl),max(ncl)))
 
 
 deb=as.POSIXct(Sys.time())
-sol=fco(solutions[[11]],solutions[[12]],fimerge,fiswap,0.1)
+sol_12=fco(solutions[[1]],solutions[[2]],fimerge,fiswap,0)
+sol_34=fco(solutions[[3]],solutions[[4]],fimerge,fiswap,0)
+sol_56=fco(solutions[[5]],solutions[[6]],fimerge,fiswap,0)
+sol_78=fco(solutions[[7]],solutions[[8]],fimerge,fiswap,0)
+fin=as.POSIXct(Sys.time())
+
+deb=as.POSIXct(Sys.time())
+sol_1234=fco(sol_12,sol_34,fimerge,fiswap,0)
+sol_5678=fco(sol_56,sol_78,fimerge,fiswap,0)
 fin=as.POSIXct(Sys.time())
 
 
@@ -94,6 +100,7 @@ fco = function(sol1,sol2,fimerge,fiswap,pmutation){
   
   sol=fimerge(ncl,Am)
   
+  print("swap")
   #if(runif(1)<pmutation){
   #  ncl = sol@cl
   #  sp_cl=sample(max(ncl),1)
@@ -102,7 +109,9 @@ fco = function(sol1,sol2,fimerge,fiswap,pmutation){
   #  ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)
   
   #  iclust  = c(sp_cl,max(ncl))
-  #  sol= fiswap(ncl,ws,iclust)
+  ncl=sol@cl
+  iclust=1:max(ncl)
+  #sol= fiswap(ncl,as.numeric(ncl%in%iclust),iclust)
   #}
   
   sol

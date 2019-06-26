@@ -41,14 +41,14 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
               train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
               # selection keep the top half solutions
               ii = order(icls)
-              Nsel = round(alg@pop_size*0.8)
+              Nsel = round(alg@pop_size*0.6)
               ii=ii[(alg@pop_size-Nsel):alg@pop_size]
               icls =icls[ii]
               solutions = solutions[ii]
               bres = solutions[[order(icls,decreasing = TRUE)[1]]]
               new_solutions = listenv::listenv()
               for (i in 1:(alg@pop_size-1)){
-                ip = 1:Nsel
+                ip = 1:min(c(Nsel,length(solutions)))
                 i1 = sample(ip,1,prob=ip)
                 i2 = sample(ip[-i1],1,prob=ip[-i1])
                 s1 = solutions[[i1]]
@@ -117,15 +117,15 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
     ws = as.numeric(ncl==sp_cl)
 
     ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)
-    if(max(ncl)>100){
-      iclust  = unique(c(sp_cl,max(ncl),sample(max(ncl),100)))  
+    if(max(ncl)>10){
+      iclust  = unique(c(sp_cl,max(ncl),sample(max(ncl),8)))  
     }else{
       iclust = 1:max(ncl)
     }
     
-    
+    sol= fiswap(ncl,as.numeric(ncl%in% iclust),iclust)
   }
-  sol= fiswap(ncl,as.numeric(ncl%in% iclust),iclust)
+
   sol
 }
 

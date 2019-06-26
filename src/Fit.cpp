@@ -121,7 +121,7 @@ S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,boo
   IclModel * M = init(model,data,clt,verbose);
   S4 sol = init_sol(model);
   Rcout << "Merge" << std::endl;
-  M->nasty_delta_merge(merge_graph);
+  M->greedy_merge(merge_graph);
 
   List obs_stats = M->get_obs_stats();
   double bicl = M->icl(obs_stats);
