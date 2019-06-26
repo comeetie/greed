@@ -104,9 +104,10 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
   }else{
     sol=sol1;
   }
-  
+  ncl = sol@cl
+  iclust = 1:max(ncl)
   if(runif(1)<pmutation){
-    ncl = sol@cl
+    
     sp_cl=sample(max(ncl),1)
     ws = as.numeric(ncl==sp_cl)
 
@@ -117,9 +118,9 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
       iclust = 1:max(ncl)
     }
     
-    sol= fiswap(ncl,as.numeric(ncl%in% iclust),iclust)
+    
   }
-  
+  sol= fiswap(ncl,as.numeric(ncl%in% iclust),iclust)
   sol
 }
 
