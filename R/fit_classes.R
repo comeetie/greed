@@ -20,7 +20,7 @@ NULL
 #' @slot obs_stats a list to store the observed statistics of the model needed to compute ICL.
 #' @slot train_hist a data.frame to store training history (format depends on the used algorithm used).
 #' @export 
-setClass("icl_fit",slots = list(name="character",K="numeric",obs_stats="list",icl="numeric",cl="numeric",train_hist="data.frame"))
+setClass("icl_fit",slots = list(name="character",K="numeric",obs_stats="list",icl="numeric",cl="numeric",train_hist="data.frame",move_mat = "dgCMatrix"))
 
 
 

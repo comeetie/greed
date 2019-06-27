@@ -121,7 +121,7 @@ S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,boo
   IclModel * M = init(model,data,clt,verbose);
   S4 sol = init_sol(model);
   Rcout << "Merge" << std::endl;
-  M->greedy_merge(merge_graph);
+  arma::sp_mat move_mat = M->greedy_merge(merge_graph);
 
   List obs_stats = M->get_obs_stats();
   double bicl = M->icl(obs_stats);
@@ -129,23 +129,34 @@ S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,boo
   sol.slot("obs_stats") = obs_stats;
   sol.slot("cl") = M->get_cl()+1 ;
   sol.slot("icl") = bicl;
+  sol.slot("move_mat") = move_mat;
   sol.slot("K") = M->get_K();
-  // List path = M->greedy_merge_path();
-  // for(int i=0;i<path.length();++i){
-  //   List cp = path[i];
-  //   if(as<double>(cp["icl1"])>bicl){
-  //     bicl = as<double>(cp["icl1"]);
-  //     sol.slot("obs_stats") = as<List>(cp["obs_stats"]);
-  //     sol.slot("cl") = as<arma::vec>(cp["cl"]) ;
-  //     sol.slot("icl") = bicl;
-  //     sol.slot("K") = as<int>(cp["K"]);
-  //   }
-  // }
-
 
   delete M;
   return(sol);
 }
+
+// [[Rcpp::export]]
+S4 swap_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & move_mat, int nb_max_pass = 50, bool verbose=false) {
+  IclModel * M = init(model,data,clt,verbose);
+  S4 sol = init_sol(model);
+  Rcout << "Merge" << std::endl;
+  int N = clt.n_elem;
+  arma::vec workingset = arma::ones(N);
+  M->greedy_swap(nb_max_pass,workingset,move_mat);
+  
+  List obs_stats = M->get_obs_stats();
+  double bicl = M->icl(obs_stats);
+  sol.slot("model") = model;
+  sol.slot("obs_stats") = obs_stats;
+  sol.slot("cl") = M->get_cl()+1 ;
+  sol.slot("icl") = bicl;
+  sol.slot("K") = M->get_K();
+  
+  delete M;
+  return(sol);
+}
+
 
 //' fit_greed
 //' @param model icl_model

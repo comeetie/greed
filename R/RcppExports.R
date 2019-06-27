@@ -27,6 +27,10 @@ merge_cstr <- function(model, data, clt, merge_graph, verbose = FALSE) {
     .Call('_greed_merge_cstr', PACKAGE = 'greed', model, data, clt, merge_graph, verbose)
 }
 
+swap_cstr <- function(model, data, clt, move_mat, nb_max_pass = 50L, verbose = FALSE) {
+    .Call('_greed_swap_cstr', PACKAGE = 'greed', model, data, clt, move_mat, nb_max_pass, verbose)
+}
+
 #' fit_greed
 #' @param model icl_model
 #' @param data list with clustering data (fileds depend on model type)
@@ -103,5 +107,9 @@ mvlm_post_del1 <- function(current, X, Y, alpha, N0) {
 
 mvlm_post_merge <- function(current1, current2, alpha, N0) {
     .Call('_greed_mvlm_post_merge', PACKAGE = 'greed', current1, current2, alpha, N0)
+}
+
+possible_moves <- function(k, move_mat) {
+    .Call('_greed_possible_moves', PACKAGE = 'greed', k, move_mat)
 }
 

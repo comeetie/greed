@@ -52,6 +52,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// swap_cstr
+S4 swap_cstr(S4 model, List data, arma::vec& clt, arma::sp_mat& move_mat, int nb_max_pass, bool verbose);
+RcppExport SEXP _greed_swap_cstr(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP, SEXP move_matSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
+    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type move_mat(move_matSEXP);
+    Rcpp::traits::input_parameter< int >::type nb_max_pass(nb_max_passSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(swap_cstr(model, data, clt, move_mat, nb_max_pass, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fit_greed
 S4 fit_greed(S4 model, List data, arma::vec& clt, std::string type, int nb_max_pass, bool verbose);
 RcppExport SEXP _greed_fit_greed(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP, SEXP typeSEXP, SEXP nb_max_passSEXP, SEXP verboseSEXP) {
@@ -281,11 +297,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// possible_moves
+arma::uvec possible_moves(int k, arma::sp_mat& move_mat);
+RcppExport SEXP _greed_possible_moves(SEXP kSEXP, SEXP move_matSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type move_mat(move_matSEXP);
+    rcpp_result_gen = Rcpp::wrap(possible_moves(k, move_mat));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_greed_post_probs", (DL_FUNC) &_greed_post_probs, 3},
     {"_greed_fit_greed_cstr", (DL_FUNC) &_greed_fit_greed_cstr, 8},
     {"_greed_merge_cstr", (DL_FUNC) &_greed_merge_cstr, 5},
+    {"_greed_swap_cstr", (DL_FUNC) &_greed_swap_cstr, 6},
     {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 6},
     {"_greed_fit_greed_path", (DL_FUNC) &_greed_fit_greed_path, 2},
     {"_greed_add_sppat", (DL_FUNC) &_greed_add_sppat, 2},
@@ -302,6 +331,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_mvlm_post_add1", (DL_FUNC) &_greed_mvlm_post_add1, 5},
     {"_greed_mvlm_post_del1", (DL_FUNC) &_greed_mvlm_post_del1, 5},
     {"_greed_mvlm_post_merge", (DL_FUNC) &_greed_mvlm_post_merge, 4},
+    {"_greed_possible_moves", (DL_FUNC) &_greed_possible_moves, 2},
     {NULL, NULL, 0}
 };
 

@@ -32,7 +32,7 @@ py$cl+1
 ```
 
 ```{python}
-G=load_graph("../data-raw/Xvlegislature.graphml")
+G=load_graph("../data-raw/Xvlegislature_clean.graphml")
 sol_gt=minimize_blockmodel_dl(G)
 cl=[b for b in sol_gt.get_blocks()]
 ```
@@ -41,15 +41,15 @@ cl=[b for b in sol_gt.get_blocks()]
 library(greed)
 library(future)
 plan(multiprocess)
-data("Xvlegislature")
-data=greed:::preprocess(new("co_dcsbm"),Xvlegislature$X)
+data("X")
+data=greed:::preprocess(new("co_dcsbm"),X)
 cl_gt=py$cl+1
 sol_gt = greed:::fit_greed(new("dcsbm"),data,cl_gt,type="none")
 sol_gt@icl
 sol_gt@K
-sol=greed(Xvlegislature$X)
-sol@icl
-sol@K
-NMI(sol@cl,sol_gt@cl)
+#sol=greed(Xvlegislature$X)
+#sol@icl
+#sol@K
+#NMI(sol@cl,sol_gt@cl)
 ```
 

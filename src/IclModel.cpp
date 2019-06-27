@@ -133,6 +133,79 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
 }
 
 
+// main function for greedy swaping with move constraints given as a sparse KxK matrix 
+void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::sp_mat & moves_mat){
+  // number of pass over data
+  int nbpass = 0;
+  // number of move during the current pass
+  int nbmove = 0;
+  // current node to swap
+  int cnode = 0;
+  // boolean to test if a move occurs
+  bool hasMoved = true;
+  // while their are moves
+  while (hasMoved && nbpass < nbpassmax && K>1){
+    // suffle the index 
+    arma::vec pass= as<arma::vec>(sample(N,N))-1;
+    // reinit move counter
+    hasMoved=false;
+    nbmove=0;
+    // perform a pass
+    for (int i=0;i<N ;++i){
+      // current node
+      cnode=pass(i);
+      //Rcout << cnode << "K:" << K << std::endl;
+      if (workingset(cnode)==1){
+        // compute delta swap
+        arma::uvec iclust = possible_moves(cl(cnode),moves_mat);
+        arma::vec delta = this->delta_swap(cnode,iclust);
+        //Rcout << delta << std::endl;
+        // best swap
+        int ncl = delta.index_max();
+        if(ncl!=cl(cnode)){
+          
+          // if best swap corresponds to a move
+          // update the stats and deal with cluster death
+          if(counts(cl(cnode))==1){
+              // remove the cluster from the move matrix
+              moves_mat = delrowcol(moves_mat,cl(cnode));
+
+          }
+          this->swap_update(cnode,ncl);
+          
+          // update the move counters
+          hasMoved=true;
+          ++nbmove;
+          // workingset(cnode)=1;
+        }else{
+          arma::vec deltaneg = delta.elem(arma::find(delta<0));
+          int bmn= deltaneg.index_max();
+          if(deltaneg(bmn) <  -5 ){
+            workingset(cnode) = 0;
+            //Rcout << "BMN :"<< bmn << "val" << deltaneg(bmn) << std::endl;
+          }
+        }
+      }
+    }
+    // update the pass counter
+    ++nbpass;
+    // compute icl after the pass
+    icl_value = icl(this->get_obs_stats());
+    Rcout << "##################################"<< std::endl;
+    Rcout << "Swap convergence in " << nbpass << " epochs with " << nbmove << " moves, icl :" << icl_value << "K :" << K << ", working set size :" << arma::accu(workingset)  << std::endl;
+    //Rcout << "swap convergence, with an ICL of "<< icl_value << " and " << K << " clusters." << std::endl;
+    Rcout << "##################################"<< std::endl; 
+    
+  }
+  if(verbose){
+    Rcout << "##################################"<< std::endl;
+    //plaRcout << "Swap convergence in " << nbpass << " epochs with " << nbmove << " moves, icl :" << icl_value << "K :" << K << ", working set size :" << arma::accu(workingset)  << std::endl;
+    Rcout << "swap convergence, with an ICL of "<< icl_value << " and " << K << " clusters." << std::endl;
+    Rcout << "##################################"<< std::endl; 
+  } 
+}
+
+
 // get p(z_i|X,z-i)
 arma::mat IclModel::get_probs(){
 
@@ -301,7 +374,7 @@ SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int 
 
 
 // main function for greedy merging with prior merge graph
-void IclModel::greedy_merge(const arma::sp_mat & merge_graph){
+arma::sp_mat IclModel::greedy_merge(const arma::sp_mat & merge_graph){
   
   // init the merge matrix(K,K) with the delta icl of each merge 
   SpMergeMat merge_mat = this->delta_merge(merge_graph);
@@ -332,6 +405,7 @@ void IclModel::greedy_merge(const arma::sp_mat & merge_graph){
     Rcout << "Merge convergence, with an ICL of "<< icl_value << " and " << K << " clusters." << std::endl;
     Rcout << "##################################"<< std::endl; 
   }
+  return merge_mat.getMergeMat();
 }
 
 // main function for greedy merging

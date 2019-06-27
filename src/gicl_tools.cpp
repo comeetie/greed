@@ -453,4 +453,7 @@ List mvlm_post_merge(List current1, List current2,double alpha, double N0) {
                       Named("log_evidence")=log_evidence);
 }
 
-
+// [[Rcpp::export]] 
+arma::uvec possible_moves(int k,arma::sp_mat & move_mat){
+  return arma::find(move_mat.col(k));
+}

@@ -11,7 +11,8 @@ NULL
 hybrid = function(model,alg,data,K, verbose=FALSE){
             
             fimerge = function(ncl,merge_graph){ greed:::merge_cstr(model,data,ncl,merge_graph,verbose)}
-            fiswap = function(ncl,ws,iclust){ fit_greed_cstr(model,data,ncl,ws,iclust,type="swap",verbose = verbose)}
+            fiswap = function(ncl,move_mat){ greed:::swap_cstr(model,data,ncl,move_mat,verbose = verbose)}
+
             train.hist = data.frame(generation=c(),icl=c(),K=c())
 
             # multi-start in //
@@ -41,7 +42,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
               train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
               # selection keep the top half solutions
               ii = order(icls)
-              Nsel = round(alg@pop_size*0.6)
+              Nsel = round(alg@pop_size*0.4)
               ii=ii[(alg@pop_size-Nsel):alg@pop_size]
               icls =icls[ii]
               solutions = solutions[ii]
@@ -57,7 +58,12 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
               }
               solutions = c(bres,as.list(new_solutions))
               icls = sapply(solutions,function(s){s@icl})
+              if(sum(is.nan(icls))>0){
+                print("NAN")
+                return(solutions[[which(is.nan(icls))[1]]])
+              }
               solutions=solutions[!is.nan(icls)]
+              
               icls=icls[!is.nan(icls)]
               print(icls)
               old_best=best_icl
@@ -103,30 +109,36 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
   }
   ijAm=which(M>0,arr.ind = TRUE)
   ijAm=ijAm[ijAm[,1]!=ijAm[,2],]
+  Am=Matrix::sparseMatrix(ijAm[,1],ijAm[,2],x=rep(1,nrow(ijAm)),dims = c(max(ncl),max(ncl)))
   if(nrow(ijAm)>0){
-    Am=Matrix::sparseMatrix(ijAm[,1],ijAm[,2],x=rep(1,nrow(ijAm)),dims = c(max(ncl),max(ncl)))
     sol=fimerge(ncl,Am)
+    move_mat =sol@move_mat;
   }else{
     sol=sol1;
+    move_mat=Am
   }
   ncl = sol@cl
   iclust = 1:max(ncl)
   if(runif(1)<pmutation){
     
     sp_cl=sample(max(ncl),1)
-    ws = as.numeric(ncl==sp_cl)
 
     ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)
-    if(max(ncl)>10){
-      iclust  = unique(c(sp_cl,max(ncl),sample(max(ncl),8)))  
-    }else{
-      iclust = 1:max(ncl)
-    }
     
-    sol= fiswap(ncl,as.numeric(ncl%in% iclust),iclust)
+    if(max(ncl)>nrow(move_mat) & sum(ncl==sp_cl)>0){
+      move_mat = cbind(move_mat,move_mat[,sp_cl])
+      move_mat = rbind(move_mat,move_mat[sp_cl,])
+      move_mat[sp_cl,max(ncl)]=1
+      move_mat[max(ncl),sp_cl]=1
+    }else{
+      ncl=sol@cl
+    }
+
+
   }
 
-  sol
+  sol= fiswap(ncl,move_mat)
+  
 }
 
 

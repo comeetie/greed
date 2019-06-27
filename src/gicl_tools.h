@@ -43,6 +43,6 @@ List mvlm_post_del1(List current, const arma::rowvec X,const arma::rowvec Y,doub
 
 List mvlm_post_merge(List current1,List current2,double alpha, double N0);
 
-
+arma::uvec possible_moves(int k,arma::sp_mat & move_mat);
 #endif
 
