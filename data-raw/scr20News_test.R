@@ -1,29 +1,10 @@
 library(greed)
-library(Matrix)
-load("~/Projets/greed/data-raw/X20news.rda")
-data("Xvlegislature")
-X20news=Xvlegislature$X
-ij=which(X20news>0,arr.ind = TRUE)
-di=dim(X20news)
-N=sum(di)
-X =  sparseMatrix(i=c(ij[,1],ij[,2]+di[1]),j=c(ij[,2]+di[1],ij[,1]),x = c(X20news[ij],X20news[ij]))
 
-library(future)
-plan("multiprocess")
-
-sol=greed(Xvlegislature$X,K=30,alg=new("hybrid",pop_size=60))
-
-deb=as.POSIXct(Sys.time())
-sol=greed(X,K=30,alg=new("hybrid",pop_size=60),verbose = TRUE)
-fin=as.POSIXct(Sys.time())
-
-system.time({
-
-})
 library(future)
 plan(multisession)
 library(Matrix)
-
+load("~/Projets/greed/data-raw/X20news.rda")
+data("Xvlegislature")
 N=10000
 K=90
 pi=rep(1/K,K)
@@ -34,41 +15,19 @@ mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,K
 sbm = rsbm(N,pi,mu)
 image(sbm$mu)
 
+
+
+
 deb=as.POSIXct(Sys.time())
 mod=new("co_dcsbm")
-data=greed:::preprocess(mod,X)
+data=greed:::preprocess(mod,X20news)
 sols=greed:::multi_swap(mod,new("multistarts",nb_start=10),data,30,verbose=TRUE)
 fin=as.POSIXct(Sys.time())
 fin-deb
-
 solutions=sols
-new_solutions = listenv::listenv()
-deb=as.POSIXct(Sys.time())
-pop_size=20
-icls = sapply(solutions,function(s){s@icl})
-icl_order = order(icls,decreasing = TRUE)
-selected  = icl_order[1:(pop_size/2)]
 
-selected_couples = matrix(selected[sample(1:length(selected),length(selected)*2,replace = TRUE)],ncol=2)
-
-fimerge = function(ncl,merge_graph){ soltemp = greed:::merge_cstr(mod,data,ncl,merge_graph,TRUE);
-
-greed:::fit_greed(mod,data,soltemp@cl,type="merge",verbose = TRUE)
-  
-  }
+fimerge = function(ncl,merge_graph){ greed:::merge_cstr(mod,data,ncl,merge_graph,TRUE)}
 fiswap = function(ncl,ws,iclust){ greed:::fit_greed_cstr(mod,data,ncl,ws,iclust,type="swap",verbose = TRUE)}
-for (i in 1:nrow(selected_couples)){
-  new_solutions[[i]] %<-% fco(solutions[[selected_couples[i,1]]],solutions[[selected_couples[i,2]]],fimerge,fiswap,0.1)
-}
-solutions = c(solutions[selected],as.list(new_solutions))
-icls = sapply(solutions,function(s){s@icl})
-fin=as.POSIXct(Sys.time())
-
-fin-deb
-
-
-
-
 
 deb=as.POSIXct(Sys.time())
 sol_12=fco(solutions[[1]],solutions[[2]],fimerge,fiswap,0)
@@ -83,8 +42,8 @@ sol_1234=fco(sol_12,sol_34,fimerge,fiswap,0)
 sol_5678=fco(sol_56,sol_78,fimerge,fiswap,0)
 fin=as.POSIXct(Sys.time())
 
-sol_F=fco(sol_1234,sol_5678,fimerge,fiswap,0)
-fco = function(sol1,sol2,fimerge,fiswap,pmutation){
+
+fco= function(sol1,sol2,fimerge,fiswap,pmutation){
   # cartesian product on the z of the two solution
   #ncl = unclass(factor(paste(sol1@cl,sol2@cl)))
   
@@ -98,27 +57,37 @@ fco = function(sol1,sol2,fimerge,fiswap,pmutation){
   for(k in 1:sol2@K){
     M[ij[,2]==k,ij[,2]==k]=1
   }
-  ijAm=which(tril(M,-1)>0,arr.ind = TRUE)
+  ijAm=which(M>0,arr.ind = TRUE)
+  ijAm=ijAm[ijAm[,1]!=ijAm[,2],]
   Am=Matrix::sparseMatrix(ijAm[,1],ijAm[,2],x=rep(1,nrow(ijAm)),dims = c(max(ncl),max(ncl)))
+  if(nrow(ijAm)>0){
+    sol=fimerge(ncl,Am)
+    move_mat =sol@move_mat;
+  }else{
+    sol=sol1;
+    move_mat=Am
+  }
+  ncl = sol@cl
+  iclust = 1:max(ncl)
+  if(runif(1)<pmutation){
+    
+    sp_cl=sample(max(ncl),1)
+    
+    ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)
+    
+    if(max(ncl)>nrow(move_mat) & sum(ncl==sp_cl)>0){
+      move_mat = cbind(move_mat,move_mat[,sp_cl])
+      move_mat = rbind(move_mat,move_mat[sp_cl,])
+      move_mat[sp_cl,max(ncl)]=1
+      move_mat[max(ncl),sp_cl]=1
+    }else{
+      ncl=sol@cl
+    }
+    
+    
+  }
   
-  print("Prep...")
-  
-  sol=fimerge(ncl,Am)
-  
-  print("swap")
-  #if(runif(1)<pmutation){
-  #  ncl = sol@cl
-  #  sp_cl=sample(max(ncl),1)
-  #  ws = as.numeric(ncl==sp_cl)
-  
-  #  ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)
-  
-  #  iclust  = c(sp_cl,max(ncl))
-  ncl=sol@cl
-  iclust=1:max(ncl)
-  #sol= fiswap(ncl,as.numeric(ncl%in%iclust),iclust)
-  #}
-  
+  #sol= fiswap(ncl,move_mat)
   sol
 }
 

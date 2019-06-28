@@ -112,7 +112,9 @@ arma::mat DcSbm::delta_swap(int i,arma::uvec iclust){
       new_dout(k) = new_dout(k)+cdout;
       List new_stats = List::create(Named("counts", new_counts),Named("din", new_din),Named("dout", new_dout), Named("x_counts", new_ec));
       delta(k)=icl(new_stats,oldcl,k)-icl(old_stats,oldcl,k);
+
     }
+    
   }
   return delta;
 }

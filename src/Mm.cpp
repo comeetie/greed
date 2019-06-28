@@ -137,11 +137,12 @@ void Mm::swap_update(int i,int newcl){
   // current row
   arma::sp_mat ccol = xt.col(i);
   // update x_counts
-  arma::sp_mat new_ec = x_counts;
-  new_ec.col(newcl) = new_ec.col(newcl)+ccol;
-  new_ec.col(oldcl) = new_ec.col(oldcl)-ccol;
+
+  x_counts.col(newcl) = x_counts.col(newcl)+ccol;
+  x_counts.col(oldcl) = x_counts.col(oldcl)-ccol;
   // update counts
-  arma::vec new_counts = update_count(counts,oldcl,newcl);
+  counts(oldcl)=counts(oldcl)-1;
+  counts(newcl)=counts(newcl)+1;
   // update cl
   cl(i)=newcl;
   // if a cluster is dead
@@ -150,22 +151,18 @@ void Mm::swap_update(int i,int newcl){
   col_sums(newcl)=col_sums(newcl)+nbt;
   col_sums(oldcl)=col_sums(oldcl)-nbt;
   
-  if(new_counts(oldcl)==0){
+  if(counts(oldcl)==0){
     // remove from counts
-    counts = new_counts.elem(arma::find(arma::linspace(0,K-1,K)!=oldcl));
+    counts.shed_row(oldcl);
     // remove from x_counts
-    x_counts = delcol(new_ec,oldcl);
+    x_counts.shed_col(oldcl);
     // remove from col_sums
-    col_sums = col_sums.cols(arma::find(arma::linspace(0,K-1,K)!=oldcl));
+    col_sums.shed_col(oldcl);
     // oldies : .rows(arma::find(arma::linspace(0,K-1,K)!=oldcl));
     // update cl to take into account de dead cluster
     cl.elem(arma::find(cl>oldcl))=cl.elem(arma::find(cl>oldcl))-1;
     // upate K
     --K;
-  }else{
-    // just update
-    counts=new_counts;
-    x_counts=new_ec;
   }
   
 
@@ -207,13 +204,13 @@ void Mm::merge_update(int k,int l){
   cl.elem(arma::find(cl>k))=cl.elem(arma::find(cl>k))-1;
   // update counts
   counts(l) = counts(k)+counts(l);
-  counts    = counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
+  counts.shed_row(k);
   // update x_counts
   x_counts.col(l) = x_counts.col(k)+x_counts.col(l);
-  x_counts = delcol(x_counts,k);
+  x_counts.shed_col(k);
   // update col_sums
   col_sums(l) = col_sums(l) + col_sums(k);
-  col_sums= col_sums.cols(arma::find(arma::linspace(0,K-1,K)!=k));
+  col_sums.shed_col(k);
   // update K
   --K;
 }

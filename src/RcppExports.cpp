@@ -96,6 +96,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sp_cross
+arma::sp_mat sp_cross(arma::sp_mat colvec, arma::sp_mat rowvec, int self, int oldcl, int newcl, int K);
+RcppExport SEXP _greed_sp_cross(SEXP colvecSEXP, SEXP rowvecSEXP, SEXP selfSEXP, SEXP oldclSEXP, SEXP newclSEXP, SEXP KSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat >::type colvec(colvecSEXP);
+    Rcpp::traits::input_parameter< arma::sp_mat >::type rowvec(rowvecSEXP);
+    Rcpp::traits::input_parameter< int >::type self(selfSEXP);
+    Rcpp::traits::input_parameter< int >::type oldcl(oldclSEXP);
+    Rcpp::traits::input_parameter< int >::type newcl(newclSEXP);
+    Rcpp::traits::input_parameter< int >::type K(KSEXP);
+    rcpp_result_gen = Rcpp::wrap(sp_cross(colvec, rowvec, self, oldcl, newcl, K));
+    return rcpp_result_gen;
+END_RCPP
+}
 // add_sppat
 arma::sp_mat add_sppat(const arma::sp_mat& a, const arma::sp_mat& b);
 RcppExport SEXP _greed_add_sppat(SEXP aSEXP, SEXP bSEXP) {
@@ -105,6 +121,30 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::sp_mat& >::type a(aSEXP);
     Rcpp::traits::input_parameter< const arma::sp_mat& >::type b(bSEXP);
     rcpp_result_gen = Rcpp::wrap(add_sppat(a, b));
+    return rcpp_result_gen;
+END_RCPP
+}
+// add_spmatpat
+arma::sp_mat add_spmatpat(const arma::sp_mat& a, const arma::sp_mat& b);
+RcppExport SEXP _greed_add_spmatpat(SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(add_spmatpat(a, b));
+    return rcpp_result_gen;
+END_RCPP
+}
+// which_spmatpat
+arma::sp_mat which_spmatpat(const arma::sp_mat& a, const arma::sp_mat& b);
+RcppExport SEXP _greed_which_spmatpat(SEXP aSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(which_spmatpat(a, b));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -121,14 +161,39 @@ BEGIN_RCPP
 END_RCPP
 }
 // delrowcol
-arma::sp_mat delrowcol(const arma::sp_mat& a, int ci);
+void delrowcol(arma::sp_mat& a, int ci);
 RcppExport SEXP _greed_delrowcol(SEXP aSEXP, SEXP ciSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< int >::type ci(ciSEXP);
+    delrowcol(a, ci);
+    return R_NilValue;
+END_RCPP
+}
+// gsum_mat
+arma::mat gsum_mat(arma::vec cl, const arma::sp_mat& x, int K);
+RcppExport SEXP _greed_gsum_mat(SEXP clSEXP, SEXP xSEXP, SEXP KSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::sp_mat& >::type a(aSEXP);
-    Rcpp::traits::input_parameter< int >::type ci(ciSEXP);
-    rcpp_result_gen = Rcpp::wrap(delrowcol(a, ci));
+    Rcpp::traits::input_parameter< arma::vec >::type cl(clSEXP);
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type K(KSEXP);
+    rcpp_result_gen = Rcpp::wrap(gsum_mat(cl, x, K));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gsum_mat_sp
+arma::sp_mat gsum_mat_sp(arma::vec cl, const arma::sp_mat& x, int K);
+RcppExport SEXP _greed_gsum_mat_sp(SEXP clSEXP, SEXP xSEXP, SEXP KSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type cl(clSEXP);
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type K(KSEXP);
+    rcpp_result_gen = Rcpp::wrap(gsum_mat_sp(cl, x, K));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -317,9 +382,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_swap_cstr", (DL_FUNC) &_greed_swap_cstr, 6},
     {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 6},
     {"_greed_fit_greed_path", (DL_FUNC) &_greed_fit_greed_path, 2},
+    {"_greed_sp_cross", (DL_FUNC) &_greed_sp_cross, 6},
     {"_greed_add_sppat", (DL_FUNC) &_greed_add_sppat, 2},
+    {"_greed_add_spmatpat", (DL_FUNC) &_greed_add_spmatpat, 2},
+    {"_greed_which_spmatpat", (DL_FUNC) &_greed_which_spmatpat, 2},
     {"_greed_delcol", (DL_FUNC) &_greed_delcol, 2},
     {"_greed_delrowcol", (DL_FUNC) &_greed_delrowcol, 2},
+    {"_greed_gsum_mat", (DL_FUNC) &_greed_gsum_mat, 3},
+    {"_greed_gsum_mat_sp", (DL_FUNC) &_greed_gsum_mat_sp, 3},
     {"_greed_gsum_mm", (DL_FUNC) &_greed_gsum_mm, 3},
     {"_greed_lm_post", (DL_FUNC) &_greed_lm_post, 5},
     {"_greed_lm_post_add1", (DL_FUNC) &_greed_lm_post_add1, 6},

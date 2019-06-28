@@ -53,8 +53,20 @@ fit_greed_path <- function(data, init_fit) {
     .Call('_greed_fit_greed_path', PACKAGE = 'greed', data, init_fit)
 }
 
+sp_cross <- function(colvec, rowvec, self, oldcl, newcl, K) {
+    .Call('_greed_sp_cross', PACKAGE = 'greed', colvec, rowvec, self, oldcl, newcl, K)
+}
+
 add_sppat <- function(a, b) {
     .Call('_greed_add_sppat', PACKAGE = 'greed', a, b)
+}
+
+add_spmatpat <- function(a, b) {
+    .Call('_greed_add_spmatpat', PACKAGE = 'greed', a, b)
+}
+
+which_spmatpat <- function(a, b) {
+    .Call('_greed_which_spmatpat', PACKAGE = 'greed', a, b)
 }
 
 delcol <- function(a, ci) {
@@ -62,7 +74,15 @@ delcol <- function(a, ci) {
 }
 
 delrowcol <- function(a, ci) {
-    .Call('_greed_delrowcol', PACKAGE = 'greed', a, ci)
+    invisible(.Call('_greed_delrowcol', PACKAGE = 'greed', a, ci))
+}
+
+gsum_mat <- function(cl, x, K) {
+    .Call('_greed_gsum_mat', PACKAGE = 'greed', cl, x, K)
+}
+
+gsum_mat_sp <- function(cl, x, K) {
+    .Call('_greed_gsum_mat_sp', PACKAGE = 'greed', cl, x, K)
 }
 
 gsum_mm <- function(cl, x, K) {

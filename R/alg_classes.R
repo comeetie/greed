@@ -171,8 +171,9 @@ spectral= function(X,K){
 #' @export
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
   data = preprocess(model,X)
+  cat(paste0("------- Fitting a ",model@name, " model ------\n"))
   sol=fit(model,alg,data,K,verbose)
-  #postprocess(sol,data)
+  sol=postprocess(sol,data)
   sol
 }
 
@@ -220,7 +221,7 @@ setGeneric("postprocess", function(path, ...) standardGeneric("postprocess"))
 #' @param path an icl_path object
 setMethod(f = "postprocess", 
           signature = signature("icl_path"), 
-          definition = function(path){
+          definition = function(path,data=NULL){
             path    
 })
 
