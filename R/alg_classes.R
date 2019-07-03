@@ -52,8 +52,8 @@ setClass("seed",
 #' @export
 setClass("hybrid",
          contains = "alg",
-         representation =  list(pop_size = "numeric",nb_max_gen = "numeric",prob_mutation = "numeric"),
-         prototype(name="hybrid",pop_size=20, nb_max_gen = 10,prob_mutation=0.25))
+         representation =  list(pop_size = "numeric",nb_max_gen = "numeric",prob_mutation = "numeric",Kmax="numeric"),
+         prototype(name="hybrid",pop_size=20, nb_max_gen = 10,prob_mutation=0.25,Kmax=300))
 
 
 #' @rdname algs-classes
@@ -170,7 +170,7 @@ spectral= function(X,K){
 #' @return an icl_path object
 #' @export
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
-  data = preprocess(model,X)
+  data = preprocess(model,X,K)
   cat(paste0("------- Fitting a ",model@name, " model ------\n"))
   sol=fit(model,alg,data,K,verbose)
   sol=postprocess(sol,data)
@@ -211,8 +211,8 @@ setGeneric("preprocess", function(model, ...) standardGeneric("preprocess"))
 #' @param X input data to prepare
 setMethod(f = "preprocess", 
           signature = signature("icl_model"), 
-          definition = function(model, data){
-            list(X=as.sparse(data),N=nrow(data))
+          definition = function(model, data,K){
+            list(X=as.sparse(data),N=nrow(data),moves=as.sparse(matrix(1,K,K)))
 })
 
 setGeneric("postprocess", function(path, ...) standardGeneric("postprocess")) 

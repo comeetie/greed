@@ -339,6 +339,9 @@ SpMergeMat IclModel::nasty_delta_merge(const arma::sp_mat & merge_graph){
   return SpMergeMat(bk,bl,bv,delta);
 }
 
+
+
+
 // update merge matrix after merge of obk/obl sparse
 SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int obl,const List & old_stats){
   // optimized version to compute only new values of the merge mat
@@ -374,6 +377,101 @@ SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int 
   return SpMergeMat(bk,bl,bv,delta);
 }
 
+// init merge matrix sparse
+arma::sp_mat IclModel::batch_greedy_merge(const arma::sp_mat & merge_graph,int nb_try,double reduction_factor){
+  // inititalize delta merge matrix
+  arma::sp_mat delta = merge_graph;
+  arma::uvec col0;
+  col0<< 0 << arma::endr;
+  arma::uvec col1;
+  col1<< 1 << arma::endr;
+  arma::uvec col01;
+  col01 << 0 << 1 << arma::endr;
+  // index to store current best merge
+  int nb_sols=K*reduction_factor;
+  int pos,k,l;
+  bool move = true;
+  while(move){
+    move = false;
+    // initialize bv found to -infty
+    arma::umat best_kls(nb_sols,2);
+    arma::vec best_kls_values(nb_sols);
+    
+    best_kls_values.fill(-std::numeric_limits<double>::infinity());
+    
+    for (int l=0;l<delta.n_cols;++l ){
+      int j = 0;
+      arma::vec Ks(delta.col(l).n_nonzero);
+      for (arma::sp_mat::iterator i = delta.begin_col(l); i != delta.end_col(l); ++i) {
+        Ks(j)=i.row();
+        j++;
+      }
+      arma::vec pass;
+      if(nb_try< delta.col(l).n_nonzero){
+        pass = as<arma::vec>(sample(delta.col(l).n_nonzero,nb_try))-1;
+      }else{
+        pass = arma::linspace(0,delta.col(l).n_nonzero-1, delta.col(l).n_nonzero);
+      }
+
+      for (int i=0;i<pass.n_elem;i++) {
+        int k=Ks(pass(i));
+        delta(k,l) = this->delta_merge(k,l);
+        // best merge ?
+        pos = nb_sols-1;
+        while(pos >=0 && delta(k,l)>best_kls_values(pos) ){
+          pos--;
+        }
+        if(pos<(nb_sols-1)){
+          //insertion
+
+            if(pos<(nb_sols-3)){
+              best_kls_values.subvec(pos+2,best_kls.n_rows-1)=best_kls_values.subvec(pos+1,best_kls.n_rows-2);
+              best_kls.submat(pos+2,0,best_kls.n_rows-1,1)=best_kls.submat(pos+1,0,best_kls.n_rows-2,1);
+            }
+
+            best_kls(pos+1,0)=k;
+            best_kls(pos+1,1)=l;
+            best_kls_values(pos+1) = delta(k,l);
+
+      
+        }
+      }
+    }
+    pos = 0;
+
+    while(pos<best_kls_values.n_elem && best_kls_values(pos)>0){
+      int bk = best_kls(pos,0);
+      int bl = best_kls(pos,1);
+      k = std::max(bk,bl);
+      l = std::min(bk,bl);
+      if(k!=l){
+        if(delta(k,l)!=best_kls_values(pos)){
+          Rcout << k  <<" ; " << l <<" ; " << delta(k,l)<< ";" << best_kls_values(pos) << std::endl;
+        }
+
+        this->merge_update(k,l);
+        delta.shed_col(k);
+        delta.shed_row(k);
+        best_kls_values=best_kls_values(arma::find(best_kls.col(0)!=k));
+        best_kls=best_kls.submat(arma::find(best_kls.col(0)!=k),col01);
+        best_kls_values=best_kls_values(arma::find(best_kls.col(1)!=k));
+        best_kls=best_kls.submat(arma::find(best_kls.col(1)!=k),col01);
+        //best_kls.submat(arma::find(best_kls.col(0)==k),col0).fill(l);
+        //best_kls.submat(arma::find(best_kls.col(1)==k),col1).fill(l);
+        best_kls.submat(arma::find(best_kls.col(0)>k),col0) = best_kls.submat(arma::find(best_kls.col(0)>k),col0)-1;
+        best_kls.submat(arma::find(best_kls.col(1)>k),col1) = best_kls.submat(arma::find(best_kls.col(1)>k),col1)-1;
+        //Rcout << best_kls << std::endl;
+        move=true;
+      }
+      pos++;
+    }
+    if(move){
+       nb_sols = K*reduction_factor;
+       nb_sols = std::max(nb_sols,1);
+    }
+  }
+  return delta;
+}
 
 
 // main function for greedy merging with prior merge graph

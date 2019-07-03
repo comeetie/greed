@@ -64,7 +64,7 @@ setMethod(f = "seed",
 
 setMethod(f = "preprocess", 
           signature = signature("co_dcsbm"), 
-          definition = function(model,data){
+          definition = function(model,data,K){
             X=as.sparse(data)
             if(class(X)!="dgCMatrix"){
               stop(paste0("Unsupported data type :", class(X) ,"for co_dcsbm model."))
@@ -79,8 +79,11 @@ setMethod(f = "preprocess",
 
             di=dim(X)
             N=sum(di)
+            moves=matrix(0,K,K);
+            moves[1:floor(K/2),1:floor(K/2)]=1
+            moves[(floor(K/2)+1):K,(floor(K/2)+1):K]=1
             X =  sparseMatrix(i=c(ij[,1],ij[,2]+di[1]),j=c(ij[,2]+di[1],ij[,1]),x = c(X[ij],X[ij]))
-            list(X=X,N=nrow(X),Nrows=di[1],Ncols=di[2])
+            list(X=X,N=nrow(X),Nrows=di[1],Ncols=di[2],moves=as.sparse(moves))
           })
 
 setMethod(f = "postprocess", 
@@ -96,23 +99,24 @@ setMethod(f = "postprocess",
             clust_rows = which(clusters_type==1)
             clust_cols = which(clusters_type==2)
             if(!(max(clust_cols)<min(clust_rows) | max(clust_rows)<min(clust_cols))){
-              stop("Co clustering failed bi partite structure not found")
+              message("Co clustering failed bi partite structure not found")
+              return(sol)
             }
             icol = (sol@Nrow+1):length(sol@cl)
             irow = 1:sol@Nrow
-            row_problems = !sol@cl[irow] %in% which(clusters_type==1)
-            col_problems = !sol@cl[icol] %in% which(clusters_type==2)
-            if((sum(row_problems)>0 | sum(col_problems)>0) & !is.null(data)){
-            probas=greed:::post_probs(sol@model,data,sol@cl)
-            if(sum(row_problems)>0){
-              row_probas = probas[irow,]
-              sol@cl[which(row_problems)]=clust_rows[apply(matrix(row_probas[which(row_problems),clusters_type==1],nrow = sum(row_problems)),1,which.max)]
-            }
-            if(sum(col_problems)>0){
-              col_probas = probas[icol,]
-              sol@cl[which(col_problems)+data$Nrows]=clust_cols[apply(matrix(col_probas[which(col_problems),clusters_type==2],nrow = sum(col_problems)),1,which.max)]
-            }
-            }
+            # row_problems = !sol@cl[irow] %in% which(clusters_type==1)
+            # col_problems = !sol@cl[icol] %in% which(clusters_type==2)
+            # if((sum(row_problems)>0 | sum(col_problems)>0) & !is.null(data)){
+            # probas=greed:::post_probs(sol@model,data,sol@cl)
+            # if(sum(row_problems)>0){
+            #   row_probas = probas[irow,]
+            #   sol@cl[which(row_problems)]=clust_rows[apply(matrix(row_probas[which(row_problems),clusters_type==1],nrow = sum(row_problems)),1,which.max)]
+            # }
+            # if(sum(col_problems)>0){
+            #   col_probas = probas[icol,]
+            #   sol@cl[which(col_problems)+data$Nrows]=clust_cols[apply(matrix(col_probas[which(col_problems),clusters_type==2],nrow = sum(col_problems)),1,which.max)]
+            # }
+            # }
             sol@clrow = sol@cl[irow]-min(sol@cl[irow])+1
             sol@Krow = max(sol@clrow)
             sol@clcol = sol@cl[icol]-min(sol@cl[icol])+1

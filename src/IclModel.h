@@ -52,6 +52,7 @@ public:
   // main method for greedy swaping
   void greedy_merge();
   arma::sp_mat greedy_merge(const arma::sp_mat & merge_graph);
+  arma::sp_mat batch_greedy_merge(const arma::sp_mat & merge_graph,int nb_try,double reduction_factor);
   // main method for greedy merge
   List greedy_merge_path();
   // get posterior probs p(Zi|X,Z-i)

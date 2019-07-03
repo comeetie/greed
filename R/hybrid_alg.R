@@ -23,9 +23,10 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             solutions = listenv::listenv()
             # first generation of solutions
             pop_size = alg@pop_size
+            init_moves= data$moves;
             for (i in 1:pop_size){
               cli = sample_cl(model,data,K)
-              solutions[[i]] %<-% fit_greed(model,data,cli,verbose = verbose)  %globals% c("model","data","cli","verbose","fit_greed")
+              solutions[[i]] %<-% fiswap(cli,init_moves)  %globals% c("model","data","cli","verbose","fiswap","init_moves")
             }
             solutions = as.list(solutions)
             icls  = sapply(solutions,function(s){s@icl})
@@ -37,7 +38,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             nbgen = 1
             # while maximum number of generation // all solutions are equals // no improvements
             pmut = alg@prob_mutation
-            
+            Kmax = alg@Kmax
             cat("################# ")
             cat(paste0("Generation ",sprintf("%2i",nbgen), ": best solution with an ICL of ",round(solutions[[which.max(icls)]]@icl)," and ",solutions[[which.max(icls)]]@K," clusters "))
             cat("#################\n")
@@ -60,7 +61,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
                 i2 = sample(ip[-i1],1,prob=ip[-i1])
                 s1 = solutions[[i1]]
                 s2 = solutions[[i2]]
-                new_solutions[[i]] %<-% full_cross_over(s1,s2,fimerge,fiswap,pmut)  %globals% c("s1","s2","fimerge","fiswap","pmut","full_cross_over")
+                new_solutions[[i]] %<-% full_cross_over(s1,s2,fimerge,fiswap,pmut,Kmax)  %globals% c("s1","s2","fimerge","fiswap","pmut","full_cross_over","Kmax")
               }
               solutions = c(bres,as.list(new_solutions))
               icls = sapply(solutions,function(s){s@icl})
@@ -98,18 +99,32 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
           }
 
 
-full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
+full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
   # cartesian product on the z of the two solution
   #ncl = unclass(factor(paste(sol1@cl,sol2@cl)))
   sol = sol1
-  # matrix of possible merge
-  ij=which(table(sol1@cl,sol2@cl)>0,arr.ind = TRUE)
-  ncl = as.numeric(factor(paste(sol1@cl,"_",sol2@cl,sep=""),levels=paste(ij[,1],"_",ij[,2],sep="")))
+  perm=sample(1:sol2@K,sol2@K)
+  cl2 = perm[sol2@cl]
+  
+  K2=sol2@K
+
+  Ta=table(sol@cl,cl2)
+  nbclust = sol@K-colSums(t(apply(Ta,1,function(r){cumsum(r>0)}))==matrix(rowSums(Ta>0),nrow=nrow(Ta),ncol=ncol(Ta)))+cumsum(colSums(Ta>0))
+  if(max(nbclust)>Kmax){
+    K2 = which(nbclust>Kmax)[1]
+    cl2[cl2>K2]=K2
+  }
+  ij=which(table(sol@cl,cl2)>0,arr.ind = TRUE)
+  ncl = as.numeric(factor(paste(sol@cl,"_",cl2,sep=""),levels=paste(ij[,1],"_",ij[,2],sep="")))
+  cat(paste0("ncl :",max(ncl)))
+  
+  
+  
   M=matrix(0,nrow(ij),nrow(ij))
   for(k in 1:sol1@K){
     M[ij[,1]==k,ij[,1]==k]=1
   }
-  for(k in 1:sol2@K){
+  for(k in 1:K2){
     M[ij[,2]==k,ij[,2]==k]=1
   }
   ijAm=which(M>0,arr.ind = TRUE)
@@ -117,9 +132,17 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
   Am=Matrix::sparseMatrix(ijAm[,1],ijAm[,2],x=rep(1,nrow(ijAm)),dims = c(max(ncl),max(ncl)))
   move_mat = Am
   if(nrow(ijAm)>0){
-    sol=fimerge(ncl,Am)
-    move_mat =sol@move_mat;
+    sol=fimerge(ncl,Matrix::tril(Am))
+    move_mat =sol@move_mat+Matrix::t(sol@move_mat);
     ncl = sol@cl
+    cat(paste0("ncl :",max(ncl)))
+    for(r in 1:nrow(move_mat)){
+      if(sum(move_mat[r,]!=0)>10){
+        merges = which(move_mat[r,]!=0)
+        best_merges_row = order(move_mat[r,merges],decreasing = TRUE)[1:10]
+        move_mat[r,setdiff(merges,merges[best_merges_row])]=0
+      }
+    }
   }
 
   if(runif(1)<pmutation){
@@ -142,6 +165,7 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation){
   if(nrow(ijAm)>0){
     sol= fiswap(ncl,move_mat)
   }
+  cat(paste0("ncl :",max(sol@cl)))
   sol
 }
 

@@ -33,11 +33,11 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
     }
     if(strcmp(model.slot("name"),"dcsbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
-      M = new SpDcSbm(xp,Ki,model.slot("alpha"),clt,verbose);
+      M = new DcSbm(xp,Ki,model.slot("alpha"),clt,verbose);
     }
     if(strcmp(model.slot("name"),"co_dcsbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
-      M = new SpDcSbm(xp,Ki,model.slot("alpha"),clt,verbose);
+      M = new DcSbm(xp,Ki,model.slot("alpha"),clt,verbose);
     }
     if(strcmp(model.slot("name"),"mm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
@@ -121,8 +121,8 @@ S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::vec workingset,arma:
 S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,bool verbose=false) {
   IclModel * M = init(model,data,clt,verbose);
   S4 sol = init_sol(model);
-  arma::sp_mat move_mat = M->greedy_merge(merge_graph);
-
+  arma::sp_mat move_mat = M->batch_greedy_merge(merge_graph,10,0.1);
+  move_mat = M->greedy_merge(move_mat);
   List obs_stats = M->get_obs_stats();
   double bicl = M->icl(obs_stats);
   sol.slot("model") = model;
