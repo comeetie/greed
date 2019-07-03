@@ -135,7 +135,6 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
     sol=fimerge(ncl,Matrix::tril(Am))
     move_mat =sol@move_mat+Matrix::t(sol@move_mat);
     ncl = sol@cl
-    cat(paste0("ncl :",max(ncl)))
     for(r in 1:nrow(move_mat)){
       if(sum(move_mat[r,]!=0)>10){
         merges = which(move_mat[r,]!=0)
@@ -165,7 +164,7 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
   if(nrow(ijAm)>0){
     sol= fiswap(ncl,move_mat)
   }
-  cat(paste0("ncl :",max(sol@cl)))
+
   sol
 }
 

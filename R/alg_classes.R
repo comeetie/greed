@@ -199,7 +199,7 @@ as.sparse = function(X){
   S = X
   if(class(X)=="matrix"){
     ij= which(X!=0,arr.ind=TRUE)
-    S = Matrix::sparseMatrix(ij[,1],ij[,1],x = X[ij]) 
+    S = Matrix::sparseMatrix(ij[,1],ij[,2],x = X[ij]) 
   }
   S
 }
