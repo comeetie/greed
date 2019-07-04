@@ -5,7 +5,7 @@
 \alias{preprocess,icl_model-method}
 \title{preprocess}
 \usage{
-\S4method{preprocess}{icl_model}(model, data)
+\S4method{preprocess}{icl_model}(model, data, K)
 }
 \arguments{
 \item{model}{an icl_model}

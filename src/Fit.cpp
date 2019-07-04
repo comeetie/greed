@@ -117,8 +117,9 @@ S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::vec workingset,arma:
   return(sol);
 }
 
+
 // [[Rcpp::export]]
-S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,bool verbose=false) {
+S4 batch_merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,bool verbose=false) {
   IclModel * M = init(model,data,clt,verbose);
   S4 sol = init_sol(model);
   arma::sp_mat move_mat = M->batch_greedy_merge(merge_graph,10,0.1);
@@ -131,10 +132,31 @@ S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,boo
   sol.slot("icl") = bicl;
   sol.slot("move_mat") = move_mat;
   sol.slot("K") = M->get_K();
+  
+  delete M;
+  return(sol);
+}
+
+// [[Rcpp::export]]
+S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,bool verbose=false) {
+  IclModel * M = init(model,data,clt,verbose);
+  S4 sol = init_sol(model);
+  arma::sp_mat move_mat = M->greedy_merge(merge_graph);
+  List obs_stats = M->get_obs_stats();
+  double bicl = M->icl(obs_stats);
+  sol.slot("model") = model;
+  sol.slot("obs_stats") = obs_stats;
+  sol.slot("cl") = M->get_cl()+1 ;
+  sol.slot("icl") = bicl;
+  sol.slot("move_mat") = move_mat;
+  sol.slot("K") = M->get_K();
 
   delete M;
   return(sol);
 }
+
+
+
 
 // [[Rcpp::export]]
 S4 swap_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & move_mat, int nb_max_pass = 50, bool verbose=false) {

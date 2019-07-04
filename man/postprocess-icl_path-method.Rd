@@ -5,7 +5,7 @@
 \alias{postprocess,icl_path-method}
 \title{postprocess}
 \usage{
-\S4method{postprocess}{icl_path}(path)
+\S4method{postprocess}{icl_path}(path, data = NULL)
 }
 \arguments{
 \item{path}{an icl_path object}
