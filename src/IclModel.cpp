@@ -282,7 +282,7 @@ SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph){
   double bv = -std::numeric_limits<double>::infinity();
   // store cuurent stats
   for (arma::sp_mat::iterator i = delta.begin(); i != delta.end(); ++i) {
-    if(i.row()<i.col()){
+    if(i.col()<i.row()){
       delta(i.row(),i.col())=this->delta_merge(i.row(),i.col());
       delta(i.col(),i.row())=delta(i.row(),i.col());
       // best merge ?
@@ -356,13 +356,13 @@ SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int 
   arma::sp_mat::iterator i = delta.begin();
   arma::sp_mat::iterator end = delta.end();
   for (; i != end; ++i) {
-     if(i.row()<i.col()){
+     if(i.col()<i.row()){
       k=i.row();
       l=i.col();
       if(k == obl | l == obl){
         delta(k,l)=this->delta_merge(k,l);
       }else{
-        delta(k,l)=delta(k,l)+this->delta_merge_correction(k,l,obk,obl,old_stats);
+        //delta(k,l)=delta(k,l)+this->delta_merge_correction(k,l,obk,obl,old_stats);
       }
       delta(l,k)=delta(k,l);
 
@@ -476,7 +476,6 @@ arma::sp_mat IclModel::batch_greedy_merge(const arma::sp_mat & merge_graph,int n
 
 // main function for greedy merging with prior merge graph
 arma::sp_mat IclModel::greedy_merge(const arma::sp_mat & merge_graph){
-  
   // init the merge matrix(K,K) with the delta icl of each merge 
   SpMergeMat merge_mat = this->delta_merge(merge_graph);
   // init merge counter
@@ -489,15 +488,16 @@ arma::sp_mat IclModel::greedy_merge(const arma::sp_mat & merge_graph){
     List old_stats = this->get_obs_stats();
     // perform the merge and update the stats
     this->merge_update(merge_mat.getK(),merge_mat.getL());
-    // if(verbose){
-    //    Rcout << "##################################"<< std::endl;
-    //    Rcout << "Merge icl : "<< icl(this->get_obs_stats()) << std::endl;
-    //    Rcout << "##################################"<< std::endl;
-    // }
+    if(verbose){
+       Rcout << "##################################"<< std::endl;
+       Rcout << "Merge icl : "<< icl(this->get_obs_stats()) << std::endl;
+       Rcout << "##################################"<< std::endl;
+    }
     // update the merge matrix
     //merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL(),old_stats);
     arma::sp_mat delta = merge_mat.getMergeMat();
     merge_mat = this->delta_merge(delta,merge_mat.getK(),merge_mat.getL(),old_stats);
+
     //delrowcol(delta,merge_mat.getK());
     //merge_mat = this->delta_merge(delta);
   }

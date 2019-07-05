@@ -182,32 +182,41 @@ incremental_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
     ncl_old = ncl
     ij  = which(table(ncl,cl2)>0,arr.ind = TRUE);
     ncl = as.numeric(factor(paste(ncl,"_",cl2,sep=""),levels=paste(ij[,1],"_",ij[,2],sep="")))
-    cat(paste0("ncl :",max(ncl),"\n"))
-    if(!is.na(max(ncl))){
-      M=matrix(0,max(ncl),max(ncl))
-      M[ij[,2]==1,ij[,2]==1]=1
-      diag(M)=0
-      ijm=which(M==1,arr.ind = TRUE)
-      move_mat=sparseMatrix(i=ijm[,1],j=ijm[,2],x = rep(1,nrow(ijm)), dims = c(max(ncl),max(ncl)))
-      if(sum(move_mat)>0){
-        sol=fimerge(ncl,Matrix::tril(move_mat))
-        move_mat =sol@move_mat+Matrix::t(sol@move_mat);
-        if(sol@icl>icl){
-          icl=sol@icl
-          ncl = sol@cl          
-        }else{
-          ncl=ncl_old
-        }
-        
+    M=matrix(0,max(ncl),max(ncl))
+    M[ij[,2]==1,ij[,2]==1]=1
+    diag(M)=0
+    ijm=which(M==1,arr.ind = TRUE)
+    move_mat=sparseMatrix(i=ijm[,1],j=ijm[,2],x = rep(1,nrow(ijm)), dims = c(max(ncl),max(ncl)))
+    if(sum(move_mat)>0){
+      sol=fimerge(ncl,Matrix::tril(move_mat))
+      move_mat =sol@move_mat+Matrix::t(sol@move_mat);
+      if(sol@icl>icl){
+        icl=sol@icl
+        ncl = sol@cl          
+      }else{
+        ncl=ncl_old
       }
+      
     }
-  }  
-  M=matrix(1,max(ncl),max(ncl))
+    
+  } 
+  M=matrix(0,max(ncl),max(ncl))
+  Tac=table(ncl,sol1@cl)
+  for(k in 1:sol1@K){
+    ibrothers = which(Tac[,k]!=0)
+    M[ibrothers,ibrothers]=1
+  }
+  Tac=table(ncl,sol2@cl)
+  for(k in 1:K2){
+    ibrothers = which(Tac[,k]!=0)
+    M[ibrothers,ibrothers]=1
+  }
   diag(M)=0
   ijm=which(M==1,arr.ind = TRUE)
   move_mat=sparseMatrix(i=ijm[,1],j=ijm[,2],x = rep(1,nrow(ijm)), dims = c(max(ncl),max(ncl)))
   sol=fimerge(ncl,Matrix::tril(move_mat))
   move_mat = sol@move_mat
+  ncl = sol@cl
   for(r in 1:nrow(move_mat)){
     if(sum(move_mat[r,]!=0)>10){
       merges = which(move_mat[r,]!=0)
