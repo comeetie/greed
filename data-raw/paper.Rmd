@@ -104,7 +104,7 @@ mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,K
 sbm = rsbm(N,pi,mu)
 ```
 
-```{r,cache=TRUE,echo=FALSE,message=FALSE}
+```{r,cache=TRUE,echo=FALSE,message=FALSE,results="hide"}
 fit = greed(sbm$x,model=new("sbm"),alg = new("hybrid",pop_size=20))
 fit_o = greed::fit_greed(new("sbm"),list(X=sbm$x),sample(1:20,nrow(sbm$x),replace = TRUE))
 fit_perm=fit
@@ -134,7 +134,7 @@ tree=plot(fit,type='tree')+ggtitle("Dendogramme derived from the best solution")
 ggarrange(gen,tree)
 ```
 
-```{r, cache=TRUE,message=FALSE}
+```{r, cache=TRUE,message=FALSE,results="hide"}
 
 Nbsim = 10
 S=matrix(0,1500,Nbsim)
@@ -188,7 +188,7 @@ ggplot(resSim)+geom_boxplot(aes(x=alg,y=nmi,group=alg))+geom_point(aes(x=alg,y=n
 ### Real data
 
 
-```{r, cache=TRUE}
+```{r, cache=TRUE,results="hide"}
 data("Blogs")
 fit_blogs = greed(Blogs$X,model=new("dcsbm"),alg=new("hybrid",prob_mutation=0))
 data("Books")
