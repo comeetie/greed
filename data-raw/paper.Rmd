@@ -19,33 +19,33 @@ library(future)
 plan(multiprocess)
 ```
 
+## Abstract
 
 
 ## Introduction
 
-Model based clustering is a principled approach for clustering [@Fraley2002], that has already proved to be very usefull in a variety of context thanks to it's capability of dealing with particular data structure. Such approaches encompasses to name a few: gaussian mixture models, mixture of regression and graph clustering models like stochastic block models. In their basic form such models assume that the observations $\{x_1,...x_n\}$ are drawn from a two step process, first a discrete latent variable is drawn using a multinomial distribution (with proportions $\pi$), then conditionaly on the drawn cluster an observation is sampled using the cluster own distribution. More formally, this can be written as:
+Model based clustering is a principled approach for clustering [@Fraley2002], that has already proved to be very useful in a variety of context thanks to it's capability of dealing with particular data structures. Such approaches encompasses to name a few: Gaussian Mixture Models (GMM), mixture of regression and graph clustering models like Stochastic Block Models (SBM). In their basic form such models assume that the observations $\{x_1,...x_N\}$ are drawn from a two step process, first a discrete latent variable is drawn using a multinomial distribution (with proportions $\pi$), then conditionally on the drawn cluster an observation is sampled using the cluster own distribution. More formally, this can be written as:
 
 
 $$
 \begin{eqnarray}
 \mathbf{z}_i|\pi&\sim& \mathcal{M}(1,\pi)\\
-x_i|\mathbf{z}_{ik}=1,\theta_{k}&\sim& \mathcal{F}(\theta_{k})
+x_i|\mathbf{z}_{ik}=1,\theta_{k}&\sim& \mathcal{F}(\theta_{k}),
 \end{eqnarray}
 $$
 
-where the $\mathbf{z}_i$ is the so-called latent variable encoding cluster membership. From a computational perspective their are two mainb way to deal with such type of models. From a frequentist perspective, if the main focus is in estimating the data distribution to integrate out the latent variable and look for the $\theta$ that maximize the likelihood:
+where the $\mathbf{z}_i\in\{0,1\}^K$ is the so-called latent variable encoding cluster membership. From a computational perspective there are two main way to deal with such type of models. From a frequentist perspective, if the main focus is in estimating the data distribution it's natural to integrate out the latent variable and look for the $\theta$ that maximize the likelihood:
 
 $$
 \begin{eqnarray}
-L(\theta_1,...,\theta_K)=\prod_{i=1}^N\sum_{k=1}^{K}\pi_k f(x_i;\theta_k)
+L(\theta_1,...,\theta_K)=\prod_{i=1}^N\sum_{k=1}^{K}\pi_k f(x_i;\theta_k),
 \end{eqnarray}
 $$
+where $f$ is the density of the mixtures component distributions. Such functional forms are not easy to optimize but the well known EM algorithm [@Dempster77] is a natural solution to this problem when the latent variable are independents given the observations. When this is not the case one may resorts to variational approximations [@Jordan1999] to solve the optimization problem. These type of approaches converge to a local maximum of the likelihood and require the  number of cluster to be fixed. When the number of groups $K$ is unknown, one classically try several values and resorts to model selection criteria like BIC and AIC [@McLachlan2000] to find the best fitting model given the data at hands. These solution leads typically to algorithms with complexity $\mathcal{O}(NK^2d)$ where $d$ is the number of features (for model selection and model fitting).
 
-Such functional forms are not easy to optimize but the EM algorithm [@Dempster77] is a natural solution to this problem when the latent variable are independant given the observations. When this is not the case one may ressort to variational approximations [@Jordan1999] to solve the optimization problem. These type of approaches converge to a local maxima of the likelihood and require the  number of cluster to be fixed. When the number of groups $K$ is unknown, one classicaly try several values and ressorts to model selection criteria like BIC and AIC [] to find the best fitting model given the data at hands. These solution leads tipically to algorithms with complexity $\mathcal{O}(NK^2d)$ where $d$ is the number of features.
+Always from a frequentist perspective when the main goal is to recovers the latent variable states one may keep them in the optimization problem and try to maximize the complete data likelihood with respect to both the latent variables states and the distributions parameters. This leads to the Classification EM algorithm [@Celeux92] which generalize the K-means algorithm (which corresponds to the special case of a mixture of spherical Gaussian with equal proportions). Such solution leads to algorithm with the same complexity as a classical EM even if they may converge more quickly. Such approaches also leave open the question of model selection (with respect to the number of mixture component).
 
-Always from a frequentist perspective when the main goal is to recovers the latent variable states one may keep them in the optimization problem and try to maximize the complete data likelihood with restect to both the latent variables sates and the distributions parameters. This leads to the Classification EM algorithm [@Celeux92] which generalize the K-means algorithm (which corresponds to the special case of a mixture of spherical gaussian with equal proportions). Such solution lead to algorithm with the same complexity as a classical EM even if they may converge more quickly.
-
-From a Bayesian perpestive a natural way to deals with mixture model come from MCMC sampling which can be used to sample both latent variables values and parameters according to the posterior distribution. In such setting, the mixture model is complemented with prior distributions over parameters $(\pi,\theta_1,...,\theta_k)$, which are oftenly chosed to be conjugate with   :
+From a Bayesian perspective a natural way to deals with finite mixture model come from MCMC sampling which can be used to sample both latent variables values and parameters according to the posterior distribution. In such setting, the mixture model is complemented with prior distributions over parameters $(\pi,\theta_1,...,\theta_k)$, which are often chose to be conjugate. A Dirichlet distribution being used as prior for the latent variables. This leads to the following type of models:
 
 $$
 \begin{eqnarray}
@@ -56,41 +56,22 @@ x_i|\mathbf{z}_{ik}=1,\theta_k&\sim& \mathcal{F}(\theta_{k})
 \end{eqnarray}
 $$
 
-with $\mathcal{D}(\alpha)$ the dirichlet distribution of parameter $\alpha$ and $P(\beta)$ a prior distribution for the $\theta$'s. Using  gibbs sampling or variant one may obtain sample from the posterior distribution. However, sampling can be hard with difficulty to explore the different modes of the prosterior distribution. Explotation of the posterior samples can also be .  the .For a more complete discussion of this different and a complete state of the art see [@Celeux2018].
+with $\mathcal{D}(\alpha)$ the Dirichlet distribution of parameter $\alpha$ and $P(\beta)$ a prior distribution for the $\theta$'s. Using  Gibbs sampling [@Diebolt1994] or variant one may obtain sample from the posterior distribution. However, sampling can be hard with difficulty to explore the different modes of the posterior distribution. Exploration of the posterior samples can also be hard to perform due to the label switching problem [@Diebolt1994,@Stephens2000] and even difficulties in retrieving the more plausible latent variable state [@Rastelli2018]. For a more complete discussion of these different approaches and a complete state of the art on these problem see [@Celeux2018].
 
+In between the frequentist and the Bayesian approaches several works introduced at the begining for model selection purposes the Integrated claffification likelihood (ICL), which correspond to the marginalisation of the model over it's parameters leaving solely the data and the latent variables : 
 
-When 
-
-Eventualy,    
 
 $$
-p(X,Z) = \int_{\theta_1,...,\theta_k}\int_{\pi}p(x|z,\theta)p(\theta)p(z|\pi)p(\pi)d\theta_1...d\theta_k d\pi
+ICL(X,Z) = \log(p(X,Z)) = \log\left(\int_{\theta}\int_{\pi}p(x|z,\theta)p(\theta)p(z|\pi)p(\pi)d\theta d\pi\right)
 $$
-
-- We propose and test several generic algorithm for solving
-- We propose a general heuristic for getting extracting a regularization path with respect to $\alpha$. This strategie enable the extraction of a dendogramme and a partial ordering of the clsuter which is interesting on real datasets.
+Approximate ICL criterion were first introduce and correspond to a BIC like approximation of this integral with improper and non informative prior. Note that ICL was originally proposed by Biernacki, Celeux and Govaert [@Biernacki2000] for Gaussian mixture models. It was then adapted by Biernacki, Celeux and Govaert [@Biernacki2010] to mixtures of multivariate multinomial distributions and to the SBM model by Daudin, Picard and Robin [@Daudin2008]. 
 
 
+Eventually, a new line of work was started by working directly with an exact version of the ICL criterion derived in a complete  Bayesian setting with conjugate priors, which can in some cases be defined as uninformative. First the exact criterion was derived for mixture of multinomial in [@Biernacki2010] but still used only for model selection purposes in conjunction with a classical EM algorithm. Then, greedy heuristics were successfully tested to directly optimize this criterion over the space of possible partition avoiding the use of EM like algorithm as a first step. Such type of algorithm performs model selection and clustering at the same time. This approach was introduced in [@Come2015] for SBM models and then used in other type of context [@Bertoletti2015,@Corneli2016,@Zreik2017]. This paper elaborate on this line of work and propose two main contributions: 
 
+- An hybrid algorithm which use evolutionary strategy and local search for optimizing the ICL criterion is introduced. This algorithm is adaptable to a variety of mixture model as soon as swap and merge move can be efficiently computed. This algorithm is tested in real and simulated test cases and for a variety of mixture model namely: mixture of Gaussian, SBM, degree-corrected SBM. 
 
-
-
-
-### Models 
-
-#### Mixture models
-
-#### Stochastick block models
-
-#### Mixture of regression
-
-### Algorithms
-
-### Regularisation path and hierarchical clustering
-
-## Experiments
-
-### Simulated data
+- We propose a general heuristic for extracting a regularization path with respect to $\alpha$. This strategy enable the extraction of a dendogramme and a partial ordering of the cluster which is interesting on real data-sets and for visualisation purposes. Since it allow to study different solution of diminishing complexity and supply a partial ordering usefull to .
 
 
 ```{r}
@@ -105,7 +86,7 @@ sbm = rsbm(N,pi,mu)
 ```
 
 ```{r,cache=TRUE,echo=FALSE,message=FALSE,results="hide"}
-fit = greed(sbm$x,model=new("sbm"),alg = new("hybrid",pop_size=20))
+fit = greed(sbm$x,model=new("sbm"))
 fit_o = greed::fit_greed(new("sbm"),list(X=sbm$x),sample(1:20,nrow(sbm$x),replace = TRUE))
 fit_perm=fit
 perm = sample(1:fit_perm@K)
@@ -116,7 +97,7 @@ fit_sp=greed::fit_greed(new("sbm"),list(X=sbm$x),cl,type="none")
 fit_sp_init=greed(sbm$x,model=new("sbm"),alg=new("seed"))
 ```
 
-```{r,fig.height=8,fig.width=15,echo=FALSE}
+```{r,fig.height=8,fig.width=15,echo=FALSE,fig.cap="Motivating example of the proposed algorithm."}
 p1=plot(fit_o)+ggtitle("greedy")
 p2=plot(fit_perm)+ggtitle("hybrid")
 p3=plot(fit)+ggtitle("hybrid + hierarchical ordering")
@@ -126,15 +107,36 @@ p6=plot(fit,type='nodelink')+ggtitle("")
 ggarrange(p1,p2,p3,p4,p5,p6,nrow = 2,ncol=3,common.legend = TRUE,legend="left")
 ```
 
+
+This paper is organized as follow, first the ICL criterions for some mixture model are detailled, in particular in the graph clustering context where the partition apply to both the rows and colums of the data-matrix. Then, the proposed optimization strategy is described and tested in sereval simulated and real test cases and compared with possible alternatives. Eventualy, the heuristic to extract a redularization path over $\alpha$ is introduced and it's interest in real situation demonstrated. Prior to some words on related works and concluding remarks.
+
+
+### Models and criterions
+
+#### Mixture of multinomial
+
+#### Mixture of regression with gaussian mixture as special case
+
+#### Stochastick block models and it's degree corected version
+
+
+### Optimization Algorithms
+
+```{r,fig.height=5,fig.width=10,echo=FALSE}
+sol1=greed:::fit_greed(new("sbm"),list(X=sbm$x,N=sbm$N),sample(1:30,sbm$N,replace = TRUE))
+sol2=greed:::fit_greed(new("sbm"),list(X=sbm$x,N=sbm$N),sample(1:30,sbm$N,replace = TRUE))
+```
+
 ```{r,fig.height=5,fig.width=10,echo=FALSE}
 gen=ggplot(fit@train_hist)+geom_boxplot(aes(x=generation,y=icl,group=generation))+geom_point(aes(x=generation,y=icl,group=generation))+
   ggtitle("Evolution of ICL with respect generation")+
   theme_bw()
-tree=plot(fit,type='tree')+ggtitle("Dendogramme derived from the best solution")
-ggarrange(gen,tree)
+#tree=plot(fit,type='tree')+ggtitle("Dendogramme derived from the best solution")
+#ggarrange(gen,tree)
+gen
 ```
 
-```{r, cache=TRUE,message=FALSE,results="hide"}
+```{r, cache=TRUE,message=FALSE,results="hide",echo=FALSE}
 
 Nbsim = 10
 S=matrix(0,1500,Nbsim)
@@ -182,21 +184,20 @@ resSim = rFi %>% bind_rows(rFi_o) %>% bind_rows(rFi_s)%>% bind_rows(rFi_si)%>% b
 ggplot(resSim)+geom_boxplot(aes(x=alg,y=nmi,group=alg))+geom_point(aes(x=alg,y=nmi))+xlab("")+ylab("Normalized mutual information")+theme_bw()
 ```
 
-
-
+### Regularisation path and hierarchical clustering
 
 ### Real data
 
 
 ```{r, cache=TRUE,results="hide"}
 data("Blogs")
-fit_blogs = greed(Blogs$X,model=new("dcsbm"),alg=new("hybrid",prob_mutation=0))
+fit_blogs = greed(Blogs$X,model=new("dcsbm"))
 data("Books")
-fit_books = greed(Books$X,model=new("dcsbm"),alg=new("hybrid",prob_mutation=0))
+fit_books = greed(Books$X,model=new("dcsbm"))
 data("Football")
-fit_foot = greed(Football$X,model=new("dcsbm"),alg=new("hybrid",prob_mutation=0))
+fit_foot = greed(Football$X,model=new("dcsbm"))
 data("Jazz")
-fit_jazz = greed(Jazz,model=new("dcsbm"),alg=new("hybrid",prob_mutation=0))
+fit_jazz = greed(Jazz,model=new("dcsbm"))
 ```
 
 
@@ -227,6 +228,11 @@ p16=plot(cut(fit_jazz,4))+ggtitle("")
 ggarrange(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,nrow = 4,ncol=4,common.legend = TRUE)
 
 ```
+## Related works and conclusions
+
+
+
+
 
 ## Conclusion
 

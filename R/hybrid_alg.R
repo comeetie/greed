@@ -25,14 +25,20 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             pop_size = alg@pop_size
             init_moves= data$moves;
             for (i in 1:pop_size){
-              cli = sample_cl(model,data,K)
-              solutions[[i]] %<-% fiswap(cli,init_moves)  %globals% c("model","data","cli","verbose","fiswap","init_moves")
+              cli = greed:::sample_cl(model,data,K)
+              # delete empty cluster eventualy
+              lev = sort(unique(cli))
+              moves=init_moves[lev,lev]
+              cli = unclass(factor(cli,levels=lev))
+              solutions[[i]] %<-% fiswap(cli,moves)  %globals% c("model","data","cli","verbose","fiswap","moves")
             }
             solutions = as.list(solutions)
             icls  = sapply(solutions,function(s){s@icl})
+
             # check for errors 
             solutions=solutions[!is.nan(icls)]
             icls=icls[!is.nan(icls)]
+
             old_best = -Inf
             best_icl = max(icls)
             nbgen = 1
