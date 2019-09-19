@@ -15,7 +15,7 @@ Optimization algorithm classes
 alg 
 An S4 class to represent an abstract optimisation algorithm.
 
-gree 
+multistarts 
 An S4 class to represent a greedy algorithm extends \code{alg} class with multiple start.
 
 seed 
@@ -25,7 +25,7 @@ genetic
 An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
 
 genetic
-An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
+An S4 class to represent a enetic algorithm extends \code{alg} class.
 }
 \section{Slots}{
 
@@ -34,9 +34,13 @@ An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} cl
 
 \item{\code{nb_start}}{number of random starts (default to 10)}
 
-\item{\code{pop_size}}{size of the solutions populations (default to 10)}
+\item{\code{pop_size}}{size of the solutions populations (default to 20)}
 
-\item{\code{nb_max_gen}}{maximal number of generation to produce (default to 4)}
+\item{\code{nb_max_gen}}{maximal number of generation to produce (default to 10)}
+
+\item{\code{prob_mutation}}{mutation probability (default to 0.25)}
+
+\item{\code{Kmax}}{maximum number of clusters (default to 400)}
 
 \item{\code{pop_size}}{size of the solutions populations (default to 10)}
 

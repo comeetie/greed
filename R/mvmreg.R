@@ -58,18 +58,23 @@ setMethod(f = "reorder",
 
 
 setMethod(f = "seed", 
-          signature = signature("mvmreg","list","integer"), 
+          signature = signature("mvmreg","list","numeric"), 
           definition = function(model,data, K){
             X=cbind(data$X,data$Y)
             sds=apply(X,2,stats::sd)
             X=X[,sds!=0]
             X=t(t(X)/sds[sds!=0])
             km=stats::kmeans(X,K)
-            km$clusters
+            km$cluster
           })
 
 
 
+setMethod(f = "preprocess", 
+          signature = signature("mvmreg"), 
+          definition = function(model, data,K){
+            list(Y=as.matrix(data),X=matrix(1,ncol=1,nrow=nrow(data)),N=nrow(data),moves=as.sparse(matrix(1,K,K)))
+          })
 
 
 
@@ -86,8 +91,5 @@ setMethod(f = "plot",
             },
             front = {
               plot_front(x)
-            },
-            blocks ={
-              methods::callNextMethod()
             })
           })

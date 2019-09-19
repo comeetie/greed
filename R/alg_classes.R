@@ -24,7 +24,7 @@ setClass("alg",slots = list(name = "character"))
 
 
 #' @rdname algs-classes 
-#' @title gree 
+#' @title multistarts 
 #' An S4 class to represent a greedy algorithm extends \code{alg} class with multiple start.
 #' @slot nb_start number of random starts (default to 10)
 #' @export
@@ -47,25 +47,27 @@ setClass("seed",
 #' @rdname algs-classes
 #' @title genetic
 #' An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
-#' @slot pop_size size of the solutions populations (default to 10)
-#' @slot nb_max_gen maximal number of generation to produce (default to 4) 
+#' @slot pop_size size of the solutions populations (default to 20)
+#' @slot nb_max_gen maximal number of generation to produce (default to 10)
+#' @slot prob_mutation mutation probability (default to 0.25)
+#' @slot Kmax maximum number of clusters (default to 400) 
 #' @export
 setClass("hybrid",
          contains = "alg",
          representation =  list(pop_size = "numeric",nb_max_gen = "numeric",prob_mutation = "numeric",Kmax="numeric"),
-         prototype(name="hybrid",pop_size=20, nb_max_gen = 10,prob_mutation=0.25,Kmax=300))
+         prototype(name="hybrid",pop_size=20, nb_max_gen = 10,prob_mutation=0.25,Kmax=400))
 
 
 #' @rdname algs-classes
 #' @title genetic
-#' An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
+#' An S4 class to represent a enetic algorithm extends \code{alg} class.
 #' @slot pop_size size of the solutions populations (default to 10)
 #' @slot nb_max_gen maximal number of generation to produce (default to 4) 
 #' @export
 setClass("genetic",
          contains = "alg",
          representation =  list(pop_size = "numeric",nb_max_gen = "numeric",prob_mut="numeric",sel_frac="numeric"),
-         prototype(name="genetic",pop_size=100, nb_max_gen = 20,prob_mut=0.1,sel_frac=0.75))
+         prototype(name="genetic",pop_size=100, nb_max_gen = 20,prob_mutation=0.1,sel_frac=0.75))
 
 
 
@@ -112,9 +114,9 @@ setGeneric("reorder", function(model, obs_stats,order) standardGeneric("reorder"
 
 
 
-#' @describeIn cut method to cut a fit to a desired number of cluster 
+#' @describeIn cut 
 #' @title Cut
-#' cut a path to a desired number of cluster 
+#' method to cut a path solution to a desired number of cluster 
 #' @param x A an \code{icl_path} solution 
 #' @param K Desired number of cluster
 #' @return an icl_path obejct with the desired number of cluster
@@ -123,8 +125,9 @@ setMethod(f = "cut",
           signature = signature("icl_path"), 
           definition = function(x, K){
             i = which(sapply(x@path,function(p){p$K})==K)
-            x@tree = x@tree[1:(2*K-1)]
-            x@ggtree = x@ggtree[1:(2*K-1),]
+            # keep the full merge tree for reference
+            # x@tree = x@tree[1:(2*K-1)]
+            # x@ggtree = x@ggtree[1:(2*K-1),]
             x@K = K
             x@logalpha=x@path[[i]]$logalpha
             x@icl = x@path[[i]]$icl
@@ -139,23 +142,24 @@ setMethod(f = "cut",
 })
 
 #' @title spectral
-#' Regularized spectral clustering nips paper 2013
+#' Regularized spectral clustering 
+#' @references Tai Qin, Karl Rohe. Regularized Spectral Clustering under the Degree-Corrected Stochastic Blockmodel. Nips 2013.
 #' @param X An adjacency matrix in sparse format
 #' @param K Desired number of cluster
-#' @return cl Vector of clsuter labels
+#' @return cl Vector of cluster labels
 #' @export
 spectral= function(X,K){
-  X = X+Matrix::t(X)
-  ij=Matrix::which(X>0,arr.ind = T)
-  X[ij]=1
-  nu = sum(X)/dim(X)[1]
-  D  = (Matrix::rowSums(X)+nu)^-0.5
-  Ln = Matrix::sparseMatrix(ij[,1],ij[,2],x=D[ij[,1]]*D[ij[,2]])
-  V = RSpectra::eigs(Ln,K)
-  Xp = V$vectors
-  Xpn = Xp/sqrt(rowSums(Xp)^2)
+  X     = X+Matrix::t(X)
+  ij    = Matrix::which(X>0,arr.ind = T)
+  X[ij] = 1
+  nu    = sum(X)/dim(X)[1]
+  D     = (Matrix::rowSums(X)+nu)^-0.5
+  Ln    = Matrix::sparseMatrix(ij[,1],ij[,2],x=D[ij[,1]]*D[ij[,2]])
+  V     = RSpectra::eigs(Ln,K)
+  Xp    = V$vectors
+  Xpn   = Xp/sqrt(rowSums(Xp)^2)
   Xpn[rowSums(Xp)==0,]=0
-  km = stats::kmeans(Xp,K)
+  km    = stats::kmeans(Xp,K)
   km$cluster
 }
 
@@ -164,8 +168,8 @@ spectral= function(X,K){
 #' @title greed
 #' @param X data to cluster 
 #' @param K Desired number of cluster
-#' @param model a dcsbm, sbm, mm or mreg model
-#' @param alg an optimisation algorithm hybrid, mutlistarts, seed or genetic
+#' @param model a dcsbm, sbm, mm or mvmreg model (default model derived from X class and shape)
+#' @param alg an optimisation algorithm of class hybrid (default), mutlistarts, seed or genetic
 #' @param verbose boolean for verbose mode 
 #' @return an icl_path object
 #' @export
@@ -206,9 +210,7 @@ as.sparse = function(X){
 
 setGeneric("preprocess", function(model, ...) standardGeneric("preprocess")) 
 
-#' @title preprocess
-#' @param model an icl_model
-#' @param X input data to prepare
+
 setMethod(f = "preprocess", 
           signature = signature("icl_model"), 
           definition = function(model, data,K){
@@ -217,8 +219,6 @@ setMethod(f = "preprocess",
 
 setGeneric("postprocess", function(path, ...) standardGeneric("postprocess")) 
 
-#' @title postprocess
-#' @param path an icl_path object
 setMethod(f = "postprocess", 
           signature = signature("icl_path"), 
           definition = function(path,data=NULL){
@@ -241,7 +241,7 @@ setMethod(f = "sample_cl",
 #' @param y target variable
 #' @param K Desired number of cluster
 #' @param model an mreg model
-#' @param alg an optimisation algorithm hybrid, mutlistarts, seed or genetic
+#' @param alg an optimisation algorithm of class hybrid, multistarts, seed or genetic
 #' @param verbose boolean for verbose mode 
 #' @return an icl_path object
 #' @export

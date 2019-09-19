@@ -57,6 +57,15 @@ fit_greed_path <- function(data, init_fit) {
     .Call('_greed_fit_greed_path', PACKAGE = 'greed', data, init_fit)
 }
 
+#' merge_mat
+#' @param data list with clustering data depnds on model type
+#' @param init_fit initial fit object
+#' @return a cost merge matrix
+#' @export
+merge_mat <- function(data, init_fit) {
+    .Call('_greed_merge_mat', PACKAGE = 'greed', data, init_fit)
+}
+
 sp_cross <- function(colvec, rowvec, self, oldcl, newcl, K) {
     .Call('_greed_sp_cross', PACKAGE = 'greed', colvec, rowvec, self, oldcl, newcl, K)
 }

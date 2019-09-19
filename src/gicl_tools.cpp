@@ -357,6 +357,12 @@ List lm_post_del(List current, const arma::mat X,const arma::colvec& y,double re
 
 // [[Rcpp::export]]
 List mvlm_post(const arma::mat X,const arma::mat Y,double alpha, double N0) {
+  
+  
+  
+  // https://tminka.github.io/papers/minka-linear.pdf
+  // Bayesian linear regression
+  // Thomas P. Minka
   int n = X.n_rows, m = X.n_cols, d=Y.n_cols;
   
   

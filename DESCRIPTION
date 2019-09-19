@@ -8,7 +8,7 @@ Maintainer: Etienne Come <etienne.come@ifsttar.fr>
 Description: A serie of algorithm that enable the clustering of networks and counts data matrix such as document/term matrix with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood (which is equivalent to minimizing the description length). Their are four models availables : SBM degree corected SBM, Mixture of Multinomials, Multivariate mixture of poisson. The optimization is performed thanks to a combination of greedy local search and a genetic algorithm.
 License: GPL
 Depends: R (>= 2.10)
-Imports: Rcpp (>= 1.0.0), Matrix, future, listenv, ggplot2, graphics, methods, stats,RSpectra,ggpubr
+Imports: Rcpp (>= 1.0.0), Matrix, future, listenv, ggplot2, graphics, methods, stats,RSpectra,ggpubr, MASS,cba
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: 
     testthat,

@@ -1,0 +1,425 @@
+---
+title: "ICL maximisation for discrete latent variable models"
+author: "Etienne Côme"
+date: "23 mai 2019"
+bibliography: bib_greed.bib
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, warning=FALSE,out.extra=FALSE,message=FALSE}
+library(greed)
+library(Matrix)
+library(ggpubr)
+library(dplyr)
+library(future)
+library(knitr)
+library(mixtools)
+library(xtable)
+plan(multisession)
+```
+
+## Abstract
+
+
+## Introduction
+
+Model based clustering is a principled approach for clustering [@Fraley2002], that has already proved to be very useful in a variety of context thanks to it's capability of dealing with particular data structures. Such approaches encompasses to name a few: Gaussian Mixture Models (GMM), mixture of regression and graph clustering models like Stochastic Block Models (SBM). In their basic form such models assume that the observations $\{x_1,...x_N\}$ are drawn from a two step process, first a discrete latent variable is drawn using a multinomial distribution (with proportions $\pi$), then conditionally on the drawn cluster an observation is sampled using the cluster own distribution. More formally, this can be written as:
+
+
+$$
+\begin{eqnarray}
+\mathbf{z}_i|\pi&\sim& \mathcal{M}(1,\pi)\\
+x_i|\mathbf{z}_{ik}=1,\theta_{k}&\sim& \mathcal{F}(\theta_{k}),
+\end{eqnarray}
+$$
+
+where the $\mathbf{z}_i\in\{0,1\}^K$ is the so-called latent variable encoding cluster membership. From a computational perspective there are two main way to deal with such type of models. From a frequentist perspective, if the main focus is in estimating the data distribution it's natural to integrate out the latent variable and look for the $\theta$ that maximize the likelihood:
+
+$$
+\begin{eqnarray}
+L(\theta_1,...,\theta_K)=\prod_{i=1}^N\sum_{k=1}^{K}\pi_k f(x_i;\theta_k),
+\end{eqnarray}
+$$
+where $f$ is the density of the mixtures component distributions. Such functional forms are not easy to optimize but the well known EM algorithm [@Dempster77] is a natural solution to this problem when the latent variable are independents given the observations. When this is not the case one may resorts to variational approximations [@Jordan1999] to solve the optimization problem. These type of approaches converge to a local maximum of the likelihood and require the  number of cluster to be fixed. When the number of groups $K$ is unknown, one classically try several values and resorts to model selection criteria like BIC and AIC [@McLachlan2000] to find the best fitting model given the data at hands. These solution leads typically to algorithms with complexity $\mathcal{O}(NK^2d)$ where $d$ is the number of features (for model selection and model fitting).
+
+Always from a frequentist perspective when the main goal is to recovers the latent variable states one may keep them in the optimization problem and try to maximize the complete data likelihood with respect to both the latent variables states and the distributions parameters. This leads to the Classification EM algorithm [@Celeux92] which generalize the K-means algorithm (which corresponds to the special case of a mixture of spherical Gaussian with equal proportions). Such solution leads to algorithm with the same complexity as a classical EM even if they may converge more quickly. Such approaches also leave open the question of model selection (with respect to the number of mixture component).
+
+From a Bayesian perspective a natural way to deals with finite mixture model come from MCMC sampling which can be used to sample both latent variables values and parameters according to the posterior distribution. In such setting, the mixture model is complemented with prior distributions over parameters $(\pi,\theta_1,...,\theta_k)$, which are often chosen to be conjugate. A Dirichlet distribution being used as prior for the latent variables. This leads to the following type of models:
+
+$$
+\begin{eqnarray}
+\pi&\sim& \mathcal{D}(\mathbf{\alpha})\\
+\mathbf{z}_i|\pi&\sim& \mathcal{M}(1,\pi)\\
+\theta_{k}&\sim& P(\mathbf{\beta})\\
+x_i|\mathbf{z}_{ik}=1,\theta_k&\sim& \mathcal{F}(\theta_{k})
+\end{eqnarray}
+$$
+
+with $\mathcal{D}(\alpha)$ the Dirichlet distribution of parameter $\alpha$ and $P(\beta)$ a prior distribution for the $\theta$'s. Using  Gibbs sampling [@Diebolt1994] or variant one may obtain sample from the posterior distribution. However, sampling can be hard with difficulty to explore the different modes of the posterior distribution. Explotation of the posterior samples can also be challeging to perform due to the label switching problem [@Diebolt1994,@Stephens2000]. Difficulties may for in retrieving the more plausible latent variable state [@Rastelli2018]. For a more complete discussion of these different approaches and a complete state of the art on these problems see [@Celeux2018].
+
+In between the frequentist and the Bayesian approaches several works introduced (at the begining for model selection purposes) the Integrated claffification likelihood (ICL), which correspond to the marginalisation of the model over it's parameters leaving solely the data, the latent variables and the priors parameters: 
+
+
+$$
+\begin{eqnarray}
+ICL(X,Z;\alpha,\beta) = \log(p(X,Z|\alpha,\beta)) &=& \log\left(\int_{\theta}\int_{\pi}p(x|z,\theta)p(\theta|\beta)p(z|\pi)p(\pi|\alpha)d\theta d\pi\right)\\
+&=&\log\left(\int_{\pi}p(z|\pi)p(\pi|\alpha)d\pi\right)+\log\left(\int_{\theta}p(x|z,\theta)p(\theta|\beta)d\theta\right)
+\end{eqnarray}
+$$
+Approximate ICL criterion were first introduce and correspond to a BIC like approximation of this integral with improper and non informative prior. Note that ICL was originally proposed by Biernacki, Celeux and Govaert [@Biernacki2000] for Gaussian mixture models. It was then adapted by Biernacki, Celeux and Govaert [@Biernacki2010] to mixtures of multivariate multinomial distributions and to the SBM model by Daudin, Picard and Robin [@Daudin2008]. 
+
+
+Eventually, a new line of work started by working directly with an exact version of the ICL criterion derived in a complete Bayesian setting with conjugate priors (which can in some cases be defined as uninformative). First the exact criterion was derived for mixture of multinomial in [@Biernacki2010] but still used only for model selection purposes in conjunction with a classical EM algorithm. Then, greedy heuristics were successfully tested to directly optimize this criterion over the space of possible partitions avoiding the use of EM like algorithm as a first step. Such type of algorithm performs model selection and clustering at the same time and are computationaly attractive. This approach was introduced in [@Come2015] for SBM models and then used in other type of context [@Bertoletti2015,@Corneli2016,@Zreik2017]. This paper elaborate on this line and propose two main contributions: 
+
+- An hybrid algorithm which use evolutionary strategy and local search for optimizing the ICL criterion is introduced. This algorithm is adaptable to a variety of mixture model as soon as swap and merge moves can be efficiently computed. This algorithm is tested in real and simulated test cases and for a variety of mixture model namely: mixture of Gaussian, SBM, degree-corrected SBM. 
+
+- We propose a general heuristic for extracting a regularization path with respect to $\alpha$. This strategy enable the extraction of a dendogramme and a partial ordering of the clustser which is interesting on real data-sets and for visualisation purposes. 
+
+As a motivating example for the proposed solution we simulate a random SBM graph with 1500 nodes and a hierarchical cluster structure with 3 big clusters each composed of 5 small clusters. The small clusters have an intra connectivty probability of 0.1 and a probability of connecting a node from the same of big cluster of 0.025. Eventually two random node are connected with a probability of 0.001. Fig 1. presents the result of a greedy opitmisation with a random starting partition with twenty clusters. The results of the proposed hybrid optimization algorithm and the results after reordoning the clusters with the regularisation path exatraction heuristic.
+
+```{r}
+N=1500
+K=15
+pi=rep(1/K,K)
+lambda  = 0.1
+lambda_o = 0.025
+Ks=5
+mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
+sbm = rsbm(N,pi,mu)
+```
+
+```{r,cache=TRUE,echo=FALSE,message=FALSE,results="hide"}
+fit = greed(sbm$x,model=new("sbm"))
+fit_o = greed::fit_greed(new("sbm"),list(X=sbm$x),sample(1:20,nrow(sbm$x),replace = TRUE))
+fit_perm=fit
+perm = sample(1:fit_perm@K)
+fit_perm@obs_stats$counts=fit_perm@obs_stats$counts[perm]
+fit_perm@obs_stats$x_counts=fit_perm@obs_stats$x_counts[perm,perm]
+cl=spectral(sbm$x,15)
+fit_sp=greed::fit_greed(new("sbm"),list(X=sbm$x),cl,type="none")
+fit_sp_init=greed(sbm$x,model=new("sbm"),alg=new("seed"))
+```
+
+```{r,fig.height=8,fig.width=15,echo=FALSE,fig.cap="Motivating example of the proposed algorithm. Block matrix representation of the solutions (upper row) and cluster node link diagram (bottom row)."}
+p1=plot(fit_o)+ggtitle("greedy")
+p2=plot(fit_perm)+ggtitle("hybrid")
+p3=plot(fit)+ggtitle("hybrid + hierarchical ordering")
+p4=plot(fit_o,type='nodelink')+ggtitle("")
+p5=plot(fit_perm,type='nodelink')+ggtitle("")
+p6=plot(fit,type='nodelink')+ggtitle("")
+ggarrange(p1,p2,p3,p4,p5,p6,nrow = 2,ncol=3,common.legend = TRUE,legend="left")
+```
+
+As clearly shown by this example greedy heuristic with random strating point suffers from under-fitting with only `r max(fit_o@cl)` clusters extracted among the 15 simulated. The hybrid algorithm did not suffer from under-fitting in this example and the hierachical ordering enable clear visualisation of the hierachical structure of this dataset.
+
+
+This paper is organized as follow, first the ICL criterions for some mixture model are detailled, in particular in the graph clustering context where the partition apply to both the rows and colums of the data-matrix. Then, the proposed optimization strategy is described and tested in sereval simulated and real test cases and compared with possible alternatives. Eventualy, the heuristic to extract a regularization path over $\alpha$ is introduced and it's interest in real situation demonstrated. Prior to some words on related works and concluding remarks.
+
+
+### Models and criterions
+
+#### Mixture of multinomial
+
+#### Mixture of regression with gaussian mixture as special case
+
+#### Stochastick block models and it's degree corected version
+
+
+### Optimization Algorithms
+
+Current solution to optimize directly ICL type criterions are mainly based on greedy hill climbing algorithms  [@Come2015,@Bertoletti2015,@Corneli2016,@Wyse2017,@Zreik2017]. Starting from a carrefully chosen over-segmented initial partition (build using k-means for example), swap  and eventually merge moved are appplied to increase the criterion. During the process clusters can die enabling model selection with respect to the number of cluster.  These algorithms are quite easy to set up, computationaly attractive and give quite good results. The major drawback of this approach is it's dependancy to the quality of the starting partition. When random initialization is used and the clustering structure is not easy to extract such algorithms may lead to under-fitting as demonsatred in the introductory example. To deal with this limitation, one potential path to investigate come from meta-heuristics which thanks to their more global nature could be a way to solve this problem. Following this idea we tried to mix the greedy local search heuristic already proposed with genetic algorithms. 
+
+```{r simuexcross,fig.height=5,fig.width=10,echo=FALSE}
+sol1=greed:::fit_greed(new("sbm"),list(X=sbm$x,N=sbm$N),sample(1:30,sbm$N,replace = TRUE))
+sol2=greed:::fit_greed(new("sbm"),list(X=sbm$x,N=sbm$N),sample(1:30,sbm$N,replace = TRUE))
+cl12 = unclass(factor(paste(sol1@cl,sol2@cl,sep=' - ')))
+```
+
+Genetic algorithms evolve a population of solutions by selecting some of the more promising ones, crossing them, possibly mutating them until a specified number of generation or other stopping criterion is met. The main component of these algorithms are the solution representation, the selection strategie and the operators used for cross-over and mutation. To represent a solution which in our case is a partition one classicaly use a vector of cluster index. This representation will be valid for all the models, whereas other based for example on list of prototypes would only works for some models. The fact that this representation will works with all of the model leads us to stick with it. However, since the optimization problem is over partitions, the ICL  cost function is invariant under permutation of the class label (label switching)  this representation is therefore redundant and this fact have an important impact on the design of the recombination (crossover) operator. Simple recombination operators based on crossover points will not take this particularity into account and completly break the structure of the solution, leading to slow evolution of the population of solutions. To circumvent this problem we looked at another solution for crossing two partitions that will not breaks the found structures. The main idea of our proposal is based around the cross partition. The cross partition of two partitiond is simply the partition build by considering all the possible intersections between the elements of the two partitions being crossed. More formally:
+$$
+\mathcal{P}^1\times\mathcal{P}^2 := \{S^1_i \cap S^2_j \,,\, \forall i\in \{1,...,|\mathcal{P}^1|\}, j\in \{1,...,|\mathcal{P}^2|\}\}\setminus \emptyset,
+$$
+with $\mathcal{P}^1=\{S_1^1,...,S^1_{K_1}\}$ and $\mathcal{P}^2=\{S_1^2,...,S^2_{K_2}\}$ two partitions of $[1,...,N]$. Using this operator on two solutions will produce a new solution wich is a refinement of both crossed partitions and with at most $|\mathcal{P}^1|\times|\mathcal{P}^1|$ clusters. In practice, the two solutions being merge will aggree on some clusters and the number of new clusters after crossing will be smaller than this value. As an example if we take two solutions obtained with local greedy search on the introductory example, they suffers from underfiting with `r max(sol1@cl)` and `r max(sol2@cl)` clusters each among the 15 of the simulations and a normalized mutual information (NMI) with the simulated labels of `r round(NMI(sbm$cl,sol2@cl)*100)/100` and `r round(NMI(sbm$cl,sol2@cl)*100)/100` respectively. If now, we cross these two solutions we get a new solution with `r max(cl12)` clusters (much smaller than the `r max(sol2@cl)*max(sol1@cl)` potential that we would have obtained if the two partitions were completly differents) and an NMI of `r round(NMI(sbm$cl,cl12)*100)/100`. Therefore, in case of under-fitting of both parents partition crossing alone will already improve the solution. This operators may create superflous clusters when the solution are around the best one, but greedy local search can be used to remove these superfluous clusters and this operator seems therefore a good proposal for working combination with greedy local search and in particular with merge move. The remaining questions concerns the selection procedures used and the mutation operators. For the selection process several solutions were tested which did not changed too much the performances of the algorithm, one rank selection []. With respect to the mutation operator, tacking the same vision of the solutions as partitions (and not simple integer vectors) one possibility that emerged was the alteration of one element of the partition i.e a cluster, one simple mutation is then to split a random cluster in two new clusters at random. Since the greedy heuristics (swap and merge) can decrease the complexity of the solutions but are unable to refine a partition this mutation (and also the proposed recombination operator) will help the exploration of candidate solution. The pseudo-code of the first version of the hybrid algorithm is introduced in \ref{alg:}
+
+~~~~
+parameters : size of the population (V), probability of mutation (pm), maximum number of generation (nb_max_generation)
+Build a population [P^1,...,P^V] of initial solutions using greedy swap
+while nb_generation < nb_max_generation 
+  add the best solution in the population to the new generation
+  sample according to their rank (V - 1) pairs of solution in the population 
+  for each pairs (P1,P2) of partitions
+    build the cross partition PN = P1 \time P2
+    update PN using greedy merge
+    if random number < pm
+      sample a cluster of PN and split it randomly in two
+    update PN using greedy swap
+    add PN to the new generation
+  replace the population by the new generation
+  nb_generation ++
+return the best solution found
+~~~~
+
+#### Computational efficiency
+
+While already efficient this first version was optimized from a computational perspective by tacking advantage of several features of the problem. In fact, from a complexity point of view the recombination and mutation process is performed in $\mathcal{O}(K^3)$ operations for the recombination (crossing followed by a greedy merge update) and $\mathcal{O}(NK^2)$ operations for the mutation and swap update. This is reasonable for relatively small values of $K$ but can be prohibtive for a larger number of cluster. To deal with problems involving a large number of cluster, several optimization were introduced.  First crossing and greedy merge optimization were performed sequentialy for each cluster of one of the partition to cross. More formaly the crossing start with one of the parents and update the partition sequantialy by crossing it with a coarse version ofthe second parent were only onbe cluster is kept:
+
+$$ P^2_{i}=\left\{S^2_i,\bigcup_{j!=i}S^2_j\right\}$$
+Furthermore after each of these partial crossing, the greedy merge update is performed but only between the newly created cluster. That is, cluster that were not split by the crossing operators are not considered any more in the merge process. This modification, lead to a complexity of $\mathcal{O}(K^2)$ for the recombination. With respect to the mutation and swap update a similar approach can be used, one may determine the clusters that have a common parent and allow swap movements only between them. This also alow to gain a factor$K$, leading to a complexity of $\mathcal{O}(NK)$.
+Eventually, as it's common with genetic algorithm, these processes can easily be parallelized since they are indepenant for each new solution. 
+
+
+~~~~
+parameters : size of the population (V), probability of mutation (pm), maximum number of generation (nb_max_generation)
+Build a population [P1,...,PV] of initial solutions using greedy swap using random starting partitions
+while nb_generation < nb_max_generation 
+  add the best solution in the population to the new generation
+  sample according to their rank (V - 1) pairs of solution in the population 
+  for each pairs (P1,$P2) of partitions
+    PN = P1
+    for each clusters i of P^2
+      PN = PN \time P2_i
+      update PN using greedy merge between the newly created cluster
+    if random number < pm
+      sample a cluster of PN and split it randomly in two
+    determine all the pairs of cluster that have a common parents cluster either in P1 or P2
+    update PN using greedy swap allowing only swap movements between the pairs of cluster with a common parent
+    add PN to the new generation
+  replace the population by the new generation
+  nb_generation ++
+return the best solution found
+~~~~
+
+These modifications leads to an algorithm that is not dependant from an initialisation and still appplicable to large datasets.
+
+#### Experiments
+    
+To presents the performances of this algorithm we start with our motivatinfg example and presents the evolution of the ICL criterion among the differents generations of solutions build by the algorithm in Fig. 2 (left). As clearly shown by this figure, the criterion improve at each generation until it reach around the fifth generation a plateau. A comparison of the algorithm with other is also performed on the same problem. We compare the hybrid algorithm with a greedy algorithm with random starting point, a greedy algorithm with multiple starts from random starting point, a regularized spectral algorithm [@Qin2013] (which is run with the true number of cluster since it does not perfom model selection), a greedy algorithm initialized with the spectral algorithm. For all the variants of the greedy algorithm and our hybrid proposal default value were used for their parameters (initial number of cluster equal to twenty, size of the population equal to twenty, probability of mutation equal to 0.25 and maximum number of generation fixed to ten).
+
+The comparison is done in term of normalized mutual information between the extracted clusters and the simulated one and one hundred of simulated graphs. As expected, the greedy algorithm with random starting point suffers from quite severe under-fitting and give n nmi aroud 0.6, using multistart help a little and the solution then are around an nmi of 0.75. The spectral algorithm does also improve with an nmi around 0.8. Eventually the two best algorithms are the simple greedy algorithm carefully initialized (here using the results of the spectral algorithm) and our proposed hybrid algorithm which recovers the simulated partition in all of the simulations whereas some simulations are still not perfectly recovered by the greedy algorithm with carefull initialization.  
+
+    
+```{r,fig.height=5,fig.width=5,echo=FALSE}
+gen=ggplot(fit@train_hist)+geom_boxplot(aes(x=generation,y=icl,group=generation))+geom_point(aes(x=generation,y=icl,group=generation))+
+  ggtitle("Evolution of ICL with respect to generations")+
+  theme_bw()
+#tree=plot(fit,type='tree')+ggtitle("Dendogramme derived from the best solution")
+#ggarrange(gen,tree)
+#gen
+```
+
+
+
+```{r simualgsbm, cache=TRUE,message=FALSE,results="hide",echo=FALSE}
+
+Nbsim = 100
+S=matrix(0,1500,Nbsim)
+Fi=matrix(0,1500,Nbsim)
+Fi_o=matrix(0,1500,Nbsim)
+Fi_s=matrix(0,1500,Nbsim)
+Fi_si=matrix(0,1500,Nbsim)
+Fi_ms=matrix(0,1500,Nbsim)
+Xlist = list()
+for (s in 1:Nbsim){
+  N=1500
+  K=15
+  pi=rep(1/K,K)
+  lambda  = 0.1
+  lambda_o = 0.025
+  Ks=5
+  mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
+  sbm = rsbm(N,pi,mu)  
+  S[,s]=sbm$cl
+  Xlist[[s]]=sbm
+  fit = greed(sbm$x,model=new("sbm"),alg = new("hybrid",pop_size=50))
+  Fi[,s]=fit@cl
+  fit_o = greed::fit_greed(new("sbm"),list(X=sbm$x),sample(1:20,nrow(sbm$x),replace = TRUE))
+  Fi_o[,s] = fit_o@cl 
+  cl=spectral(sbm$x,15)
+  Fi_s[,s] = cl 
+  fit_sp_init=greed(sbm$x,model=new("sbm"),alg=new("seed"))
+  Fi_si[,s] = fit_sp_init@cl
+  fit_ms = greed(sbm$x,model=new("sbm"),alg = new("multistarts"))
+  Fi_ms[,s]=fit_ms@cl
+}
+```
+
+```{r,echo=FALSE}
+rFi = tibble(alg="Hybrid",nmi=sapply(1:Nbsim,function(s){NMI(Fi[,s],S[,s])}))
+rFi_o = tibble(alg="Greedy",nmi=sapply(1:Nbsim,function(s){NMI(Fi_o[,s],S[,s])}))
+rFi_s = tibble(alg="Spectral",nmi=sapply(1:Nbsim,function(s){NMI(Fi_s[,s],S[,s])}))
+rFi_si = tibble(alg="Seed",nmi=sapply(1:Nbsim,function(s){NMI(Fi_si[,s],S[,s])}))
+rFi_ms = tibble(alg="Multistart",nmi=sapply(1:Nbsim,function(s){NMI(Fi_ms[,s],S[,s])}))
+resSim = rFi %>% bind_rows(rFi_o) %>% bind_rows(rFi_s)%>% bind_rows(rFi_si)%>% bind_rows(rFi_ms) %>% mutate(alg=factor(alg,levels=c("Greedy","Multistart","Spectral","Seed","Hybrid")))
+```
+
+
+```{r,fig.width=10,fig.height=5,echo=FALSE, fig.cap="Evolution of the ICL criterion aliong the different generation build by the algorithm (left). comparison in term of NMI with the simulated clusters for several algorithm."}
+perf=ggplot(resSim)+geom_boxplot(aes(x=alg,y=nmi,group=alg))+geom_point(aes(x=alg,y=nmi))+xlab("")+ylab("Normalized mutual information")+theme_bw()+ggtitle("Algorithms performance comparison")
+ggarrange(gen,perf)
+```
+
+As a second simulation we tried a mixture of multinomial model. The simulation setup was as follow: 15 clusters with equal proportions were generated. The sample size was fixed to 500 and the number of possible outcomes for the multinomials to 100. The multinomial parameters were set such that for each cluster ten randomly chosen outcomes have a probability four time bigger than the others. Eventually the number of draw for each multinomial sample was set to 50. The simulation was performed one hundred time and for each generated datasets the solutions found by the the differents variants of the greedy heuristic, an EM algorithm (from the mixtools R package) with model selection performed with AIC, BIC and approximate ICL were recorded.
+
+
+```{r simualgmm, cache=TRUE,message=FALSE,results="hide",echo=FALSE}
+Nbsim = 100
+N = 500
+S=matrix(0,N,Nbsim)
+Fi=matrix(0,N,Nbsim)
+Fi_o=matrix(0,N,Nbsim)
+Fi_aic=matrix(0,N,Nbsim)
+Fi_bic=matrix(0,N,Nbsim)
+Fi_icl=matrix(0,N,Nbsim)
+Fi_si=matrix(0,N,Nbsim)
+Fi_ms=matrix(0,N,Nbsim)
+Xlist = list()
+for (s in 1:Nbsim){
+  K = 15
+  pi = rep(1/K,K)
+  d   = 100
+  nbv = 10 
+  mu = matrix(1,K,d)
+  mu[cbind(rep(1:K,each=nbv),as.vector(sapply(1:K,function(k){sample(1:d,nbv)})))]=4
+  mm = rmm(N,pi,cbind(mu),rep(50,N))
+  S[,s]=mm$cl
+  Xlist[[s]]=mm
+  fit = greed(mm$x,model=new("mm"),alg = new("hybrid",pop_size=50))
+  mm$x
+  Fi[,s]=fit@cl
+  fit_o = greed::fit_greed(new("mm"),list(X=mm$x),sample(1:20,nrow(mm$x),replace = TRUE))
+  Fi_o[,s] = fit_o@cl 
+  sel=multmixmodel.sel(as.matrix(mm$x),1:20)
+  Kbic=sel[2,ncol(sel)]
+  Kaic=sel[1,ncol(sel)]
+  Kicl=sel[4,ncol(sel)]
+  sol_bic = multmixEM(as.matrix(mm$x),k=Kbic)
+  sol_aic = multmixEM(as.matrix(mm$x),k=Kaic)
+  sol_icl = multmixEM(as.matrix(mm$x),k=Kicl)
+  Fi_bic[,s] = apply(sol_bic$posterior,1,which.max)
+  Fi_aic[,s] = apply(sol_aic$posterior,1,which.max)
+  Fi_icl[,s] = apply(sol_icl$posterior,1,which.max)
+  fit_sp_init=greed(mm$x,model=new("mm"),alg=new("seed"))
+  Fi_si[,s] = fit_sp_init@cl
+  fit_ms = greed(mm$x,model=new("mm"),alg = new("multistarts"))
+  Fi_ms[,s]=fit_ms@cl
+}
+```
+
+```{r,echo=FALSE}
+rFi = tibble(alg="Hybrid",nmi=sapply(1:Nbsim,function(s){NMI(Fi[,s],S[,s])}))
+rFi_o = tibble(alg="Greedy",nmi=sapply(1:Nbsim,function(s){NMI(Fi_o[,s],S[,s])}))
+rFi_aic = tibble(alg="EM + AIC",nmi=sapply(1:Nbsim,function(s){NMI(Fi_aic[,s],S[,s])}))
+rFi_bic = tibble(alg="EM + BIC",nmi=sapply(1:Nbsim,function(s){NMI(Fi_bic[,s],S[,s])}))
+rFi_icl = tibble(alg="EM + ICL",nmi=sapply(1:Nbsim,function(s){NMI(Fi_icl[,s],S[,s])}))
+rFi_si = tibble(alg="Seed",nmi=sapply(1:Nbsim,function(s){NMI(Fi_si[,s],S[,s])}))
+rFi_ms = tibble(alg="Multistart",nmi=sapply(1:Nbsim,function(s){NMI(Fi_ms[,s],S[,s])}))
+resSim = rFi %>% bind_rows(rFi_o) %>% bind_rows(rFi_bic) %>% bind_rows(rFi_aic)%>% bind_rows(rFi_si)%>% bind_rows(rFi_ms) %>% mutate(alg=factor(alg,levels=c("EM + BIC","EM + AIC","Greedy","Multistart","Seed","Hybrid")))
+```
+
+
+```{r,fig.width=7,fig.height=5,echo=FALSE, fig.cap="Evolution of the ICL criterion aliong the different generation build by the algorithm (left). comparison in term of NMI with the simulated clusters for several algorithm."}
+perf=ggplot(resSim)+geom_boxplot(aes(x=alg,y=nmi,group=alg))+geom_point(aes(x=alg,y=nmi))+xlab("")+ylab("Normalized mutual information")+theme_bw()+ggtitle("Algorithms performance comparison")
+perf
+```
+
+
+```{r,echo=FALSE}
+rFi = tibble(alg="Hybrid",K=sapply(1:Nbsim,function(s){max(Fi[,s])}))
+rFi_o = tibble(alg="Greedy",K=sapply(1:Nbsim,function(s){max(Fi_o[,s])}))
+rFi_aic = tibble(alg="EM + AIC",K=sapply(1:Nbsim,function(s){max(Fi_aic[,s])}))
+rFi_bic = tibble(alg="EM + BIC",K=sapply(1:Nbsim,function(s){max(Fi_bic[,s])}))
+rFi_icl = tibble(alg="EM + ICL",K=sapply(1:Nbsim,function(s){max(Fi_icl[,s])}))
+rFi_si = tibble(alg="Seed",K=sapply(1:Nbsim,function(s){max(Fi_si[,s])}))
+rFi_ms = tibble(alg="Multistart",K=sapply(1:Nbsim,function(s){max(Fi_ms[,s])}))
+resSim = rFi %>% bind_rows(rFi_o) %>% bind_rows(rFi_icl) %>% bind_rows(rFi_bic) %>% bind_rows(rFi_aic)%>% bind_rows(rFi_si)%>% bind_rows(rFi_ms) %>% mutate(alg=factor(alg,levels=c("EM + BIC","EM + AIC","EM + ICL","Greedy","Multistart","Seed","Hybrid")),K=factor(K,levels = 1:20))
+kable(table(resSim))
+```
+
+```{r frenchpalg,echo=FALSE, cache=TRUE,message=FALSE,results="hide"}
+data("FrenchParliament")
+nbrun = 5
+sol_h=list()
+sol_h100=list()
+sol_h50=list()
+sol_seed=list()
+sol_ms=list()
+for (i in 1:nbrun){
+  sol_h[[i]]=greed(FrenchParliament$X,K=40)
+  sol_h50[[i]]=greed(FrenchParliament$X,K=40, alg=new("hybrid",pop_size=50))
+  sol_h100[[i]]=greed(FrenchParliament$X,K=40, alg=new("hybrid",pop_size=100))
+  sol_seed[[i]]=greed(FrenchParliament$X,K=40,alg=new("seed"))
+  sol_ms[[i]]=greed(FrenchParliament$X,K=40,alg=new("multistarts"))
+}
+```
+
+
+```{r frenchp,echo=FALSE, cache=TRUE,message=FALSE,results="hide",fig.width=4,fig.height=5,}
+
+  sH=tibble(icl=sapply(sol_h,function(s){s@icl}),alg="Hybrid (20)")
+  sH50=tibble(icl=sapply(sol_h50,function(s){s@icl}),alg="Hybrid (50)")
+  sH100=tibble(icl=sapply(sol_h50,function(s){s@icl}),alg="Hybrid (100)")
+  sMs = tibble(icl=sapply(sol_ms,function(s){s@icl}),alg="Multistart")
+  sSeed = tibble(icl=sapply(sol_seed,function(s){s@icl}),alg="Seed")
+  gg=sH%>%bind_rows(sMs)%>%bind_rows(sSeed)%>%bind_rows(sH100) %>%bind_rows(sH50) %>% mutate(alg=factor(alg,levels = c("Multistart","Seed","Hybrid (20)","Hybrid (50)","Hybrid (100)")))
+  ggplot(gg)+geom_boxplot(aes(x=alg,group=alg,y=icl))+geom_point(aes(x=alg,y=icl))+xlab("")+ylab("ICL")+theme_bw()+ggtitle("Algorithms performance comparison")
+
+
+```
+
+## Regularisation path and hierarchical clustering
+
+### Real data
+
+
+```{r realdatadcsbm,results="hide"}
+data("Blogs")
+fit_blogs = greed(Blogs$X,model=new("dcsbm"))
+data("Books")
+fit_books = greed(Books$X,model=new("dcsbm"))
+data("Football")
+fit_foot = greed(Football$X,model=new("dcsbm"))
+data("Jazz")
+fit_jazz = greed(Jazz,model=new("dcsbm"))
+```
+
+
+```{r, fig.height=16,fig.width=16, echo=FALSE}
+
+p1=plot(fit_blogs)+ggtitle("Blogs")
+p2=plot(fit_books)+ggtitle("Books")
+p3=plot(fit_foot)+ggtitle("Football")
+p4=plot(fit_jazz)+ggtitle("Jazz")
+
+p5=plot(fit_blogs,type='nodelink')+ggtitle("")
+p6=plot(fit_books,type='nodelink')+ggtitle("")
+p7=plot(fit_foot,type='nodelink')+ggtitle("")
+p8=plot(fit_jazz,type='nodelink')+ggtitle("")
+
+p9=plot(fit_blogs,type='tree')+ggtitle("")
+p10=plot(fit_books,type='tree')+ggtitle("")
+p11=plot(fit_foot,type='tree')+ggtitle("")
+p12=plot(fit_jazz,type='tree')+ggtitle("")
+
+
+p13=plot(cut(fit_blogs,2))+ggtitle("")
+p14=plot(cut(fit_books,3))+ggtitle("")
+p15=plot(cut(fit_foot,10))+ggtitle("")
+p16=plot(cut(fit_jazz,5))+ggtitle("")
+
+
+ggarrange(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,nrow = 4,ncol=4,common.legend = TRUE)
+
+```
+## Related works and conclusions
+
+
+
+
+
+## Conclusion
+
+## References

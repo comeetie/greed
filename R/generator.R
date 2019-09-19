@@ -56,8 +56,14 @@ rmm = function (N,pi,mu,lambda){
   nbv = dim(mu)[2]
   cl  = sample(1:K,N,replace=TRUE,prob = pi)
   X   = matrix(0,N,nbv) 
+  if(length(lambda)==1 | length(lambda)!=N){
+    Nr=stats::rpois(N,lambda)  
+  }else{
+    Nr=lambda
+  }
+  
   for (k in 1:K){
-    X[cl==k]  = t(stats::rmultinom(sum(cl==k),stats::rpois(N,lambda),mu[k,]))
+    X[cl==k]  = t(stats::rmultinom(sum(cl==k),Nr[cl==k],mu[k,]))
   }
   links = Matrix::which(X>0,arr.ind = TRUE)
   list(cl=cl, x = Matrix::sparseMatrix(links[,1],links[,2], x = X[links]), K=K,N=N,pi=pi,mu=mu, lambda=lambda)
@@ -65,9 +71,9 @@ rmm = function (N,pi,mu,lambda){
 
 #' Generate graph adjacency matrix using a degree corrected SBM
 #'
-#' \code{rmm} returns a count matrix and the cluster labels generated randomly unsig a Mixture of Multinomial model.
+#' \code{rdcsbm} returns an adjacency matrix and the cluster labels generated randomly using a Degree Corrected Stochastich Block Model.
 #'
-#' It take the sample size, cluster proportions and emission matrix, and  as input and sample a graph accordingly together with the clusters labels.
+#' It take the sample size, cluster proportions and emission matrix, and   as input and sample a graph accordingly together with the clusters labels.
 #'
 #' @param N A numeric value the size of the graph to generate
 #' @param pi A numeric vector of length K with clusters proportions. Must sum up to 1.

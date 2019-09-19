@@ -3,7 +3,7 @@
 \name{spectral}
 \alias{spectral}
 \title{spectral
-Regularized spectral clustering nips paper 2013}
+Regularized spectral clustering}
 \usage{
 spectral(X, K)
 }
@@ -13,9 +13,12 @@ spectral(X, K)
 \item{K}{Desired number of cluster}
 }
 \value{
-cl Vector of clsuter labels
+cl Vector of cluster labels
 }
 \description{
 spectral
-Regularized spectral clustering nips paper 2013
+Regularized spectral clustering
+}
+\references{
+Tai Qin, Karl Rohe. Regularized Spectral Clustering under the Degree-Corrected Stochastic Blockmodel. Nips 2013.
 }

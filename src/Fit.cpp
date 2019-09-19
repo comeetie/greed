@@ -1,6 +1,7 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadilloExtensions/sample.h>
 #include "IclModel.h"
+#include "MergeMat.h"
 #include "Sbm.h"
 #include "DcSbm.h"
 #include "SpDcSbm.h"
@@ -219,6 +220,22 @@ S4 fit_greed_path(List data, S4 init_fit) {
   delete M;
   return(sol);
   
+}
+
+//' merge_mat
+//' @param data list with clustering data depnds on model type
+//' @param init_fit initial fit object
+//' @return a cost merge matrix
+//' @export
+// [[Rcpp::export]]
+arma::mat merge_mat(List data, S4 init_fit) {
+  S4 model = init_fit.slot("model");
+  arma::vec clt = init_fit.slot("cl");
+  IclModel * M = init(model,data,clt,false);
+  MergeMat merge_mat = M->delta_merge();
+  arma::mat mm = merge_mat.getMergeMat();
+  delete M;
+  return(mm);
 }
 
 

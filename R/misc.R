@@ -41,3 +41,10 @@ MI = function(cl1,cl2){
 NMI = function(cl1,cl2){
   MI(cl1,cl2)/max(c(H(cl1),H(cl2)))
 }
+
+zscore = function(X){
+  m=apply(X,2,mean)
+  X=t(t(X)-m)
+  s=apply(X,2,sd)
+  X=t(t(X)/s)
+}

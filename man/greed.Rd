@@ -14,9 +14,9 @@ greed(X, K = 20, model = find_model(X), alg = methods::new("hybrid"),
 
 \item{K}{Desired number of cluster}
 
-\item{model}{a dcsbm, sbm, mm or mreg model}
+\item{model}{a dcsbm, sbm, mm or mvmreg model (default model derived from X class and shape)}
 
-\item{alg}{an optimisation algorithm hybrid, mutlistarts, seed or genetic}
+\item{alg}{an optimisation algorithm of class hybrid (default), mutlistarts, seed or genetic}
 
 \item{verbose}{boolean for verbose mode}
 }

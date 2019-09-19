@@ -56,12 +56,18 @@ setMethod(f = "reorder",
 
 
 setMethod(f = "seed", 
-          signature = signature("mm","list","integer"), 
+          signature = signature("mm","list","numeric"), 
           definition = function(model,data, K){
-            km=stats::kmeans(data$X,K)
-            km$clusters
+            km=stats::kmeans(as.matrix(data$X),K)
+            km$cluster
           })
 
+
+setMethod(f = "sample_cl", 
+          signature = signature("mm","list","numeric"), 
+          definition = function(model,data,K){
+            sample(1:K,data$N,replace = TRUE)
+          })
 
 #' @rdname plot
 #' @param x \code{\link{icl_fit-class}} object to be ploted

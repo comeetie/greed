@@ -16,7 +16,7 @@ greed_cond(X, y, K = 20, model = find_model_cond(X, y),
 
 \item{model}{an mreg model}
 
-\item{alg}{an optimisation algorithm hybrid, mutlistarts, seed or genetic}
+\item{alg}{an optimisation algorithm of class hybrid, multistarts, seed or genetic}
 
 \item{verbose}{boolean for verbose mode}
 }

@@ -4,10 +4,6 @@ author: "Etienne Côme"
 date: "`r Sys.Date()`"
 fig_caption: yes
 output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Graph clustering with SBM}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}

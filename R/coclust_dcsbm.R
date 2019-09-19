@@ -98,10 +98,10 @@ setMethod(f = "postprocess",
             clusters_type = apply(table(sol@cl,c(rep(1,sol@Nrow),rep(2,sol@Ncol))),1,which.max)
             clust_rows = which(clusters_type==1)
             clust_cols = which(clusters_type==2)
-            if(!(max(clust_cols)<min(clust_rows) | max(clust_rows)<min(clust_cols))){
-              message("Co clustering failed bi partite structure not found")
-              return(sol)
-            }
+            # if(!(max(clust_cols)<min(clust_rows) | max(clust_rows)<min(clust_cols))){
+            #   message("Co clustering failed bi partite structure not found")
+            #   return(sol)
+            # }
             icol = (sol@Nrow+1):length(sol@cl)
             irow = 1:sol@Nrow
             # row_problems = !sol@cl[irow] %in% which(clusters_type==1)
@@ -117,31 +117,79 @@ setMethod(f = "postprocess",
             #   sol@cl[which(col_problems)+data$Nrows]=clust_cols[apply(matrix(col_probas[which(col_problems),clusters_type==2],nrow = sum(col_problems)),1,which.max)]
             # }
             # }
-            sol@clrow = sol@cl[irow]-min(sol@cl[irow])+1
+            sol@clrow = as.numeric(factor(sol@cl[irow],levels=clust_rows))
             sol@Krow = max(sol@clrow)
-            sol@clcol = sol@cl[icol]-min(sol@cl[icol])+1
+            sol@clcol = as.numeric(factor(sol@cl[icol],levels=clust_cols))
             sol@Kcol = max(sol@clcol)
             sol@obs_stats$co_x_counts=sol@obs_stats$x_counts[clust_rows,clust_cols]
             
-            tree= sol@ggtree
-            tree=tree[tree$tree!=0,]
-            leafs = tree[tree$H==0,]
-            leafs = leafs[order(leafs$x),]
-            # cols first
-            if(max(clust_cols)<min(clust_rows)){
-              xsplit = leafs$x[length(clust_cols)]
-              coltree = tree[tree$x<=xsplit,]
-              rowtree = tree[tree$x>xsplit,]
-            # rows first
-            }else{
-              xsplit = leafs$x[length(clust_rows)]
-              rowtree = tree[tree$x<=xsplit,]
-              coltree = tree[tree$x>xsplit,]
+            if(!is.null(data)){
+              tree= sol@ggtree[order(sol@ggtree$H),]
+              coltree = tree[tree$node %in% clust_cols,]
+              coltree$x = seq(1,-1,length.out = length(clust_cols))
+              leafs   =  coltree
+              fathers = unique(leafs$tree)
+              while(length(fathers)>0){
+                leafs = tree[tree$node %in% fathers,]
+                coltree = rbind(coltree,leafs)
+                fathers = setdiff(unique(leafs$tree),coltree$node)
+                fathers=fathers[fathers!=0]
+              }
+              coltree=coltree[order(coltree$H),]
+              noleaves = (which(coltree$H>0)[1]):nrow(coltree)
+              for (nl in noleaves){
+                no =coltree$node[nl]
+                xch = coltree$x[coltree$tree==no]
+                coltree[nl,"x"]=mean(xch)
+                coltree[nl,"xmin"]=min(xch)
+                coltree[nl,"xmax"]=max(xch)
+              }
+              
+              
+              rowtree = tree[tree$node %in% clust_rows,]
+              rowtree$x = seq(1,-1,length.out = length(clust_rows))
+              leafs   =  rowtree
+              fathers = unique(leafs$tree)
+              while(length(fathers)>0){
+                leafs = tree[tree$node %in% fathers,]
+                rowtree = rbind(rowtree,leafs)
+                fathers = setdiff(unique(leafs$tree),rowtree$node)
+                fathers=fathers[fathers!=0]
+              }
+              rowtree=rowtree[order(rowtree$H),]
+              noleaves = (which(rowtree$H>0)[1]):nrow(rowtree)
+              for (nl in noleaves){
+                no =rowtree$node[nl]
+                xch = rowtree$x[rowtree$tree==no]
+                rowtree[nl,"x"]=mean(xch)
+                rowtree[nl,"xmin"]=min(xch)
+                rowtree[nl,"xmax"]=max(xch)
+              }
+              
+              sol@ggtreecol = coltree
+              sol@ggtreerow = rowtree 
             }
-            sol@ggtreecol = coltree #coltree[2:nrow(coltree),]
-            sol@ggtreerow = rowtree #rowtree[2:nrow(rowtree),]
+
             sol
           })
+
+
+setMethod(f = "cut", 
+          signature = signature("co_dcsbm_path"), 
+          definition = function(x, K){
+            i = which(sapply(x@path,function(p){p$K})==K)
+            x@K = K
+            x@logalpha=x@path[[i]]$logalpha
+            x@icl = x@path[[i]]$icl
+            x@cl = as.vector(x@path[[i]]$cl)
+            for(st in names(x@path[[i]]$obs_stats)){
+              x@obs_stats[st] = x@path[[i]]$obs_stats[st]
+            }
+            
+            x@path=x@path[(i+1):length(x@path)]
+            postprocess(x)
+          })
+
 
  setMethod(f = "sample_cl", 
            signature = signature("co_dcsbm","list","numeric"), 

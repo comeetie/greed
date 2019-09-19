@@ -85,7 +85,7 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
       if (workingset(cnode)==1){
         // compute delta swap
         arma::vec delta = this->delta_swap(cnode,iclust);
-        //Rcout << delta << std::endl;
+        // Rcout << delta << std::endl;
         // best swap
         int ncl = delta.index_max();
         if(ncl!=cl(cnode)){
@@ -586,7 +586,8 @@ List IclModel::greedy_merge_path(){
                                 Named("icl1")=icl,
                                 Named("logalpha")=icl-iclold,
                                 Named("k")=k+1,
-                                Named("l")=l+1));
+                                Named("l")=l+1,
+                                Named("merge_mat") = arma::trimatl(merge_mat.getMergeMat())));
     // update merge matrix
     merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL(),old_stats);
   }

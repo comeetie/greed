@@ -153,42 +153,57 @@ mat_reg_line = function(x,Xd,yd){
   ggp= data.frame(x=Xd[,1],y=yd,K=factor(x@cl,levels=1:K))
   gg=data.frame(y=as.vector(cbind(seq(min(ggp$x),max(ggp$x),length.out = 20),rep(1,20))%*%sapply(x@obs_stats$regs,function(reg){reg$mu})),
                 x=rep(seq(min(ggp$x),max(ggp$x),length.out = 20),K),K=rep(1:K,each=20))
-  ggplot2::ggplot()+
+ ggplot2::ggplot()+
     ggplot2::geom_point(data=ggp[,1:2],ggplot2::aes_(x=~x,y=~y),alpha=0.05)+
     ggplot2::geom_path(data=gg,ggplot2::aes_(x=~x,y=~y,group=~K))+
     ggplot2::geom_point(data=ggp,ggplot2::aes_(x=~x,y=~y,col=~K))+
     ggplot2::ggtitle(paste0("Mixture of Regression Model with : ",max(x@cl)," clusters."))+
     ggplot2::facet_wrap(~K)+
-    ggplot2::theme_bw()      
+    ggplot2::theme_bw()
+
 }
 
 
 
 dendo = function(x){
   ggtree = x@ggtree
-  ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
+  tree=ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
     ggplot2::geom_segment(data=ggtree[-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
     ggplot2::scale_x_continuous("",breaks=c())+
     ggplot2::ylab(expression(paste("-log(",alpha,")")))+
     ggplot2::ggtitle(paste0(toupper(x@model@name)," ",length(x@obs_stats$counts)," clusters, dendogram"))+
     ggplot2::theme_bw()
+  if(x@K<max(x@ggtree$K)){
+    hc = x@ggtree$H[x@ggtree$K==x@K]
+    tree=tree+ggplot2::geom_hline(ggplot2::aes(yintercept=hc),color='red',size=0.8,linetype="dashed",alpha=0.8)
+  }
+  tree
 }
 
 co_dendo = function(x){
   ggtree = x@ggtreerow
   rowt = ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
-    ggplot2::geom_segment(data=ggtree[-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
+    ggplot2::geom_segment(data=ggtree[ggtree$Hend!=-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
     ggplot2::scale_x_continuous("",breaks=c())+
     ggplot2::ylab(expression(paste("-log(",alpha,")")))+
     ggplot2::ggtitle(paste0(x@Krow," row clusters"))+
     ggplot2::theme_bw()
+  if(x@K<max(x@ggtree$K)){
+    hc = x@ggtree$H[x@ggtree$K==x@K]
+    rowt=rowt+ggplot2::geom_hline(ggplot2::aes(yintercept=hc),color='red',size=0.8,linetype="dashed",alpha=0.8)
+  }
+  
   ggtree = x@ggtreecol
   colt = ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
-    ggplot2::geom_segment(data=ggtree[-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
+    ggplot2::geom_segment(data=ggtree[ggtree$Hend!=-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
     ggplot2::scale_x_continuous("",breaks=c())+
     ggplot2::ylab(expression(paste("-log(",alpha,")")))+
     ggplot2::ggtitle(paste0(x@Kcol," column clusters"))+
     ggplot2::theme_bw()
+  if(x@K<max(x@ggtree$K)){
+    hc = x@ggtree$H[x@ggtree$K==x@K]
+    colt=colt+ggplot2::geom_hline(aes(yintercept=hc),color='red',size=0.8,linetype="dashed",alpha=0.8)
+  }
   ggpubr::ggarrange(rowt,colt)
 }
 
@@ -221,8 +236,12 @@ co_nodelink = function(sol){
   cccol = as.numeric(table(sol@clcol))
   ccrow = as.numeric(table(sol@clrow))
   
-  gglink = data.frame(from=ij[,1],to=ij[,2],p=ld[ij]) %>% mutate(nrow = ccrow[from],ncol=cccol[to],pn=p/(nrow*ncol)) %>% arrange(pn)
-  ggnode = data.frame(type="col",n=cccol,i=1:sol@Kcol) %>% bind_rows(data.frame(type="row",n=ccrow,i=1:sol@Krow) )
+  gglink = data.frame(from=ij[,1],to=ij[,2],p=ld[ij]) 
+  gglink$nrow = ccrow[gglink$from]
+  gglink$ncol = cccol[gglink$to]
+  gglink$pn=gglink$p/(gglink$nrow*gglink$ncol)
+  gglink=gglink[order(gglink$pn),]
+  ggnode = rbind(data.frame(type="col",n=cccol,i=1:sol@Kcol),data.frame(type="row",n=ccrow,i=1:sol@Krow) )
   
   
   ggplot2::ggplot()+ggplot2::geom_curve(data=gglink,ggplot2::aes_(y=~from,yend=~max(from)+1,x=-5,xend=~to,size=~p,alpha=~p),curvature = 0.35)+
@@ -307,6 +326,7 @@ plot_front = function(sol){
     ggplot2::ggtitle(paste0(toupper(sol@model@name)," model with : ",max(sol@cl)," clusters."))+
     ggplot2::theme_bw()
 }
+
 
 
 

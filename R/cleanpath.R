@@ -25,12 +25,9 @@ cleanpath = function(pathsol){
       pathsol@obs_stats = path[[im]]$obs_stats
       pathsol@icl = path[[im]]$icl1
       pathsol@cl = as.vector(path[[im]]$cl)
-      # if it exist cut from there
-      if(im>1){
-        path=path[(im+1):length(path)]  
-      }else{
-        path=list()
-      }
+
+      path=path[(im+1):length(path)]  
+
       pathsol@path=path
     }
     
@@ -83,7 +80,7 @@ cleanpath = function(pathsol){
         Kc[lab[l]]=K
         H[lab[l]]=Hfront[K]
         
-        # update lab[l] to onbe of the two new nodes
+        # update lab[l] to one of the two new nodes
         lab[l]=cn+1
         
         # current father position
@@ -226,5 +223,104 @@ extract_front_height=function(sol){
   H
 }
 
+# clean the merge path 
+cleanpathopt = function(pathsol){
+  K=pathsol@K
+  pathsol@logalpha = 0
+  path=pathsol@path
+  
+  
+  # check for possible better solution than init with alpha=1 along the path
+  if(length(path)>0){
+    icli = sapply(path,function(p){p$icl1})
+    if(max(icli)>pathsol@icl){
+      im = which.max(icli)
+      K = path[[im]]$K
+      pathsol@K = K
+      pathsol@obs_stats = path[[im]]$obs_stats
+      pathsol@icl = path[[im]]$icl1
+      pathsol@cl = as.vector(path[[im]]$cl)
+      
+      path=path[(im+1):length(path)]  
+      
+      pathsol@path=path
+    }
+    
+    
+    
+    # check for non empty path
+    if(length(path)>0){
+      
+      # compute the pareto front and extract the height as -log(alpha) of each merge in the front
+      Hfront = greed:::extract_front_height(pathsol)
+      # initialisation
+      # build the merge tree in hclust format
+      merge = c()
+      cnodes = -(1:pathsol@K)
+      for (m in 1:length(path)){
+        merge= rbind(merge,c(cnodes[path[[m]]$k],cnodes[path[[m]]$l]))
+        cnodes[path[[m]]$l]=m
+        cnodes=cnodes[-path[[m]]$k]
+      }
+      # find optimal leaf ordering
+      leaforder = cba::order.optimal(as.dist(-path[[1]]$merge_mat+t(path[[1]]$merge_mat)),merge)
+      
+      
+      # ordering of initial solution
+      pathsol@obs_stats = greed:::reorder(pathsol@model,pathsol@obs_stats,leaforder$order)
+      pathsol@cl=order(leaforder$order)[pathsol@cl]
+      
+      #prepare the data.frame to store the tree
+      ggtree=data.frame(H=rep(0,K),tree=0,x=seq(-1,1,length.out = K),node=1:K,xmin=0,xmax=0,K=K)
+      tree  = rep(0,2*K-1)
+      perm  = leaforder$order
+      nodes = 1:K
+      cn=K+1
+      for (m in 1:length(path)){
+        # update the permutation
+        oldperm=perm
+        perm=perm[perm!=path[[m]]$k]
+        perm[perm>path[[m]]$k]=perm[perm>path[[m]]$k]-1
+        # update the stats accordingly
+        path[[m]]$obs_stats = greed:::reorder(pathsol@model,path[[m]]$obs_stats,as.integer(perm))
+        path[[m]]$cl=order(perm)[path[[m]]$cl]
+        path[[m]]$merge_mat=tril(path[[m]]$merge_mat[oldperm,oldperm]+t(path[[m]]$merge_mat[oldperm,oldperm]))
+        # and the index of the merged cluster
+        nkl=sort(which(oldperm==path[[m]]$k|oldperm==path[[m]]$l))
+        path[[m]]$k=nkl[2]
+        path[[m]]$l=nkl[1]
+        # build the tree
+        tree[nodes[path[[m]]$k]]=cn
+        tree[nodes[path[[m]]$l]]=cn
+        xchildren = ggtree$x[c(nodes[path[[m]]$k],nodes[path[[m]]$l])]
+        ggtree=rbind(ggtree,data.frame(H=Hfront[K-m],tree=0,x=mean(xchildren),node=cn,xmin=min(xchildren),xmax=max(xchildren),K=K-m))
+        # update nodes vector
+        nodes=nodes[-path[[m]]$k]
+        nodes[path[[m]]$l]=cn
+        cn=cn+1
+      }
+      # store the tree
+      ggtree$tree=tree
+      # store height and xpos of father
+      ggtree$Hend = c(ggtree$H[ggtree$tree],-1)
+      ggtree$xend = c(ggtree$x[ggtree$tree],-1)
+      
+      
+      # store upated path and tree
+      pathsol@path = path
+      pathsol@tree = tree
+      pathsol@ggtree = ggtree[nrow(ggtree):1,] 
+    }else{
+      # deals with empty path
+      pathsol@tree=c(0)
+      pathsol@ggtree = data.frame(H=0,tree=0,x=0,node=1,xmin=0,max=0)
+    }
+  }else{
+    # deals with empty path
+    pathsol@tree=c(0)
+    pathsol@ggtree = data.frame(H=0,tree=0,x=0,node=1,xmin=0,max=0)
+  }
+  pathsol
+} 
 
 

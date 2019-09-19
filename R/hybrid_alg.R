@@ -49,7 +49,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             cat(paste0("Generation ",sprintf("%2i",nbgen), ": best solution with an ICL of ",round(solutions[[which.max(icls)]]@icl)," and ",solutions[[which.max(icls)]]@K," clusters "))
             cat("#################\n")
             
-            while((max(icls)-min(icls))>1  & nbgen < alg@nb_max_gen){
+            while((max(icls)-min(icls))>1  & nbgen < alg@nb_max_gen & best_icl>old_best){
               
 
               train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
@@ -72,7 +72,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
               solutions = c(bres,as.list(new_solutions))
               icls = sapply(solutions,function(s){s@icl})
               if(sum(is.na(icls))>0 | sum(is.nan(icls))>0 ){
-                message("NAN in objective function returning problematic soltuion")
+                message("NAN in objective function returning problematic solution")
                 return(solutions[[which(is.nan(icls))[1]]])
               }
               solutions=solutions[!is.nan(icls)]
@@ -95,7 +95,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             # compute merge path
             path = fit_greed_path(data,res)
             # clean the resuts (compute, merge tree,...)
-            path = greed:::cleanpath(path)
+            path = greed:::cleanpathopt(path)
             # store train history
             path@train_hist = train.hist
             # stop future plan

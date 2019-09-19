@@ -111,6 +111,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// merge_mat
+arma::mat merge_mat(List data, S4 init_fit);
+RcppExport SEXP _greed_merge_mat(SEXP dataSEXP, SEXP init_fitSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< S4 >::type init_fit(init_fitSEXP);
+    rcpp_result_gen = Rcpp::wrap(merge_mat(data, init_fit));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sp_cross
 arma::sp_mat sp_cross(arma::sp_mat colvec, arma::sp_mat rowvec, int self, int oldcl, int newcl, int K);
 RcppExport SEXP _greed_sp_cross(SEXP colvecSEXP, SEXP rowvecSEXP, SEXP selfSEXP, SEXP oldclSEXP, SEXP newclSEXP, SEXP KSEXP) {
@@ -398,6 +410,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_swap_cstr", (DL_FUNC) &_greed_swap_cstr, 6},
     {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 6},
     {"_greed_fit_greed_path", (DL_FUNC) &_greed_fit_greed_path, 2},
+    {"_greed_merge_mat", (DL_FUNC) &_greed_merge_mat, 2},
     {"_greed_sp_cross", (DL_FUNC) &_greed_sp_cross, 6},
     {"_greed_add_sppat", (DL_FUNC) &_greed_add_sppat, 2},
     {"_greed_add_spmatpat", (DL_FUNC) &_greed_add_spmatpat, 2},

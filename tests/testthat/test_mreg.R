@@ -1,5 +1,6 @@
 context("MREG test")
 library(greed)
+library(ggplot2)
 
 test_that("MReg sim evidence and fit", {
   mreg_simu=rmreg(1000,c(0.5,0.5),cbind(c(5,5),c(-5,-5)),0.8)
