@@ -54,10 +54,10 @@ library(greed)
 data(Jazz)
 sol=greed(Jazz)
 #> ------- Fitting a dcsbm model ------
-#> ################# Generation  1: best solution with an ICL of -29413 and 17 clusters #################
-#> ################# Generation  2: best solution with an ICL of -29376 and 15 clusters #################
-#> ################# Generation  3: best solution with an ICL of -29317 and 17 clusters #################
-#> ################# Generation  4: best solution with an ICL of -29317 and 17 clusters #################
+#> ################# Generation  1: best solution with an ICL of -29416 and 16 clusters #################
+#> ################# Generation  2: best solution with an ICL of -29345 and 19 clusters #################
+#> ################# Generation  3: best solution with an ICL of -29313 and 19 clusters #################
+#> ################# Generation  4: best solution with an ICL of -29313 and 19 clusters #################
 ```
 
 Some plotting function enable the exploraiton of the clustering results:
@@ -66,7 +66,7 @@ Some plotting function enable the exploraiton of the clustering results:
 plot(sol)
 ```
 
-<img src="man/figures/README-plot-1.png" width="100%" />
+<img src="man/figures/README-plot-1.png" width="60%" />
 
 And the hierarhical structure between clusters:
 
@@ -74,7 +74,7 @@ And the hierarhical structure between clusters:
 plot(sol,type='tree')
 ```
 
-<img src="man/figures/README-tree-1.png" width="100%" />
+<img src="man/figures/README-tree-1.png" width="60%" />
 
 Eventually, one may explore some coarser clustering using the cut
 function:
@@ -83,4 +83,4 @@ function:
 plot(cut(sol,5))
 ```
 
-<img src="man/figures/README-cut-1.png" width="100%" />
+<img src="man/figures/README-cut-1.png" width="60%" />
