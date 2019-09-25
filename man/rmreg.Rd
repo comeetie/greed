@@ -2,7 +2,7 @@
 % Please edit documentation in R/generator.R
 \name{rmreg}
 \alias{rmreg}
-\title{Generate X and y with a mixture of regression model}
+\title{Generate data from a mixture of regression model}
 \usage{
 rmreg(N, pi, mu, sigma, X = cbind(matrix(stats::rnorm(N * (nrow(mu) -
   1)), N, nrow(mu) - 1), rep(1, N)))

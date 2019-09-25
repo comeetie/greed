@@ -4,24 +4,24 @@
 \alias{greed_cond}
 \title{greed_cond}
 \usage{
-greed_cond(X, y, K = 20, model = find_model_cond(X, y),
+greed_cond(X, Y, K = 20, model = find_model_cond(X, Y),
   alg = methods::new("hybrid"), verbose = FALSE)
 }
 \arguments{
-\item{X}{covariable data}
+\item{X}{covariates data}
 
-\item{y}{target variable}
+\item{Y}{target variables}
 
 \item{K}{Desired number of cluster}
 
-\item{model}{an mreg model}
+\item{model}{a conditional generative model \code{\link{mvmreg-class}}}
 
-\item{alg}{an optimisation algorithm of class hybrid, multistarts, seed or genetic}
+\item{alg}{an optimisation algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}}
 
 \item{verbose}{boolean for verbose mode}
 }
 \value{
-an icl_path object
+an \code{\link{icl_path-class}} object
 }
 \description{
 greed_cond

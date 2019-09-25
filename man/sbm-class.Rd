@@ -3,25 +3,19 @@
 \docType{class}
 \name{sbm-class}
 \alias{sbm-class}
-\title{sbm
-
-An S4 class to represent a stochastick block model that extends \code{icl_model} class.}
+\title{Clustering with a stochastick block model description class}
 \description{
-sbm
-
-An S4 class to represent a stochastick block model that extends \code{icl_model} class.
+An S4 class to represent a a stochastick block model, extend \code{\link{icl_model-class}}.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{alpha}}{dirichlet parameter for the prior over cluyster proportions (default to 1)}
+\item{\code{name}}{name of the model}
 
-\item{\code{a0}}{a numeric vector of length 1 which define the parameters of the beta prior over the edges (default to 1)}
+\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter}
 
-\item{\code{b0}}{a numeric vector of length 1 which define the parameters of the beta prior over the non-edges (default to 1)}
+\item{\code{a0}}{Beta prior parameter over links}
+
+\item{\code{b0}}{Beta prior parameter over no-links}
 }}
 
-\examples{
-new("sbm")
-new("sbm",a0=0.5,b0=0.5,alpha=1)
-}

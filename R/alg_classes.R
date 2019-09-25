@@ -4,28 +4,25 @@
 #' @name %<-%
 NULL
 
-#' @include models_classes.R fit_classes.R hybrid_alg.R genetic_alg.R
+#' @include models_classes.R fit_classes.R hybrid_alg.R genetic_alg.R misc.R
 #' @import Matrix
 NULL
 
-#' @title Optimization algorithm classes
+
+#' @title represent an abstract optimisation algorithm
 #' 
-#' @name algs-classes 
-NULL
-
-
-
-#' @rdname algs-classes
-#' @title alg 
+#' @description
 #' An S4 class to represent an abstract optimisation algorithm.
-#' @slot name Name of the algorithm
+#' @slot name algorithm name
 #' @export
 setClass("alg",slots = list(name = "character"))
 
 
-#' @rdname algs-classes 
-#' @title multistarts 
-#' An S4 class to represent a greedy algorithm extends \code{alg} class with multiple start.
+
+#' @title greedy algorithm with multiple start class
+#' 
+#' @description 
+#' An S4 class to represent a greedy algorithm  with multiple start (extends \code{\link{alg-class}} class).
 #' @slot nb_start number of random starts (default to 10)
 #' @export
 setClass("multistarts",
@@ -34,9 +31,11 @@ setClass("multistarts",
          prototype(name="greed",nb_start=10))
 
 
-#' @rdname algs-classes 
-#' @title seed 
-#' An S4 class to represent a greedy algorithm extends \code{alg} class with initialization with spectral clustering and or k-means.
+
+#' @title greedy algorithm with seeded initialisation
+#' 
+#' @description
+#' An S4 class to represent a greedy algorithm with initialization from spectral clustering and or k-means (extends \code{\link{alg-class}} class ).
 #' @export
 setClass("seed",
          contains = "alg",
@@ -44,9 +43,11 @@ setClass("seed",
          prototype(name="seed"))
 
 
-#' @rdname algs-classes
-#' @title genetic
-#' An S4 class to represent a hybrid genetic/greedy algorithm extends \code{alg} class.
+
+#' @title hybrid optimization algorithm 
+#' 
+#' @description 
+#' An S4 class to represent an hybrid genetic/greedy algorithm (extends \code{\link{alg-class}} class).
 #' @slot pop_size size of the solutions populations (default to 20)
 #' @slot nb_max_gen maximal number of generation to produce (default to 10)
 #' @slot prob_mutation mutation probability (default to 0.25)
@@ -58,76 +59,36 @@ setClass("hybrid",
          prototype(name="hybrid",pop_size=20, nb_max_gen = 10,prob_mutation=0.25,Kmax=400))
 
 
-#' @rdname algs-classes
-#' @title genetic
-#' An S4 class to represent a enetic algorithm extends \code{alg} class.
+
+#' @title genetic optimization algorithm
+#' 
+#' @description
+#' An S4 class to represent a genetic algorithm (extends \code{\link{alg-class}} class).
 #' @slot pop_size size of the solutions populations (default to 10)
 #' @slot nb_max_gen maximal number of generation to produce (default to 4) 
+#' @slot prob_mutation probability of muattion (default to 0.25)
+#' @slot sel_frac fraction of best solutions selected for crossing  (default to 0.75)
 #' @export
 setClass("genetic",
          contains = "alg",
-         representation =  list(pop_size = "numeric",nb_max_gen = "numeric",prob_mut="numeric",sel_frac="numeric"),
-         prototype(name="genetic",pop_size=100, nb_max_gen = 20,prob_mutation=0.1,sel_frac=0.75))
+         representation =  list(pop_size = "numeric",nb_max_gen = "numeric",prob_mutation="numeric",sel_frac="numeric"),
+         prototype(name="genetic",pop_size=100, nb_max_gen = 20,prob_mutation=0.25,sel_frac=0.75))
 
 
 
-setGeneric("fit",function(model,alg,...) standardGeneric("fit")) 
 
 
-
-setMethod(f = "fit", 
-          signature = signature("icl_model","hybrid"), 
-          definition = function(model,alg,data, K,verbose=FALSE){
-            hybrid(model,alg,data,K,verbose)
-})
-
-
-setMethod(f = "fit", 
-          signature = signature("icl_model","genetic"), 
-          definition = function(model,alg,data,k,verbose=FALSE){
-            genetic(model,alg,data,k,verbose=verbose)
-          })
-
-
-
-setMethod(f = "fit", 
-          signature = signature("icl_model","multistarts"), 
-          definition = function(model,alg,data, K=20,verbose=FALSE){
-            multistart(model,alg,data,K,verbose)
-          })
-
-
-setGeneric("seed", function(model, data,K) standardGeneric("seed")) 
-
-setMethod(f = "fit", 
-          signature = signature("icl_model","seed"), 
-          definition = function(model,alg,data, K=20,verbose=FALSE){
-            cl = seed(model,data,K)  
-            res = fit_greed(model,data,cl,"both",verbose=verbose)
-            path = fit_greed_path(data,res)
-            p=cleanpath(path)   
-})
-
-
-
-setGeneric("reorder", function(model, obs_stats,order) standardGeneric("reorder")) 
-
-
-
-#' @describeIn cut 
-#' @title Cut
-#' method to cut a path solution to a desired number of cluster 
+#' @title method to cut a path solution to a desired number of cluster 
+#' 
+#' @description This method take a \code{\link{icl_path-class}} object and an integer K and return the solution from the path with K clusters 
 #' @param x A an \code{icl_path} solution 
 #' @param K Desired number of cluster
-#' @return an icl_path obejct with the desired number of cluster
+#' @return an \code{\link{icl_path-class}} object with the desired number of cluster
 #' @export
 setMethod(f = "cut", 
           signature = signature("icl_path"), 
           definition = function(x, K){
             i = which(sapply(x@path,function(p){p$K})==K)
-            # keep the full merge tree for reference
-            # x@tree = x@tree[1:(2*K-1)]
-            # x@ggtree = x@ggtree[1:(2*K-1),]
             x@K = K
             x@logalpha=x@path[[i]]$logalpha
             x@icl = x@path[[i]]$icl
@@ -141,37 +102,16 @@ setMethod(f = "cut",
             
 })
 
-#' @title spectral
-#' Regularized spectral clustering 
-#' @references Tai Qin, Karl Rohe. Regularized Spectral Clustering under the Degree-Corrected Stochastic Blockmodel. Nips 2013.
-#' @param X An adjacency matrix in sparse format
-#' @param K Desired number of cluster
-#' @return cl Vector of cluster labels
-#' @export
-spectral= function(X,K){
-  X     = X+Matrix::t(X)
-  ij    = Matrix::which(X>0,arr.ind = T)
-  X[ij] = 1
-  nu    = sum(X)/dim(X)[1]
-  D     = (Matrix::rowSums(X)+nu)^-0.5
-  Ln    = Matrix::sparseMatrix(ij[,1],ij[,2],x=D[ij[,1]]*D[ij[,2]])
-  V     = RSpectra::eigs(Ln,K)
-  Xp    = V$vectors
-  Xpn   = Xp/sqrt(rowSums(Xp)^2)
-  Xpn[rowSums(Xp)==0,]=0
-  km    = stats::kmeans(Xp,K)
-  km$cluster
-}
-
-
-
-#' @title greed
+#' @title model based hierachical clustering
+#' 
+#' @description
+#' Performs  a
 #' @param X data to cluster 
 #' @param K Desired number of cluster
-#' @param model a dcsbm, sbm, mm or mvmreg model (default model derived from X class and shape)
-#' @param alg an optimisation algorithm of class hybrid (default), mutlistarts, seed or genetic
+#' @param model a generative model one of \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}} or \code{\link{mvmreg-class}
+#' @param alg an optimisation algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
 #' @param verbose boolean for verbose mode 
-#' @return an icl_path object
+#' @return an \code{\link{icl_path-class}} object
 #' @export
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
   data = preprocess(model,X,K)
@@ -181,6 +121,7 @@ greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=F
   sol
 }
 
+
 find_model = function(X){
   if(class(X)=="dgCMatrix" | class(X)=="matrix"){
     if(nrow(X)==ncol(X)){
@@ -189,7 +130,7 @@ find_model = function(X){
       if(all(round(X)==X)){
         model = methods::new("co_dcsbm")  
       }else{
-        model = methods::new("mvmreg")
+        model = methods::new("mvmreg",N0=ncol(X)+1)
       }
     }
   }else{
@@ -198,18 +139,62 @@ find_model = function(X){
   model
 }
 
-
-as.sparse = function(X){
-  S = X
-  if(class(X)=="matrix"){
-    ij= which(X!=0,arr.ind=TRUE)
-    S = Matrix::sparseMatrix(ij[,1],ij[,2],x = X[ij]) 
-  }
-  S
+#' @title greed_cond
+#' 
+#' 
+#' @param X covariates data 
+#' @param Y target variables
+#' @param K Desired number of cluster
+#' @param model a conditional generative model \code{\link{mvmreg-class}}
+#' @param alg an optimisation algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
+#' @param verbose boolean for verbose mode 
+#' @return an \code{\link{icl_path-class}} object
+#' @export
+greed_cond = function(X,Y,K=20,model=find_model_cond(X,Y),alg=methods::new("hybrid"),verbose=FALSE){
+  fit(model,alg,list(X=X,y=y,N=dim(X)[1]),K,verbose)
 }
 
-setGeneric("preprocess", function(model, ...) standardGeneric("preprocess")) 
 
+find_model_cond = function(X,Y){
+  methods::new("mvmreg",N0=ncol(Y)+1)
+}
+
+setGeneric("reorder", function(model, obs_stats,order) standardGeneric("reorder")) 
+
+setGeneric("fit",function(model,alg,...) standardGeneric("fit")) 
+
+
+setMethod(f = "fit", 
+          signature = signature("icl_model","hybrid"), 
+          definition = function(model,alg,data, K,verbose=FALSE){
+            hybrid(model,alg,data,K,verbose)
+          })
+
+setMethod(f = "fit", 
+          signature = signature("icl_model","genetic"), 
+          definition = function(model,alg,data,k,verbose=FALSE){
+            genetic(model,alg,data,k,verbose=verbose)
+          })
+
+
+setMethod(f = "fit", 
+          signature = signature("icl_model","multistarts"), 
+          definition = function(model,alg,data, K=20,verbose=FALSE){
+            multistart(model,alg,data,K,verbose)
+          })
+
+setGeneric("seed", function(model, data,K) standardGeneric("seed")) 
+
+setMethod(f = "fit", 
+          signature = signature("icl_model","seed"), 
+          definition = function(model,alg,data, K=20,verbose=FALSE){
+            cl = seed(model,data,K)  
+            res = fit_greed(model,data,cl,"both",verbose=verbose)
+            path = fit_greed_path(data,res)
+            p=cleanpathopt(path)   
+          })
+
+setGeneric("preprocess", function(model, ...) standardGeneric("preprocess")) 
 
 setMethod(f = "preprocess", 
           signature = signature("icl_model"), 
@@ -228,7 +213,6 @@ setMethod(f = "postprocess",
 
 setGeneric("sample_cl", function(model, data,K) standardGeneric("sample_cl")) 
 
-
 setMethod(f = "sample_cl", 
           signature = signature("icl_model","list","numeric"), 
           definition = function(model,data,K){
@@ -236,21 +220,6 @@ setMethod(f = "sample_cl",
           })
 
 
-#' @title greed_cond
-#' @param X covariable data 
-#' @param y target variable
-#' @param K Desired number of cluster
-#' @param model an mreg model
-#' @param alg an optimisation algorithm of class hybrid, multistarts, seed or genetic
-#' @param verbose boolean for verbose mode 
-#' @return an icl_path object
-#' @export
-greed_cond = function(X,y,K=20,model=find_model_cond(X,y),alg=methods::new("hybrid"),verbose=FALSE){
-  fit(model,alg,list(X=X,y=y,N=dim(X)[1]),K,verbose)
-}
 
 
 
-find_model_cond = function(X,y){
-  methods::new("mreg")
-}

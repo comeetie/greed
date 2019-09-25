@@ -2,15 +2,11 @@
 NULL
 
 
-#' @rdname models-classes
-#' @title co_dcsbm
+
+#' @title Co-clustering with a degree correted stochastick block model class
 #' 
-#' An S4 class to represent a stochastick block model that extends \code{icl_model} class.
-#' \itemize{
-#' \item slots : \code{name,alpha,a0,b0}
-#' }
-#' @slot a0 a numeric vector of length 1 which define the parameters of the beta prior over the edges (default to 1)
-#' @slot b0 a numeric vector of length 1 which define the parameters of the beta prior over the non-edges (default to 1)
+#' @description An S4 class to represent a degree corrected stochastick block model for co_clustering, extends \code{\link{icl_model-class}} class.
+#' @slot alpha dirichlet parameters for the prior over clusters proportions (default to 1)
 #' @examples 
 #' new("co_dcsbm")
 #' @export
@@ -20,46 +16,154 @@ setClass("co_dcsbm",
          prototype(name="co_dcsbm",alpha=1))
 
 
-#' @rdname fits-classes
-#' @title co_dcsbm_fit
+
+#' @title Co-clustering with a degree correted stochastick block model fit results class
 #' 
-#' An S4 class to represent a fit of a stochastick block model that extend \code{icl_fit}.
+#' @description An S4 class to represent a fit of a degree corrected stochastick block model for co_clustering, extend \code{\link{icl_fit-class}}.
+#' @slot model a \code{\link{co_dcsbm-class}} object to store the model fitted
+#' @slot name generative model name
+#' @slot icl icl value of the fitted model
+#' @slot K number of extracted clusters over row and columns
+#' @slot Krow number of extracted row clusters
+#' @slot Kcol number of extracted column clusters
+#' @slot cl a numeric vector with row and clolumns cluster indexes
+#' @slot obs_stats a list with the following elements:
 #' \itemize{
-#' \item slots : \code{name,K,icl,cl,obs_stats,model}
+#' \item counts: numeric vector of size K with number of elements in each clusters
+#' \item din: numeric vector of size K wich store the sums of in-degrees for each clusters
+#' \item dout: numeric vector of size K wich store the sums of out-degrees for each clusters 
+#' \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
+#' \item co_x_counts: matrix of size Krow*Kcol with the number of links between each pair of row and column cluster 
 #' }
-#' @slot model an \code{\link{icl_model}} to store the model fitted
+#' @slot clrow a numeric vector with row cluster indexes
+#' @slot clcol a numeric vector with column cluster indexes
+#' @slot Nrow number of rows
+#' @slot Ncol number of columns
+#' @slot move_mat binary matrix which store move constraints
+#' @slot train_hist data.frame with training history infromation (details depends on the training procedure)
 #' @export 
 setClass("co_dcsbm_fit",slots = list(model="co_dcsbm",clrow="numeric",clcol="numeric",Krow="numeric",Kcol="numeric",Nrow="numeric",Ncol="numeric"),contains="icl_fit")
 
 
 
-#' @rdname fits-classes
-#' @title co_dcsbm_path
+
+#' @title Co-clustering with a degree correted stochastick block model path extraction results class
 #' 
-#' An S4 class to represent a hierachical path of solutions for a DC-SBM model that extend \code{dcsbm_fit-class} and \code{icl_path-class}.
+#' 
+#' @description An S4 class to represent a fit of a degree corrected stochastick block model for co_clustering, extend \code{\link{icl_path-class}}.
+#' @slot model a \code{\link{co_dcsbm-class}} object to store the model fitted
+#' @slot name generative model name
+#' @slot icl icl value of the fitted model
+#' @slot K number of extracted clusters over row and columns
+#' @slot Krow number of extracted row clusters
+#' @slot Kcol number of extracted column clusters
+#' @slot cl a numeric vector with row and clolumns cluster indexes
+#' @slot obs_stats a list with the following elements:
 #' \itemize{
-#' \item slots : \code{name,K,icl,cl,obs_stats, model, path, tree, ggtree, logalpha}
+#' \item counts: numeric vector of size K with number of elements in each clusters
+#' \item din: numeric vector of size K wich store the sums of in-degrees for each clusters
+#' \item dout: numeric vector of size K wich store the sums of out-degrees for each clusters 
+#' \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
+#' \item co_x_counts: matrix of size Krow*Kcol with the number of links between each pair of row and column cluster 
 #' }
-#' @export
+#' @slot clrow a numeric vector with row cluster indexes
+#' @slot clcol a numeric vector with column cluster indexes
+#' @slot Nrow number of rows
+#' @slot Ncol number of columns
+#' @slot path a list of size K-1 with each part of the path described by:
+#' \itemize{
+#' \item icl1: icl value reach with this solution for alpha=1 
+#' \item logalpha: log(alpha) value were this solution is better than its parent
+#' \item K: number of clusters
+#' \item cl: vector of cluster indexes
+#' \item k,l: index of the cluster that were merged at this step
+#' \item merge_mat: lower triangular matrix of delta icl values 
+#' \item obs_stats: a list with the same elements
+#' }
+#' @slot logalpha value of log(alpha)
+#' @slot ggtree data.frame with complete merge tree for easy ploting with gggplot
+#' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father  
+#' @slot ggtreerow data.frame with complete merge tree of row clusters for easy ploting with gggplot
+#' @slot ggtreecol data.frame with complete merge tree od column clusters for easy ploting with gggplot
+#' @slot train_hist  data.frame with training history infromation (details depends on the training procedure)
+#' @export 
 setClass("co_dcsbm_path",slots = list(ggtreerow="data.frame",ggtreecol="data.frame"),contains=c("icl_path","co_dcsbm_fit"))
 
 
 
 
-setMethod(f = "reorder", 
-          signature = signature("co_dcsbm", "list","integer"), 
-          definition = function(model, obs_stats,order){
-            reorder_dcsbm(obs_stats,order)
+#' @title method to cut a path solution to a desired number of cluster 
+#' 
+#' @description this method take a \code{\link{co_dcsbm_path-class}} and an integer K and return the solution from the path with K clusters 
+#' @param x A an \code{\link{co_dcsbm_path-class}} solution 
+#' @param K Desired number of cluster
+#' @return an icl_path object with the desired number of cluster
+#' @export
+setMethod(f = "cut", 
+          signature = signature("co_dcsbm_path"), 
+          definition = function(x, K){
+            i = which(sapply(x@path,function(p){p$K})==K)
+            x@K = K
+            x@logalpha=x@path[[i]]$logalpha
+            x@icl = x@path[[i]]$icl
+            x@cl = as.vector(x@path[[i]]$cl)
+            for(st in names(x@path[[i]]$obs_stats)){
+              x@obs_stats[st] = x@path[[i]]$obs_stats[st]
+            }
+            
+            x@path=x@path[(i+1):length(x@path)]
+            postprocess(x)
           })
 
 
-setMethod(f = "seed", 
-          signature = signature("co_dcsbm","list","numeric"), 
-          definition = function(model,data, K){
-            kmrow = kmeans(data$X[1:data$Nrows,(data$Nrows+1):data$N],floor(K/2));
-            kmcol = kmeans(t(data$X[1:data$Nrows,(data$Nrows+1):data$N]),floor(K/2));
-            c(kmrow$cluster,kmcol$cluster+max(kmrow$cluster))
-            #spectral(data$X,K)
+#' @title plot a \code{\link{co_dcsbm_fit-class}}
+#' 
+#' 
+#' @param x a \code{\link{co_dcsbm_fit-class}}
+#' @param type a string which specify plot type:
+#' \itemize{
+#' \item \code{'blocks'}: plot a block matrix with summarizing connections between row and column clusters
+#' \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between row and column clusters
+#' }
+#' @return a \code{\link{ggplot2}} graphic
+#' @export 
+setMethod(f = "plot", 
+          signature = signature("co_dcsbm_fit","missing"),
+          definition = function(x,type="blocks"){
+            switch(type,blocks=co_blocks(x),nodelink=co_nodelink(x))
+          })
+
+#' @title plot a \code{\link{co_dcsbm_path-class}}
+#' 
+#' @param x a \code{\link{co_dcsbm_path-class}}
+#' @param type a string which specify plot type:
+#' \itemize{
+#' \item \code{'blocks'}: plot a block matrix with summarizing connections between row and column clusters
+#' \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between row and column clusters
+#' \item \code{'front'}: plot the extracted front ICL, log(alpha)
+#' \item \code{'path'}: plot the veolution of ICL with repsect to K
+#' \item \code{'tree'}: plot the associated dendograms one for the row clustrers and one for the column clusters
+#' }
+#' @return a \code{\link{ggplot2}} graphic
+#' @export 
+setMethod(f = "plot", 
+          signature = signature("co_dcsbm_path","missing"),
+          definition = function(x,type='blocks'){
+            switch(type,tree = {
+              co_dendo(x)
+            },
+            path ={
+              lapath(x)
+            },
+            front = {
+              plot_front(x)
+            },
+            blocks ={
+              methods::callNextMethod()
+            },
+            nodelink={
+              methods::callNextMethod()
+            })   
           })
 
 setMethod(f = "preprocess", 
@@ -124,7 +228,7 @@ setMethod(f = "postprocess",
             sol@obs_stats$co_x_counts=sol@obs_stats$x_counts[clust_rows,clust_cols]
             
             if(!is.null(data)){
-              tree= sol@ggtree[order(sol@ggtree$H),]
+              tree= sol@ggtree[order(sol@ggtree$H,sol@ggtree$node),]
               coltree = tree[tree$node %in% clust_cols,]
               coltree$x = seq(1,-1,length.out = length(clust_cols))
               leafs   =  coltree
@@ -174,21 +278,6 @@ setMethod(f = "postprocess",
           })
 
 
-setMethod(f = "cut", 
-          signature = signature("co_dcsbm_path"), 
-          definition = function(x, K){
-            i = which(sapply(x@path,function(p){p$K})==K)
-            x@K = K
-            x@logalpha=x@path[[i]]$logalpha
-            x@icl = x@path[[i]]$icl
-            x@cl = as.vector(x@path[[i]]$cl)
-            for(st in names(x@path[[i]]$obs_stats)){
-              x@obs_stats[st] = x@path[[i]]$obs_stats[st]
-            }
-            
-            x@path=x@path[(i+1):length(x@path)]
-            postprocess(x)
-          })
 
 
  setMethod(f = "sample_cl", 
@@ -198,32 +287,19 @@ setMethod(f = "cut",
            })
 
 
-#' @rdname plot
-#' @export
-setMethod(f = "plot", 
-          signature = signature("co_dcsbm_fit","missing"),
-          definition = function(x,type="blocks"){
-            switch(type,blocks=co_blocks(x),nodelink=co_nodelink(x))
+setMethod(f = "reorder", 
+          signature = signature("co_dcsbm", "list","integer"), 
+          definition = function(model, obs_stats,order){
+            reorder_dcsbm(obs_stats,order)
           })
 
-#' @rdname plot
-#' @export
-setMethod(f = "plot", 
-          signature = signature("co_dcsbm_path","missing"),
-          definition = function(x,type='blocks'){
-            switch(type,tree = {
-              co_dendo(x)
-            },
-            path ={
-              lapath(x)
-            },
-            front = {
-              plot_front(x)
-            },
-            blocks ={
-              methods::callNextMethod()
-            },
-            nodelink={
-              methods::callNextMethod()
-            })   
+
+setMethod(f = "seed", 
+          signature = signature("co_dcsbm","list","numeric"), 
+          definition = function(model,data, K){
+            kmrow = stats::kmeans(data$X[1:data$Nrows,(data$Nrows+1):data$N],floor(K/2));
+            kmcol = stats::kmeans(t(data$X[1:data$Nrows,(data$Nrows+1):data$N]),floor(K/2));
+            c(kmrow$cluster,kmcol$cluster+max(kmrow$cluster))
+            #spectral(data$X,K)
           })
+

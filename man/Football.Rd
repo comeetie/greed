@@ -3,7 +3,7 @@
 \docType{data}
 \name{Football}
 \alias{Football}
-\title{American College football}
+\title{American College football network dataset}
 \format{An object of class \code{"list"} with two fields; 
  \describe{
   \item{X}{network adjacency matrix as a \cite{sparseMatrix} of size 115x115}

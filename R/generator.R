@@ -1,11 +1,11 @@
-#' Generate graph adjacency matrix using a SBM
+#' Generate a graph adjacency matrix using a Stochastick Block Model
 #'
 #' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Stochastick Block Model.
 #'
-#' This function take graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
+#' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 #'
-#' @param N A numeric value the size of the graph to generate
-#' @param pi A numeric vector of length K with clusters proportions. Must sum up to 1.
+#' @param N The size of the graph to generate
+#' @param pi A numeric vector of length K with clusters proportions (will be noramlized to sumup to 1). 
 #' @param mu A numeric matrix of dim K x K with the connectivity pattern to generate. elements in [0,1].
 #' @return A list with fields:
 #' \itemize{
@@ -14,12 +14,10 @@
 #' \item N: number of vertex
 #' \item cl: vector of clusters labels
 #' \item pi: clusters proportions
-#' \item mu: connectivuty matrix
+#' \item mu: connectivity matrix
 #' }
 #' @examples
 #' simu = rsbm(100,rep(1/5,5),diag(rep(0.1,5))+0.001)
-#' x  = simu$x
-#' xl = simu$cl
 #' @export
 rsbm = function (N,pi,mu){
   K  = length(pi)
@@ -30,7 +28,7 @@ rsbm = function (N,pi,mu){
 }
 
 
-#' Generate graph adjacency matrix using a Multinomial Mixture
+#' Generate data using a Multinomial Mixture
 #'
 #' \code{rmm} returns a count matrix and the cluster labels generated randomly unsig a Mixture of Multinomial model.
 #'
@@ -105,7 +103,7 @@ rdcsbm = function (N,pi,mu,betain,betaout){
 }
 
 
-#' Generate X and y with a mixture of regression model
+#' Generate data from a mixture of regression model
 #'
 #' \code{rmreg} returns an X matrix, a y vector and the cluster labels generated randomly unsig a Mixture of regression model.
 #'

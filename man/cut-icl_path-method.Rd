@@ -3,8 +3,7 @@
 \docType{methods}
 \name{cut,icl_path-method}
 \alias{cut,icl_path-method}
-\title{Cut
-method to cut a path solution to a desired number of cluster}
+\title{method to cut a path solution to a desired number of cluster}
 \usage{
 \S4method{cut}{icl_path}(x, K)
 }
@@ -14,14 +13,8 @@ method to cut a path solution to a desired number of cluster}
 \item{K}{Desired number of cluster}
 }
 \value{
-an icl_path obejct with the desired number of cluster
+an \code{\link{icl_path-class}} object with the desired number of cluster
 }
 \description{
-Cut
-method to cut a path solution to a desired number of cluster
+This method take a \code{\link{icl_path-class}} object and an integer K and return the solution from the path with K clusters
 }
-\section{Methods (by class)}{
-\itemize{
-\item \code{icl_path}: 
-}}
-

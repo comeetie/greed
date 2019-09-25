@@ -1,4 +1,4 @@
-#' American College football
+#' American College football network dataset
 #'
 #' Network of American football games between Division IA colleges during regular season Fall 2000. 
 #' @docType data
@@ -35,7 +35,7 @@
 
 
 
-#' Political blogs 
+#' Political blogs network dataset
 #' 
 #' A directed network of hyperlinks between weblogs on US politics, recorded in 2005 by Adamic and Glance. 
 #' Only the biggest connected component of the original graph is provided. 
@@ -63,7 +63,7 @@
 
 
 
-#' Books about US politics
+#' Books about US politics network dataset
 #' 
 #' A network of books about US politics published around the time of the 2004 presidential election and sold by the online bookseller Amazon.com. Edges between books represent frequent copurchasing of books by the same buyers. 
 #' The network was compiled by V. Krebs and is unpublished, but can found on Krebs' web site. Thanks to Valdis Krebs for permission to post these data on this web site.
@@ -88,7 +88,7 @@
 "Books"
 
 
-#' Jazz musicians network
+#' Jazz musicians network dataset
 #' 
 #' List of edges of the network of Jazz musicians.
 #'  
@@ -109,12 +109,12 @@
 "Jazz"
 
 
-#' French Parliament votes
+#' French Parliament votes dataset
 #' 
 #' 
 #'  
 #' 
-#' @docType data
+#' @docType data 
 #'
 #' @usage data(FrenchParliament)
 #'
@@ -126,5 +126,24 @@
 #' @examples
 #' data(FrenchParliament)
 "FrenchParliament"
+
+#' French Parliament votes dataset
+#' 
+#' 
+#'  
+#' 
+#' @docType data
+#'
+#' @usage data(Xvlegislature)
+#'
+#' @format An object of class \code{"list"} with three fields; 
+#'  \describe{
+#'   \item{X}{matrix of deputy votes a \cite{sparseMatrix} of size 593x1839}
+#'   \item{rowmeta}{a data frame of deputy meta-data}
+#'   \item{colmeta}{a data frame of scrutin meta data}
+#' }
+#' @examples
+#' data(Xvlegislature)
+"Xvlegislature"
 
 

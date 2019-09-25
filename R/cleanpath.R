@@ -252,7 +252,7 @@ cleanpathopt = function(pathsol){
     if(length(path)>0){
       
       # compute the pareto front and extract the height as -log(alpha) of each merge in the front
-      Hfront = greed:::extract_front_height(pathsol)
+      Hfront = extract_front_height(pathsol)
       # initialisation
       # build the merge tree in hclust format
       merge = c()
@@ -263,11 +263,11 @@ cleanpathopt = function(pathsol){
         cnodes=cnodes[-path[[m]]$k]
       }
       # find optimal leaf ordering
-      leaforder = cba::order.optimal(as.dist(-path[[1]]$merge_mat+t(path[[1]]$merge_mat)),merge)
+      leaforder = cba::order.optimal(stats::as.dist(-path[[1]]$merge_mat+t(path[[1]]$merge_mat)),merge)
       
       
       # ordering of initial solution
-      pathsol@obs_stats = greed:::reorder(pathsol@model,pathsol@obs_stats,leaforder$order)
+      pathsol@obs_stats = reorder(pathsol@model,pathsol@obs_stats,leaforder$order)
       pathsol@cl=order(leaforder$order)[pathsol@cl]
       
       #prepare the data.frame to store the tree
@@ -282,7 +282,7 @@ cleanpathopt = function(pathsol){
         perm=perm[perm!=path[[m]]$k]
         perm[perm>path[[m]]$k]=perm[perm>path[[m]]$k]-1
         # update the stats accordingly
-        path[[m]]$obs_stats = greed:::reorder(pathsol@model,path[[m]]$obs_stats,as.integer(perm))
+        path[[m]]$obs_stats = reorder(pathsol@model,path[[m]]$obs_stats,as.integer(perm))
         path[[m]]$cl=order(perm)[path[[m]]$cl]
         path[[m]]$merge_mat=tril(path[[m]]$merge_mat[oldperm,oldperm]+t(path[[m]]$merge_mat[oldperm,oldperm]))
         # and the index of the merged cluster

@@ -42,9 +42,48 @@ NMI = function(cl1,cl2){
   MI(cl1,cl2)/max(c(H(cl1),H(cl2)))
 }
 
+
+
+
+#' @title Regularized spectral clustering 
+#' 
+#' @description 
+#' performs regularized spectral clustering of a sparce adjacency matrix
+#' @references Tai Qin, Karl Rohe. Regularized Spectral Clustering under the Degree-Corrected Stochastic Blockmodel. Nips 2013.
+#' @param X An adjacency matrix in sparse format
+#' @param K Desired number of cluster
+#' @return cl Vector of cluster labels
+#' @export
+spectral= function(X,K){
+  X     = X+Matrix::t(X)
+  ij    = Matrix::which(X>0,arr.ind = T)
+  X[ij] = 1
+  nu    = sum(X)/dim(X)[1]
+  D     = (Matrix::rowSums(X)+nu)^-0.5
+  Ln    = Matrix::sparseMatrix(ij[,1],ij[,2],x=D[ij[,1]]*D[ij[,2]])
+  V     = RSpectra::eigs(Ln,K)
+  Xp    = V$vectors
+  Xpn   = Xp/sqrt(rowSums(Xp)^2)
+  Xpn[rowSums(Xp)==0,]=0
+  km    = stats::kmeans(Xp,K)
+  km$cluster
+}
+
+
 zscore = function(X){
   m=apply(X,2,mean)
   X=t(t(X)-m)
-  s=apply(X,2,sd)
+  s=apply(X,2,stats::sd)
   X=t(t(X)/s)
+}
+
+
+
+as.sparse = function(X){
+  S = X
+  if(class(X)=="matrix"){
+    ij= which(X!=0,arr.ind=TRUE)
+    S = Matrix::sparseMatrix(ij[,1],ij[,2],x = X[ij]) 
+  }
+  S
 }

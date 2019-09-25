@@ -2,18 +2,17 @@
 NULL
 
 
-#' @rdname models-classes
-#' @title mreg
+#' @title Clustering with a multivariate mixture of regression model description class
 #' 
-#' An S4 class to represent a mixture of multinomial also known has mixture of unigrams that extends \code{icl_model} class.
-#' \itemize{
-#' \item slots : \code{name,alpha,beta,N0}
-#' }
-#' @slot beta a numeric vector of length 1 which define the variance parameter of the normal prior over the regression parameters (default to 0.1)
-#' @slot N0 a numeric vector of length 1 which define the parameter a0 of the inverse gamma over the regression noise variance parameters (default to 1)
+#' @description 
+#' An S4 class to represent a multivariate mixture of regression model, extend \code{\link{icl_model-class}}.
+#' @slot name name of the model
+#' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
+#' @slot beta Prior parameter (inverse variance) default 0.01 
+#' @slot N0 Prior parameter (pseudo count) defulat to 10 ! should be > number of features
 #' @examples
-#' new("mreg")
-#' new("mreg",alpha=1,reg=5,a0=0.5,b0=0.5)
+#' new("mvmreg")
+#' new("mvmreg",alpha=1,beta=0.1,N0=15)
 #' @export
 setClass("mvmreg",
          representation = list(beta = "numeric",N0="numeric"),
@@ -21,27 +20,83 @@ setClass("mvmreg",
          prototype(name="mvmreg",beta=0.01,N0=10,alpha=1))
 
 
-#' @rdname fits-classes
-#' @title mreg_fit
+#' @title Clustering with a multivariate mixture of regression model fit results class
 #' 
-#' An S4 class to represent an icl fit of a mixture of multinomials model that extend \code{icl_fit}.
+#' @description An S4 class to represent a fit of a multivariate mixture of regression model, extend \code{\link{icl_fit-class}}.
+#' @slot model a \code{\link{mvmreg-class}} object to store the model fitted
+#' @slot name generative model name
+#' @slot icl icl value of the fitted model
+#' @slot K number of extracted clusters over row and columns
+#' @slot cl a numeric vector with row and clolumns cluster indexes
+#' @slot obs_stats a list with the following elements:
 #' \itemize{
-#' \item slots : \code{name,K,icl,cl,obs_stats,model}
+#' \item counts: numeric vector of size K with number of elements in each clusters
+#' \item regs: list of size $K$ with statistics for each clusters
 #' }
+#' @slot move_mat binary matrix which store move constraints
+#' @slot train_hist data.frame with training history infromation (details depends on the training procedure)
 #' @export 
 setClass("mvmreg_fit",slots = list(model="mvmreg"),contains="icl_fit")
 
 
-#' @rdname fits-classes
-#' @title mreg_path
+#' @title Clustering with a multivariate mixture of regression model path extraction results class
 #' 
-#' An S4 class to represent a hierachical path of solutions for a Mixture of Regression model that extend \code{mreg_fit-class} and \code{icl_path-class}.
+#' 
+#' @description An S4 class to represent a hierarchical fit of a multivariate mixture of regression model, extend \code{\link{icl_path-class}}.
+#' @slot model a \code{\link{mvmreg-class}} object to store the model fitted
+#' @slot name generative model name
+#' @slot icl icl value of the fitted model
+#' @slot K number of extracted clusters over row and columns
+#' @slot cl a numeric vector with row and clolumns cluster indexes
+#' @slot obs_stats a list with the following elements:
 #' \itemize{
-#' \item slots : \code{name,K,icl,cl,obs_stats, model, path, tree, ggtree, logalpha}
+#' \item counts: numeric vector of size K with number of elements in each clusters
+#' \item regs: list of size $K$ with statistics for each clusters
 #' }
-#' @export
+#' @slot path a list of size K-1 with each part of the path described by:
+#' \itemize{
+#' \item icl1: icl value reach with this solution for alpha=1 
+#' \item logalpha: log(alpha) value were this solution is better than its parent
+#' \item K: number of clusters
+#' \item cl: vector of cluster indexes
+#' \item k,l: index of the cluster that were merged at this step
+#' \item merge_mat: lower triangular matrix of delta icl values 
+#' \item obs_stats: a list with the same elements
+#' }
+#' @slot logalpha value of log(alpha)
+#' @slot ggtree data.frame with complete merge tree for easy ploting with gggplot
+#' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father  
+#' @slot train_hist  data.frame with training history infromation (details depends on the training procedure)
+#' @export 
 setClass("mvmreg_path",contains=c("icl_path","mvmreg_fit"))
 
+
+
+#' @title plot a \code{\link{mvmreg_path-class}} object
+#' 
+#' 
+#' @param x a \code{\link{mvmreg_path-class}}
+#' @param type a string which specify plot type:
+#' \itemize{
+#' \item \code{'front'}: plot the extracted front ICL, log(alpha)
+#' \item \code{'path'}: plot the veolution of ICL with repsect to K
+#' \item \code{'tree'}: plot the associated dendogram
+#' }
+#' @return a \code{\link{ggplot2}} graphic
+#' @export 
+setMethod(f = "plot", 
+          signature = signature("mvmreg_path","missing"),
+          definition = function(x,type='tree'){
+            switch(type,tree = {
+              dendo(x)
+            },
+            path ={
+              lapath(x)
+            },
+            front = {
+              plot_front(x)
+            })
+          })
 
 reorder_mvmreg = function(obs_stats,or){
   obs_stats$counts = obs_stats$counts[or]
@@ -78,18 +133,3 @@ setMethod(f = "preprocess",
 
 
 
-#' @rdname plot
-#' @export
-setMethod(f = "plot", 
-          signature = signature("mvmreg_path","missing"),
-          definition = function(x,type='blocks'){
-            switch(type,tree = {
-              dendo(x)
-            },
-            path ={
-              lapath(x)
-            },
-            front = {
-              plot_front(x)
-            })
-          })

@@ -3,7 +3,7 @@
 \docType{data}
 \name{Blogs}
 \alias{Blogs}
-\title{Political blogs}
+\title{Political blogs network dataset}
 \format{An object of class \code{"list"} with two fields; 
  \describe{
   \item{X}{network adjacency matrix as a \cite{sparseMatrix} of size 1222x1222}

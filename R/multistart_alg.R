@@ -19,7 +19,7 @@ multistart = function(model,alg,data,K,verbose=FALSE){
   
   res = solutions[[order(icls,decreasing = TRUE)[1]]]
   path = fit_greed_path(data,res)
-  path = cleanpath(path)
+  path = cleanpathopt(path)
   path@train_hist = data.frame(icl=icls,K= sapply(solutions,function(s){max(s@cl)}))
   
   path

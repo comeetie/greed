@@ -1,10 +1,32 @@
 #' @importFrom graphics plot
 #' @include models_classes.R fit_classes.R
-#' @title Plot a clustering results
-#' @description Main methods to explore clusterings results visualy.  
-#' @name plot
-NULL
 
+
+
+
+
+#' @title print an icl_path object
+#' 
+#' @description
+#' print an \code{\link{icl_path-class}} object
+#' @param x \code{\link{icl_path-class}} object to print
+#' @export
+setMethod(f = "print", 
+          signature = signature("icl_path"),
+          definition = function(x){
+            print(paste0("ICL clustering with a ",toupper(x@model@name)," model, ",length(x@obs_stats$counts), " clusters and an icl of ", round(x@icl),"."))
+          })
+
+
+#' @title show an icl_path object
+#' show an n \code{\link{icl_path-class}} object
+#' @param object \code{\link{icl_path-class}} object to print
+#' @export
+setMethod(f = "show", 
+          signature = signature("icl_path"),
+          definition = function(object){
+            print(object)
+          })
 
 
 nodelink = function(sol){
@@ -202,9 +224,65 @@ co_dendo = function(x){
     ggplot2::theme_bw()
   if(x@K<max(x@ggtree$K)){
     hc = x@ggtree$H[x@ggtree$K==x@K]
-    colt=colt+ggplot2::geom_hline(aes(yintercept=hc),color='red',size=0.8,linetype="dashed",alpha=0.8)
+    colt=colt+ggplot2::geom_hline(ggplot2::aes(yintercept=hc),color='red',size=0.8,linetype="dashed",alpha=0.8)
   }
   ggpubr::ggarrange(rowt,colt)
+}
+
+
+
+bi_plot = function(x){
+  
+  K = x@Krow
+  D = x@Kcol
+  ccrow = cumsum(table(x@clrow))
+  cccol = cumsum(table(x@clcol))
+  gg=data.frame(kc=rep(ccrow,D),
+                lc=rep(cccol,each=K),
+                sizek = rep(table(x@clrow),D),
+                sizel = rep(table(x@clcol),each=K), 
+                count=as.vector(x@obs_stats$co_x_counts))
+  ylab  = round(100*table(x@clcol)/sum(table(x@clcol)))
+  xlab = round(100*table(x@clrow)/sum(table(x@clrow)))
+  
+  
+  theme_mm = ggplot2::theme(axis.title.x=ggplot2::element_blank(),
+                             axis.text.x=ggplot2::element_blank(),
+                             axis.ticks.x=ggplot2::element_blank(),
+                             axis.title.y=ggplot2::element_blank(),
+                             axis.text.y=ggplot2::element_blank(),
+                             axis.ticks.y=ggplot2::element_blank(),
+                            panel.border = ggplot2::element_blank())      
+  mat = ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~count/(sizek*sizel),alpha=~count/(sizek*sizel)))+
+    ggplot2::scale_fill_distiller("E[X]",type="seq",direction = 1)+
+    ggplot2::scale_alpha("E[X]")+
+    ggplot2::scale_x_continuous("Col clusters",breaks=cccol,labels=ifelse(ylab>5,paste0(ylab,"%"),""),minor_breaks = NULL)+
+    ggplot2::scale_y_continuous("Row clusters",breaks=ccrow,labels =ifelse(xlab>5,paste0(xlab,"%"),""),minor_breaks = NULL)+
+    ggplot2::theme_bw()+theme_mm
+  
+  ggtree = x@ggtreerow
+  rowt = ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(y=~xmin,x=~H,yend=~xmax,xend=~H))+
+    ggplot2::geom_segment(data=ggtree[ggtree$Hend!=-1,],ggplot2::aes_(x=~H,y=~x,yend=~x,xend=~Hend))+
+    ggplot2::scale_y_continuous("",breaks=c())+
+    ggplot2::scale_x_reverse("",breaks=c())+
+    ggplot2::theme_bw()+theme_mm
+  if(x@K<max(x@ggtree$K)){
+    hc = x@ggtree$H[x@ggtree$K==x@K]
+    rowt=rowt+ggplot2::geom_hline(ggplot2::aes(yintercept=hc),color='red',size=0.8,linetype="dashed",alpha=0.8)
+  }
+  
+  ggtree = x@ggtreecol
+  colt = ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
+    ggplot2::geom_segment(data=ggtree[ggtree$Hend!=-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
+    ggplot2::scale_x_continuous("",breaks=c())+
+    ggplot2::ylab(expression(paste("-log(",alpha,")")))+
+    ggplot2::ggtitle(paste0(x@Kcol," column clusters"))+
+    ggplot2::theme_bw()
+  if(x@K<max(x@ggtree$K)){
+    hc = x@ggtree$H[x@ggtree$K==x@K]
+    colt=colt+ggplot2::geom_hline(ggplot2::aes(yintercept=hc),color='red',size=0.8,linetype="dashed",alpha=0.8)
+  }
+  ggpubr::ggarrange(rowt,mat,common.legend = TRUE,widths = c(1,2))
 }
 
 co_blocks = function(x){
@@ -330,24 +408,4 @@ plot_front = function(sol){
 
 
 
-#' @rdname print
-#' @title print
-#' print an icl_path object
-#' @param x \code{\link{icl_path-class}} object to print
-#' @export
-setMethod(f = "print", 
-          signature = signature("icl_path"),
-          definition = function(x){
-            print(paste0("ICL clustering with a ",toupper(x@model@name)," model, ",length(x@obs_stats$counts), " clusters and an icl of ", round(x@icl),"."))
-          })
 
-#' @rdname show
-#' @title show
-#' show an icl_path object
-#' @param object \code{\link{icl_path-class}} object to print
-#' @export
-setMethod(f = "show", 
-          signature = signature("icl_path"),
-          definition = function(object){
-            print(object)
-          })

@@ -3,8 +3,8 @@
 \docType{methods}
 \name{show,icl_path-method}
 \alias{show,icl_path-method}
-\title{show
-show an icl_path object}
+\title{show an icl_path object
+show an n \code{\link{icl_path-class}} object}
 \usage{
 \S4method{show}{icl_path}(object)
 }
@@ -12,6 +12,6 @@ show an icl_path object}
 \item{object}{\code{\link{icl_path-class}} object to print}
 }
 \description{
-show
 show an icl_path object
+show an n \code{\link{icl_path-class}} object
 }

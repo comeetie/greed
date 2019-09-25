@@ -12,8 +12,8 @@ NULL
 
 hybrid = function(model,alg,data,K, verbose=FALSE){
             
-            fimerge = function(ncl,merge_graph){ greed:::merge_cstr(model,data,ncl,merge_graph,verbose)}
-            fiswap = function(ncl,move_mat){ greed:::swap_cstr(model,data,ncl,move_mat,verbose = verbose)}
+            fimerge = function(ncl,merge_graph){ merge_cstr(model,data,ncl,merge_graph,verbose)}
+            fiswap = function(ncl,move_mat){ swap_cstr(model,data,ncl,move_mat,verbose = verbose)}
 
             train.hist = data.frame(generation=c(),icl=c(),K=c())
 
@@ -25,7 +25,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             pop_size = alg@pop_size
             init_moves= data$moves;
             for (i in 1:pop_size){
-              cli = greed:::sample_cl(model,data,K)
+              cli = sample_cl(model,data,K)
               # delete empty cluster eventualy
               lev = sort(unique(cli))
               moves=init_moves[lev,lev]
@@ -95,7 +95,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             # compute merge path
             path = fit_greed_path(data,res)
             # clean the resuts (compute, merge tree,...)
-            path = greed:::cleanpathopt(path)
+            path = cleanpathopt(path)
             # store train history
             path@train_hist = train.hist
             # stop future plan
@@ -150,7 +150,7 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
     }
   }
 
-  if(runif(1)<pmutation){
+  if(stats::runif(1)<pmutation){
     
     sp_cl=sample(max(ncl),1)
     nclold=ncl
@@ -231,7 +231,7 @@ incremental_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
     }
   }
   
-  if(runif(1)<pmutation){
+  if(stats::runif(1)<pmutation){
     
     sp_cl=sample(max(ncl),1)
     nclold=ncl

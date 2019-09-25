@@ -3,7 +3,7 @@
 \docType{data}
 \name{FrenchParliament}
 \alias{FrenchParliament}
-\title{French Parliament votes}
+\title{French Parliament votes dataset}
 \format{An object of class \code{"list"} with two fields; 
  \describe{
   \item{X}{matrix of deputy votes a \cite{sparseMatrix} of size 593x570}
@@ -13,7 +13,7 @@
 data(FrenchParliament)
 }
 \description{
-French Parliament votes
+French Parliament votes dataset
 }
 \examples{
 data(FrenchParliament)

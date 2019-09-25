@@ -3,7 +3,7 @@
 \docType{data}
 \name{Books}
 \alias{Books}
-\title{Books about US politics}
+\title{Books about US politics network dataset}
 \format{An object of class \code{"list"} with two fields; 
  \describe{
   \item{X}{network adjacency matrix as a \cite{sparseMatrix} of size 105x105}

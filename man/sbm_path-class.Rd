@@ -3,39 +3,46 @@
 \docType{class}
 \name{sbm_path-class}
 \alias{sbm_path-class}
-\title{sbm_path
-
-An S4 class to represent a hierachical path of solutions for a SBM model that extend \code{sbm_fit-class} and \code{icl_path-class}.}
+\title{Clustering with a stochastick block model path extraction results class}
 \description{
-sbm_path
-
-An S4 class to represent a hierachical path of solutions for a SBM model that extend \code{sbm_fit-class} and \code{icl_path-class}.
+An S4 class to represent a hierarchical fit of a stochastick block model, extend \code{\link{icl_path-class}}.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{name}}{name of the model}
+\item{\code{model}}{a \code{\link{sbm-class}} object to store the model fitted}
 
-\item{\code{K}}{number of extracted cluster}
+\item{\code{name}}{generative model name}
 
-\item{\code{icl}}{value of the icl criterion}
+\item{\code{icl}}{icl value of the fitted model}
 
-\item{\code{cl}}{vector of cluster label}
+\item{\code{K}}{number of extracted clusters over row and columns}
 
-\item{\code{obs_stats}}{list of model observed statistics (counts: number of nodes per clusters, x_counts: matrix with number of edges between each cluster)}
+\item{\code{cl}}{a numeric vector with row and clolumns cluster indexes}
 
-\item{\code{model}}{\code{\link{sbm}} model used with it's prior parameters}
+\item{\code{obs_stats}}{a list with the following elements:
+\itemize{
+\item counts: numeric vector of size K with number of elements in each clusters
+\item x_counts: matrix of size K*K with the number of links between each pair of clusters 
+}}
 
-\item{\code{path}}{list of clustering solution build using hierachical greedy merge}
+\item{\code{path}}{a list of size K-1 with each part of the path described by:
+\itemize{
+\item icl1: icl value reach with this solution for alpha=1 
+\item logalpha: log(alpha) value were this solution is better than its parent
+\item K: number of clusters
+\item cl: vector of cluster indexes
+\item k,l: index of the cluster that were merged at this step
+\item merge_mat: lower triangular matrix of delta icl values 
+\item obs_stats: a list with the same elements
+}}
 
-\item{\code{tree}}{merge tree}
+\item{\code{logalpha}}{value of log(alpha)}
 
-\item{\code{ggtree}}{data.frame with merge tree meta information}
+\item{\code{ggtree}}{data.frame with complete merge tree for easy ploting with gggplot}
 
-\item{\code{logalpha}}{value of log(alpha) were alpha is the dirichlet prior parameter on cluster proportions}
+\item{\code{tree}}{numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father}
 
-\item{\code{train_hist}}{data.frame with training history information}
-
-\item{\code{move_mat}}{sparse.matrix with eventually the constraints used for merge and swap moves}
+\item{\code{train_hist}}{data.frame with training history infromation (details depends on the training procedure)}
 }}
 

@@ -72,11 +72,10 @@ S4 init_sol(S4 model,String type="fit") {
   return(sol);
 }
 
-//' post_probs
-//' @param model icl_model
-//' @param data list with clustering data (fileds depend on model type)
-//' @param clt cluster labels in 1,..,K
-//' @export
+// post_probs
+// @param model icl_model
+// @param data list with clustering data (fields depend on model type)
+// @param clt cluster labels in 1,..,K //' @export
 // [[Rcpp::export]]
 arma::mat post_probs(S4 model,List data,  arma::vec& clt) {
   IclModel * M = init(model,data,clt,false);
@@ -85,15 +84,16 @@ arma::mat post_probs(S4 model,List data,  arma::vec& clt) {
   return(probs);
 }
 
-//' fit_greed
-//' @param model icl_model
-//' @param data list with clustering data (fileds depend on model type)
-//' @param clt cluster labels {0,...,K-1}
-//' @param type merge, swap, none, or both (default)  
-//' @param nb_max_pass maximum number of pass for greedy swap
-//' @param verbose boolean for verbose mode default to false
-//' @return a model_fit object  
-//' @export
+// fit_greed_cstr
+// @param model icl_model
+// @param data list with clustering data (fileds depend on model type)
+// @param clt cluster labels {0,...,K-1}
+// @param workingset 
+// @param iclust 
+// @param type: merge, swap, none, or both (default)  
+// @param nb_max_pass maximum number of pass for greedy swap
+// @param verbose boolean for verbose mode default to false
+// @return a model_fit object  //' @export
 // [[Rcpp::export]]
 S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::vec workingset,arma::uvec iclust, std::string type="both", int nb_max_pass = 50,bool verbose=false) {
   IclModel * M = init(model,data,clt,verbose);
@@ -180,15 +180,14 @@ S4 swap_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & move_mat, int nb
 }
 
 
-//' fit_greed
-//' @param model icl_model
-//' @param data list with clustering data (fileds depend on model type)
-//' @param clt cluster labels {0,...,K-1}
-//' @param type merge, swap, none, or both (default)  
-//' @param nb_max_pass maximum number of pass for greedy swap
-//' @param verbose boolean for verbose mode default to false
-//' @return a model_fit object  
-//' @export
+// fit_greed
+// @param model icl_model
+// @param data list with clustering data (fileds depend on model type)
+// @param clt cluster labels {0,...,K-1}
+// @param type merge, swap, none, or both (default)  
+// @param nb_max_pass maximum number of pass for greedy swap
+// @param verbose boolean for verbose mode default to false
+// @return a model_fit object  //' @export
 // [[Rcpp::export]]
 S4 fit_greed(S4 model,List data,  arma::vec& clt,std::string type="both", int nb_max_pass = 50,bool verbose=false) {
 
@@ -200,11 +199,10 @@ S4 fit_greed(S4 model,List data,  arma::vec& clt,std::string type="both", int nb
   return(sol);
 }
 
-//' fit_greed_path
-//' @param data list with clustering data depnds on model type
-//' @param init_fit initial fit object
-//' @return a model_path object
-//' @export
+// fit_greed_path
+// @param data list with clustering data depnds on model type
+// @param init_fit initial fit object
+// @return a model_path object //' @export
 // [[Rcpp::export]]
 S4 fit_greed_path(List data, S4 init_fit) {
   S4 model = init_fit.slot("model");
@@ -222,11 +220,10 @@ S4 fit_greed_path(List data, S4 init_fit) {
   
 }
 
-//' merge_mat
-//' @param data list with clustering data depnds on model type
-//' @param init_fit initial fit object
-//' @return a cost merge matrix
-//' @export
+// merge_mat
+// @param data list with clustering data depnds on model type
+// @param init_fit initial fit object
+// @return a cost merge matrix //' @export
 // [[Rcpp::export]]
 arma::mat merge_mat(List data, S4 init_fit) {
   S4 model = init_fit.slot("model");

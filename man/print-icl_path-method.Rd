@@ -3,8 +3,7 @@
 \docType{methods}
 \name{print,icl_path-method}
 \alias{print,icl_path-method}
-\title{print
-print an icl_path object}
+\title{print an icl_path object}
 \usage{
 \S4method{print}{icl_path}(x)
 }
@@ -12,6 +11,5 @@ print an icl_path object}
 \item{x}{\code{\link{icl_path-class}} object to print}
 }
 \description{
-print
-print an icl_path object
+print an \code{\link{icl_path-class}} object
 }
