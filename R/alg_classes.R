@@ -102,13 +102,13 @@ setMethod(f = "cut",
             
 })
 
-#' @title model based hierachical clustering
+#' @title model based hierachical clustering with icl
 #' 
-#' @description
-#' Performs  a
-#' @param X data to cluster 
-#' @param K Desired number of cluster
-#' @param model a generative model one of \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}} or \code{\link{mvmreg-class}
+#' @description 
+#' 
+#' @param X data to cluster either a matrix or a \code{\link{dgCMatrix-class}}
+#' @param K initial number of cluster
+#' @param model a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}} or \code{\link{mvmreg-class}}
 #' @param alg an optimisation algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
 #' @param verbose boolean for verbose mode 
 #' @return an \code{\link{icl_path-class}} object
@@ -116,8 +116,8 @@ setMethod(f = "cut",
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
   data = preprocess(model,X,K)
   cat(paste0("------- Fitting a ",model@name, " model ------\n"))
-  sol=fit(model,alg,data,K,verbose)
-  sol=postprocess(sol,data)
+  sol = fit(model,alg,data,K,verbose)
+  sol = postprocess(sol,data)
   sol
 }
 
@@ -130,6 +130,7 @@ find_model = function(X){
       if(all(round(X)==X)){
         model = methods::new("co_dcsbm")  
       }else{
+        
         model = methods::new("mvmreg",N0=ncol(X)+1)
       }
     }
@@ -139,8 +140,7 @@ find_model = function(X){
   model
 }
 
-#' @title greed_cond
-#' 
+#' @title conditional model based hierachical clustering
 #' 
 #' @param X covariates data 
 #' @param Y target variables
@@ -151,7 +151,7 @@ find_model = function(X){
 #' @return an \code{\link{icl_path-class}} object
 #' @export
 greed_cond = function(X,Y,K=20,model=find_model_cond(X,Y),alg=methods::new("hybrid"),verbose=FALSE){
-  fit(model,alg,list(X=X,y=y,N=dim(X)[1]),K,verbose)
+  fit(model,alg,list(X=X,Y=Y,N=dim(X)[1]),K,verbose)
 }
 
 

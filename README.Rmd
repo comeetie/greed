@@ -37,11 +37,11 @@ Eventually, the whole path of solutions from K* to 1 cluster is extracted. This 
 
 ## Installation
 
-You can install the released version of greed from [GitHub](https://github.com/)) with:
+You can install the released version of greed from [GitHub](https://github.com/) with:
 
 ``` r
 install.packages("devtools")
-devtools::install_git("comeetie/greed")
+devtools::install_github("comeetie/greed")
 ```
 
 ## Example

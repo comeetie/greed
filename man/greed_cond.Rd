@@ -2,7 +2,7 @@
 % Please edit documentation in R/alg_classes.R
 \name{greed_cond}
 \alias{greed_cond}
-\title{greed_cond}
+\title{conditional model based hierachical clustering}
 \usage{
 greed_cond(X, Y, K = 20, model = find_model_cond(X, Y),
   alg = methods::new("hybrid"), verbose = FALSE)
@@ -24,5 +24,5 @@ greed_cond(X, Y, K = 20, model = find_model_cond(X, Y),
 an \code{\link{icl_path-class}} object
 }
 \description{
-greed_cond
+conditional model based hierachical clustering
 }

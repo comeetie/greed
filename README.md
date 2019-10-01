@@ -38,11 +38,11 @@ functionality.
 ## Installation
 
 You can install the released version of greed from
-[GitHub](https://github.com/)) with:
+[GitHub](https://github.com/) with:
 
 ``` r
 install.packages("devtools")
-devtools::install_git("comeetie/greed")
+devtools::install_github("comeetie/greed")
 ```
 
 ## Example
@@ -54,10 +54,12 @@ library(greed)
 data(Jazz)
 sol=greed(Jazz)
 #> ------- Fitting a dcsbm model ------
-#> ################# Generation  1: best solution with an ICL of -29416 and 16 clusters #################
-#> ################# Generation  2: best solution with an ICL of -29345 and 19 clusters #################
-#> ################# Generation  3: best solution with an ICL of -29313 and 19 clusters #################
-#> ################# Generation  4: best solution with an ICL of -29313 and 19 clusters #################
+#> ################# Generation  1: best solution with an ICL of -29391 and 16 clusters #################
+#> ################# Generation  2: best solution with an ICL of -29315 and 18 clusters #################
+#> ################# Generation  3: best solution with an ICL of -29305 and 19 clusters #################
+#> ################# Generation  4: best solution with an ICL of -29304 and 19 clusters #################
+#> ################# Generation  5: best solution with an ICL of -29304 and 19 clusters #################
+#> ################# Generation  6: best solution with an ICL of -29304 and 19 clusters #################
 ```
 
 Some plotting function enable the exploraiton of the clustering results:

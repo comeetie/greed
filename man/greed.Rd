@@ -4,15 +4,17 @@
 \name{greed}
 \alias{greed}
 \alias{greed-package}
-\title{model based hierachical clustering}
+\title{model based hierachical clustering with icl}
 \usage{
 greed(X, K = 20, model = find_model(X), alg = methods::new("hybrid"),
   verbose = FALSE)
 }
 \arguments{
-\item{X}{data to cluster}
+\item{X}{data to cluster either a matrix or a \code{\link{dgCMatrix-class}}}
 
-\item{K}{Desired number of cluster}
+\item{K}{initial number of cluster}
+
+\item{model}{a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}} or \code{\link{mvmreg-class}}}
 
 \item{alg}{an optimisation algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}}
 
@@ -22,7 +24,7 @@ greed(X, K = 20, model = find_model(X), alg = methods::new("hybrid"),
 an \code{\link{icl_path-class}} object
 }
 \description{
-Performs  a
+
 
 Greed enable the clustering of networks and counts data such as document/term matrix with different model. 
 Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood 
