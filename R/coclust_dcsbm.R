@@ -222,9 +222,9 @@ setMethod(f = "postprocess",
             # }
             # }
             sol@clrow = as.numeric(factor(sol@cl[irow],levels=clust_rows))
-            sol@Krow = max(sol@clrow)
+            sol@Krow = max(sol@clrow,na.rm=TRUE)
             sol@clcol = as.numeric(factor(sol@cl[icol],levels=clust_cols))
-            sol@Kcol = max(sol@clcol)
+            sol@Kcol = max(sol@clcol,na.rm=TRUE)
             sol@obs_stats$co_x_counts=sol@obs_stats$x_counts[clust_rows,clust_cols]
             
             if(!is.null(data)){

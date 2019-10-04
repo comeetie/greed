@@ -263,7 +263,13 @@ cleanpathopt = function(pathsol){
         cnodes=cnodes[-path[[m]]$k]
       }
       # find optimal leaf ordering
-      leaforder = cba::order.optimal(stats::as.dist(-path[[1]]$merge_mat+t(path[[1]]$merge_mat)),merge)
+      if(length(path)>1){
+        leaforder = cba::order.optimal(stats::as.dist(-path[[1]]$merge_mat+t(path[[1]]$merge_mat)),merge)
+      }else{
+        leaforder=list(order=1:2)
+      }
+        
+      
       
       
       # ordering of initial solution

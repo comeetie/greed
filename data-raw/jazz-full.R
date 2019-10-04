@@ -47,3 +47,16 @@ col_meta=tibble(Band=colnames(X)) %>% left_join(bands_full)
 
 Jazz_full=list(X=X,col_meta=col_meta)
 devtools::use_data(Jazz_full)
+
+Xb= t(X) %*% X
+diag(Xb)=0
+Xb[Xb>1]=1
+
+sol=greed(Xb)
+
+
+Xm= X %*% t(X)
+diag(Xm)=0
+Xm[Xm>1]=1
+
+sol=greed(Xm)

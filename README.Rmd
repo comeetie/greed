@@ -24,9 +24,11 @@ Greed enable model based clustering of networks, counts data matrix and much mor
 Four generative models are availables currently : 
 
 * sbm : Stochastick Block Models (directed), 
-* dcsbm : degree corected Block Models (directed), 
+* dcsbm : degree corrected Block Models (directed),
+* co_dcsbm: co clustering with degree corrected Block Models (directed)
 * mm: Mixture of Multinomials, 
-* mreg : Mixture of regression. 
+* mvmreg : Mixture of regression.
+
 
 With the Integrated Classification Likelihood the parameters of the models are integrated out. The optimization is performed by default thanks to a combination of greedy local search and a genetic algorithm, several optimization algorithms are available.
 
@@ -54,7 +56,7 @@ data(Jazz)
 sol=greed(Jazz)
 ```
 
-Some plotting function enable the exploraiton of the clustering results:
+The generative model will be chosen automatically to fit with the data provided. Here Jazz is a square sparse matrix and a dcsbm model will be used by default. Some plotting function enable the exploraiton of the clustering results:
 ```{r plot,message=FALSE,results="hide"}
 plot(sol)
 ```
@@ -68,3 +70,14 @@ Eventually, one may explore some coarser clustering using the cut function:
 ```{r cut}
 plot(cut(sol,5))
 ```
+
+For large datasets, it's possible to use parallelism to speed-up the computation thanks to the fure package. You only need to specify the type of parralelism.
+```{r future}
+library(future)
+plan(multisession)
+data("Blogs")
+sol=greed(Blogs$X)
+plot(sol)
+```
+
+

@@ -131,7 +131,7 @@ find_model = function(X){
         model = methods::new("co_dcsbm")  
       }else{
         
-        model = methods::new("mvmreg",N0=ncol(X)+1)
+        model = methods::new("gmm",N0=ncol(X)+1)
       }
     }
   }else{
@@ -150,13 +150,11 @@ find_model = function(X){
 #' @param verbose boolean for verbose mode 
 #' @return an \code{\link{icl_path-class}} object
 #' @export
-greed_cond = function(X,Y,K=20,model=find_model_cond(X,Y),alg=methods::new("hybrid"),verbose=FALSE){
-  fit(model,alg,list(X=X,Y=Y,N=dim(X)[1]),K,verbose)
-}
-
-
-find_model_cond = function(X,Y){
-  methods::new("mvmreg",N0=ncol(Y)+1)
+greed_cond = function(X,Y,K=20,model=methods::new("mvmreg",N0=ncol(Y)+1),alg=methods::new("hybrid"),verbose=FALSE){
+  if(nrow(X)!=nrow(Y)){
+    stop("Incomptible sizes between X and Y.")
+  }
+  fit(model,alg,list(X=X,Y=Y,N=nrow(X),moves=as.sparse(matrix(1,K,K))),K,verbose)
 }
 
 setGeneric("reorder", function(model, obs_stats,order) standardGeneric("reorder")) 

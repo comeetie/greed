@@ -354,7 +354,6 @@ List lm_post_del(List current, const arma::mat X,const arma::colvec& y,double re
                       Named("log_evidence")=log_evidence);
 }
 
-
 // [[Rcpp::export]]
 List mvlm_post(const arma::mat X,const arma::mat Y,double alpha, double N0) {
   
@@ -363,6 +362,7 @@ List mvlm_post(const arma::mat X,const arma::mat Y,double alpha, double N0) {
   // https://tminka.github.io/papers/minka-linear.pdf
   // Bayesian linear regression
   // Thomas P. Minka
+  // But ridge prior K= alpha.I, M=0, S0= NoI
   int n = X.n_rows, m = X.n_cols, d=Y.n_cols;
   
   
@@ -386,8 +386,8 @@ List mvlm_post(const arma::mat X,const arma::mat Y,double alpha, double N0) {
   double log_evidence = arma::accu(lgamma((n+N0+1-di)/2)) - arma::accu(lgamma((N0+1-di)/2));
   log_evidence = log_evidence + m*d/2*log(alpha) - d/2*log(det(S)) - n*d/2*log(M_PI);
   log_evidence = log_evidence + N0*d/2*log(N0)-(n+N0)/2*log(det(Syx+SMprior));
-   // log_evidence = arma::accu(di);
-    //+ m*d/2*log(alpha) - d/2*log(det(S)) - n*d/2*log(M_PI)+N0*d/2*log(N0)-(n+N0)/2*log(det(Syx+SMprior));
+  // log_evidence = arma::accu(di);
+  //+ m*d/2*log(alpha) - d/2*log(det(S)) - n*d/2*log(M_PI)+N0*d/2*log(N0)-(n+N0)/2*log(det(Syx+SMprior));
   return List::create(Named("S")  = S,
                       Named("mu") = mu,
                       Named("n")  = n,

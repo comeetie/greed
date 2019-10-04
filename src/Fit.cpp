@@ -25,7 +25,7 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
        strcmp(model.slot("name"),"co_dcsbm")!=0 && 
        strcmp(model.slot("name"),"mm")!=0 &&
        strcmp(model.slot("name"),"mvmreg")!=0 &&
-       strcmp(model.slot("name"),"mreg")!=0){
+       strcmp(model.slot("name"),"gmm")!=0){
       stop("Unsuported model");
     }
     if(strcmp(model.slot("name"),"sbm")==0){
@@ -50,7 +50,7 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       M = new Mreg(X,y,Ki,model.slot("alpha"),model.slot("reg"),model.slot("a0"),model.slot("b0"),clt,verbose);
     }
     
-    if(strcmp(model.slot("name"),"mvmreg")==0){
+    if(strcmp(model.slot("name"),"mvmreg")==0 | strcmp(model.slot("name"),"gmm")==0 ){
       arma::mat X = as<arma::mat>(data["X"]);
       arma::mat Y = as<arma::mat>(data["Y"]);
       M = new Mvmreg(X,Y,Ki,model.slot("alpha"),model.slot("beta"),model.slot("N0"),clt,verbose);
