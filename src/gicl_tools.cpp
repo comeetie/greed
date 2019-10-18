@@ -355,39 +355,34 @@ List lm_post_del(List current, const arma::mat X,const arma::colvec& y,double re
 }
 
 // [[Rcpp::export]]
-List mvlm_post(const arma::mat X,const arma::mat Y,double alpha, double N0) {
+List mvlm_post_comp(const arma::mat X,const arma::mat Y,const arma::mat M,const arma::mat K, const arma::mat S0, double N0) {
   
   
   
   // https://tminka.github.io/papers/minka-linear.pdf
   // Bayesian linear regression
-  // Thomas P. Minka
-  // But ridge prior K= alpha.I, M=0, S0= NoI
   int n = X.n_rows, m = X.n_cols, d=Y.n_cols;
-  
-  
-  arma::mat Sprior(m,m);
-  Sprior.zeros();
-  Sprior.diag() = arma::ones<arma::vec>(m)*alpha;
-  
-  
-  arma::mat SMprior(d,d);
-  SMprior.zeros();
-  SMprior.diag() = arma::ones<arma::vec>(d)*N0;
-  
-  arma::mat S = X.t()*X+Sprior;
-  arma::mat Xty = X.t()*Y;
+
+
+  arma::mat S = X.t()*X+K;
+
+  arma::mat Xty = X.t()*Y+(M.t()*K).t();
+
   arma::mat iS = inv_sympd(S);
   arma::mat mu =  iS*Xty;
-  arma::mat Yty = Y.t()*Y;
+ 
+  arma::mat Yty = Y.t()*Y+M.t()*K*M;
+
   arma::mat Syx = Yty - Y.t()*X*mu;
   
   arma::vec di = arma::linspace<arma::vec>(1, d,d);
   double log_evidence = arma::accu(lgamma((n+N0+1-di)/2)) - arma::accu(lgamma((N0+1-di)/2));
-  log_evidence = log_evidence + m*d/2*log(alpha) - d/2*log(det(S)) - n*d/2*log(M_PI);
-  log_evidence = log_evidence + N0*d/2*log(N0)-(n+N0)/2*log(det(Syx+SMprior));
-  // log_evidence = arma::accu(di);
-  //+ m*d/2*log(alpha) - d/2*log(det(S)) - n*d/2*log(M_PI)+N0*d/2*log(N0)-(n+N0)/2*log(det(Syx+SMprior));
+
+  log_evidence = log_evidence + d/2*log(det(K))- d/2*log(det(S)) - n*d/2*log(M_PI);
+
+  log_evidence = log_evidence + N0/2*log(det(S0))-(n+N0)/2*log(det(Syx+S0));
+
+  
   return List::create(Named("S")  = S,
                       Named("mu") = mu,
                       Named("n")  = n,
@@ -399,20 +394,17 @@ List mvlm_post(const arma::mat X,const arma::mat Y,double alpha, double N0) {
 }
 
 
+
+
+
 // [[Rcpp::export]]
-List mvlm_post_add1(List current, const arma::rowvec X,const arma::rowvec Y,double alpha, double N0) {
+List mvlm_post_add1_comp(List current, const arma::rowvec X,const arma::rowvec Y,const arma::mat M,const arma::mat K, const arma::mat S0, double N0) {
   int m = X.n_cols, d=Y.n_cols;
   int n = as<int>(current["n"])+1;
   
   arma::mat S = as<arma::mat>(current["S"])+X.t()*X;
   arma::mat Xty = as<arma::mat>(current["Xty"])+X.t()*Y;
   arma::mat Yty = as<arma::mat>(current["Yty"])+Y.t()*Y;
-  
-  
-  arma::mat SMprior(d,d);
-  SMprior.zeros();
-  SMprior.diag() = arma::ones<arma::vec>(d)*N0;
-  
   
   arma::mat iSo = as<arma::mat>(current["iS"]);
   // algo de mise a jour sequentiel pour 1 point
@@ -425,8 +417,9 @@ List mvlm_post_add1(List current, const arma::rowvec X,const arma::rowvec Y,doub
   
   arma::vec di = arma::linspace<arma::vec>(1, d,d);
   double log_evidence = arma::accu(lgamma((n+N0+1-di)/2)) - arma::accu(lgamma((N0+1-di)/2));
-  log_evidence = log_evidence + m*d/2*log(alpha) - d/2*log(det(S)) - n*d/2*log(M_PI);
-  log_evidence = log_evidence + N0*d/2*log(N0)-(n+N0)/2*log(det(Syx+SMprior));
+  log_evidence = log_evidence + d/2*log(det(K))- d/2*log(det(S)) - n*d/2*log(M_PI);
+  log_evidence = log_evidence + N0/2*log(det(S0))-(n+N0)/2*log(det(Syx+S0));
+  
   return List::create(Named("S")  = S,
                       Named("mu") = mu,
                       Named("n")  = n,
@@ -437,8 +430,10 @@ List mvlm_post_add1(List current, const arma::rowvec X,const arma::rowvec Y,doub
                       Named("log_evidence")=log_evidence);
 }
 
+
 // [[Rcpp::export]]
-List mvlm_post_del1(List current, const arma::rowvec X,const arma::rowvec Y,double alpha, double N0) {
+List mvlm_post_del1_comp(List current, const arma::rowvec X,const arma::rowvec Y,const arma::mat M,const arma::mat K, const arma::mat S0, double N0) {
+
   int m = X.n_cols, d=Y.n_cols;
   int n = as<int>(current["n"])-1;
   
@@ -446,12 +441,7 @@ List mvlm_post_del1(List current, const arma::rowvec X,const arma::rowvec Y,doub
   arma::mat Xty = as<arma::mat>(current["Xty"])-X.t()*Y;
   arma::mat Yty = as<arma::mat>(current["Yty"])-Y.t()*Y;
   
-  
-  arma::mat SMprior(d,d);
-  SMprior.zeros();
-  SMprior.diag() = arma::ones<arma::vec>(d)*N0;
-  
-  
+
   arma::mat iSo = as<arma::mat>(current["iS"]);
   // algo de mise a jour sequentiel pour 1 point
   // https://en.wikipedia.org/wiki/Sherman%E2%80%93Morrison_formula
@@ -462,10 +452,13 @@ List mvlm_post_del1(List current, const arma::rowvec X,const arma::rowvec Y,doub
   arma::mat Syx = Yty - Xty.t()*mu;
   
   
+  
+  
   arma::vec di = arma::linspace<arma::vec>(1, d,d);
   double log_evidence = arma::accu(lgamma((n+N0+1-di)/2)) - arma::accu(lgamma((N0+1-di)/2));
-  log_evidence = log_evidence + m*d/2*log(alpha) - d/2*log(det(S)) - n*d/2*log(M_PI);
-  log_evidence = log_evidence + N0*d/2*log(N0)-(n+N0)/2*log(det(Syx+SMprior));
+  log_evidence = log_evidence + d/2*log(det(K))- d/2*log(det(S)) - n*d/2*log(M_PI);
+  log_evidence = log_evidence + N0/2*log(det(S0))-(n+N0)/2*log(det(Syx+S0));
+  
   return List::create(Named("S")  = S,
                       Named("mu") = mu,
                       Named("n")  = n,
@@ -477,24 +470,18 @@ List mvlm_post_del1(List current, const arma::rowvec X,const arma::rowvec Y,doub
 }
 
 // [[Rcpp::export]]
-List mvlm_post_merge(List current1, List current2,double alpha, double N0) {
+List mvlm_post_merge_comp(List current1, List current2,const arma::mat M,const arma::mat K, const arma::mat S0, double N0) {
+
   int m = as<arma::mat>(current1["S"]).n_cols, d=as<arma::mat>(current1["Yty"]).n_cols;
   int n = as<int>(current1["n"])+as<int>(current2["n"]);
   
-  arma::mat Sprior(m,m);
-  Sprior.zeros();
-  Sprior.diag() = arma::ones<arma::vec>(m)*alpha;
+
   
+  arma::mat S = as<arma::mat>(current1["S"])+as<arma::mat>(current2["S"])-K;
+  arma::mat Xty = as<arma::mat>(current1["Xty"])+as<arma::mat>(current2["Xty"])-(M.t()*K).t();
+  arma::mat Yty = as<arma::mat>(current1["Yty"])+as<arma::mat>(current2["Yty"])-M.t()*K*M;
   
-  arma::mat S = as<arma::mat>(current1["S"])+as<arma::mat>(current2["S"])-Sprior;
-  arma::mat Xty = as<arma::mat>(current1["Xty"])+as<arma::mat>(current2["Xty"]);
-  arma::mat Yty = as<arma::mat>(current1["Yty"])+as<arma::mat>(current2["Yty"]);
-  
-  
-  arma::mat SMprior(d,d);
-  SMprior.zeros();
-  SMprior.diag() = arma::ones<arma::vec>(d)*N0;
-  
+
   arma::mat iS = inv_sympd(S);
   arma::mat mu =  iS*Xty;
   
@@ -502,8 +489,9 @@ List mvlm_post_merge(List current1, List current2,double alpha, double N0) {
   
   arma::vec di = arma::linspace<arma::vec>(1, d,d);
   double log_evidence = arma::accu(lgamma((n+N0+1-di)/2)) - arma::accu(lgamma((N0+1-di)/2));
-  log_evidence = log_evidence + m*d/2*log(alpha) - d/2*log(det(S)) - n*d/2*log(M_PI);
-  log_evidence = log_evidence + N0*d/2*log(N0)-(n+N0)/2*log(det(Syx+SMprior));
+  log_evidence = log_evidence + d/2*log(det(K))- d/2*log(det(S)) - n*d/2*log(M_PI);
+  log_evidence = log_evidence + N0/2*log(det(S0))-(n+N0)/2*log(det(Syx+S0));
+  
   return List::create(Named("S")  = S,
                       Named("mu") = mu,
                       Named("n")  = n,
@@ -513,6 +501,118 @@ List mvlm_post_merge(List current1, List current2,double alpha, double N0) {
                       Named("iS")=iS,
                       Named("log_evidence")=log_evidence);
 }
+
+
+// [[Rcpp::export]]
+List gmm_marginal(const arma::mat X,double tau,int N0i, const arma::mat epsilon, const arma::rowvec mu) {
+  
+  
+  double ng = X.n_rows, d = X.n_cols;
+  double N0 = N0i;
+  arma::rowvec m = arma::mean(X,0);
+  arma::mat M(ng,d);
+  M.each_row() = m;
+  arma::mat S = (X-M).t()*(X-M); 
+  arma::mat Sp = epsilon+tau*ng/(tau+ng)*(m-mu).t()*(m-mu)+S;
+  
+  
+  arma::vec di = arma::linspace<arma::vec>(1, d,d);
+  double log_evidence = arma::accu(lgamma((ng+N0+1-di)/2)) - arma::accu(lgamma((N0+1-di)/2));
+  log_evidence = log_evidence - ng*d/2*log(M_PI) + d/2*log(tau) - d/2*log(tau+ng) ;
+  log_evidence = log_evidence + N0/2*log(det(epsilon))-(ng+N0)/2*log(det(Sp));
+  
+  return List::create(Named("S")  = S,
+                      Named("m") = m,
+                      Named("ng")  = ng,
+                      Named("Sp") = Sp,
+                      Named("log_evidence")=log_evidence);
+}
+
+
+// [[Rcpp::export]]
+List gmm_marginal_add1(List current, const arma::rowvec X,double tau,int N0i, const arma::mat epsilon, const arma::rowvec mu) {
+  
+
+  double d = X.n_cols;
+  
+  arma::mat mold = as<arma::mat>(current["m"]);
+  double ngold = as<double>(current["ng"]);
+  double ng = ngold +1;
+  double N0 = N0i;
+  arma::rowvec m = (mold*ngold+X)/ng;
+  arma::mat S =  as<arma::mat>(current["S"])+(X-m).t()*(X-mold);
+  arma::mat Sp = epsilon+tau*ng/(tau+ng)*(m-mu).t()*(m-mu)+S;
+  
+  arma::vec di = arma::linspace<arma::vec>(1, d,d);
+  double log_evidence = arma::accu(lgamma((ng+N0+1-di)/2)) - arma::accu(lgamma((N0+1-di)/2));
+  log_evidence = log_evidence - ng*d/2*log(M_PI) + d/2*log(tau) - d/2*log(tau+ng) ;
+  log_evidence = log_evidence + N0/2*log(det(epsilon))-(ng+N0)/2*log(det(Sp));
+  
+  return List::create(Named("S")  = S,
+                      Named("m") = m,
+                      Named("ng")  = ng,
+                      Named("log_evidence")=log_evidence);
+}
+
+
+// [[Rcpp::export]]
+List gmm_marginal_del1(List current, const arma::rowvec X,double tau,int N0i, const arma::mat epsilon, const arma::rowvec mu) {
+  
+  
+  double d = X.n_cols;
+  
+  arma::mat mold = as<arma::mat>(current["m"]);
+  double ngold = as<int>(current["ng"]);
+  double ng = ngold -1;
+  double N0 = N0i;
+  arma::rowvec m = (mold*ngold-X)/ng;
+  arma::mat S =  as<arma::mat>(current["S"])-(X-m).t()*(X-mold);
+  arma::mat Sp = epsilon+tau*ng/(tau+ng)*(m-mu).t()*(m-mu)+S;
+  
+  arma::vec di = arma::linspace<arma::vec>(1, d,d);
+  double log_evidence = arma::accu(lgamma((ng+N0+1-di)/2)) - arma::accu(lgamma((N0+1-di)/2));
+  log_evidence = log_evidence - ng*d/2*log(M_PI) + d/2*log(tau) - d/2*log(tau+ng) ;
+  log_evidence = log_evidence + N0/2*log(det(epsilon))-(ng+N0)/2*log(det(Sp));
+  
+  return List::create(Named("S")  = S,
+                      Named("m") = m,
+                      Named("ng")  = ng,
+                      Named("log_evidence")=log_evidence);
+}
+
+
+// [[Rcpp::export]]
+List gmm_marginal_merge(List current1, List current2,double tau,int N0i, const arma::mat epsilon, const arma::rowvec mu) {
+  
+  
+  double N0 = N0i;
+
+  double ng1 = as<double>(current1["ng"]);
+  double ng2 = as<double>(current2["ng"]);
+  double ng  = ng1+ng2;
+  
+  arma::rowvec m1 = as<arma::rowvec>(current1["m"]);
+  arma::rowvec m2 = as<arma::rowvec>(current2["m"]);
+  arma::rowvec m = m1*(ng1/ng)+m2*(ng2/ng);
+
+  double d = m1.n_cols;
+  arma::mat S1 =  as<arma::mat>(current1["S"]);
+  arma::mat S2 =  as<arma::mat>(current2["S"]);
+  arma::mat S = S1+ng1*(m1-m).t()*(m1-m)+S2+ng2*(m2-m).t()*(m2-m);
+  
+  arma::mat Sp = epsilon+tau*ng/(tau+ng)*(m-mu).t()*(m-mu)+S;
+  
+  arma::vec di = arma::linspace<arma::vec>(1, d,d);
+  double log_evidence = arma::accu(lgamma((ng+N0+1-di)/2)) - arma::accu(lgamma((N0+1-di)/2));
+  log_evidence = log_evidence - ng*d/2*log(M_PI) + d/2*log(tau) - d/2*log(tau+ng) ;
+  log_evidence = log_evidence + N0/2*log(det(epsilon))-(ng+N0)/2*log(det(Sp));
+  
+  return List::create(Named("S")  = S,
+                      Named("m") = m,
+                      Named("ng")  = ng,
+                      Named("log_evidence")=log_evidence);
+}
+
 
 // [[Rcpp::export]] 
 arma::uvec possible_moves(int k,arma::sp_mat & move_mat){

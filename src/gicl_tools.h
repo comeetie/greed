@@ -46,6 +46,19 @@ List mvlm_post_del1(List current, const arma::rowvec X,const arma::rowvec Y,doub
 
 List mvlm_post_merge(List current1,List current2,double alpha, double N0);
 
+List mvlm_post_comp(const arma::mat X,const arma::mat Y,const arma::mat K,const arma::mat M, const arma::mat S0, double N0);
+
+List mvlm_post_add1_comp(List current, const arma::rowvec X,const arma::rowvec Y,const arma::mat K,const arma::mat M, const arma::mat S0, double N0);
+
+List mvlm_post_del1_comp(List current, const arma::rowvec X,const arma::rowvec Y,const arma::mat K,const arma::mat M, const arma::mat S0, double N0);
+
+List mvlm_post_merge_comp(List current1,List current2,const arma::mat K,const arma::mat M, const arma::mat S0, double N0);
+
+List gmm_marginal(const arma::mat X,double tau,int N0, const arma::mat epsilon, const arma::rowvec mu);
+List gmm_marginal_add1(List current, const arma::rowvec X,double tau,int N0, const arma::mat epsilon, const arma::rowvec mu);
+List gmm_marginal_del1(List current, const arma::rowvec X,double tau,int N0, const arma::mat epsilon, const arma::rowvec mu);
+List gmm_marginal_merge(List current1, List current2,double tau,int N0, const arma::mat epsilon, const arma::rowvec mu);
+
 arma::uvec possible_moves(int k,arma::sp_mat & move_mat);
 #endif
 

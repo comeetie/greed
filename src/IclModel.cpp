@@ -85,7 +85,7 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
       if (workingset(cnode)==1){
         // compute delta swap
         arma::vec delta = this->delta_swap(cnode,iclust);
-        // Rcout << delta << std::endl;
+        //Rcout << delta << std::endl;
         // best swap
         int ncl = delta.index_max();
         if(ncl!=cl(cnode)){
@@ -107,7 +107,7 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
         }else{
           arma::vec deltaneg = delta.elem(arma::find(delta<0));
           int bmn= deltaneg.index_max();
-          if(deltaneg(bmn) <  -5 ){
+          if(deltaneg(bmn) <  -10 ){
             workingset(cnode) = 0;
             //Rcout << "BMN :"<< bmn << "val" << deltaneg(bmn) << std::endl;
           }
@@ -123,8 +123,8 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
   }
   if(verbose){
     Rcout << "##################################"<< std::endl;
-    //plaRcout << "Swap convergence in " << nbpass << " epochs with " << nbmove << " moves, icl :" << icl_value << "K :" << K << ", working set size :" << arma::accu(workingset)  << std::endl;
-    Rcout << "Swap convergence, with an ICL of "<< icl_value << " and " << K << " clusters." << std::endl;
+    Rcout << "Swap convergence in " << nbpass << " epochs with " << nbmove << " moves, icl :" << icl_value << "K :" << K << ", working set size :" << arma::accu(workingset)  << std::endl;
+    //Rcout << "Swap convergence, with an ICL of "<< icl_value << " and " << K << " clusters." << std::endl;
     Rcout << "##################################"<< std::endl; 
   } 
 }

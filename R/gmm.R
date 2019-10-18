@@ -8,13 +8,17 @@ NULL
 #' An S4 class to represent a multivariate mixture of regression model, extend \code{\link{icl_model-class}}.
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
-#' @slot beta Prior parameter (inverse variance) default 0.01 
+#' @slot tau Prior parameter (inverse variance) default 0.01 
 #' @slot N0 Prior parameter (pseudo count) defulat to 10 ! should be > number of features
+#' @slot epsilon Prior parameter covartiance matrix prior
+#' @slot mu mean prior
 #' @examples
 #' new("gmm")
-#' new("gmm",alpha=1,beta=0.1,N0=15)
+#' new("gmm",alpha=1,tau=0.1,N0=15)
 #' @export
-setClass("gmm", contains = "mvmreg",prototype = prototype(name="gmm"))
+setClass("gmm", representation = list(tau = "numeric",mu="numeric",epsilon="matrix",N0="numeric"),
+         contains = "icl_model",
+         prototype(name="gmm",tau=0.1,N0=10,mu=1,epsilon=matrix(1,1,1),alpha=1))
 
 
 #' @title Clustering with a gaussian mixture model fit results class
@@ -98,13 +102,9 @@ setMethod(f = "plot",
 
 
 setMethod(f = "seed", 
-          signature = signature("mvmreg","list","numeric"), 
+          signature = signature("gmm","list","numeric"), 
           definition = function(model,data, K){
-            X=cbind(data$X,data$Y)
-            sds=apply(X,2,stats::sd)
-            X=X[,sds!=0]
-            X=t(t(X)/sds[sds!=0])
-            km=stats::kmeans(X,K)
+            km=stats::kmeans(zscore(data$X),K)
             km$cluster
           })
 
@@ -113,8 +113,19 @@ setMethod(f = "seed",
 setMethod(f = "preprocess", 
           signature = signature("gmm"), 
           definition = function(model, data,K){
-            list(Y=zscore(as.matrix(data)),X=matrix(1,ncol=1,nrow=nrow(data)),N=nrow(data),moves=as.sparse(matrix(1,K,K)))
+            list(X=as.matrix(data),N=nrow(data),moves=as.sparse(matrix(1,K,K)))
           })
 
+reorder_gmm = function(obs_stats,or){
+  obs_stats$counts = obs_stats$counts[or]
+  obs_stats$regs = obs_stats$regs[or]
+  obs_stats
+}
 
+
+setMethod(f = "reorder", 
+          signature = signature("gmm", "list","integer"), 
+          definition = function(model, obs_stats,order){
+            reorder_gmm(obs_stats,order)
+          })
 

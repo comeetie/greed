@@ -193,6 +193,8 @@ incremental_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
     diag(M)=0
     ijm=which(M==1,arr.ind = TRUE)
     move_mat=sparseMatrix(i=ijm[,1],j=ijm[,2],x = rep(1,nrow(ijm)), dims = c(max(ncl),max(ncl)))
+    
+
     if(sum(move_mat)>0){
       sol=fimerge(ncl,Matrix::tril(move_mat))
       move_mat =sol@move_mat+Matrix::t(sol@move_mat);
@@ -220,6 +222,7 @@ incremental_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
   diag(M)=0
   ijm=which(M==1,arr.ind = TRUE)
   move_mat=sparseMatrix(i=ijm[,1],j=ijm[,2],x = rep(1,nrow(ijm)), dims = c(max(ncl),max(ncl)))
+
   sol=fimerge(ncl,Matrix::tril(move_mat))
   move_mat = sol@move_mat
   ncl = sol@cl

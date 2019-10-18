@@ -93,20 +93,36 @@ lm_post_del <- function(current, X, y, regu, a0, b0) {
     .Call('_greed_lm_post_del', PACKAGE = 'greed', current, X, y, regu, a0, b0)
 }
 
-mvlm_post <- function(X, Y, alpha, N0) {
-    .Call('_greed_mvlm_post', PACKAGE = 'greed', X, Y, alpha, N0)
+mvlm_post_comp <- function(X, Y, M, K, S0, N0) {
+    .Call('_greed_mvlm_post_comp', PACKAGE = 'greed', X, Y, M, K, S0, N0)
 }
 
-mvlm_post_add1 <- function(current, X, Y, alpha, N0) {
-    .Call('_greed_mvlm_post_add1', PACKAGE = 'greed', current, X, Y, alpha, N0)
+mvlm_post_add1_comp <- function(current, X, Y, M, K, S0, N0) {
+    .Call('_greed_mvlm_post_add1_comp', PACKAGE = 'greed', current, X, Y, M, K, S0, N0)
 }
 
-mvlm_post_del1 <- function(current, X, Y, alpha, N0) {
-    .Call('_greed_mvlm_post_del1', PACKAGE = 'greed', current, X, Y, alpha, N0)
+mvlm_post_del1_comp <- function(current, X, Y, M, K, S0, N0) {
+    .Call('_greed_mvlm_post_del1_comp', PACKAGE = 'greed', current, X, Y, M, K, S0, N0)
 }
 
-mvlm_post_merge <- function(current1, current2, alpha, N0) {
-    .Call('_greed_mvlm_post_merge', PACKAGE = 'greed', current1, current2, alpha, N0)
+mvlm_post_merge_comp <- function(current1, current2, M, K, S0, N0) {
+    .Call('_greed_mvlm_post_merge_comp', PACKAGE = 'greed', current1, current2, M, K, S0, N0)
+}
+
+gmm_marginal <- function(X, tau, N0i, epsilon, mu) {
+    .Call('_greed_gmm_marginal', PACKAGE = 'greed', X, tau, N0i, epsilon, mu)
+}
+
+gmm_marginal_add1 <- function(current, X, tau, N0i, epsilon, mu) {
+    .Call('_greed_gmm_marginal_add1', PACKAGE = 'greed', current, X, tau, N0i, epsilon, mu)
+}
+
+gmm_marginal_del1 <- function(current, X, tau, N0i, epsilon, mu) {
+    .Call('_greed_gmm_marginal_del1', PACKAGE = 'greed', current, X, tau, N0i, epsilon, mu)
+}
+
+gmm_marginal_merge <- function(current1, current2, tau, N0i, epsilon, mu) {
+    .Call('_greed_gmm_marginal_merge', PACKAGE = 'greed', current1, current2, tau, N0i, epsilon, mu)
 }
 
 possible_moves <- function(k, move_mat) {

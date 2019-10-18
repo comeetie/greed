@@ -331,61 +331,132 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// mvlm_post
-List mvlm_post(const arma::mat X, const arma::mat Y, double alpha, double N0);
-RcppExport SEXP _greed_mvlm_post(SEXP XSEXP, SEXP YSEXP, SEXP alphaSEXP, SEXP N0SEXP) {
+// mvlm_post_comp
+List mvlm_post_comp(const arma::mat X, const arma::mat Y, const arma::mat M, const arma::mat K, const arma::mat S0, double N0);
+RcppExport SEXP _greed_mvlm_post_comp(SEXP XSEXP, SEXP YSEXP, SEXP MSEXP, SEXP KSEXP, SEXP S0SEXP, SEXP N0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
     Rcpp::traits::input_parameter< const arma::mat >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type K(KSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type S0(S0SEXP);
     Rcpp::traits::input_parameter< double >::type N0(N0SEXP);
-    rcpp_result_gen = Rcpp::wrap(mvlm_post(X, Y, alpha, N0));
+    rcpp_result_gen = Rcpp::wrap(mvlm_post_comp(X, Y, M, K, S0, N0));
     return rcpp_result_gen;
 END_RCPP
 }
-// mvlm_post_add1
-List mvlm_post_add1(List current, const arma::rowvec X, const arma::rowvec Y, double alpha, double N0);
-RcppExport SEXP _greed_mvlm_post_add1(SEXP currentSEXP, SEXP XSEXP, SEXP YSEXP, SEXP alphaSEXP, SEXP N0SEXP) {
+// mvlm_post_add1_comp
+List mvlm_post_add1_comp(List current, const arma::rowvec X, const arma::rowvec Y, const arma::mat M, const arma::mat K, const arma::mat S0, double N0);
+RcppExport SEXP _greed_mvlm_post_add1_comp(SEXP currentSEXP, SEXP XSEXP, SEXP YSEXP, SEXP MSEXP, SEXP KSEXP, SEXP S0SEXP, SEXP N0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type current(currentSEXP);
     Rcpp::traits::input_parameter< const arma::rowvec >::type X(XSEXP);
     Rcpp::traits::input_parameter< const arma::rowvec >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type K(KSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type S0(S0SEXP);
     Rcpp::traits::input_parameter< double >::type N0(N0SEXP);
-    rcpp_result_gen = Rcpp::wrap(mvlm_post_add1(current, X, Y, alpha, N0));
+    rcpp_result_gen = Rcpp::wrap(mvlm_post_add1_comp(current, X, Y, M, K, S0, N0));
     return rcpp_result_gen;
 END_RCPP
 }
-// mvlm_post_del1
-List mvlm_post_del1(List current, const arma::rowvec X, const arma::rowvec Y, double alpha, double N0);
-RcppExport SEXP _greed_mvlm_post_del1(SEXP currentSEXP, SEXP XSEXP, SEXP YSEXP, SEXP alphaSEXP, SEXP N0SEXP) {
+// mvlm_post_del1_comp
+List mvlm_post_del1_comp(List current, const arma::rowvec X, const arma::rowvec Y, const arma::mat M, const arma::mat K, const arma::mat S0, double N0);
+RcppExport SEXP _greed_mvlm_post_del1_comp(SEXP currentSEXP, SEXP XSEXP, SEXP YSEXP, SEXP MSEXP, SEXP KSEXP, SEXP S0SEXP, SEXP N0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type current(currentSEXP);
     Rcpp::traits::input_parameter< const arma::rowvec >::type X(XSEXP);
     Rcpp::traits::input_parameter< const arma::rowvec >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type K(KSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type S0(S0SEXP);
     Rcpp::traits::input_parameter< double >::type N0(N0SEXP);
-    rcpp_result_gen = Rcpp::wrap(mvlm_post_del1(current, X, Y, alpha, N0));
+    rcpp_result_gen = Rcpp::wrap(mvlm_post_del1_comp(current, X, Y, M, K, S0, N0));
     return rcpp_result_gen;
 END_RCPP
 }
-// mvlm_post_merge
-List mvlm_post_merge(List current1, List current2, double alpha, double N0);
-RcppExport SEXP _greed_mvlm_post_merge(SEXP current1SEXP, SEXP current2SEXP, SEXP alphaSEXP, SEXP N0SEXP) {
+// mvlm_post_merge_comp
+List mvlm_post_merge_comp(List current1, List current2, const arma::mat M, const arma::mat K, const arma::mat S0, double N0);
+RcppExport SEXP _greed_mvlm_post_merge_comp(SEXP current1SEXP, SEXP current2SEXP, SEXP MSEXP, SEXP KSEXP, SEXP S0SEXP, SEXP N0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type current1(current1SEXP);
     Rcpp::traits::input_parameter< List >::type current2(current2SEXP);
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type K(KSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type S0(S0SEXP);
     Rcpp::traits::input_parameter< double >::type N0(N0SEXP);
-    rcpp_result_gen = Rcpp::wrap(mvlm_post_merge(current1, current2, alpha, N0));
+    rcpp_result_gen = Rcpp::wrap(mvlm_post_merge_comp(current1, current2, M, K, S0, N0));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gmm_marginal
+List gmm_marginal(const arma::mat X, double tau, int N0i, const arma::mat epsilon, const arma::rowvec mu);
+RcppExport SEXP _greed_gmm_marginal(SEXP XSEXP, SEXP tauSEXP, SEXP N0iSEXP, SEXP epsilonSEXP, SEXP muSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type tau(tauSEXP);
+    Rcpp::traits::input_parameter< int >::type N0i(N0iSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type epsilon(epsilonSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec >::type mu(muSEXP);
+    rcpp_result_gen = Rcpp::wrap(gmm_marginal(X, tau, N0i, epsilon, mu));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gmm_marginal_add1
+List gmm_marginal_add1(List current, const arma::rowvec X, double tau, int N0i, const arma::mat epsilon, const arma::rowvec mu);
+RcppExport SEXP _greed_gmm_marginal_add1(SEXP currentSEXP, SEXP XSEXP, SEXP tauSEXP, SEXP N0iSEXP, SEXP epsilonSEXP, SEXP muSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current(currentSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type tau(tauSEXP);
+    Rcpp::traits::input_parameter< int >::type N0i(N0iSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type epsilon(epsilonSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec >::type mu(muSEXP);
+    rcpp_result_gen = Rcpp::wrap(gmm_marginal_add1(current, X, tau, N0i, epsilon, mu));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gmm_marginal_del1
+List gmm_marginal_del1(List current, const arma::rowvec X, double tau, int N0i, const arma::mat epsilon, const arma::rowvec mu);
+RcppExport SEXP _greed_gmm_marginal_del1(SEXP currentSEXP, SEXP XSEXP, SEXP tauSEXP, SEXP N0iSEXP, SEXP epsilonSEXP, SEXP muSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current(currentSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec >::type X(XSEXP);
+    Rcpp::traits::input_parameter< double >::type tau(tauSEXP);
+    Rcpp::traits::input_parameter< int >::type N0i(N0iSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type epsilon(epsilonSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec >::type mu(muSEXP);
+    rcpp_result_gen = Rcpp::wrap(gmm_marginal_del1(current, X, tau, N0i, epsilon, mu));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gmm_marginal_merge
+List gmm_marginal_merge(List current1, List current2, double tau, int N0i, const arma::mat epsilon, const arma::rowvec mu);
+RcppExport SEXP _greed_gmm_marginal_merge(SEXP current1SEXP, SEXP current2SEXP, SEXP tauSEXP, SEXP N0iSEXP, SEXP epsilonSEXP, SEXP muSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current1(current1SEXP);
+    Rcpp::traits::input_parameter< List >::type current2(current2SEXP);
+    Rcpp::traits::input_parameter< double >::type tau(tauSEXP);
+    Rcpp::traits::input_parameter< int >::type N0i(N0iSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type epsilon(epsilonSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec >::type mu(muSEXP);
+    rcpp_result_gen = Rcpp::wrap(gmm_marginal_merge(current1, current2, tau, N0i, epsilon, mu));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -426,10 +497,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_lm_post_merge", (DL_FUNC) &_greed_lm_post_merge, 5},
     {"_greed_lm_post_add", (DL_FUNC) &_greed_lm_post_add, 6},
     {"_greed_lm_post_del", (DL_FUNC) &_greed_lm_post_del, 6},
-    {"_greed_mvlm_post", (DL_FUNC) &_greed_mvlm_post, 4},
-    {"_greed_mvlm_post_add1", (DL_FUNC) &_greed_mvlm_post_add1, 5},
-    {"_greed_mvlm_post_del1", (DL_FUNC) &_greed_mvlm_post_del1, 5},
-    {"_greed_mvlm_post_merge", (DL_FUNC) &_greed_mvlm_post_merge, 4},
+    {"_greed_mvlm_post_comp", (DL_FUNC) &_greed_mvlm_post_comp, 6},
+    {"_greed_mvlm_post_add1_comp", (DL_FUNC) &_greed_mvlm_post_add1_comp, 7},
+    {"_greed_mvlm_post_del1_comp", (DL_FUNC) &_greed_mvlm_post_del1_comp, 7},
+    {"_greed_mvlm_post_merge_comp", (DL_FUNC) &_greed_mvlm_post_merge_comp, 6},
+    {"_greed_gmm_marginal", (DL_FUNC) &_greed_gmm_marginal, 5},
+    {"_greed_gmm_marginal_add1", (DL_FUNC) &_greed_gmm_marginal_add1, 6},
+    {"_greed_gmm_marginal_del1", (DL_FUNC) &_greed_gmm_marginal_del1, 6},
+    {"_greed_gmm_marginal_merge", (DL_FUNC) &_greed_gmm_marginal_merge, 6},
     {"_greed_possible_moves", (DL_FUNC) &_greed_possible_moves, 2},
     {NULL, NULL, 0}
 };
