@@ -19,20 +19,18 @@ knitr::opts_chunk$set(
 # GREED : Bayesian greedy clustering <img src="./inst/exdata/greed.png" width=200 align="right" />
 <!-- badges: start -->
 <!-- badges: end -->
-Greed enable model based clustering of networks, counts data matrix and much more with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood (which is equivalent to minimizing the description length). 
+Greed enable model based clustering of networks, counts data matrix and much more with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. 
 
 Four generative models are availables currently : 
 
-* sbm : Stochastick Block Models (directed), 
-* dcsbm : degree corrected Block Models (directed),
-* co_dcsbm: co clustering with degree corrected Block Models (directed)
+* sbm : Stochastick Block Models (for directed and undirected graphs), 
+* dcsbm : Degree Corrected Stochastick Block Models (for directed and undirected graphs), 
+* co_dcsbm: Degree Corrected Latent Block Models,
 * mm: Mixture of Multinomials, 
-* mvmreg : Mixture of regression.
+* gmm : Gaussian Mixture Model.
 
 
-With the Integrated Classification Likelihood the parameters of the models are integrated out. The optimization is performed by default thanks to a combination of greedy local search and a genetic algorithm, several optimization algorithms are available.
-
-Since the Integrated Classification Likelihood introduces a natural regularisation for complex models such strategie automaticaly find a "natural" value for the number of cluster, the user needs only to provide an initial guess.
+With the Integrated Classification Likelihood the parameters of the models are integrated out. Since the Integrated Classification Likelihood introduces a natural regularisation for complex models such strategie automaticaly find a "natural" value for the number of cluster, the user needs only to provide an initial guess. The optimization is performed by default thanks to a combination of greedy local search and a genetic algorithm, several optimization algorithms are available.
 
 Eventually, the whole path of solutions from K* to 1 cluster is extracted. This enable a partial ordering of the clusters, and the evaluation of simpler clustering. The package also provides some ploting functionality.
 
@@ -71,7 +69,7 @@ Eventually, one may explore some coarser clustering using the cut function:
 plot(cut(sol,5))
 ```
 
-For large datasets, it's possible to use parallelism to speed-up the computation thanks to the fure package. You only need to specify the type of parralelism.
+For large datasets, it's possible to use parallelism to speed-up the computation thanks to the future package. You only need to specify the type of parralelism.
 ```{r future}
 library(future)
 plan(multisession)
