@@ -12,7 +12,7 @@ multistart = function(model,alg,data,K,verbose=FALSE){
   
   solutions = listenv::listenv()
   for (i in 1:alg@nb_start){
-    solutions[[i]] %<-% fit_greed(model,data,sample(1:K,data$N,replace = TRUE))
+    solutions[[i]] %<-% fit_greed(model,data,sample_cl(model,data,K))
   }
   solutions = as.list(solutions)
   icls = sapply(solutions,function(s){s@icl})

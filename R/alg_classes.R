@@ -114,7 +114,7 @@ setMethod(f = "cut",
 #' @return an \code{\link{icl_path-class}} object
 #' @export
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
-  data = preprocess(model,X,K)
+  data = preprocess(model,X)
   cat(paste0("------- Fitting a ",model@name, " model ------\n"))
   sol = fit(model,alg,data,K,verbose)
   sol = postprocess(sol,data)
@@ -134,7 +134,7 @@ find_model = function(X){
       }
     }
   }else{
-    stop(paste0("Unsupported data type :", class(X) ," use matrix or sparse dgCMatrix."))
+    stop(paste0("Unsupported data type: ", class(X) ," use matrix or sparse dgCMatrix."))
   }
   model
 }
@@ -195,8 +195,8 @@ setGeneric("preprocess", function(model, ...) standardGeneric("preprocess"))
 
 setMethod(f = "preprocess", 
           signature = signature("icl_model"), 
-          definition = function(model, data,K){
-            list(X=as.sparse(data),N=nrow(data),moves=as.sparse(matrix(1,K,K)))
+          definition = function(model, data){
+            list(X=as.sparse(data),N=nrow(data))
 })
 
 setGeneric("postprocess", function(path, ...) standardGeneric("postprocess")) 

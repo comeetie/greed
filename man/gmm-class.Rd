@@ -14,12 +14,16 @@ An S4 class to represent a multivariate mixture of regression model, extend \cod
 
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
 
-\item{\code{beta}}{Prior parameter (inverse variance) default 0.01}
+\item{\code{tau}}{Prior parameter (inverse variance) default 0.01}
 
 \item{\code{N0}}{Prior parameter (pseudo count) defulat to 10 ! should be > number of features}
+
+\item{\code{epsilon}}{Prior parameter covartiance matrix prior}
+
+\item{\code{mu}}{mean prior}
 }}
 
 \examples{
-new("mvmreg")
-new("mvmreg",alpha=1,beta=0.1,N0=15)
+new("gmm")
+new("gmm",alpha=1,tau=0.1,N0=15)
 }

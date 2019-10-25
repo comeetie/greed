@@ -9,10 +9,6 @@ fit_greed_cstr <- function(model, data, clt, workingset, iclust, type = "both", 
     .Call('_greed_fit_greed_cstr', PACKAGE = 'greed', model, data, clt, workingset, iclust, type, nb_max_pass, verbose)
 }
 
-batch_merge_cstr <- function(model, data, clt, merge_graph, verbose = FALSE) {
-    .Call('_greed_batch_merge_cstr', PACKAGE = 'greed', model, data, clt, merge_graph, verbose)
-}
-
 merge_cstr <- function(model, data, clt, merge_graph, verbose = FALSE) {
     .Call('_greed_merge_cstr', PACKAGE = 'greed', model, data, clt, merge_graph, verbose)
 }
@@ -59,6 +55,10 @@ delrowcol <- function(a, ci) {
 
 gsum_mat <- function(cl, x, K) {
     .Call('_greed_gsum_mat', PACKAGE = 'greed', cl, x, K)
+}
+
+gsum_bimat <- function(clr, clc, x, K) {
+    .Call('_greed_gsum_bimat', PACKAGE = 'greed', clr, clc, x, K)
 }
 
 gsum_mat_sp <- function(cl, x, K) {

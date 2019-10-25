@@ -225,6 +225,11 @@ extract_front_height=function(sol){
 
 # clean the merge path 
 cleanpathopt = function(pathsol){
+  if(is.infinite(pathsol@path[[length(pathsol@path)]]$icl1)){
+    pathsol@path[[length(pathsol@path)]]$icl1=pathsol@path[[length(pathsol@path)-1]]$icl1
+    pathsol@path[[length(pathsol@path)]]$logalpha=pathsol@path[[length(pathsol@path)-1]]$logalpha
+  }
+  
   K=pathsol@K
   pathsol@logalpha = 0
   path=pathsol@path
@@ -263,8 +268,11 @@ cleanpathopt = function(pathsol){
         cnodes=cnodes[-path[[m]]$k]
       }
       # find optimal leaf ordering
+      
+      dm=-path[[1]]$merge_mat-t(path[[1]]$merge_mat)
+      dm[is.infinite(dm)]=100*max(dm[!is.infinite(dm)])
       if(length(path)>1){
-        leaforder = cba::order.optimal(stats::as.dist(-path[[1]]$merge_mat+t(path[[1]]$merge_mat)),merge)
+        leaforder = cba::order.optimal(stats::as.dist(dm),merge)
       }else{
         leaforder=list(order=1:2)
       }

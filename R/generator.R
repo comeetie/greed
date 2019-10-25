@@ -5,7 +5,7 @@
 #' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 #'
 #' @param N The size of the graph to generate
-#' @param pi A numeric vector of length K with clusters proportions (will be noramlized to sumup to 1). 
+#' @param pi A numeric vector of length K with clusters proportions (will be normalized to sumup to 1). 
 #' @param mu A numeric matrix of dim K x K with the connectivity pattern to generate. elements in [0,1].
 #' @return A list with fields:
 #' \itemize{
@@ -26,6 +26,47 @@ rsbm = function (N,pi,mu){
   links = Matrix::which(x==1,arr.ind = TRUE)
   list(cl=cl, x = Matrix::sparseMatrix(links[,1],links[,2], x = rep(1,nrow(links))), K=K,N=N,pi=pi,mu=mu)
 }
+
+#' Generate a data matrix using a Latent Block Model
+#'
+#' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Latent Block Model.
+#'
+#' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
+#'
+#' @param Nr desired Number of rows
+#' @param Nc desired Number of column
+#' @param pir A numeric vector of length Kr with rows clusters proportions (will be normalized to sumup to 1). 
+#' @param pic A numeric vector of length Kc with columns clusters proportions (will be normalized to sumup to 1). 
+#' @param mu A numeric matrix of dim Kr x Kc with the connectivity pattern to generate. elements in [0,1].
+#' @return A list with fields:
+#' \itemize{
+#' \item x: the generated data matrix as a \code{dgCMatrix}
+#' \item clr: vector of row clusters labels
+#' \item clc: vector of column clusters labels
+#' \item Kr: number of generated row clusters
+#' \item Kc: number of generated column clusters
+#' \item Nr: number of rows
+#' \item Nc: number of column
+#' \item pir: row clusters proportions
+#' \item pic: colum clusters proportions
+#' \item mu: connectivity matrix
+#' }
+#' @examples
+#' simu = rlbm(500,1000,rep(1/5,5),rep(1/10,10),matrix(runif(50),5,10))
+#' @export
+rlbm = function (Nr,Nc,pir,pic,mu){
+  Kr = length(pir)
+  Kc = length(pic)
+  clc = sample(1:Kc,Nc,replace=TRUE,prob = pic)
+  clr = sample(1:Kr,Nr,replace=TRUE,prob = pir)
+  if(dim(mu)[1]!=Kr | dim(mu)[1]!=Kr){
+    stop("incompatible argument sizes")
+  }
+  x  = matrix(stats::rbinom(Nr*Nc,1,mu[cbind(rep(clr,Nc),rep(clc,each=Nr))]),Nr,Nc)
+  links = Matrix::which(x==1,arr.ind = TRUE)
+  list(clr=clr,clc=clc, x = Matrix::sparseMatrix(links[,1],links[,2], x = rep(1,nrow(links))), Kr=Kr,Kc=Kc,Nr=Nr,Nc=Nc,pir=pir,pic=pic,mu=mu)
+}
+
 
 
 #' Generate data using a Multinomial Mixture

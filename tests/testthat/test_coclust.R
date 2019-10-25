@@ -6,14 +6,14 @@ set.seed(1234)
 
 
 test_that("COSBM hybrid", {
-  N = 500
-  K = 10
-  pi = rep(1/K,K)
-  mu = cbind(diag(rep(5,K)),matrix(0,K,20))+matrix(runif(K*(20+K)),K,20+K)
-  mm = rmm(N,pi,mu,40)
+  mu=cbind(lower.tri(matrix(1,4,4)),upper.tri(matrix(1,4,4)))*0.2+0.01
+  mu[2,4]=0.21
+  mu[3,5]=0.21
+  mm=rlbm(200,400,rep(1/4,4),rep(1/8,8),mu)
   sol=greed(mm$x,model=new('co_dcsbm'))
-  expect_equal(sol@Krow, K)
-  solc = cut(sol,21)
+  expect_equal(sol@Krow, 4)
+  expect_equal(sol@Kcol, 8)
+  solc = cut(sol,8)
   expect_true(is.ggplot(plot(solc,type='tree')))
   expect_true(is.ggplot(plot(solc,type='path')))
   expect_true(is.ggplot(plot(solc,type='front')))
@@ -22,16 +22,14 @@ test_that("COSBM hybrid", {
 })
 
 test_that("COSBM seed", {
-  N = 500
-  K = 10
-  pi = rep(1/K,K)
-  mu = lapply(1:5,function(x){cbind(diag(rep(10,K)),matrix(0,K,20))+matrix(runif(K*(20+K)),K,20+K)})
-  mu = do.call(cbind,mu)
-  mm = rmm(N,pi,mu,15)
+  mu=cbind(lower.tri(matrix(1,4,4)),upper.tri(matrix(1,4,4)))*0.2+0.01
+  mu[2,4]=0.21
+  mu[3,5]=0.21
+  mm=rlbm(200,400,rep(1/4,4),rep(1/8,8),mu)
   sol=greed(mm$x,model=new("co_dcsbm"),alg=new("seed"),K=40)
-  expect_gte(sol@Krow, K-2)
-  expect_lte(sol@Krow, K+2)
-  solc = cut(sol,15)
+  expect_gte(sol@K, 12-2)
+  expect_lte(sol@K, 12+2)
+  solc = cut(sol,8)
   expect_true(is.ggplot(plot(solc,type='tree')))
   expect_true(is.ggplot(plot(solc,type='path')))
   expect_true(is.ggplot(plot(solc,type='front')))
@@ -41,16 +39,14 @@ test_that("COSBM seed", {
 
 
 test_that("COSBM multistart", {
-  N = 500
-  K = 10
-  pi = rep(1/K,K)
-  mu = lapply(1:5,function(x){cbind(diag(rep(10,K)),matrix(0,K,20))+matrix(runif(K*(20+K)),K,20+K)})
-  mu = do.call(cbind,mu)
-  mm = rmm(N,pi,mu,15)
+  mu=cbind(lower.tri(matrix(1,4,4)),upper.tri(matrix(1,4,4)))*0.2+0.01
+  mu[2,4]=0.21
+  mu[3,5]=0.21
+  mm=rlbm(200,400,rep(1/4,4),rep(1/8,8),mu)
   sol=greed(mm$x,model=new('co_dcsbm'),alg=new("multistarts"),K=40)
-  expect_gte(sol@Krow, K-2)
-  expect_lte(sol@Krow, K+2)
-  solc = cut(sol,15)
+  expect_gte(sol@K, 12-2)
+  expect_lte(sol@K, 12+2)
+  solc = cut(sol,8)
   expect_true(is.ggplot(plot(sol,type='tree')))
   expect_true(is.ggplot(plot(sol,type='path')))
   expect_true(is.ggplot(plot(sol,type='front')))

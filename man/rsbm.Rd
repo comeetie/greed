@@ -9,7 +9,7 @@ rsbm(N, pi, mu)
 \arguments{
 \item{N}{The size of the graph to generate}
 
-\item{pi}{A numeric vector of length K with clusters proportions (will be noramlized to sumup to 1).}
+\item{pi}{A numeric vector of length K with clusters proportions (will be normalized to sumup to 1).}
 
 \item{mu}{A numeric matrix of dim K x K with the connectivity pattern to generate. elements in [0,1].}
 }

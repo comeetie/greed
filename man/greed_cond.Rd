@@ -4,8 +4,8 @@
 \alias{greed_cond}
 \title{conditional model based hierachical clustering}
 \usage{
-greed_cond(X, Y, K = 20, model = find_model_cond(X, Y),
-  alg = methods::new("hybrid"), verbose = FALSE)
+greed_cond(X, Y, K = 20, model = methods::new("mvmreg", N0 = ncol(Y) +
+  1), alg = methods::new("hybrid"), verbose = FALSE)
 }
 \arguments{
 \item{X}{covariates data}

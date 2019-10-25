@@ -135,6 +135,17 @@ arma::mat gsum_mat(arma::vec cl,const arma::sp_mat& x,int K) {
   return result;
 }
 
+// [[Rcpp::export]]
+arma::mat gsum_bimat(arma::vec clr,arma::vec clc, const arma::sp_mat& x,int K) {
+  arma::mat result(K,K);
+  result.fill(0);
+  for (arma::sp_mat::const_iterator i = x.begin(); i != x.end(); ++i) {
+    result(clr(i.row()),clc(i.col())) += *i;
+  }
+  return result;
+}
+
+
 
 // [[Rcpp::export]]
 arma::sp_mat gsum_mat_sp(arma::vec cl,const arma::sp_mat& x,int K) {

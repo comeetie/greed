@@ -112,8 +112,8 @@ setMethod(f = "seed",
 
 setMethod(f = "preprocess", 
           signature = signature("gmm"), 
-          definition = function(model, data,K){
-            list(X=as.matrix(data),N=nrow(data),moves=as.sparse(matrix(1,K,K)))
+          definition = function(model, data){
+            list(X=as.matrix(data),N=nrow(data))
           })
 
 reorder_gmm = function(obs_stats,or){

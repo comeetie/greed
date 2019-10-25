@@ -37,21 +37,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// batch_merge_cstr
-S4 batch_merge_cstr(S4 model, List data, arma::vec& clt, arma::sp_mat& merge_graph, bool verbose);
-RcppExport SEXP _greed_batch_merge_cstr(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP, SEXP merge_graphSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
-    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type clt(cltSEXP);
-    Rcpp::traits::input_parameter< arma::sp_mat& >::type merge_graph(merge_graphSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(batch_merge_cstr(model, data, clt, merge_graph, verbose));
-    return rcpp_result_gen;
-END_RCPP
-}
 // merge_cstr
 S4 merge_cstr(S4 model, List data, arma::vec& clt, arma::sp_mat& merge_graph, bool verbose);
 RcppExport SEXP _greed_merge_cstr(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP, SEXP merge_graphSEXP, SEXP verboseSEXP) {
@@ -208,6 +193,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::sp_mat& >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type K(KSEXP);
     rcpp_result_gen = Rcpp::wrap(gsum_mat(cl, x, K));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gsum_bimat
+arma::mat gsum_bimat(arma::vec clr, arma::vec clc, const arma::sp_mat& x, int K);
+RcppExport SEXP _greed_gsum_bimat(SEXP clrSEXP, SEXP clcSEXP, SEXP xSEXP, SEXP KSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type clr(clrSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type clc(clcSEXP);
+    Rcpp::traits::input_parameter< const arma::sp_mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type K(KSEXP);
+    rcpp_result_gen = Rcpp::wrap(gsum_bimat(clr, clc, x, K));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -476,7 +475,6 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_greed_post_probs", (DL_FUNC) &_greed_post_probs, 3},
     {"_greed_fit_greed_cstr", (DL_FUNC) &_greed_fit_greed_cstr, 8},
-    {"_greed_batch_merge_cstr", (DL_FUNC) &_greed_batch_merge_cstr, 5},
     {"_greed_merge_cstr", (DL_FUNC) &_greed_merge_cstr, 5},
     {"_greed_swap_cstr", (DL_FUNC) &_greed_swap_cstr, 6},
     {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 6},
@@ -489,6 +487,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_delcol", (DL_FUNC) &_greed_delcol, 2},
     {"_greed_delrowcol", (DL_FUNC) &_greed_delrowcol, 2},
     {"_greed_gsum_mat", (DL_FUNC) &_greed_gsum_mat, 3},
+    {"_greed_gsum_bimat", (DL_FUNC) &_greed_gsum_bimat, 4},
     {"_greed_gsum_mat_sp", (DL_FUNC) &_greed_gsum_mat_sp, 3},
     {"_greed_gsum_mm", (DL_FUNC) &_greed_gsum_mm, 3},
     {"_greed_lm_post", (DL_FUNC) &_greed_lm_post, 5},
