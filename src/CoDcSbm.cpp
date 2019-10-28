@@ -114,10 +114,14 @@ double CoDcSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
     return -std::numeric_limits<double>::infinity();
   }
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
+  arma::vec ncounts =as<arma::vec>(obs_stats["counts"]);  
+  
+  
   arma::vec dr =as<arma::vec>(obs_stats["dr"]);
   arma::vec dc =as<arma::vec>(obs_stats["dc"]);
   arma::vec d = dr+dc;
   arma::mat edges_counts =as<arma::mat>(obs_stats["x_counts"]);
+  
   
   // degree correction
   double icl_emiss = lgamma(counts(newcl))-lgamma(counts(newcl)+d(newcl))+d(newcl)*log(counts(newcl));
@@ -283,9 +287,10 @@ double CoDcSbm::delta_merge(int k, int l){
 
   arma::mat new_ec = x_counts;
   arma::mat new_counts = counts;
-  new_counts(k)=0;
   new_counts(l)=new_counts(k)+new_counts(l);
-
+  new_counts(k)=0;
+  
+  
   arma::vec new_dr = dr;
   arma::vec new_dc = dc;
   if(clusttypes(k)==1){
@@ -333,33 +338,50 @@ double CoDcSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & 
     if(clusttypes(k)==1){
       // remove old values
       cc = old_counts(ko)*old_counts(obk);
-      correction -= lgamma(edges_counts(ko,obk)+1)-(edges_counts(ko,obk)+1)*log(p*cc+1);
+      correction += lgamma(edges_counts(ko,obk)+1)-(edges_counts(ko,obk)+1)*log(p*cc+1);
       cc = old_counts(ko)*old_counts(obl);
-      correction -= lgamma(edges_counts(ko,obl)+1)-(edges_counts(ko,obl)+1)*log(p*cc+1);
+      correction += lgamma(edges_counts(ko,obl)+1)-(edges_counts(ko,obl)+1)*log(p*cc+1);
       cc = old_counts(lo)*old_counts(obk);
-      correction -= lgamma(edges_counts(lo,obk)+1)-(edges_counts(lo,obk)+1)*log(p*cc+1);
+      correction += lgamma(edges_counts(lo,obk)+1)-(edges_counts(lo,obk)+1)*log(p*cc+1);
       cc = old_counts(lo)*old_counts(obl);
-      correction -= lgamma(edges_counts(lo,obl)+1)-(edges_counts(lo,obl)+1)*log(p*cc+1);
+      correction += lgamma(edges_counts(lo,obl)+1)-(edges_counts(lo,obl)+1)*log(p*cc+1);
+      //
+      cc = (old_counts(ko)+old_counts(lo))*old_counts(obk);
+      correction -= lgamma(edges_counts(lo,obk)+edges_counts(ko,obk)+1)-(edges_counts(lo,obk)+edges_counts(ko,obk)+1)*log(p*cc+1);
+      cc = (old_counts(ko)+old_counts(lo))*old_counts(obl);
+      correction -= lgamma(edges_counts(lo,obl)+edges_counts(ko,obl)+1)-(edges_counts(lo,obl)+edges_counts(ko,obl)+1)*log(p*cc+1);
       // add new values
       cc = counts(k)*counts(obl);
-      correction += lgamma(x_counts(k,obl)+1)-(x_counts(k,obl)+1)*log(p*cc+1);
+      correction -= lgamma(x_counts(k,obl)+1)-(x_counts(k,obl)+1)*log(p*cc+1);
       cc = counts(l)*counts(obl);
-      correction += lgamma(x_counts(l,obl)+1)-(x_counts(l,obl)+1)*log(p*cc+1);
+      correction -= lgamma(x_counts(l,obl)+1)-(x_counts(l,obl)+1)*log(p*cc+1);
+      // merge k,l et merge obk,obl
+      cc = (counts(k)+counts(l))*counts(obl);
+      correction += lgamma(x_counts(l,obl)+x_counts(k,obl)+1)-(x_counts(l,obl)+x_counts(k,obl)+1)*log(p*cc+1);
+      
     }else{
-      // remove old values
+      // remove old values no fusion k,l no fusion obk,obl
       cc = old_counts(ko)*old_counts(obk);
-      correction -= lgamma(edges_counts(obk,ko)+1)-(edges_counts(obk,ko)+1)*log(p*cc+1);
+      correction += lgamma(edges_counts(obk,ko)+1)-(edges_counts(obk,ko)+1)*log(p*cc+1);
       cc = old_counts(ko)*old_counts(obl);
-      correction -= lgamma(edges_counts(obl,ko)+1)-(edges_counts(obl,ko)+1)*log(p*cc+1);
+      correction += lgamma(edges_counts(obl,ko)+1)-(edges_counts(obl,ko)+1)*log(p*cc+1);
       cc = old_counts(lo)*old_counts(obk);
-      correction -= lgamma(edges_counts(obk,lo)+1)-(edges_counts(obk,lo)+1)*log(p*cc+1);
+      correction += lgamma(edges_counts(obk,lo)+1)-(edges_counts(obk,lo)+1)*log(p*cc+1);
       cc = old_counts(lo)*old_counts(obl);
-      correction -= lgamma(edges_counts(obl,lo)+1)-(edges_counts(obl,lo)+1)*log(p*cc+1);
-      // add new values
+      correction += lgamma(edges_counts(obl,lo)+1)-(edges_counts(obl,lo)+1)*log(p*cc+1);
+      // remove old values fusion k,l, no fusion obk,obl
+      cc = (old_counts(ko)+old_counts(lo))*old_counts(obk);
+      correction -= lgamma(edges_counts(obk,lo)+edges_counts(obk,ko)+1)-(edges_counts(obk,lo)+edges_counts(obk,ko)+1)*log(p*cc+1);
+      cc = (old_counts(ko)+old_counts(lo))*old_counts(obl);
+      correction -= lgamma(edges_counts(obl,lo)+edges_counts(obl,ko)+1)-(edges_counts(obl,lo)+edges_counts(obl,ko)+1)*log(p*cc+1);
+      // add new values no fusion k,l fusion obk,obl
       cc = counts(k)*counts(obl);
-      correction += lgamma(x_counts(obl,k)+1)-(x_counts(obl,k)+1)*log(p*cc+1);
+      correction -= lgamma(x_counts(obl,k)+1)-(x_counts(obl,k)+1)*log(p*cc+1);
       cc = counts(l)*counts(obl);
-      correction += lgamma(x_counts(obl,l)+1)-(x_counts(obl,l)+1)*log(p*cc+1);
+      correction -= lgamma(x_counts(obl,l)+1)-(x_counts(obl,l)+1)*log(p*cc+1);
+      // add new values fusion k,l fusion obk,obl
+      cc = (counts(k)+counts(l))*counts(obl);
+      correction += lgamma(x_counts(obl,l)+x_counts(obl,k)+1)-(x_counts(obl,l)+x_counts(obl,k)+1)*log(p*cc+1);
     }
     
     

@@ -64,7 +64,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
                 i2 = sample(ip[-i1],1,prob=ip[-i1])
                 s1 = solutions[[i1]]
                 s2 = solutions[[i2]]
-                new_solutions[[i]] %<-% incremental_cross_over(s1,s2,fimerge,fiswap,pmut,Kmax)  %globals% c("s1","s2","fimerge","fiswap","pmut","incremental_cross_over","Kmax")
+                new_solutions[[i]] %<-% full_cross_over(s1,s2,fimerge,fiswap,pmut,Kmax)  %globals% c("s1","s2","fimerge","fiswap","pmut","full_cross_over","Kmax")
               }
               solutions = c(bres,as.list(new_solutions))
               icls = sapply(solutions,function(s){s@icl})
@@ -119,8 +119,6 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
   }
   ij=which(table(sol@cl,cl2)>0,arr.ind = TRUE)
   ncl = as.numeric(factor(paste(sol@cl,"_",cl2,sep=""),levels=paste(ij[,1],"_",ij[,2],sep="")))
-  cat(paste0("ncl :",max(ncl)))
-  
   
   
   M=matrix(0,nrow(ij),nrow(ij))
@@ -148,7 +146,6 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
   }
 
   if(stats::runif(1)<pmutation){
-    print("mutation")
     sp_cl=sample(max(ncl),1)
     nclold=ncl
     ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)
@@ -190,7 +187,6 @@ incremental_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
     diag(M)=0
     ijm=which(M==1,arr.ind = TRUE)
     move_mat=sparseMatrix(i=ijm[,1],j=ijm[,2],x = rep(1,nrow(ijm)), dims = c(max(ncl),max(ncl)))
-    
 
     if(sum(move_mat)>0){
       sol=fimerge(ncl,Matrix::tril(move_mat))

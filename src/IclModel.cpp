@@ -364,7 +364,7 @@ arma::sp_mat IclModel::greedy_merge(const arma::sp_mat & merge_graph){
     // int Ko = merge_mat.getK();
     merge_mat = this->delta_merge(delta,merge_mat.getK(),merge_mat.getL(),old_stats);
 
-    // check test for merge mat correction
+    //check test for merge mat correction
     // delrowcol(delta,Ko);
     // Rcout << "--- check correction ---" << std::endl;
     // Rcout << K << std::endl;
