@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 
 
-Gmm::Gmm(const arma::mat & Xi,int Ki,double alphai,double taui,int N0i, const arma::mat epsiloni, const arma::rowvec mui, arma::vec& cli,bool verb){
+Gmm::Gmm(const arma::mat & Xi,double alphai,double taui,int N0i, const arma::mat epsiloni, const arma::rowvec mui, arma::vec& cli,bool verb){
   // dirichlet prior parameter on proportion
   alpha = alphai;
 
@@ -15,26 +15,32 @@ Gmm::Gmm(const arma::mat & Xi,int Ki,double alphai,double taui,int N0i, const ar
   X  = Xi;
   // Number of individuals
   N  = X.n_rows;
-  // First value for K
-  K  = Ki;
-  cl = cli;
+
   tau = taui;
   N0 = N0i;
   epsilon = epsiloni;
   mu = mui;
-  // construct oberved stats 
-  for(int k=0;k<K;k++){
-    regs.push_back(gmm_marginal(X.rows(arma::find(cl==k)),tau,N0,epsilon,mu));
-  }
+  set_cl(cli);
   S = cov(X);
   //normfact = -N/2*log(det(S));
   List normref = as<List>(gmm_marginal(X,tau,N0,epsilon,mu));
   normfact = normref["log_evidence"];
-  // counts : number of row in each cluster
-  counts = count(cl,K);
+
   // TODO : add a filed to store the icl const ?
   verbose=verb;
 }
+
+void Gmm::set_cl(arma::vec cli){
+  // construct oberved stats 
+  cl = cli;
+  K = arma::max(cl)+1;
+  for(int k=0;k<K;k++){
+    regs.push_back(gmm_marginal(X.rows(arma::find(cl==k)),tau,N0,epsilon,mu));
+  }
+  // counts : number of row in each cluster
+  counts = count(cl,K);
+}
+
 
 
 List Gmm::get_obs_stats(){

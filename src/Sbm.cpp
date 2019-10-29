@@ -7,18 +7,22 @@ using namespace Rcpp;
 
 
 
-Sbm::Sbm(arma::sp_mat& xp,int Ki,double alphai,double a0i,double b0i,arma::vec& clt,bool verb){
+Sbm::Sbm(arma::sp_mat& xp,double alphai,double a0i,double b0i,arma::vec& clt,bool verb){
   alpha = alphai;
   a0 = a0i;
   b0 = b0i;
   x  = xp;
   xt = xp.t();
   N  = x.n_rows;
-  K  = Ki;
+  set_cl(clt);
+  verbose=verb;
+}
+
+void Sbm::set_cl(arma::vec clt){
   cl = clt;
+  K = arma::max(cl)+1;
   x_counts = gsum_mat(cl,x,K);
   counts = count(cl,K);
-  verbose=verb;
 }
 
 

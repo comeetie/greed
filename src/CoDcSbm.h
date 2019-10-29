@@ -10,7 +10,8 @@ using namespace Rcpp;
 class CoDcSbm : public IclModel
 {
 public:
-  CoDcSbm(const arma::sp_mat& xp,int Nri, int Nci,int K,double alpha,arma::vec& cl,bool verb=false);
+  CoDcSbm(const arma::sp_mat& xp,int Nri, int Nci,double alpha,arma::vec& cl,bool verb=false);
+  void set_cl(arma::vec clt);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
   double icl(const List & obs_stats);

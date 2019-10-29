@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 
 
-Mvmregcomp::Mvmregcomp(const arma::mat & Xi,const arma::mat & Yi, int Ki,double alphai,double betai, double N0i,arma::vec& cli,bool verb){
+Mvmregcomp::Mvmregcomp(const arma::mat & Xi,const arma::mat & Yi, double alphai,double betai, double N0i,arma::vec& cli,bool verb){
   // dirichlet prior parameter on proportion
   alpha = alphai;
 
@@ -16,9 +16,8 @@ Mvmregcomp::Mvmregcomp(const arma::mat & Xi,const arma::mat & Yi, int Ki,double 
   Y  = Yi;
   // Number of individuals
   N  = X.n_rows;
-  // First value for K
-  K  = Ki;
-  cl = cli;
+
+
   M  = inv_sympd(X.t()*X)*X.t()*Y;
 
   Kp  =  betai*X.t()*X/N;
@@ -35,18 +34,24 @@ Mvmregcomp::Mvmregcomp(const arma::mat & Xi,const arma::mat & Yi, int Ki,double 
   N0 = Y.n_cols;
   S0.diag() = N0*N0i*RR.diag()/N;
 
+  set_cl(cli);
 
-  // construct oberved stats 
-  for(int k=0;k<K;k++){
-    regs.push_back(mvlm_post_comp(X.rows(arma::find(cl==k)),Y.rows(arma::find(cl==k)),M,Kp,S0,N0));
-  }
-
-  // counts : number of row in each cluster
-  counts = count(cl,K);
   // TODO : add a filed to store the icl const ?
   verbose=verb;
 }
 
+
+void Mvmregcomp::set_cl(arma::vec cli){
+  cl = cli;
+  K = arma::max(cl)+1;
+  // construct oberved stats 
+  for(int k=0;k<K;k++){
+    regs.push_back(mvlm_post_comp(X.rows(arma::find(cl==k)),Y.rows(arma::find(cl==k)),M,Kp,S0,N0));
+  }
+  
+  // counts : number of row in each cluster
+  counts = count(cl,K);
+}
 
 List Mvmregcomp::get_obs_stats(){
   // return observed stats

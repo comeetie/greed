@@ -15,7 +15,6 @@ using namespace Rcpp;
 IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
   
   IclModel * M;
-  int Ki = arma::max(clt);
   int N = clt.n_elem;
   clt = clt-arma::ones(N);
   S4 sol;
@@ -30,31 +29,31 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
     }
     if(strcmp(model.slot("name"),"sbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
-      M = new Sbm(xp,Ki,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt,verbose);
+      M = new Sbm(xp,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt,verbose);
     }
     if(strcmp(model.slot("name"),"dcsbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
-      M = new DcSbm(xp,Ki,model.slot("alpha"),clt,verbose);
+      M = new DcSbm(xp,model.slot("alpha"),clt,verbose);
     }
     if(strcmp(model.slot("name"),"co_dcsbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       int Nr = static_cast<int>(data["Nrows"]);
       int Nc = static_cast<int>(data["Ncols"]);
-      M = new CoDcSbm(xp,Nr,Nc,Ki,model.slot("alpha"),clt,verbose);
+      M = new CoDcSbm(xp,Nr,Nc,model.slot("alpha"),clt,verbose);
     }
     if(strcmp(model.slot("name"),"mm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
-      M = new Mm(xp,Ki,model.slot("alpha"),model.slot("beta"),clt,verbose);
+      M = new Mm(xp,model.slot("alpha"),model.slot("beta"),clt,verbose);
     }
     if(strcmp(model.slot("name"),"gmm")==0){
       arma::mat X = as<arma::mat>(data["X"]);
-      M = new Gmm(X,Ki,model.slot("alpha"),model.slot("tau"),model.slot("N0"),model.slot("epsilon"),model.slot("mu"),clt,verbose);
+      M = new Gmm(X,model.slot("alpha"),model.slot("tau"),model.slot("N0"),model.slot("epsilon"),model.slot("mu"),clt,verbose);
     }
     
     if(strcmp(model.slot("name"),"mvmreg")==0 ){
       arma::mat X = as<arma::mat>(data["X"]);
       arma::mat Y = as<arma::mat>(data["Y"]);
-      M = new Mvmregcomp(X,Y,Ki,model.slot("alpha"),model.slot("beta"),model.slot("N0"),clt,verbose);
+      M = new Mvmregcomp(X,Y,model.slot("alpha"),model.slot("beta"),model.slot("N0"),clt,verbose);
     }
     
     

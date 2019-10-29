@@ -7,27 +7,15 @@ using namespace Rcpp;
 
 
 
-CoDcSbm::CoDcSbm(const arma::sp_mat& xp,int Nri, int Nci,int Ki,double alphai,arma::vec& clt,bool verb){
+CoDcSbm::CoDcSbm(const arma::sp_mat& xp,int Nri, int Nci,double alphai,arma::vec& clt,bool verb){
   alpha = alphai;
   x  = xp;
   N  = Nri+Nci;
-  K  = Ki;
-  cl = clt;
-  
   Nc=Nci;
   Nr=Nri;
-  arma::vec clr = cl.subvec(0,Nr-1);
-  row_clusts = arma::unique(clr);
-  Kr = row_clusts.n_elem;
-  arma::vec clc = cl.subvec(Nr,N-1);
-  col_clusts = arma::unique(clc);
-  Kc = col_clusts.n_elem;
-
-  x_counts = gsum_bimat(clr,clc,x,K);
-  counts = count(cl,K);
-  dr = sum(x_counts.t()).t();
-  dc = sum(x_counts).t();
-
+  
+  set_cl(clt);
+  
   p = arma::accu(x_counts)/(Nr*Nc);
 
   verbose=verb;
@@ -35,6 +23,22 @@ CoDcSbm::CoDcSbm(const arma::sp_mat& xp,int Nri, int Nci,int Ki,double alphai,ar
   cst = 0;
 
   
+
+}
+
+void CoDcSbm::set_cl(arma::vec cli){
+  cl = cli;
+  K =arma::max(cl)+1;
+  arma::vec clr = cl.subvec(0,Nr-1);
+  row_clusts = arma::unique(clr);
+  Kr = row_clusts.n_elem;
+  arma::vec clc = cl.subvec(Nr,N-1);
+  col_clusts = arma::unique(clc);
+  Kc = col_clusts.n_elem;
+  x_counts = gsum_bimat(clr,clc,x,K);
+  counts = count(cl,K);
+  dr = sum(x_counts.t()).t();
+  dc = sum(x_counts).t();
   arma::vec types(K);
   types.fill(0);
   for (int i = 0;i<row_clusts.n_elem;++i){
@@ -46,10 +50,8 @@ CoDcSbm::CoDcSbm(const arma::sp_mat& xp,int Nri, int Nci,int Ki,double alphai,ar
     }
     types(col_clusts(i))=2;
   }
-
   clusttypes=types;
 }
-
 
 double CoDcSbm::icl(const List & obs_stats){
   // compute the first part p(Zr,Zc) from clusters counts

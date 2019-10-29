@@ -7,23 +7,26 @@ using namespace Rcpp;
 
 
 
-DcSbm::DcSbm(const arma::sp_mat& xp,int Ki,double alphai,arma::vec& clt,bool verb){
+DcSbm::DcSbm(const arma::sp_mat& xp,double alphai,arma::vec& clt,bool verb){
   alpha = alphai;
   x  = xp;
   xt = xp.t();
   N  = x.n_rows;
-  K  = Ki;
-  cl = clt;
-  x_counts = gsum_mat(cl,x,K);
-  counts = count(cl,K);
-  din = sum(x_counts).t();
-  dout = sum(x_counts.t()).t();
+  set_cl(clt);
   p= arma::accu(x_counts)/(N*N);
   verbose=verb;
   // cst to add 
   cst = 0;
 }
 
+void DcSbm::set_cl(arma::vec clt){
+  cl = clt;
+  K = arma::max(cl)+1;
+  x_counts = gsum_mat(cl,x,K);
+  counts = count(cl,K);
+  din = sum(x_counts).t();
+  dout = sum(x_counts.t()).t();
+}
 
 double DcSbm::icl_emiss(const List & obs_stats){
 

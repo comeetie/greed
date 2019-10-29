@@ -10,7 +10,8 @@ using namespace Rcpp;
 class DcSbm : public IclModel
 {
 public:
-  DcSbm(const arma::sp_mat& xp,int K,double alpha,arma::vec& cl,bool verb=false);
+  DcSbm(const arma::sp_mat& xp,double alpha,arma::vec& cl,bool verb=false);
+  void set_cl(arma::vec clt);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
   arma::mat delta_swap(int i,arma::uvec iclust);

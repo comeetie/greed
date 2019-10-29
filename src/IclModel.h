@@ -14,6 +14,7 @@ using namespace Rcpp;
 class IclModel
 {
 public:
+  virtual void set_cl(arma::vec clt){};
   // compute icl
   double icl(const List & obs_stats);
   // compute icl optimized for deltas

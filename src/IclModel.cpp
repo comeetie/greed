@@ -343,11 +343,16 @@ SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int 
 arma::sp_mat IclModel::greedy_merge(const arma::sp_mat & merge_graph){
   // init the merge matrix(K,K) with the delta icl of each merge 
   SpMergeMat merge_mat = this->delta_merge(merge_graph);
+  arma::sp_mat delta = merge_mat.getMergeMat();
   // init merge counter
   int nbmerge = 0;
-  //while a positive merge exists
-  while(merge_mat.getValue()>0){
-
+  double cicl = this->icl(this->get_obs_stats());
+  double bicl= cicl;
+  arma::sp_mat best_merge_mat = delta;
+  arma::vec bcl = cl;
+  // while teir are merge to explore
+  while(delta.n_nonzero>0){
+    
     // increment
     ++nbmerge;
     List old_stats = this->get_obs_stats();
@@ -360,10 +365,23 @@ arma::sp_mat IclModel::greedy_merge(const arma::sp_mat & merge_graph){
     }
     // update the merge matrix
     //merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL(),old_stats);
-    arma::sp_mat delta = merge_mat.getMergeMat();
+
+    //Rcout << delta.n_nonzero << std::endl;
+    //Rcout << cicl << std::endl;
+    cicl = cicl + merge_mat.getValue();
+
+
     // int Ko = merge_mat.getK();
     merge_mat = this->delta_merge(delta,merge_mat.getK(),merge_mat.getL(),old_stats);
-
+    
+    delta = merge_mat.getMergeMat();
+    if(cicl > bicl){
+      bicl=cicl;
+      bcl = cl;
+      best_merge_mat=delta;
+    }
+    
+    
     //check test for merge mat correction
     // delrowcol(delta,Ko);
     // Rcout << "--- check correction ---" << std::endl;
@@ -374,13 +392,15 @@ arma::sp_mat IclModel::greedy_merge(const arma::sp_mat & merge_graph){
     // Rcout << merge_mat_comp.getMergeMat() << std::endl;
   }
   //compute final icl value
+  this->set_cl(bcl);
   icl_value = icl(this->get_obs_stats());
+  
   if(verbose){
     Rcout << "##################################"<< std::endl;
     Rcout << "Merge convergence, with an ICL of "<< icl_value << " and " << K << " clusters." << std::endl;
     Rcout << "##################################"<< std::endl; 
   }
-  return merge_mat.getMergeMat();
+  return best_merge_mat;
 }
 
 // main function for greedy merging

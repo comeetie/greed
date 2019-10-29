@@ -6,7 +6,7 @@ using namespace Rcpp;
 
 
 
-Mm::Mm(arma::sp_mat& xp,int Ki,double alphai,double betai,arma::vec& clt,bool verb){
+Mm::Mm(arma::sp_mat& xp,double alphai,double betai,arma::vec& clt,bool verb){
   // dirichlet prior parameter on proportion
   alpha = alphai;
   // dirichlet prior parameter on proportion
@@ -16,21 +16,24 @@ Mm::Mm(arma::sp_mat& xp,int Ki,double alphai,double betai,arma::vec& clt,bool ve
   xt = xp.t();
   // Number of individuals
   N  = xp.n_rows;
-  // First value for K
-  K  = Ki;
+
+  set_cl(clt);
+  // TODO : add a filed to store the icl const ?
+  verbose=verb;
+}
+void Mm::set_cl(arma::vec clt){
   // init Z
   cl = clt;
+  K = arma::max(cl)+1;
   // construct oberved stats 
   // x_counts : col sums for each cluster
   x_counts = gsum_mm(cl,xt,K);
-
+  
   arma::rowvec col_sums_dense(sum(x_counts));
   col_sums = col_sums_dense;
-
+  
   // counts : number of row in each cluster
   counts = count(cl,K);
-  // TODO : add a filed to store the icl const ?
-  verbose=verb;
 }
 
 

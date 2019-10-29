@@ -3,7 +3,7 @@
 export(H)
 export(MI)
 export(NMI)
-export(graphbalance)
+export(graph_balance)
 export(greed)
 export(greed_cond)
 export(nodelinklab)
