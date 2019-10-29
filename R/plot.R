@@ -226,7 +226,7 @@ graph_blocks = function(x){
                 sizel = rep(x@obs_stats$counts,K), 
                 count=as.vector(x@obs_stats$x_counts))
   ggplot2::ggplot(gg[gg$count>0,])+ggplot2::geom_tile(ggplot2::aes_(x=~kc-sizek/2,y=~lc-sizel/2,width=~sizek,height=~sizel,fill=~count/(sizek*sizel),alpha=~count/(sizek*sizel)))+
-    ggplot2::scale_fill_distiller("Link density",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend())+
+    ggplot2::scale_fill_distiller("Link density",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(0,max(gg$count/(gg$sizek*gg$sizel))))+
     ggplot2::scale_alpha("Link density",range=c(0,1),limits=c(0,max(gg$count/(gg$sizek*gg$sizel))))+
     ggplot2::ggtitle(paste0(toupper(x@model@name)," model with : ",max(x@cl)," clusters."))+
     ggplot2::scale_x_continuous("",breaks=cumsum(x@obs_stats$counts),
@@ -253,7 +253,7 @@ co_blocks = function(x){
   xlab = round(100*table(x@clrow)/sum(table(x@clrow)))
   
   ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~count/(sizek*sizel),alpha=~count/(sizek*sizel)))+
-    ggplot2::scale_fill_distiller("E[X]",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend())+
+    ggplot2::scale_fill_distiller("E[X]",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(0,max(gg$count/(gg$sizek*gg$sizel))))+
     ggplot2::scale_alpha("E[X]",range=c(0,1),limits=c(0,max(gg$count/(gg$sizek*gg$sizel))))+
     ggplot2::ggtitle(paste0("Co-clustering with : ",max(x@cl)," clusters."))+
     ggplot2::scale_x_continuous("Col clusters",breaks=cccol,labels=ifelse(ylab>5,paste0(ylab,"%"),""),minor_breaks = NULL,expand = ggplot2::expand_scale(mult = 0, add = 0))+
@@ -270,7 +270,7 @@ mat_blocks = function(x){
                 sizel = rep(1,K*D), 
                 count=as.vector(x@obs_stats$x_counts))
   ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~count/sizek,alpha=~count/sizek))+
-    ggplot2::scale_fill_distiller("E[X]",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend())+
+    ggplot2::scale_fill_distiller("E[X]",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(0,max(gg$count/gg$sizek)))+
     ggplot2::scale_alpha("E[X]",range=c(0,1),limits=c(0,max(gg$count/gg$sizek)))+
     ggplot2::ggtitle(paste0("MM Model with : ",max(x@cl)," clusters."))+
     ggplot2::scale_x_continuous("Features",breaks=1:D,labels=rep("",D),minor_breaks = NULL,expand = ggplot2::expand_scale(mult = 0, add = 0))+
