@@ -266,11 +266,17 @@ setMethod(f = "postprocess",
              c(sample(1:floor(K/2),data$Nrows,replace = TRUE),sample((floor(K/2)+1):K,data$Ncols,replace = TRUE))
            })
 
-
+reorder_codcsbm = function(obs_stats,or){
+  obs_stats$counts = obs_stats$counts[or]
+  obs_stats$dr = obs_stats$dr[or]
+  obs_stats$dc = obs_stats$dc[or]
+  obs_stats$x_counts = obs_stats$x_counts[or,or]
+  obs_stats
+}
 setMethod(f = "reorder", 
           signature = signature("co_dcsbm", "list","integer"), 
           definition = function(model, obs_stats,order){
-            reorder_dcsbm(obs_stats,order)
+            reorder_codcsbm(obs_stats,order)
           })
 
 

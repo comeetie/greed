@@ -61,6 +61,11 @@ List gmm_marginal_add1(List current, const arma::rowvec X,double tau,int N0, con
 List gmm_marginal_del1(List current, const arma::rowvec X,double tau,int N0, const arma::mat epsilon, const arma::rowvec mu);
 List gmm_marginal_merge(List current1, List current2,double tau,int N0, const arma::mat epsilon, const arma::rowvec mu);
 
+List gmm_marginal_eb(const arma::mat X,double tau,int N0, const arma::mat epsilon, const arma::rowvec mu);
+List gmm_marginal_add1_eb(List current, const arma::rowvec X,double tau,int N0, const arma::mat epsilon, const arma::rowvec mu);
+List gmm_marginal_del1_eb(List current, const arma::rowvec X,double tau,int N0, const arma::mat epsilon, const arma::rowvec mu);
+List gmm_marginal_merge_eb(List current1, List current2,double tau,int N0, const arma::mat epsilon, const arma::rowvec mu);
+
 arma::uvec possible_moves(int k,arma::sp_mat & move_mat);
 #endif
 

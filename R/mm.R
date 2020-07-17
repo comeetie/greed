@@ -121,7 +121,7 @@ setMethod(f = "plot",
 
 reorder_mm = function(obs_stats,or){
   obs_stats$counts = obs_stats$counts[or]
-  obs_stats$x_counts = obs_stats$x_counts[or,]
+  obs_stats$x_counts = obs_stats$x_counts[,or]
   obs_stats
 }
 

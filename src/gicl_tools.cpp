@@ -2,6 +2,42 @@
 #include <RcppArmadillo.h>
 using namespace Rcpp;
 
+
+double golden_search(std::function<double(double)> f,double lower_bound,double upper_bound,double tol){
+  double golden = 2/(sqrt(5) + 1);
+  
+  
+  double x1 = upper_bound - golden*(upper_bound - lower_bound);
+  double x2 = lower_bound + golden*(upper_bound - lower_bound);
+  
+  
+  double f1 = f(x1);
+  double f2 = f(x2);
+  
+  int iteration = 0;
+  
+  while (std::abs(upper_bound - lower_bound) > tol){
+    iteration = iteration + 1;
+    
+    if (f2 > f1){
+      upper_bound = x2;
+      x2 = x1;
+      f2 = f1;
+      x1 = upper_bound - golden*(upper_bound - lower_bound);
+      f1 = f(x1);
+    }else{
+      lower_bound = x1;
+      x1 = x2;
+      f1 = f2;
+      x2 = lower_bound + golden*(upper_bound - lower_bound);
+      f2 = f(x2);
+    }
+  }
+  
+  return (lower_bound + upper_bound)/2;
+}
+
+
 arma::mat submatcross(int oldcl,int newcl,int K){
   arma::mat result(4*(K-1),2);
   int nbr = 0;
@@ -540,6 +576,46 @@ List gmm_marginal(const arma::mat X,double tau,int N0i, const arma::mat epsilon,
 }
 
 
+double gauss_evidence(double d, double ng,double N0, double tau,double eps,arma::mat epsilon, arma::mat S, arma::rowvec m, arma::rowvec mu){
+  arma::mat Sp = eps*epsilon+S;
+  arma::vec di = arma::linspace<arma::vec>(1, d,d);
+  //+tau*ng/(tau+ng)*(m-mu).t()*(m-mu)
+  //+ d/2*log(tau) - d/2*log(tau+ng)
+  double log_evidence = arma::accu(lgamma((ng+N0+1-di)/2)) - arma::accu(lgamma((N0+1-di)/2));
+  log_evidence = log_evidence - ng*d/2*log(M_PI)  ;
+  log_evidence = log_evidence + N0/2*log(det(eps*epsilon))-(ng+N0)/2*log(det(Sp));
+  return log_evidence; 
+}
+
+
+// [[Rcpp::export]]
+List gmm_marginal_eb(const arma::mat X,double tau,int N0i, const arma::mat epsilon, const arma::rowvec mu) {
+  
+  
+  double ng = X.n_rows, d = X.n_cols;
+  double N0 = N0i;
+  arma::rowvec m = arma::mean(X,0);
+  arma::mat M(ng,d);
+  M.each_row() = m;
+  arma::mat S = (X-M).t()*(X-M); 
+
+
+  
+  double eps = golden_search([&](double eps)->double{
+    return gauss_evidence(d,ng,N0,tau,eps,epsilon,S,m,mu)*(-1);
+  },0.5,10,0.001);
+  
+  double log_evidence = gauss_evidence(d,ng,N0,tau,eps,epsilon,S,m,mu);
+  arma::mat Sp = eps*epsilon+tau*ng/(tau+ng)*(m-mu).t()*(m-mu)+S;
+  return List::create(Named("S")  = S,
+                      Named("m") = m,
+                      Named("eps") = eps,
+                      Named("ng")  = ng,
+                      Named("Sp") = Sp,
+                      Named("log_evidence")=log_evidence);
+}
+
+
 // [[Rcpp::export]]
 List gmm_marginal_add1(List current, const arma::rowvec X,double tau,int N0i, const arma::mat epsilon, const arma::rowvec mu) {
   
@@ -564,6 +640,33 @@ List gmm_marginal_add1(List current, const arma::rowvec X,double tau,int N0i, co
                       Named("ng")  = ng,
                       Named("log_evidence")=log_evidence);
 }
+
+// [[Rcpp::export]]
+List gmm_marginal_add1_eb(List current, const arma::rowvec X,double tau,int N0i, const arma::mat epsilon, const arma::rowvec mu) {
+  
+  
+  double d = X.n_cols;
+  
+  arma::mat mold = as<arma::mat>(current["m"]);
+  double ngold = as<double>(current["ng"]);
+  double ng = ngold +1;
+  double N0 = N0i;
+  arma::rowvec m = (mold*ngold+X)/ng;
+  arma::mat S =  as<arma::mat>(current["S"])+(X-m).t()*(X-mold);
+
+  double eps = golden_search([&](double eps)->double{
+    return gauss_evidence(d,ng,N0,tau,eps,epsilon,S,m,mu)*(-1);
+  },0.5,10,0.001);
+  
+  double log_evidence = gauss_evidence(d,ng,N0,tau,eps,epsilon,S,m,mu);
+  
+  return List::create(Named("S")  = S,
+                      Named("m") = m,
+                      Named("eps") = eps,
+                      Named("ng")  = ng,
+                      Named("log_evidence")=log_evidence);
+}
+
 
 
 // [[Rcpp::export]]
@@ -590,6 +693,34 @@ List gmm_marginal_del1(List current, const arma::rowvec X,double tau,int N0i, co
                       Named("ng")  = ng,
                       Named("log_evidence")=log_evidence);
 }
+
+
+// [[Rcpp::export]]
+List gmm_marginal_del1_eb(List current, const arma::rowvec X,double tau,int N0i, const arma::mat epsilon, const arma::rowvec mu) {
+  
+  
+  double d = X.n_cols;
+  
+  arma::mat mold = as<arma::mat>(current["m"]);
+  double ngold = as<int>(current["ng"]);
+  double ng = ngold -1;
+  double N0 = N0i;
+  arma::rowvec m = (mold*ngold-X)/ng;
+  arma::mat S =  as<arma::mat>(current["S"])-(X-m).t()*(X-mold);
+  
+  double eps = golden_search([&](double eps)->double{
+    return gauss_evidence(d,ng,N0,tau,eps,epsilon,S,m,mu)*(-1);
+  },0.5,10,0.001);
+  
+  double log_evidence = gauss_evidence(d,ng,N0,tau,eps,epsilon,S,m,mu);
+  
+  return List::create(Named("S")  = S,
+                      Named("m") = m,
+                      Named("eps") = eps,
+                      Named("ng")  = ng,
+                      Named("log_evidence")=log_evidence);
+}
+
 
 
 // [[Rcpp::export]]
@@ -624,8 +755,46 @@ List gmm_marginal_merge(List current1, List current2,double tau,int N0i, const a
                       Named("log_evidence")=log_evidence);
 }
 
+// [[Rcpp::export]]
+List gmm_marginal_merge_eb(List current1, List current2,double tau,int N0i, const arma::mat epsilon, const arma::rowvec mu) {
+  
+  
+  double N0 = N0i;
+  
+  double ng1 = as<double>(current1["ng"]);
+  double ng2 = as<double>(current2["ng"]);
+  double ng  = ng1+ng2;
+  
+  arma::rowvec m1 = as<arma::rowvec>(current1["m"]);
+  arma::rowvec m2 = as<arma::rowvec>(current2["m"]);
+  arma::rowvec m = m1*(ng1/ng)+m2*(ng2/ng);
+  
+  double d = m1.n_cols;
+  arma::mat S1 =  as<arma::mat>(current1["S"]);
+  arma::mat S2 =  as<arma::mat>(current2["S"]);
+  arma::mat S = S1+ng1*(m1-m).t()*(m1-m)+S2+ng2*(m2-m).t()*(m2-m);
+  
+  double eps = golden_search([&](double eps)->double{
+    return gauss_evidence(d,ng,N0,tau,eps,epsilon,S,m,mu)*(-1);
+  },0.5,10,0.001);
+  
+  double log_evidence = gauss_evidence(d,ng,N0,tau,eps,epsilon,S,m,mu);
+  
+  
+  return List::create(Named("S")  = S,
+                      Named("m") = m,
+                      Named("eps") = eps,
+                      Named("ng")  = ng,
+                      Named("log_evidence")=log_evidence);
+}
+
+
 
 // [[Rcpp::export]] 
 arma::uvec possible_moves(int k,arma::sp_mat & move_mat){
   return arma::find(move_mat.col(k));
 }
+
+
+
+

@@ -146,6 +146,7 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
   }
 
   if(stats::runif(1)<pmutation){
+
     sp_cl=sample(max(ncl),1)
     nclold=ncl
     ncl[ncl==sp_cl]=sample(c(sp_cl,max(ncl)+1),sum(ncl==sp_cl),replace=TRUE)

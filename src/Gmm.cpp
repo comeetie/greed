@@ -23,7 +23,7 @@ Gmm::Gmm(const arma::mat & Xi,double alphai,double taui,int N0i, const arma::mat
   set_cl(cli);
   S = cov(X);
   //normfact = -N/2*log(det(S));
-  List normref = as<List>(gmm_marginal(X,tau,N0,epsilon,mu));
+  List normref = as<List>(gmm_marginal_eb(X,tau,N0,epsilon,mu));
   normfact = normref["log_evidence"];
 
   // TODO : add a filed to store the icl const ?
@@ -35,7 +35,7 @@ void Gmm::set_cl(arma::vec cli){
   cl = cli;
   K = arma::max(cl)+1;
   for(int k=0;k<K;k++){
-    regs.push_back(gmm_marginal(X.rows(arma::find(cl==k)),tau,N0,epsilon,mu));
+    regs.push_back(gmm_marginal_eb(X.rows(arma::find(cl==k)),tau,N0,epsilon,mu));
   }
   // counts : number of row in each cluster
   counts = count(cl,K);
@@ -107,11 +107,11 @@ arma::mat Gmm::delta_swap(int i,arma::uvec iclust){
       
       List regk = new_regs[k];
       
-      new_regs[k]=gmm_marginal_add1(regk,xc,tau,N0,epsilon,mu);
+      new_regs[k]=gmm_marginal_add1_eb(regk,xc,tau,N0,epsilon,mu);
       
       List regold = new_regs[oldcl];
       
-      new_regs[oldcl]=gmm_marginal_del1(regold,xc,tau,N0,epsilon,mu);
+      new_regs[oldcl]=gmm_marginal_del1_eb(regold,xc,tau,N0,epsilon,mu);
       // update cluster counts
       
  
@@ -139,8 +139,8 @@ void Gmm::swap_update(int i,int newcl){
   // update regs
   List new_regs = clone(regs);
   // switch row x from cluster oldcl to k
-  new_regs[newcl]=gmm_marginal_add1(new_regs[newcl],xc,tau,N0,epsilon,mu);
-  new_regs[oldcl]=gmm_marginal_del1(new_regs[oldcl],xc,tau,N0,epsilon,mu);
+  new_regs[newcl]=gmm_marginal_add1_eb(new_regs[newcl],xc,tau,N0,epsilon,mu);
+  new_regs[oldcl]=gmm_marginal_del1_eb(new_regs[oldcl],xc,tau,N0,epsilon,mu);
   // update counts
   arma::mat new_counts = update_count(counts,oldcl,newcl);
   // update cl
@@ -177,7 +177,7 @@ double Gmm::delta_merge(int k, int l){
   new_counts(k) = 0;
   // x_counts after merge on l
   // row/col k will not be taken into account since counts(k)==0
-  new_regs[l] = gmm_marginal_merge(regs[k],regs[l],tau,N0,epsilon,mu);
+  new_regs[l] = gmm_marginal_merge_eb(regs[k],regs[l],tau,N0,epsilon,mu);
   
   List new_stats = List::create(Named("counts", new_counts), Named("regs", new_regs));
   // delta
@@ -197,7 +197,7 @@ void Gmm::merge_update(int k,int l){
   counts    = counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
   // update x_counts
   regs = clone(regs);
-  regs[l] = gmm_marginal_merge(regs[k],regs[l],tau,N0,epsilon,mu);
+  regs[l] = gmm_marginal_merge_eb(regs[k],regs[l],tau,N0,epsilon,mu);
   IntegerVector idx = seq_len(regs.length()) - 1;
   regs = regs[idx!=k];
   // update K

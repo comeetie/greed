@@ -257,7 +257,7 @@ cleanpathopt = function(pathsol){
     if(length(path)>0){
       
       # compute the pareto front and extract the height as -log(alpha) of each merge in the front
-      Hfront = extract_front_height(pathsol)
+      Hfront = greed:::extract_front_height(pathsol)
       # initialisation
       # build the merge tree in hclust format
       merge = c()
@@ -283,6 +283,7 @@ cleanpathopt = function(pathsol){
       # ordering of initial solution
       pathsol@obs_stats = reorder(pathsol@model,pathsol@obs_stats,leaforder$order)
       pathsol@cl=order(leaforder$order)[pathsol@cl]
+      cat(max(pathsol@cl))
       
       #prepare the data.frame to store the tree
       ggtree=data.frame(H=rep(0,K),tree=0,x=seq(-1,1,length.out = K),node=1:K,xmin=0,xmax=0,K=K)
