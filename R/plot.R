@@ -263,15 +263,16 @@ co_blocks = function(x){
 
 mat_blocks = function(x){
   K = length(x@obs_stats$counts)
-  D = dim(x@obs_stats$x_counts)[2]
+  D = dim(x@obs_stats$x_counts)[1]
   gg=data.frame(kc=rep(cumsum(x@obs_stats$counts),D),
                 lc=rep(1:D,each=K),
                 sizek = rep(x@obs_stats$counts,D),
                 sizel = rep(1,K*D), 
-                count=as.vector(x@obs_stats$x_counts))
-  ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~count/sizek,alpha=~count/sizek))+
-    ggplot2::scale_fill_distiller("E[X]",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(0,max(gg$count/gg$sizek)))+
-    ggplot2::scale_alpha("E[X]",range=c(0,1),limits=c(0,max(gg$count/gg$sizek)))+
+                count=as.vector(Matrix:::t(x@obs_stats$x_counts)/Matrix:::rowSums(Matrix:::t(x@obs_stats$x_counts))))
+  
+  ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~count,alpha=~count))+
+    ggplot2::scale_fill_distiller("E[X]",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(0,max(gg$count)))+
+    ggplot2::scale_alpha("E[X]",range=c(0,1),limits=c(0,max(gg$count)))+
     ggplot2::ggtitle(paste0("MM Model with : ",max(x@cl)," clusters."))+
     ggplot2::scale_x_continuous("Features",breaks=1:D,labels=rep("",D),minor_breaks = NULL,expand = ggplot2::expand_scale(mult = 0, add = 0))+
     ggplot2::scale_y_continuous("Clusters",breaks=cumsum(x@obs_stats$counts),labels = paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),minor_breaks = NULL,expand = ggplot2::expand_scale(mult = 0, add = 0))+
