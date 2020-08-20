@@ -455,7 +455,9 @@ List IclModel::greedy_merge_path(){
   List path = List();
   // init merge counter
   int nbmerge = 0;
-  double icl = this->icl(this->get_obs_stats());
+  List obs_stats = this->get_obs_stats();
+  arma::vec counts =as<arma::vec>(obs_stats["counts"]);
+  double icl = this->icl_emiss(obs_stats)-log(K)+arma::accu(lgamma(counts))+lgamma(N);
   double iclold = icl;
   int k=0;
   int l=0;
@@ -477,7 +479,10 @@ List IclModel::greedy_merge_path(){
     this->merge_update(k,l);
     // compute new icl
     iclold = icl;
-    icl = icl+merge_mat.getValue();
+    obs_stats = this->get_obs_stats();
+    counts =as<arma::vec>(obs_stats["counts"]);
+    icl = this->icl_emiss(obs_stats)-log(K)+arma::accu(lgamma(counts))+lgamma(N);
+    // icl = icl+merge_mat.getValue();
     // this->icl(this->get_obs_stats());
     // store current solution
 

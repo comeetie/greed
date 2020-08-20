@@ -270,8 +270,8 @@ mat_blocks = function(x){
                 sizel = rep(1,K*D), 
                 count=as.vector(Matrix:::t(x@obs_stats$x_counts)/Matrix:::rowSums(Matrix:::t(x@obs_stats$x_counts))))
   
-  ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~count,alpha=~count))+
-    ggplot2::scale_fill_distiller("E[X]",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(0,max(gg$count)))+
+  ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~log(count),alpha=~count))+
+    ggplot2::scale_fill_distiller("E[X]",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(1,log(max(gg$count))))+
     ggplot2::scale_alpha("E[X]",range=c(0,1),limits=c(0,max(gg$count)))+
     ggplot2::ggtitle(paste0("MM Model with : ",max(x@cl)," clusters."))+
     ggplot2::scale_x_continuous("Features",breaks=1:D,labels=rep("",D),minor_breaks = NULL,expand = ggplot2::expand_scale(mult = 0, add = 0))+
