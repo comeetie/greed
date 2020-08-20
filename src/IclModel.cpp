@@ -480,8 +480,12 @@ List IclModel::greedy_merge_path(){
     // compute new icl
     iclold = icl;
     obs_stats = this->get_obs_stats();
-    counts =as<arma::vec>(obs_stats["counts"]);
-    icl = this->icl_emiss(obs_stats)-log(K)+arma::accu(lgamma(counts))-lgamma(N);
+    if(merge_mat.getValue()>-std::numeric_limits<double>::infinity()){
+      counts =as<arma::vec>(obs_stats["counts"]);
+      icl = this->icl_emiss(obs_stats)-log(K)+arma::accu(lgamma(counts))-lgamma(N);
+    }else{
+      icl = -std::numeric_limits<double>::infinity();
+    }
     // icl = icl+merge_mat.getValue();
     // this->icl(this->get_obs_stats());
     // store current solution
