@@ -191,7 +191,7 @@ dendo = function(x){
 co_dendo = function(x){
   ggtree = x@ggtreerow
   rowt = ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
-    ggplot2::geom_segment(data=ggtree[ggtree$Hend!=-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
+    ggplot2::geom_segment(data=ggtree,ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
     ggplot2::scale_x_continuous("",breaks=c())+
     ggplot2::ylab(expression(paste("-log(",alpha,")")))+
     ggplot2::ggtitle(paste0(x@Krow," row clusters"))+
@@ -203,7 +203,7 @@ co_dendo = function(x){
   
   ggtree = x@ggtreecol
   colt = ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
-    ggplot2::geom_segment(data=ggtree[ggtree$Hend!=-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
+    ggplot2::geom_segment(data=ggtree,ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
     ggplot2::scale_x_continuous("",breaks=c())+
     ggplot2::ylab(expression(paste("-log(",alpha,")")))+
     ggplot2::ggtitle(paste0(x@Kcol," column clusters"))+
