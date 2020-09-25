@@ -68,3 +68,20 @@ test_that("SBM multitstart", {
   expect_true(is.ggplot(plot(solc,type='blocks')))
   expect_true(is.ggplot(plot(solc,type='nodelink')))
 })
+
+test_that("SBM genetic", {
+  N = 500
+  K = 10
+  pi = rep(1/K,K)
+  mu = diag(rep(1/5,K))+runif(K*K)*0.01
+  sbm = rsbm(N,pi,mu)
+  sol=greed(sbm$x,model=new('sbm'),alg=new("genetic"))
+  expect_gte(sol@K, K-2)
+  expect_lte(sol@K, K+2)
+  solc = cut(sol,8)
+  expect_true(is.ggplot(plot(solc,type='tree')))
+  expect_true(is.ggplot(plot(solc,type='path')))
+  expect_true(is.ggplot(plot(solc,type='front')))
+  expect_true(is.ggplot(plot(solc,type='blocks')))
+  expect_true(is.ggplot(plot(solc,type='nodelink')))
+})
