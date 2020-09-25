@@ -52,7 +52,7 @@ test_that("SBM seed", {
 })
 
 
-test_that("SBM seed", {
+test_that("SBM multitstart", {
   N = 500
   K = 10
   pi = rep(1/K,K)
