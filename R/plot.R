@@ -231,10 +231,10 @@ graph_blocks = function(x){
     ggplot2::ggtitle(paste0(toupper(x@model@name)," model with : ",max(x@cl)," clusters."))+
     ggplot2::scale_x_continuous("",breaks=cumsum(x@obs_stats$counts),
                                 labels = ifelse(x@obs_stats$counts/sum(x@obs_stats$counts)>0.05,paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),""),
-                                minor_breaks = NULL,expand = ggplot2::expand_scale(mult = 0, add = 0))+
+                                minor_breaks = NULL,expand = ggplot2::expansion(mult = 0, add = 0))+
     ggplot2::scale_y_continuous("",breaks=cumsum(x@obs_stats$counts),
                                 labels = ifelse(x@obs_stats$counts/sum(x@obs_stats$counts)>0.05,paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),""),
-                                minor_breaks = NULL,expand = ggplot2::expand_scale(mult = 0, add = 0))+
+                                minor_breaks = NULL,expand = ggplot2::expansion(mult = 0, add = 0))+
     ggplot2::coord_fixed()+ggplot2::theme_bw()
 }
 
@@ -256,8 +256,8 @@ co_blocks = function(x){
     ggplot2::scale_fill_distiller("E[X]",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(0,max(gg$count/(gg$sizek*gg$sizel))))+
     ggplot2::scale_alpha("E[X]",range=c(0,1),limits=c(0,max(gg$count/(gg$sizek*gg$sizel))))+
     ggplot2::ggtitle(paste0("Co-clustering with : ",max(x@cl)," clusters."))+
-    ggplot2::scale_x_continuous("Col clusters",breaks=cccol,labels=ifelse(ylab>5,paste0(ylab,"%"),""),minor_breaks = NULL,expand = ggplot2::expand_scale(mult = 0, add = 0))+
-    ggplot2::scale_y_continuous("Row clusters",breaks=ccrow,labels =ifelse(xlab>5,paste0(xlab,"%"),""),minor_breaks = NULL,expand = ggplot2::expand_scale(mult = 0, add = 0))+
+    ggplot2::scale_x_continuous("Col clusters",breaks=cccol,labels=ifelse(ylab>5,paste0(ylab,"%"),""),minor_breaks = NULL,expand = ggplot2::expansion(mult = 0, add = 0))+
+    ggplot2::scale_y_continuous("Row clusters",breaks=ccrow,labels =ifelse(xlab>5,paste0(xlab,"%"),""),minor_breaks = NULL,expand = ggplot2::expansion(mult = 0, add = 0))+
     ggplot2::theme_bw()      
 }
 
@@ -274,8 +274,8 @@ mat_blocks = function(x){
     ggplot2::scale_fill_distiller("E[X]",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(1,log(max(gg$count))))+
     ggplot2::scale_alpha("E[X]",range=c(0,1),limits=c(0,max(gg$count)))+
     ggplot2::ggtitle(paste0("MM Model with : ",max(x@cl)," clusters."))+
-    ggplot2::scale_x_continuous("Features",breaks=1:D,labels=rep("",D),minor_breaks = NULL,expand = ggplot2::expand_scale(mult = 0, add = 0))+
-    ggplot2::scale_y_continuous("Clusters",breaks=cumsum(x@obs_stats$counts),labels = paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),minor_breaks = NULL,expand = ggplot2::expand_scale(mult = 0, add = 0))+
+    ggplot2::scale_x_continuous("Features",breaks=1:D,labels=rep("",D),minor_breaks = NULL,expand = ggplot2::expansion(mult = 0, add = 0))+
+    ggplot2::scale_y_continuous("Clusters",breaks=cumsum(x@obs_stats$counts),labels = paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),minor_breaks = NULL,expand = ggplot2::expansion(mult = 0, add = 0))+
     ggplot2::theme_bw()      
 }
 

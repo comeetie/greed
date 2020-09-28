@@ -54,7 +54,7 @@ genetic = function(model,alg,data,K,verbose=FALSE){
     }
     children = as.list(children)
     for (i in 1:(alg@pop_size-1)){
-      if(stats::runif(1)<alg@prob_mut){
+      if(stats::runif(1)<alg@prob_mutation){
         new_solutions[[i]] %<-% fit_greed(model,data,children[[i]]@cl,"swap",1)
       }else{
         new_solutions[[i]] = children[[i]]
