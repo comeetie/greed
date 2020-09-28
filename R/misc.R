@@ -81,7 +81,7 @@ zscore = function(X){
 
 as.sparse = function(X){
   S = X
-  if(class(X)=="matrix"){
+  if(is(X,"matrix")){
     ij= which(X!=0,arr.ind=TRUE)
     S = Matrix::sparseMatrix(ij[,1],ij[,2],x = X[ij]) 
   }
