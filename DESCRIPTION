@@ -4,7 +4,7 @@ Title: Greed: Clustering and Model Selection
 Version: 1.0
 Date: 2019-04-27
 Author: Etienne Come
-Maintainer: Etienne Come <etienne.come@ifsttar.fr>
+Maintainer: Etienne Come <etienne.come@univ-eiffel.fr>
 Description: A serie of algorithms that enable the clustering of networks and counts data matrix such as document/term matrix with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood (which is equivalent to minimizing the description length). Their are four models availables : SBM degree corected SBM, Mixture of Multinomials, Multivariate mixture of poisson. The optimization is performed thanks to a combination of greedy local search and a genetic algorithm.
 License: GPL
 Depends: R (>= 2.10)
@@ -14,10 +14,11 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    igraph
+    igraph,
+    dplyr
 Encoding: UTF-8
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Collate: 
     'RcppExports.R'
     'misc.R'

@@ -4,12 +4,14 @@
 \name{Xvlegislature}
 \alias{Xvlegislature}
 \title{French Parliament votes dataset}
-\format{An object of class \code{"list"} with three fields; 
+\format{
+An object of class \code{"list"} with three fields; 
  \describe{
   \item{X}{matrix of deputy votes a \cite{sparseMatrix} of size 593x1839}
   \item{rowmeta}{a data frame of deputy meta-data}
   \item{colmeta}{a data frame of scrutin meta data}
-}}
+}
+}
 \usage{
 data(Xvlegislature)
 }

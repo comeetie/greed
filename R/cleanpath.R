@@ -257,7 +257,7 @@ cleanpathopt = function(pathsol){
     if(length(path)>0){
       
       # compute the pareto front and extract the height as -log(alpha) of each merge in the front
-      Hfront = greed:::extract_front_height(pathsol)
+      Hfront = extract_front_height(pathsol)
       # initialisation
       # build the merge tree in hclust format
       merge = c()

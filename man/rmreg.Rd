@@ -4,8 +4,13 @@
 \alias{rmreg}
 \title{Generate data from a mixture of regression model}
 \usage{
-rmreg(N, pi, mu, sigma, X = cbind(matrix(stats::rnorm(N * (nrow(mu) -
-  1)), N, nrow(mu) - 1), rep(1, N)))
+rmreg(
+  N,
+  pi,
+  mu,
+  sigma,
+  X = cbind(matrix(stats::rnorm(N * (nrow(mu) - 1)), N, nrow(mu) - 1), rep(1, N))
+)
 }
 \arguments{
 \item{N}{A numeric value the size of the graph to generate}

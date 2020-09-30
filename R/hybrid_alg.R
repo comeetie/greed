@@ -2,6 +2,8 @@
 #' @importFrom Rcpp sourceCpp
 #' @importFrom future %<-%
 #' @name %<-%
+NULL
+
 #' @importFrom future %globals%
 #' @name %globals%
 NULL

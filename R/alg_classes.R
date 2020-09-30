@@ -130,7 +130,7 @@ find_model = function(X){
       if(all(round(X)==X)){
         model = methods::new("co_dcsbm")  
       }else{
-        model = methods::new("gmm",N0=ncol(X),epsilon=cov(X),mu=apply(X,2,mean),tau=0.0001)
+        model = methods::new("gmm",N0=ncol(X),epsilon=stats::cov(X),mu=apply(X,2,mean),tau=0.0001)
       }
     }
   }else{

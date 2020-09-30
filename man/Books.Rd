@@ -4,11 +4,13 @@
 \name{Books}
 \alias{Books}
 \title{Books about US politics network dataset}
-\format{An object of class \code{"list"} with two fields; 
+\format{
+An object of class \code{"list"} with two fields; 
  \describe{
   \item{X}{network adjacency matrix as a \cite{sparseMatrix} of size 105x105}
   \item{label}{ a factor of length  (size 105) with levels "l", "n", or "c" to indicate whether the books are liberal, neutral, or conservative}
-}}
+}
+}
 \source{
 \href{http://www-personal.umich.edu/~mejn/netdata/}{M. E. J. Newman Network datasets}
 }

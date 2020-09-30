@@ -3,11 +3,15 @@
 \docType{package}
 \name{greed}
 \alias{greed}
-\alias{greed-package}
 \title{model based hierachical clustering with icl}
 \usage{
-greed(X, K = 20, model = find_model(X), alg = methods::new("hybrid"),
-  verbose = FALSE)
+greed(
+  X,
+  K = 20,
+  model = find_model(X),
+  alg = methods::new("hybrid"),
+  verbose = FALSE
+)
 }
 \arguments{
 \item{X}{data to cluster either a matrix or a \code{\link{dgCMatrix-class}}}

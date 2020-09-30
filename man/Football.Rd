@@ -4,7 +4,8 @@
 \name{Football}
 \alias{Football}
 \title{American College football network dataset}
-\format{An object of class \code{"list"} with two fields; 
+\format{
+An object of class \code{"list"} with two fields; 
  \describe{
   \item{X}{network adjacency matrix as a \cite{sparseMatrix} of size 115x115}
   \item{label}{vector of teams conferences of size 115 with the following encoding (0 = Atlantic Coast,
@@ -19,7 +20,8 @@
   9 = Southeastern,
   10 = Sun Belt,
   11 = Western Athletic)}
-}}
+}
+}
 \source{
 \href{http://www-personal.umich.edu/~mejn/netdata/}{M. E. J. Newman Network datasets}
 }

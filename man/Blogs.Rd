@@ -4,11 +4,13 @@
 \name{Blogs}
 \alias{Blogs}
 \title{Political blogs network dataset}
-\format{An object of class \code{"list"} with two fields; 
+\format{
+An object of class \code{"list"} with two fields; 
  \describe{
   \item{X}{network adjacency matrix as a \cite{sparseMatrix} of size 1222x1222}
   \item{label}{vector of political leaning of each blogs (size 1222) with the following encoding (0 = left or liberal,1 = right or conservative)}
-}}
+}
+}
 \source{
 \href{http://www-personal.umich.edu/~mejn/netdata/}{M. E. J. Newman Network datasets}
 }

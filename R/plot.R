@@ -268,7 +268,7 @@ mat_blocks = function(x){
                 lc=rep(1:D,each=K),
                 sizek = rep(x@obs_stats$counts,D),
                 sizel = rep(1,K*D), 
-                count=as.vector(Matrix:::t(x@obs_stats$x_counts)/Matrix:::rowSums(Matrix:::t(x@obs_stats$x_counts))))
+                count=as.vector(Matrix::t(x@obs_stats$x_counts)/Matrix::rowSums(Matrix::t(x@obs_stats$x_counts))))
   
   ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~log(count),alpha=~count))+
     ggplot2::scale_fill_distiller("E[X]",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(1,log(max(gg$count))))+

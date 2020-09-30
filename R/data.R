@@ -108,6 +108,30 @@
 #' data(Jazz)
 "Jazz"
 
+#' Jazz musicians / Bands relations
+#' 
+#' List  Jazz musicians / Bands relationship
+#'  
+#' @docType data
+#'
+#' @usage data(Jazz_full)
+#'
+#' @format A list with two fields:
+#' \describe{
+#'   \item{X}{a \code{"sparseMatrix"} binary matrix of size 4475x965 with a one when one musicians played once in a given band.}
+#'   \item{col_meta}{a data.frame with columns (bands) meta_data}
+#' }
+#'
+#' @keywords datasets
+#'
+#' @references P.Gleiser and L. Danon , Community Structure in jazz, Adv. Complex Syst.6, 565 (2003) (\href{https://arxiv.org/abs/cond-mat/0307434}{Arxiv})
+#' 
+#' @source \href{http://deim.urv.cat/~alexandre.arenas/data/welcome.htm}{A. Arena Network datasets}
+#'
+#' @examples
+#' data(Jazz_full)
+"Jazz_full"
+
 
 #' French Parliament votes dataset
 #' 
