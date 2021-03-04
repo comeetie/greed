@@ -251,7 +251,7 @@ MergeMat IclModel::delta_merge(arma::mat delta, int obk, int obl, const List & o
   double bv = -std::numeric_limits<double>::infinity();
   for(int k = 1; k < K; ++k) {
     for (int l = 0;l<k;++l){
-      if(k == obl | l == obl){
+      if((k == obl) | (l == obl)){
         delta(k,l)=this->delta_merge(k,l);
       }else{
         //Rcout << k <<" : " <<l << " - " << obk <<" : " << obl <<std::endl;
@@ -319,7 +319,7 @@ SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int 
      if(i.col()<i.row()){
       k=i.row();
       l=i.col();
-      if(k == obl | l == obl){
+      if((k == obl) | (l == obl)){
         delta(k,l)=this->delta_merge(k,l);
       }else{
         delta(k,l)=delta(k,l)+this->delta_merge_correction(k,l,obk,obl,old_stats);

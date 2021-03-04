@@ -19,13 +19,13 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
   clt = clt-arma::ones(N);
   S4 sol;
   try{
-    if(strcmp(model.slot("name"),"sbm")!=0 && 
-       strcmp(model.slot("name"),"dcsbm")!=0 && 
-       strcmp(model.slot("name"),"co_dcsbm")!=0 && 
-       strcmp(model.slot("name"),"mm")!=0 &&
-       strcmp(model.slot("name"),"mvmreg")!=0 &&
-       strcmp(model.slot("name"),"gmm")!=0){
-      stop("Unsuported model");
+    if((strcmp(model.slot("name"),"sbm")!=0) && 
+       (strcmp(model.slot("name"),"dcsbm")!=0) && 
+       (strcmp(model.slot("name"),"co_dcsbm")!=0) && 
+       (strcmp(model.slot("name"),"mm")!=0) &&
+       (strcmp(model.slot("name"),"mvmreg")!=0) &&
+       (strcmp(model.slot("name"),"gmm")!=0)){
+       stop("Unsuported model");
     }
     if(strcmp(model.slot("name"),"sbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
@@ -61,6 +61,7 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
   }catch(std::exception &ex) {	
     forward_exception_to_r(ex);
   }
+  return NULL;
 }
 
 S4 init_sol(S4 model,String type="fit") {

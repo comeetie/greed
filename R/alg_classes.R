@@ -123,7 +123,7 @@ greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=F
 
 
 find_model = function(X){
-  if(class(X)=="dgCMatrix" | class(X)=="matrix"){
+  if(methods::is(X,"dgCMatrix") | methods::is(X,"matrix")){
     if(nrow(X)==ncol(X)){
       model = methods::new("dcsbm")
     }else{

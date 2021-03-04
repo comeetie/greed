@@ -49,8 +49,8 @@ NMI = function(cl1,cl2){
 #' 
 #' @description 
 #' performs regularized spectral clustering of a sparce adjacency matrix
-#' @references Tai Qin, Karl Rohe. Regularized Spectral Clustering under the Degree-Corrected Stochastic Blockmodel. Nips 2013.
-#' @param X An adjacency matrix in sparse format
+#' @references Tai Qin, Karl Rohe. Regularized Spectral Clustering under the Degree-Corrected Stochastic Block Model. Nips 2013.
+#' @param X An adjacency matrix in sparse format (see the \code{Matrix} package)
 #' @param K Desired number of cluster
 #' @return cl Vector of cluster labels
 #' @export

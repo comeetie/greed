@@ -14,7 +14,7 @@ An S4 class to represent a multinomial model model, extend \code{\link{icl_model
 
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
 
-\item{\code{beta}}{Dircihlet over vocabulary prior parameter (default to 1)}
+\item{\code{beta}}{Dirchlet over vocabulary prior parameter (default to 1)}
 }}
 
 \examples{

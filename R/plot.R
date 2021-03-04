@@ -18,15 +18,6 @@ setMethod(f = "print",
           })
 
 
-#' @title show an icl_path object
-#' show an n \code{\link{icl_path-class}} object
-#' @param object \code{\link{icl_path-class}} object to print
-#' @export
-setMethod(f = "show", 
-          signature = signature("icl_path"),
-          definition = function(object){
-            print(object)
-          })
 
 pprint =function(x,M,l){
   K = length(x@obs_stats$counts)

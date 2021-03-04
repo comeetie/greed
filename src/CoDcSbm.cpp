@@ -41,10 +41,10 @@ void CoDcSbm::set_cl(arma::vec cli){
   dc = sum(x_counts).t();
   arma::vec types(K);
   types.fill(0);
-  for (int i = 0;i<row_clusts.n_elem;++i){
+  for (arma::uword i = 0;i<row_clusts.n_elem;++i){
     types(row_clusts(i))=1; 
   }
-  for (int i = 0;i<col_clusts.n_elem;++i){
+  for (arma::uword i = 0;i<col_clusts.n_elem;++i){
     if(types(col_clusts(i))!=0){
       Rcpp::stop("Invalid partition in co-clustering");      
     }
@@ -138,7 +138,7 @@ double CoDcSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
   }else{
     opp_clusts = row_clusts;
   }
-  for (int i = 0;i<opp_clusts.n_elem;++i){
+  for (arma::uword i = 0;i<opp_clusts.n_elem;++i){
     int l=opp_clusts(i);
     double cc=counts(newcl)*counts(l);
     
@@ -190,9 +190,9 @@ arma::mat CoDcSbm::delta_swap(int i,arma::uvec iclust){
   List old_stats = List::create(Named("counts", counts),Named("dr", dr),Named("dc", dc), Named("x_counts", x_counts));
   int k = 0;
   // for each possible move
-  for(int j = 0; j < iclust.n_elem; ++j) {
+  for(arma::uword j = 0; j < iclust.n_elem; ++j) {
     k=iclust(j);
-    if(k!=oldcl & (clusttypes(k)==clusttypes(oldcl))){
+    if((k!=oldcl) & (clusttypes(k)==clusttypes(oldcl))){
       arma::mat new_ec = x_counts;
       arma::vec new_counts = update_count(counts,oldcl,k);
       arma::vec new_dr = dr;
@@ -324,7 +324,7 @@ double CoDcSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & 
   int lo,ko;
   double cc;
   
-  if(clusttypes(k)==clusttypes(l) & clusttypes(k)!=clusttypes(obl)){
+  if((clusttypes(k)==clusttypes(l)) & (clusttypes(k)!=clusttypes(obl))){
     // k,l position in old_stats
     //Rcout << "Corr" << std::endl;
     if(l>=obk){

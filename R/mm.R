@@ -7,7 +7,7 @@ NULL
 #' An S4 class to represent a multinomial model model, extend \code{\link{icl_model-class}}.
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
-#' @slot beta Dircihlet over vocabulary prior parameter (default to 1)
+#' @slot beta Dirchlet over vocabulary prior parameter (default to 1)
 #' @examples
 #' new("mm")
 #' new("mm",alpha=1,beta=1)

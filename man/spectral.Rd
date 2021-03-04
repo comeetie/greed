@@ -7,7 +7,7 @@
 spectral(X, K)
 }
 \arguments{
-\item{X}{An adjacency matrix in sparse format}
+\item{X}{An adjacency matrix in sparse format (see the \code{Matrix} package)}
 
 \item{K}{Desired number of cluster}
 }
@@ -18,5 +18,5 @@ cl Vector of cluster labels
 performs regularized spectral clustering of a sparce adjacency matrix
 }
 \references{
-Tai Qin, Karl Rohe. Regularized Spectral Clustering under the Degree-Corrected Stochastic Blockmodel. Nips 2013.
+Tai Qin, Karl Rohe. Regularized Spectral Clustering under the Degree-Corrected Stochastic Block Model. Nips 2013.
 }

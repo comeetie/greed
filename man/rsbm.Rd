@@ -2,7 +2,7 @@
 % Please edit documentation in R/generator.R
 \name{rsbm}
 \alias{rsbm}
-\title{Generate a graph adjacency matrix using a Stochastick Block Model}
+\title{Generate a graph adjacency matrix using a Stochastic Block Model}
 \usage{
 rsbm(N, pi, mu)
 }
@@ -25,7 +25,7 @@ A list with fields:
 }
 }
 \description{
-\code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Stochastick Block Model.
+\code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Stochastic Block Model.
 }
 \details{
 This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.

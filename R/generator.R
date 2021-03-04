@@ -1,6 +1,6 @@
-#' Generate a graph adjacency matrix using a Stochastick Block Model
+#' Generate a graph adjacency matrix using a Stochastic Block Model
 #'
-#' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Stochastick Block Model.
+#' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Stochastic Block Model.
 #'
 #' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 #'
@@ -110,7 +110,7 @@ rmm = function (N,pi,mu,lambda){
 
 #' Generate graph adjacency matrix using a degree corrected SBM
 #'
-#' \code{rdcsbm} returns an adjacency matrix and the cluster labels generated randomly using a Degree Corrected Stochastich Block Model.
+#' \code{rdcsbm} returns an adjacency matrix and the cluster labels generated randomly using a Degree Corrected Stochastic Block Model.
 #'
 #' It take the sample size, cluster proportions and emission matrix, and   as input and sample a graph accordingly together with the clusters labels.
 #'

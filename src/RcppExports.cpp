@@ -161,13 +161,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // delcol
-arma::sp_mat delcol(const arma::sp_mat& a, int ci);
+arma::sp_mat delcol(const arma::sp_mat& a, arma::uword ci);
 RcppExport SEXP _greed_delcol(SEXP aSEXP, SEXP ciSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::sp_mat& >::type a(aSEXP);
-    Rcpp::traits::input_parameter< int >::type ci(ciSEXP);
+    Rcpp::traits::input_parameter< arma::uword >::type ci(ciSEXP);
     rcpp_result_gen = Rcpp::wrap(delcol(a, ci));
     return rcpp_result_gen;
 END_RCPP

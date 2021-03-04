@@ -28,7 +28,7 @@ Mvmregcomp::Mvmregcomp(const arma::mat & Xi,const arma::mat & Yi, double alphai,
   arma::mat RR = R.t()*R;
   
   Rcout << RR/N  << std::endl;
-  int m = Y.n_cols;
+
   S0 = RR;
   S0.zeros();
   N0 = Y.n_cols;
@@ -108,7 +108,7 @@ arma::mat Mvmregcomp::delta_swap(int i,arma::uvec iclust){
   
   int k = 0;
   // for each possible move
-  for(int j = 0; j < iclust.n_elem; ++j) {
+  for(arma::uword j = 0; j < iclust.n_elem; ++j) {
     k=iclust(j);
     if(k!=oldcl){
       // construct new stats
