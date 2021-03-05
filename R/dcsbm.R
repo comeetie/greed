@@ -3,10 +3,10 @@ NULL
 
 
 
-#' @title Clustering with a degree corrected stochastick block model description class
+#' @title Clustering with a degree corrected stochastic block model description class
 #' 
 #' @description 
-#' An S4 class to represent a degree corrected stochastick block model, extend \code{\link{icl_model-class}}.
+#' An S4 class to represent a degree corrected stochastic block model, extend \code{\link{icl_model-class}}.
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter
 #' @export 
@@ -17,24 +17,24 @@ setClass("dcsbm",
 
 
 
-#' @title Clustering with a degree correted stochastick block model fit results class
+#' @title Clustering with a degree corrected stochastic block model fit results class
 #' 
 #' @description
-#'  An S4 class to represent a fit of a degree corrected stochastick block model for co_clustering, extend \code{\link{icl_fit-class}}.
+#'  An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{icl_fit-class}}.
 #' @slot model a \code{\link{dcsbm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
-#' @slot cl a numeric vector with row and clolumns cluster indexes
+#' @slot cl a numeric vector with row and columns cluster indexes
 #' @slot obs_stats a list with the following elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters
-#' \item din: numeric vector of size K wich store the sums of in-degrees for each clusters
-#' \item dout: numeric vector of size K wich store the sums of out-degrees for each clusters 
+#' \item din: numeric vector of size K which store the sums of in-degrees for each clusters
+#' \item dout: numeric vector of size K which store the sums of out-degrees for each clusters 
 #' \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
 #' }
 #' @slot move_mat binary matrix which store move constraints
-#' @slot train_hist data.frame with training history infromation (details depends on the training procedure)
+#' @slot train_hist data.frame with training history information (details depends on the training procedure)
 #' @export 
 setClass("dcsbm_fit",slots = list(model="dcsbm"),contains="icl_fit")
 
@@ -42,20 +42,20 @@ setClass("dcsbm_fit",slots = list(model="dcsbm"),contains="icl_fit")
 
 
 
-#' @title Clustering with a degree correted stochastick block model path extraction results class
+#' @title Clustering with a degree corrected stochastic block model path extraction results class
 #' 
 #' 
-#' @description An S4 class to represent a fit of a stochastick block model, extend \code{\link{icl_path-class}}.
+#' @description An S4 class to represent a fit of a stochastic block model, extend \code{\link{icl_path-class}}.
 #' @slot model a \code{\link{dcsbm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
-#' @slot cl a numeric vector with row and clolumns cluster indexes
+#' @slot cl a numeric vector with row and columns cluster indexes
 #' @slot obs_stats a list with the following elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters
-#' \item din: numeric vector of size K wich store the sums of in-degrees for each clusters
-#' \item dout: numeric vector of size K wich store the sums of out-degrees for each clusters 
+#' \item din: numeric vector of size K which store the sums of in-degrees for each clusters
+#' \item dout: numeric vector of size K which store the sums of out-degrees for each clusters 
 #' \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
 #' }
 #' @slot path a list of size K-1 with each part of the path described by:
@@ -69,9 +69,9 @@ setClass("dcsbm_fit",slots = list(model="dcsbm"),contains="icl_fit")
 #' \item obs_stats: a list with the same elements
 #' }
 #' @slot logalpha value of log(alpha)
-#' @slot ggtree data.frame with complete merge tree for easy ploting with gggplot
+#' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father  
-#' @slot train_hist  data.frame with training history infromation (details depends on the training procedure)
+#' @slot train_hist  data.frame with training history information (details depends on the training procedure)
 #' @export 
 setClass("dcsbm_path",contains=c("icl_path","dcsbm_fit"))
 
@@ -102,8 +102,8 @@ setMethod(f = "plot",
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
 #' \item \code{'nodelink'}: plot a nodelink diagram of the graph summarizing connections between clusters
 #' \item \code{'front'}: plot the extracted front in the plane ICL, log(alpha)
-#' \item \code{'path'}: plot the veolution of ICL with repsect to K
-#' \item \code{'tree'}: plot the associated dendogram
+#' \item \code{'path'}: plot the evolution of ICL with respect to K
+#' \item \code{'tree'}: plot the associated dendrogram
 #' }
 #' @return a \code{\link{ggplot2}} graphic
 #' @export 

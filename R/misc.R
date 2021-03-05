@@ -1,7 +1,7 @@
 #' Compute the entropy of a discrete sample
 #'
 #' @param cl vector of discrete labels
-#' @return the entropie of the sample   
+#' @return the entropy of the sample   
 #' @examples
 #' cl =sample(2,500,replace=TRUE)
 #' H(cl)
@@ -12,7 +12,7 @@ H = function(cl){
   -sum(p*log(p))
 }
 
-#' Compute the mutual information of two discretes samples
+#' Compute the mutual information of two discrete samples
 #'
 #' @param cl1 vector of discrete labels
 #' @param cl2 vector of discrete labels
@@ -28,7 +28,7 @@ MI = function(cl1,cl2){
   sum(pj[pj!=0]*log(pj[pj!=0])-pj[pj!=0]*log(pi[pj!=0]))
 }
 
-#' Compute the normalized mutual information of two discretes samples
+#' Compute the normalized mutual information of two discrete samples
 #'
 #' @param cl1 vector of discrete labels
 #' @param cl2 vector of discrete labels
@@ -48,7 +48,7 @@ NMI = function(cl1,cl2){
 #' @title Regularized spectral clustering 
 #' 
 #' @description 
-#' performs regularized spectral clustering of a sparce adjacency matrix
+#' performs regularized spectral clustering of a sparse adjacency matrix
 #' @references Tai Qin, Karl Rohe. Regularized Spectral Clustering under the Degree-Corrected Stochastic Block Model. Nips 2013.
 #' @param X An adjacency matrix in sparse format (see the \code{Matrix} package)
 #' @param K Desired number of cluster

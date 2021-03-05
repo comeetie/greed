@@ -12,7 +12,7 @@
 \item{type}{a string which specify plot type:
 \itemize{
 \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
-\item \code{'nodelink'}: plot a nodelink diagram of the graph summarizing connections between lusters
+\item \code{'nodelink'}: plot a nodelink diagram of the graph summarizing connections between clusters
 }}
 }
 \value{

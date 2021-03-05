@@ -2,10 +2,10 @@
 NULL
 
 
-#' @title Clustering with a stochastick block model description class
+#' @title Clustering with a stochastic block model description class
 #' 
 #' @description 
-#' An S4 class to represent a a stochastick block model, extend \code{\link{icl_model-class}}.
+#' An S4 class to represent a a stochastic block model, extend \code{\link{icl_model-class}}.
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter
 #' @slot a0 Beta prior parameter over links
@@ -18,34 +18,34 @@ setClass("sbm",
 
 
 
-#' @title Clustering with stochastick block model fit results class
+#' @title Clustering with stochastic block model fit results class
 #' 
-#' @description An S4 class to represent a fit of a stochastick block model, extend \code{\link{icl_fit-class}}.
+#' @description An S4 class to represent a fit of a stochastic block model, extend \code{\link{icl_fit-class}}.
 #' @slot model a \code{\link{sbm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
-#' @slot cl a numeric vector with row and clolumns cluster indexes
+#' @slot cl a numeric vector with row and columns cluster indexes
 #' @slot obs_stats a list with the following elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters
 #' \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
 #' }
 #' @slot move_mat binary matrix which store move constraints
-#' @slot train_hist data.frame with training history infromation (details depends on the training procedure)
+#' @slot train_hist data.frame with training history information (details depends on the training procedure)
 #' @export 
 setClass("sbm_fit",slots = list(model="sbm"),contains="icl_fit")
 
 
-#' @title Clustering with a stochastick block model path extraction results class
+#' @title Clustering with a stochastic block model path extraction results class
 #' 
 #' 
-#' @description An S4 class to represent a hierarchical fit of a stochastick block model, extend \code{\link{icl_path-class}}.
+#' @description An S4 class to represent a hierarchical fit of a stochastic block model, extend \code{\link{icl_path-class}}.
 #' @slot model a \code{\link{sbm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
-#' @slot cl a numeric vector with row and clolumns cluster indexes
+#' @slot cl a numeric vector with row and columns cluster indexes
 #' @slot obs_stats a list with the following elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters
@@ -62,9 +62,9 @@ setClass("sbm_fit",slots = list(model="sbm"),contains="icl_fit")
 #' \item obs_stats: a list with the same elements
 #' }
 #' @slot logalpha value of log(alpha)
-#' @slot ggtree data.frame with complete merge tree for easy ploting with gggplot
+#' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father  
-#' @slot train_hist  data.frame with training history infromation (details depends on the training procedure)
+#' @slot train_hist  data.frame with training history information (details depends on the training procedure)
 #' @export 
 setClass("sbm_path",contains=c("icl_path","sbm_fit"))
 
@@ -75,7 +75,7 @@ setClass("sbm_path",contains=c("icl_path","sbm_fit"))
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
-#' \item \code{'nodelink'}: plot a nodelink diagram of the graph summarizing connections between lusters
+#' \item \code{'nodelink'}: plot a nodelink diagram of the graph summarizing connections between clusters
 #' }
 #' @return a \code{\link{ggplot2}} graphic
 #' @export 
@@ -94,8 +94,8 @@ setMethod(f = "plot",
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
 #' \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between clusters
 #' \item \code{'front'}: plot the extracted front ICL, log(alpha)
-#' \item \code{'path'}: plot the veolution of ICL with repsect to K
-#' \item \code{'tree'}: plot the associated dendogram
+#' \item \code{'path'}: plot the evolution of ICL with respect to K
+#' \item \code{'tree'}: plot the associated dendrogram
 #' }
 #' @return a \code{\link{ggplot2}} graphic
 #' @export 

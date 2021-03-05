@@ -5,18 +5,18 @@
 \alias{icl_model-class}
 \title{abstract class to represent a generative model
 
-An S4 class to represent an abstract egenrative model}
+An S4 class to represent an abstract generative model}
 \description{
 abstract class to represent a generative model
 
-An S4 class to represent an abstract egenrative model
+An S4 class to represent an abstract generative model
 }
 \section{Slots}{
 
 \describe{
 \item{\code{name}}{a character vector}
 
-\item{\code{alpha}}{a numeric vector of length 1 which define the parameters of the dirichlet over the cluster proportions (default to 1)}
+\item{\code{alpha}}{a numeric vector of length 1 which define the parameters of the Dirichlet over the cluster proportions (default to 1)}
 }}
 
 \seealso{

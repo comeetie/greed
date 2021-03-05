@@ -14,8 +14,8 @@
 \item \code{'blocks'}: plot a block matrix with summarizing connections between row and column clusters
 \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between row and column clusters
 \item \code{'front'}: plot the extracted front ICL, log(alpha)
-\item \code{'path'}: plot the veolution of ICL with repsect to K
-\item \code{'tree'}: plot the associated dendograms one for the row clustrers and one for the column clusters
+\item \code{'path'}: plot the evolution of ICL with respect to K
+\item \code{'tree'}: plot the associated dendrograms one for the row clusters and one for the column clusters
 }}
 }
 \value{

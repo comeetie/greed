@@ -5,7 +5,7 @@
 \alias{Jazz}
 \title{Jazz musicians network dataset}
 \format{
-An object of class \code{"sparseMatrix"} with the network adjacency matrix.
+An object of class \code{\link[Matrix]{sparseMatrix}} with the network adjacency matrix.
 }
 \source{
 \href{http://deim.urv.cat/~alexandre.arenas/data/welcome.htm}{A. Arena Network datasets}

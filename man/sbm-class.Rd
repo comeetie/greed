@@ -3,9 +3,9 @@
 \docType{class}
 \name{sbm-class}
 \alias{sbm-class}
-\title{Clustering with a stochastick block model description class}
+\title{Clustering with a stochastic block model description class}
 \description{
-An S4 class to represent a a stochastick block model, extend \code{\link{icl_model-class}}.
+An S4 class to represent a a stochastic block model, extend \code{\link{icl_model-class}}.
 }
 \section{Slots}{
 

@@ -115,7 +115,7 @@ nodelink = function(sol){
 #' nodelinklab
 #' @param sol \code{\link{mm_path-class}} object to be plot
 #' @param labels a vector of cluster labels
-#' @param s threeshold for links
+#' @param s threshold for links
 #' @return a ggplot2 graph
 #' @export 
 nodelinklab = function(sol,labels,s=0){

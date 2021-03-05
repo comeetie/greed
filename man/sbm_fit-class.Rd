@@ -3,9 +3,9 @@
 \docType{class}
 \name{sbm_fit-class}
 \alias{sbm_fit-class}
-\title{Clustering with stochastick block model fit results class}
+\title{Clustering with stochastic block model fit results class}
 \description{
-An S4 class to represent a fit of a stochastick block model, extend \code{\link{icl_fit-class}}.
+An S4 class to represent a fit of a stochastic block model, extend \code{\link{icl_fit-class}}.
 }
 \section{Slots}{
 
@@ -18,7 +18,7 @@ An S4 class to represent a fit of a stochastick block model, extend \code{\link{
 
 \item{\code{K}}{number of extracted clusters over row and columns}
 
-\item{\code{cl}}{a numeric vector with row and clolumns cluster indexes}
+\item{\code{cl}}{a numeric vector with row and columns cluster indexes}
 
 \item{\code{obs_stats}}{a list with the following elements:
 \itemize{
@@ -28,6 +28,6 @@ An S4 class to represent a fit of a stochastick block model, extend \code{\link{
 
 \item{\code{move_mat}}{binary matrix which store move constraints}
 
-\item{\code{train_hist}}{data.frame with training history infromation (details depends on the training procedure)}
+\item{\code{train_hist}}{data.frame with training history information (details depends on the training procedure)}
 }}
 

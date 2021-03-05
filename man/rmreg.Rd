@@ -37,7 +37,7 @@ A list with fields:
 }
 }
 \description{
-\code{rmreg} returns an X matrix, a y vector and the cluster labels generated randomly unsig a Mixture of regression model.
+\code{rmreg} returns an X matrix, a y vector and the cluster labels generated randomly with a Mixture of regression model.
 }
 \details{
 It take the sample size, cluster proportions and regression parameters matrix and variance  as input accordingly

@@ -3,9 +3,9 @@
 \docType{class}
 \name{dcsbm-class}
 \alias{dcsbm-class}
-\title{Clustering with a degree corrected stochastick block model description class}
+\title{Clustering with a degree corrected stochastic block model description class}
 \description{
-An S4 class to represent a degree corrected stochastick block model, extend \code{\link{icl_model-class}}.
+An S4 class to represent a degree corrected stochastic block model, extend \code{\link{icl_model-class}}.
 }
 \section{Slots}{
 

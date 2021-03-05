@@ -1,3 +1,6 @@
 inst/doc
 .Rproj.user
 data-raw/FD_MIGCOM_2015.txt
+*.o
+*.so
+*.win

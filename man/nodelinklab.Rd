@@ -11,7 +11,7 @@ nodelinklab(sol, labels, s = 0)
 
 \item{labels}{a vector of cluster labels}
 
-\item{s}{threeshold for links}
+\item{s}{threshold for links}
 }
 \value{
 a ggplot2 graph

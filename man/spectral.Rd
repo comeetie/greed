@@ -15,7 +15,7 @@ spectral(X, K)
 cl Vector of cluster labels
 }
 \description{
-performs regularized spectral clustering of a sparce adjacency matrix
+performs regularized spectral clustering of a sparse adjacency matrix
 }
 \references{
 Tai Qin, Karl Rohe. Regularized Spectral Clustering under the Degree-Corrected Stochastic Block Model. Nips 2013.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/alg_classes.R
 \name{greed_cond}
 \alias{greed_cond}
-\title{conditional model based hierachical clustering}
+\title{conditional model based hierarchical clustering}
 \usage{
 greed_cond(
   X,
@@ -14,7 +14,7 @@ greed_cond(
 )
 }
 \arguments{
-\item{X}{covariates data}
+\item{X}{design matrix}
 
 \item{Y}{target variables}
 
@@ -22,13 +22,13 @@ greed_cond(
 
 \item{model}{a conditional generative model \code{\link{mvmreg-class}}}
 
-\item{alg}{an optimisation algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}}
+\item{alg}{an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}}
 
-\item{verbose}{boolean for verbose mode}
+\item{verbose}{Boolean for verbose mode}
 }
 \value{
 an \code{\link{icl_path-class}} object
 }
 \description{
-conditional model based hierachical clustering
+conditional model based hierarchical clustering
 }

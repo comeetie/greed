@@ -12,8 +12,8 @@
 \item{type}{a string which specify plot type:
 \itemize{
 \item \code{'front'}: plot the extracted front ICL, log(alpha)
-\item \code{'path'}: plot the veolution of ICL with repsect to K
-\item \code{'tree'}: plot the associated dendogram
+\item \code{'path'}: plot the evolution of ICL with respect to K
+\item \code{'tree'}: plot the associated dendrogram
 }}
 }
 \value{

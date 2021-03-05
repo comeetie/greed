@@ -3,9 +3,9 @@
 \docType{class}
 \name{alg-class}
 \alias{alg-class}
-\title{represent an abstract optimisation algorithm}
+\title{represent an abstract optimization algorithm}
 \description{
-An S4 class to represent an abstract optimisation algorithm.
+An S4 class to represent an abstract optimization algorithm.
 }
 \section{Slots}{
 

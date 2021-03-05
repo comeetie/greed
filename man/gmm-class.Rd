@@ -3,7 +3,7 @@
 \docType{class}
 \name{gmm-class}
 \alias{gmm-class}
-\title{Clustering with a gaussian mixture model description class}
+\title{Clustering with a Gaussian mixture model description class}
 \description{
 An S4 class to represent a multivariate mixture of regression model, extend \code{\link{icl_model-class}}.
 }
@@ -16,9 +16,9 @@ An S4 class to represent a multivariate mixture of regression model, extend \cod
 
 \item{\code{tau}}{Prior parameter (inverse variance) default 0.01}
 
-\item{\code{N0}}{Prior parameter (pseudo count) defulat to 10 ! should be > number of features}
+\item{\code{N0}}{Prior parameter (pseudo count) default to 10 ! should be > number of features}
 
-\item{\code{epsilon}}{Prior parameter covartiance matrix prior}
+\item{\code{epsilon}}{Prior parameter co-variance matrix prior}
 
 \item{\code{mu}}{mean prior}
 }}

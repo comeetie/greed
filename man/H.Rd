@@ -10,7 +10,7 @@ H(cl)
 \item{cl}{vector of discrete labels}
 }
 \value{
-the entropie of the sample
+the entropy of the sample
 }
 \description{
 Compute the entropy of a discrete sample

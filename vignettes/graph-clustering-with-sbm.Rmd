@@ -56,7 +56,7 @@ Plot the results with a node link diagram.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='nodelink')
 ```
-Or a dendogram for selecting a smaller value for K.
+Or a dendrogram for selecting a smaller value for K.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='tree')
 ```
@@ -77,7 +77,7 @@ plot(sol2,type='blocks')
 ```
 
 
-Eventualy you may change the algorithm "hybrid" (default), "multistart" for greedy with random multiple start and "seed"" for greedy initialized with spectral clustering. See the doc for details on the algorithm parameters. 
+Eventually, you may change the algorithm from **hybrid** (default) to **multistart** for greedy with random multiple starts or **seed** for greedy initialized with spectral clustering. See the doc for details on the algorithm parameters. 
 
 One example with the polbooks dataset:
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}

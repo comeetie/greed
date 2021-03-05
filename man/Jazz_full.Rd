@@ -7,7 +7,7 @@
 \format{
 A list with two fields:
 \describe{
-  \item{X}{a \code{"sparseMatrix"} binary matrix of size 4475x965 with a one when one musicians played once in a given band.}
+  \item{X}{a \code{\link[Matrix]{sparseMatrix}} binary matrix of size 4475x965 with a one when one musicians played once in a given band.}
   \item{col_meta}{a data.frame with columns (bands) meta_data}
 }
 }

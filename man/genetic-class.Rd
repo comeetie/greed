@@ -14,7 +14,7 @@ An S4 class to represent a genetic algorithm (extends \code{\link{alg-class}} cl
 
 \item{\code{nb_max_gen}}{maximal number of generation to produce (default to 4)}
 
-\item{\code{prob_mutation}}{probability of muattion (default to 0.25)}
+\item{\code{prob_mutation}}{probability of mutation (default to 0.25)}
 
 \item{\code{sel_frac}}{fraction of best solutions selected for crossing  (default to 0.75)}
 }}

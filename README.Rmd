@@ -19,20 +19,22 @@ knitr::opts_chunk$set(
 # GREED : Bayesian greedy clustering <img src="./inst/exdata/greed.png" width=200 align="right" />
 <!-- badges: start -->
 <!-- badges: end -->
-Greed enable model based clustering of networks, counts data matrix and much more with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. 
+Greed enable model based clustering of networks, counts data matrix and much more with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details on the algorithms and methods proposed by this package can be found in this pre-print [https://arxiv.org/abs/2002.11577v1](https://arxiv.org/abs/2002.11577v1).
 
-The following generative models are availables currently : 
+The following generative models are available currently : 
 
-* sbm : Stochastick Block Models (for directed and undirected graphs), 
-* dcsbm : Degree Corrected Stochastick Block Models (for directed and undirected graphs), 
+* sbm : Stochastic Block Models (for directed and un-directed graphs), 
+* dcsbm : Degree Corrected Stochastic Block Models (for directed and un-directed graphs),
+* co_sbm : Latent Clock Models,
 * co_dcsbm: Degree Corrected Latent Block Models,
 * mm: Mixture of Multinomials, 
-* gmm : Gaussian Mixture Model.
+* gmm : Gaussian Mixture Model (experimental),
+* mvmreg : Multivariate Mixture of Gaussian Regression Model (experimental).
 
 
-With the Integrated Classification Likelihood the parameters of the models are integrated out. Since the Integrated Classification Likelihood introduces a natural regularisation for complex models such strategie automaticaly find a "natural" value for the number of cluster, the user needs only to provide an initial guess. The optimization is performed by default thanks to a combination of greedy local search and a genetic algorithm, several optimization algorithms are available.
+With the Integrated Classification Likelihood the parameters of the models are integrated out. Since the Integrated Classification Likelihood introduces a natural regularization for complex models such strategy automatically find a "natural" value for the number of cluster, the user needs only to provide an initial guess. The optimization is performed by default thanks to a combination of greedy local search and a genetic algorithm, several optimization algorithms are available.
 
-Eventually, the whole path of solutions from K* to 1 cluster is extracted. This enable a partial ordering of the clusters, and the evaluation of simpler clustering. The package also provides some ploting functionality.
+Eventually, the whole path of solutions from K* to 1 cluster is extracted. This enable a partial ordering of the clusters, and the evaluation of simpler clustering. The package also provides some plotting functionality.
 
 
 ## Installation
@@ -44,9 +46,9 @@ install.packages("devtools")
 devtools::install_github("comeetie/greed")
 ```
 
-## Example
+## Usage
 
-This is a basic example whith the classical blogs network:
+The main function is simply the greed function. The generative model will be chosen automatically to fit with the data provided, but you may specify another choice with the model parameter. This is a basic example with the classical blogs network:
 
 ```{r example}
 library(greed)
@@ -54,12 +56,12 @@ data(Jazz)
 sol=greed(Jazz)
 ```
 
-The generative model will be chosen automatically to fit with the data provided. Here Jazz is a square sparse matrix and a dcsbm model will be used by default. Some plotting function enable the exploraiton of the clustering results:
+Here Jazz is a square sparse matrix and a dcsbm model will be used by default. Some plotting function enable the exploration of the clustering results:
 ```{r plot,message=FALSE,results="hide"}
 plot(sol)
 ```
 
-And the hierarhical structure between clusters:
+And the hierarchical structure between clusters:
 ```{r tree}
 plot(sol,type='tree')
 ```
@@ -69,7 +71,7 @@ Eventually, one may explore some coarser clustering using the cut function:
 plot(cut(sol,5))
 ```
 
-For large datasets, it's possible to use parallelism to speed-up the computation thanks to the future package. You only need to specify the type of parralelism.
+For large datasets, it's possible to use parallelism to speed-up the computation thanks to the future package. You only need to specify the type of parallelism.
 ```{r future}
 library(future)
 plan(multisession)

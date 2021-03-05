@@ -3,9 +3,9 @@
 \docType{class}
 \name{mm-class}
 \alias{mm-class}
-\title{Clustering with a mixture of multinomial model description class}
+\title{Clustering with a mixture of Multinomial model description class}
 \description{
-An S4 class to represent a multinomial model model, extend \code{\link{icl_model-class}}.
+An S4 class to represent a Multinomial model model, extend \code{\link{icl_model-class}}.
 }
 \section{Slots}{
 
@@ -14,7 +14,7 @@ An S4 class to represent a multinomial model model, extend \code{\link{icl_model
 
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
 
-\item{\code{beta}}{Dirchlet over vocabulary prior parameter (default to 1)}
+\item{\code{beta}}{Dirichlet over vocabulary prior parameter (default to 1)}
 }}
 
 \examples{

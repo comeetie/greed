@@ -9,10 +9,10 @@ NULL
 NULL
 
 
-#' @title represent an abstract optimisation algorithm
+#' @title represent an abstract optimization algorithm
 #' 
 #' @description
-#' An S4 class to represent an abstract optimisation algorithm.
+#' An S4 class to represent an abstract optimization algorithm.
 #' @slot name algorithm name
 #' @export
 setClass("alg",slots = list(name = "character"))
@@ -32,7 +32,7 @@ setClass("multistarts",
 
 
 
-#' @title greedy algorithm with seeded initialisation
+#' @title greedy algorithm with seeded initialization
 #' 
 #' @description
 #' An S4 class to represent a greedy algorithm with initialization from spectral clustering and or k-means (extends \code{\link{alg-class}} class ).
@@ -66,7 +66,7 @@ setClass("hybrid",
 #' An S4 class to represent a genetic algorithm (extends \code{\link{alg-class}} class).
 #' @slot pop_size size of the solutions populations (default to 10)
 #' @slot nb_max_gen maximal number of generation to produce (default to 4) 
-#' @slot prob_mutation probability of muattion (default to 0.25)
+#' @slot prob_mutation probability of mutation (default to 0.25)
 #' @slot sel_frac fraction of best solutions selected for crossing  (default to 0.75)
 #' @export
 setClass("genetic",
@@ -102,15 +102,15 @@ setMethod(f = "cut",
             
 })
 
-#' @title model based hierachical clustering with icl
+#' @title model based hierarchical clustering with icl
 #' 
 #' @description 
 #' 
 #' @param X data to cluster either a matrix or a \code{\link{dgCMatrix-class}}
 #' @param K initial number of cluster
 #' @param model a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}} or \code{\link{mvmreg-class}}
-#' @param alg an optimisation algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
-#' @param verbose boolean for verbose mode 
+#' @param alg an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
+#' @param verbose Boolean for verbose mode 
 #' @return an \code{\link{icl_path-class}} object
 #' @export
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
@@ -139,14 +139,14 @@ find_model = function(X){
   model
 }
 
-#' @title conditional model based hierachical clustering
+#' @title conditional model based hierarchical clustering
 #' 
-#' @param X covariates data 
+#' @param X design matrix
 #' @param Y target variables
 #' @param K Desired number of cluster
 #' @param model a conditional generative model \code{\link{mvmreg-class}}
-#' @param alg an optimisation algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
-#' @param verbose boolean for verbose mode 
+#' @param alg an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
+#' @param verbose Boolean for verbose mode 
 #' @return an \code{\link{icl_path-class}} object
 #' @export
 greed_cond = function(X,Y,K=20,model=methods::new("mvmreg",N0=ncol(Y)+1),alg=methods::new("hybrid"),verbose=FALSE){

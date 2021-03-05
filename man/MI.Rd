@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{MI}
 \alias{MI}
-\title{Compute the mutual information of two discretes samples}
+\title{Compute the mutual information of two discrete samples}
 \usage{
 MI(cl1, cl2)
 }
@@ -15,7 +15,7 @@ MI(cl1, cl2)
 the mutual information between the two discrete samples
 }
 \description{
-Compute the mutual information of two discretes samples
+Compute the mutual information of two discrete samples
 }
 \examples{
 cl1 =sample(2,500,replace=TRUE)
