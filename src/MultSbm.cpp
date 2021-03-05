@@ -103,3 +103,8 @@ double MultSbm::delta_merge(int k, int l){
 double MultSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats){
   return 0;
 }
+
+
+void MultSbm::merge_update(int k, int l){
+  
+}

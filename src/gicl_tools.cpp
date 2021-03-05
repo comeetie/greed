@@ -47,7 +47,7 @@ arma::mat submatcross(int oldcl,int newcl,int K){
     result(i,1)=i;
     result(i+K,0)=newcl;
     result(i+K,1)=i;
-    if((i==oldcl) | (i==newcl)){
+    if(i==oldcl | i==newcl){
       nbr = nbr + 1;
     }else{
       result(i+2*K-nbr,1)=oldcl;
@@ -101,7 +101,7 @@ arma::sp_mat which_spmatpat(const arma::sp_mat & a, const arma::sp_mat & b){
 }
 
 // [[Rcpp::export]]
-arma::sp_mat delcol(const arma::sp_mat & a,arma::uword ci){
+arma::sp_mat delcol(const arma::sp_mat & a, int ci){
   arma::sp_mat result(a.n_rows,a.n_cols-1);
   for (arma::sp_mat::const_iterator i = a.begin(); i != a.end(); ++i) {
     if(i.col()<ci){
@@ -149,12 +149,21 @@ void delrowcol(arma::sp_mat & a, int ci){
 
 
 
-
+arma::cube gsum_cube(arma::vec cl,const arma::cube& x, int K){
+  arma::cube res = arma::cube(K,K,x.n_slices);
+  res.fill(0);
+  for(int i = 0; i < cl.n_elem; ++i) {
+    for(int j = 0; j < cl.n_elem; ++j) {
+      res.tube( cl(i), cl(j) )=res.tube( cl(i), cl(j) )+ x.tube(i,j);
+    }  
+  }
+  return res;
+}
 
 arma::vec count(arma::vec cl,int K){
   arma::vec result(K);
   result.fill(0);
-  for(arma::uword i = 0; i < cl.n_elem; ++i) {
+  for(int i = 0; i < cl.n_elem; ++i) {
     result(cl(i),0)+=1;
   }
   return result;
@@ -408,7 +417,7 @@ List mvlm_post_comp(const arma::mat X,const arma::mat Y,const arma::mat M,const 
   
   // https://tminka.github.io/papers/minka-linear.pdf
   // Bayesian linear regression
-  int n = X.n_rows,  d=Y.n_cols;
+  int n = X.n_rows, m = X.n_cols, d=Y.n_cols;
 
 
   arma::mat S = X.t()*X+K;
@@ -446,7 +455,7 @@ List mvlm_post_comp(const arma::mat X,const arma::mat Y,const arma::mat M,const 
 
 // [[Rcpp::export]]
 List mvlm_post_add1_comp(List current, const arma::rowvec X,const arma::rowvec Y,const arma::mat M,const arma::mat K, const arma::mat S0, double N0) {
-  int d=Y.n_cols;
+  int m = X.n_cols, d=Y.n_cols;
   int n = as<int>(current["n"])+1;
   
   arma::mat S = as<arma::mat>(current["S"])+X.t()*X;
@@ -481,7 +490,7 @@ List mvlm_post_add1_comp(List current, const arma::rowvec X,const arma::rowvec Y
 // [[Rcpp::export]]
 List mvlm_post_del1_comp(List current, const arma::rowvec X,const arma::rowvec Y,const arma::mat M,const arma::mat K, const arma::mat S0, double N0) {
 
-  int d=Y.n_cols;
+  int m = X.n_cols, d=Y.n_cols;
   int n = as<int>(current["n"])-1;
   
   arma::mat S = as<arma::mat>(current["S"])-X.t()*X;
@@ -519,7 +528,7 @@ List mvlm_post_del1_comp(List current, const arma::rowvec X,const arma::rowvec Y
 // [[Rcpp::export]]
 List mvlm_post_merge_comp(List current1, List current2,const arma::mat M,const arma::mat K, const arma::mat S0, double N0) {
 
-  int d=as<arma::mat>(current1["Yty"]).n_cols;
+  int m = as<arma::mat>(current1["S"]).n_cols, d=as<arma::mat>(current1["Yty"]).n_cols;
   int n = as<int>(current1["n"])+as<int>(current2["n"]);
   
 
