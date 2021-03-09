@@ -148,7 +148,7 @@ void delrowcol(arma::sp_mat & a, int ci){
 }
 
 
-
+// [[Rcpp::export]]
 arma::cube gsum_cube(arma::vec cl,const arma::cube& x, int K){
   arma::cube res = arma::cube(K,K,x.n_slices);
   res.fill(0);

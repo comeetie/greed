@@ -151,7 +151,7 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::sp_mat & mo
     for (int i=0;i<N ;++i){
       // current node
       cnode=pass(i);
-      //Rcout << cnode << "K:" << K << std::endl;
+      // Rcout << cnode << "K:" << K << std::endl;
       if (workingset(cnode)==1){
         // compute delta swap
         arma::uvec iclust = possible_moves(cl(cnode),moves_mat);
@@ -408,6 +408,7 @@ void IclModel::greedy_merge(){
   
   // init the merge matrix(K,K) with the delta icl of each merge 
   MergeMat merge_mat = this->delta_merge();
+
   // init merge counter
   int nbmerge = 0;
   

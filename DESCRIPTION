@@ -40,6 +40,7 @@ Collate:
     'greed.R'
     'mm.R'
     'multistart_alg.R'
+    'multsbm.R'
     'plot.R'
     'sbm.R'
 Language: en-US

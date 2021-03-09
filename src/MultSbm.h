@@ -10,7 +10,7 @@ using namespace Rcpp;
 class MultSbm : public IclModel
 {
 public:
-  MultSbm(const arma::cube& xp,double alpha,arma::vec& cl,bool verb=false);
+  MultSbm(const arma::cube& xp,double alpha,double beta,arma::vec& cl,bool verb=false);
   void set_cl(arma::vec clt);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
@@ -21,12 +21,11 @@ public:
   void merge_update(int k, int l);
   List get_obs_stats();
 private:
-  int N;
   int M;
-  arma::cube  x;
+  double beta;
   // matrix of observed counts for each clusters
+  arma::cube x;
   arma::cube x_counts;
-  arma::mat x_sums;
   double cst; 
 };
 

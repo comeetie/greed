@@ -88,16 +88,21 @@ setClass("genetic",
 setMethod(f = "cut", 
           signature = signature("icl_path"), 
           definition = function(x, K){
-            i = which(sapply(x@path,function(p){p$K})==K)
-            x@K = K
-            x@logalpha=x@path[[i]]$logalpha
-            x@icl = x@path[[i]]$icl
-            x@cl = as.vector(x@path[[i]]$cl)
-            for(st in names(x@obs_stats)){
-              x@obs_stats[st] = x@path[[i]]$obs_stats[st]
+            if(K<x@K){
+              i = which(sapply(x@path,function(p){p$K})==K)
+              x@K = K
+              x@logalpha=x@path[[i]]$logalpha
+              x@icl = x@path[[i]]$icl
+              x@cl = as.vector(x@path[[i]]$cl)
+              for(st in names(x@obs_stats)){
+                x@obs_stats[st] = x@path[[i]]$obs_stats[st]
+              }
+              
+              x@path=x@path[(i+1):length(x@path)]
+              x
+            }else{
+              warning(paste0("This clustering has ",x@K," clusters and you requested ",K ," clusters. Please provide a value for K smaller than ",x@K,"."),call. = FALSE)
             }
-
-            x@path=x@path[(i+1):length(x@path)]
             x
             
 })
@@ -115,26 +120,39 @@ setMethod(f = "cut",
 #' @export
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
   data = preprocess(model,X)
-  cat(paste0("------- Fitting a ",model@name, " model ------\n"))
+  cat(paste0("------- Fitting a ",toupper(model@name), " model ------\n"))
   sol = fit(model,alg,data,K,verbose)
   sol = postprocess(sol,data)
+  cat("------- Final clustering -------\n")
+  print(sol)
   sol
 }
 
 
 find_model = function(X){
-  if(methods::is(X,"dgCMatrix") | methods::is(X,"matrix")){
-    if(nrow(X)==ncol(X)){
-      model = methods::new("dcsbm")
-    }else{
-      if(all(round(X)==X)){
-        model = methods::new("co_dcsbm")  
-      }else{
-        model = methods::new("gmm",N0=ncol(X),epsilon=stats::cov(X),mu=apply(X,2,mean),tau=0.0001)
-      }
+  if(methods::is(X,"array")){
+    dimensions = dim(X)
+    if(dimensions[1]!=dimensions[2]){
+      stop(paste0("Multinomial SBM expect a cube with as many rows as columns:",dimensions,collapse = " x "))
     }
+    if(length(dimensions)!=3){
+      stop(paste0("Multinomial SBM expect a cube found an array od dimensions:",dimensions,collapse = " x "))
+    }
+    model = methods::new("multsbm")
   }else{
-    stop(paste0("Unsupported data type: ", class(X) ," use matrix or sparse dgCMatrix."))
+    if(methods::is(X,"dgCMatrix") | methods::is(X,"matrix")){
+      if(nrow(X)==ncol(X)){
+        model = methods::new("dcsbm")
+      }else{
+        if(all(round(X)==X)){
+          model = methods::new("co_dcsbm")  
+        }else{
+          model = methods::new("gmm",N0=ncol(X),epsilon=stats::cov(X),mu=apply(X,2,mean),tau=0.0001)
+        }
+      }
+    }else{
+      stop(paste0("Unsupported data type: ", class(X) ," use matrix, sparse dgCMatrix or array."))
+    }
   }
   model
 }

@@ -7,6 +7,7 @@
 #' \itemize{
 #' \item Stochastic Block Model (directed)
 #' \item Degree corrected Stochastic Block Model (directed)
+#' \item Stochastic Block Model with Mutlinomial observations (experimental)
 #' \item Mixture of Multinomial
 #' \item Latent Block Model (directed)
 #' \item Degree corrected Latent Block Model (directed)

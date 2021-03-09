@@ -14,7 +14,7 @@
 setMethod(f = "print", 
           signature = signature("icl_path"),
           definition = function(x){
-            print(paste0("ICL clustering with a ",toupper(x@model@name)," model, ",length(x@obs_stats$counts), " clusters and an icl of ", round(x@icl),"."))
+            cat(paste0("ICL clustering with a ",toupper(x@model@name)," model, ",length(x@obs_stats$counts), " clusters and an icl of ", round(x@icl),"."))
           })
 
 
@@ -395,8 +395,58 @@ bi_plot = function(x){
 
 
 
+graph_blocks_cube = function(x){
+  K = length(x@obs_stats$counts)
+  M=dim(x@obs_stats$x_counts)[3]
+  ggl = lapply(1:M,function(m){data.frame(kc=rep(cumsum(x@obs_stats$counts),each=K),
+                                     lc=rep(cumsum(x@obs_stats$counts),K),
+                                     sizek = rep(x@obs_stats$counts,each=K),
+                                     sizel = rep(x@obs_stats$counts,K), 
+                                     count=as.vector(x@obs_stats$x_counts),m=paste("Slice ",m),stringsAsFactors = FALSE)})
+  
+  gg=do.call(rbind,ggl);
+  
+  ggplot2::ggplot(gg[gg$count>0,])+ggplot2::geom_tile(ggplot2::aes_(x=~kc-sizek/2,y=~lc-sizel/2,width=~sizek,height=~sizel,fill=~count/(sizek*sizel),alpha=~count/(sizek*sizel)))+
+    ggplot2::facet_wrap(~m)+
+    ggplot2::scale_fill_distiller("Link density",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(0,max(gg$count/(gg$sizek*gg$sizel))))+
+    ggplot2::scale_alpha("Link density",range=c(0,1),limits=c(0,max(gg$count/(gg$sizek*gg$sizel))))+
+    ggplot2::ggtitle(paste0(toupper(x@model@name)," model with : ",max(x@cl)," clusters."))+
+    ggplot2::scale_x_continuous("",breaks=cumsum(x@obs_stats$counts),
+                                labels = ifelse(x@obs_stats$counts/sum(x@obs_stats$counts)>0.05,paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),""),
+                                minor_breaks = NULL,expand = ggplot2::expansion(mult = 0, add = 0))+
+    ggplot2::scale_y_continuous("",breaks=cumsum(x@obs_stats$counts),
+                                labels = ifelse(x@obs_stats$counts/sum(x@obs_stats$counts)>0.05,paste0(round(100*x@obs_stats$counts/sum(x@obs_stats$counts)),"%"),""),
+                                minor_breaks = NULL,expand = ggplot2::expansion(mult = 0, add = 0))+
+    ggplot2::coord_fixed()+ggplot2::theme_bw()
+}
 
 
+nodelink_cube = function(sol){
+  M=dim(sol@obs_stats$x_counts)[3]
+  gglink_list = lapply(1:M,function(m){
+  ij = which(sol@obs_stats$x_counts[,,m]>0,arr.ind = TRUE)
+  ld = sol@obs_stats$x_counts[,,m]
+  #/(sol@obs_stats$counts%*%t(sol@obs_stats$counts))
+  ij = ij[ij[,1]!=ij[,2],]
+  gglink = data.frame(from=ij[,1],to=ij[,2],p=ld[ij])
+  gglink$y=ifelse(gglink$from<gglink$to,-0.3,0.3)
+  gglink$m=paste("Slice",m)
+  gglink
+  })
+  gglink =do.call(rbind,gglink_list)
+  ggnode_list=lapply(1:M, function(m){data.frame(i=1:length(sol@obs_stats$counts),pi=diag(sol@obs_stats$x_counts[,,m]),m=paste("Slice",m),stringsAsFactors = FALSE)})
+  ggnode =do.call(rbind,ggnode_list)
+  gl = ggplot2::guide_legend()
+  ggplot2::ggplot()+ggplot2::geom_curve(data=gglink,ggplot2::aes_(x=~from,xend=~to,y=~y,yend=~y,size=~p,alpha=~p),arrow=grid::arrow(length = grid::unit(2,"mm")),curvature = 0.7)+
+    ggplot2::facet_wrap(~m)+
+    ggplot2::scale_x_continuous("",c())+
+    ggplot2::scale_y_continuous("",c(),limits = c(-5,5))+
+    ggplot2::scale_alpha("Link density:",limits=c(0,max(gglink$p)),guide="none")+
+    ggplot2::scale_size_area("Clusters size:",limits=c(0,max(ggnode$pi)),max_size = 4,guide="none")+
+    ggplot2::geom_point(data=ggnode,ggplot2::aes_(x=~i,y=~0,size=~pi))+
+    ggplot2::ggtitle(paste0(toupper(sol@model@name)," model with : ",max(sol@cl)," clusters."))+
+    ggplot2::theme_minimal()
+}
 
 
 

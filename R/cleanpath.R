@@ -252,7 +252,6 @@ cleanpathopt = function(pathsol){
     }
     
     
-    
     # check for non empty path
     if(length(path)>0){
       
@@ -283,7 +282,7 @@ cleanpathopt = function(pathsol){
       # ordering of initial solution
       pathsol@obs_stats = reorder(pathsol@model,pathsol@obs_stats,leaforder$order)
       pathsol@cl=order(leaforder$order)[pathsol@cl]
-      cat(max(pathsol@cl))
+      
       
       #prepare the data.frame to store the tree
       ggtree=data.frame(H=rep(0,K),tree=0,x=seq(-1,1,length.out = K),node=1:K,xmin=0,xmax=0,K=K)

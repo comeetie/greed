@@ -4,6 +4,7 @@
 #include "MergeMat.h"
 #include "Sbm.h"
 #include "DcSbm.h"
+#include "MultSbm.h"
 #include "CoDcSbm.h"
 #include "Mm.h"
 #include "Gmm.h"
@@ -20,7 +21,8 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
   S4 sol;
   try{
     if((strcmp(model.slot("name"),"sbm")!=0) && 
-       (strcmp(model.slot("name"),"dcsbm")!=0) && 
+       (strcmp(model.slot("name"),"dcsbm")!=0) &&
+       (strcmp(model.slot("name"),"multsbm")!=0) &&
        (strcmp(model.slot("name"),"co_dcsbm")!=0) && 
        (strcmp(model.slot("name"),"mm")!=0) &&
        (strcmp(model.slot("name"),"mvmreg")!=0) &&
@@ -34,6 +36,10 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
     if(strcmp(model.slot("name"),"dcsbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       M = new DcSbm(xp,model.slot("alpha"),clt,verbose);
+    }
+    if(strcmp(model.slot("name"),"multsbm")==0){
+      arma::cube xp = as<arma::cube>(data["X"]);
+      M = new MultSbm(xp,model.slot("alpha"),model.slot("beta"),clt,verbose);
     }
     if(strcmp(model.slot("name"),"co_dcsbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
@@ -143,6 +149,8 @@ S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,boo
 
 // [[Rcpp::export]]
 S4 swap_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & move_mat, int nb_max_pass = 50, bool verbose=false) {
+  
+  
   IclModel * M = init(model,data,clt,verbose);
   S4 sol = init_sol(model);
   int N = clt.n_elem;
@@ -172,7 +180,6 @@ S4 swap_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & move_mat, int nb
 // @return a model_fit object  //' @export
 // [[Rcpp::export]]
 S4 fit_greed(S4 model,List data,  arma::vec& clt,std::string type="both", int nb_max_pass = 50,bool verbose=false) {
-
   int N = clt.n_elem;
   arma::vec workingset = arma::ones(N);
   int Ki = arma::max(clt);

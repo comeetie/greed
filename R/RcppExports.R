@@ -53,6 +53,10 @@ delrowcol <- function(a, ci) {
     invisible(.Call('_greed_delrowcol', PACKAGE = 'greed', a, ci))
 }
 
+gsum_cube <- function(cl, x, K) {
+    .Call('_greed_gsum_cube', PACKAGE = 'greed', cl, x, K)
+}
+
 gsum_mat <- function(cl, x, K) {
     .Call('_greed_gsum_mat', PACKAGE = 'greed', cl, x, K)
 }

@@ -102,17 +102,23 @@ setClass("co_dcsbm_path",slots = list(ggtreerow="data.frame",ggtreecol="data.fra
 setMethod(f = "cut", 
           signature = signature("co_dcsbm_path"), 
           definition = function(x, K){
-            i = which(sapply(x@path,function(p){p$K})==K)
-            x@K = K
-            x@logalpha=x@path[[i]]$logalpha
-            x@icl = x@path[[i]]$icl
-            x@cl = as.vector(x@path[[i]]$cl)
-            for(st in names(x@path[[i]]$obs_stats)){
-              x@obs_stats[st] = x@path[[i]]$obs_stats[st]
+            if(K<x@K){
+              i = which(sapply(x@path,function(p){p$K})==K)
+              x@K = K
+              x@logalpha=x@path[[i]]$logalpha
+              x@icl = x@path[[i]]$icl
+              x@cl = as.vector(x@path[[i]]$cl)
+              for(st in names(x@path[[i]]$obs_stats)){
+                x@obs_stats[st] = x@path[[i]]$obs_stats[st]
+              }
+              
+              x@path=x@path[(i+1):length(x@path)]
+              postprocess(x)
+            }else{
+              warning(paste0("This clustering has ",x@K," clusters and you requested ",K ," clusters. Please provide a value for K smaller than ",x@K,"."),call. = FALSE)
             }
+            x
             
-            x@path=x@path[(i+1):length(x@path)]
-            postprocess(x)
           })
 
 

@@ -25,7 +25,8 @@ The following generative models are available currently :
 
 * sbm : Stochastic Block Models (for directed and un-directed graphs), 
 * dcsbm : Degree Corrected Stochastic Block Models (for directed and un-directed graphs),
-* co_sbm : Latent Clock Models,
+* co_sbm : Latent Block Models,
+* multsbm : Stochastic Block Models with Mutlinomial observations (experimental),
 * co_dcsbm: Degree Corrected Latent Block Models,
 * mm: Mixture of Multinomials, 
 * gmm : Gaussian Mixture Model (experimental),
