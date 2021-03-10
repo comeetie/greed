@@ -8,7 +8,7 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
+  fig.path = "man/figures/",
   out.width = "60%"
 )
 ```
@@ -16,21 +16,20 @@ knitr::opts_chunk$set(
 
 
 
-# GREED : Bayesian greedy clustering <img src="./inst/exdata/greed.png" width=200 align="right" />
+# GREED : Bayesian greedy clustering <img src="man/figures/greed.png" width=200 align="right" />
 <!-- badges: start -->
 <!-- badges: end -->
 Greed enable model based clustering of networks, counts data matrix and much more with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details on the algorithms and methods proposed by this package can be found in this pre-print [https://arxiv.org/abs/2002.11577v1](https://arxiv.org/abs/2002.11577v1).
 
 The following generative models are available currently : 
 
-* sbm : Stochastic Block Models (for directed and un-directed graphs), 
-* dcsbm : Degree Corrected Stochastic Block Models (for directed and un-directed graphs),
-* co_sbm : Latent Block Models,
-* multsbm : Stochastic Block Models with Mutlinomial observations (experimental),
-* co_dcsbm: Degree Corrected Latent Block Models,
-* mm: Mixture of Multinomials, 
-* gmm : Gaussian Mixture Model (experimental),
-* mvmreg : Multivariate Mixture of Gaussian Regression Model (experimental).
+* Stochastic Block Models (for directed and un-directed graphs, see ``?`sbm-class` ``), 
+* Degree Corrected Stochastic Block Models (for directed and un-directed graphs, see ``?`dcsbm-class` ``),
+* Stochastic Block Models with Mutlinomial observations (experimental, see `?multsbm-class`),
+* Degree Corrected Latent Block Models (see ``?`co_dcsbm-class` ``),
+* Mixture of Multinomials (see ``?`mm-class` ``), 
+* Gaussian Mixture Model (experimental, see ``?`gmm-class` ``),
+* Multivariate Mixture of Gaussian Regression Model (experimental, see ``?`mvmreg-class` ``).
 
 
 With the Integrated Classification Likelihood the parameters of the models are integrated out. Since the Integrated Classification Likelihood introduces a natural regularization for complex models such strategy automatically find a "natural" value for the number of cluster, the user needs only to provide an initial guess. The optimization is performed by default thanks to a combination of greedy local search and a genetic algorithm, several optimization algorithms are available.
@@ -49,7 +48,7 @@ devtools::install_github("comeetie/greed")
 
 ## Usage
 
-The main function is simply the greed function. The generative model will be chosen automatically to fit with the data provided, but you may specify another choice with the model parameter. This is a basic example with the classical blogs network:
+The main entry point for using the package is simply the greed function (`?greed`). The generative model will be chosen automatically to fit with the data provided, but you may specify another choice with the model parameter. This is a basic example with the classical blogs network:
 
 ```{r example}
 library(greed)
