@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R build status](https://github.com/comeetie/greed/workflows/R-CMD-check/badge.svg)](https://github.com/comeetie/greed/actions)
 <!-- badges: end -->
-Greed enable model based clustering of networks, counts data matrix and much more with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details on the algorithms and methods proposed by this package can be found in this pre-print [https://arxiv.org/abs/2002.11577v1](https://arxiv.org/abs/2002.11577v1).
+Greed enable model based clustering of networks, counts data matrix and much more with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details on the algorithms and methods proposed by this package can be found in this [arxiv 2002.11577v1](https://arxiv.org/abs/2002.11577v1) pre-print.
 
 The following generative models are available currently : 
 

@@ -130,7 +130,7 @@ greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=F
 
 
 find_model = function(X){
-  if(methods::is(X,"array")){
+  if(methods::is(X,"array") && length(dim(X))>2){
     dimensions = dim(X)
     if(dimensions[1]!=dimensions[2]){
       stop(paste0("Multinomial SBM expect a cube with as many rows as columns:",dimensions,collapse = " x "))
