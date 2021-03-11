@@ -77,37 +77,3 @@ And select a smaller value to extract a new solution.
 sol2 = cut(sol,2)
 plot(sol2,type='blocks')
 ```
-
-
-Eventually, you may change the algorithm from **hybrid** (default) to **multistart** for greedy with random multiple starts or **seed** for greedy initialized with spectral clustering. See the doc for details on the algorithm parameters. 
-
-One example with the polbooks dataset:
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-data("Books")
-solbooks=greed(Books$X,10,new("dcsbm"),new("hybrid",pop_size=30))
-plot(solbooks,type='blocks')
-```
-
-
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-plot(solbooks,type='tree')
-table(Books$label,cut(solbooks,3)@cl)
-```
-
-
-One with the polblogs dataset:
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-data("Blogs")
-solblogs=greed(Blogs$X)
-plot(solblogs,type='blocks')
-```
-
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-plot(solblogs,type='front')
-table(Blogs$label,cut(solblogs,2)@cl)
-```
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-data("Football")
-solfoot=greed(Football$X)
-plot(solfoot,type='blocks')
-```
