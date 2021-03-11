@@ -18,23 +18,24 @@ knitr::opts_chunk$set(
 
 # GREED : Bayesian greedy clustering <img src="man/figures/greed.png" width=200 align="right" />
 <!-- badges: start -->
+[![R build status](https://github.com/comeetie/greed/workflows/R-CMD-check/badge.svg)](https://github.com/comeetie/greed/actions)
 <!-- badges: end -->
 Greed enable model based clustering of networks, counts data matrix and much more with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details on the algorithms and methods proposed by this package can be found in this pre-print [https://arxiv.org/abs/2002.11577v1](https://arxiv.org/abs/2002.11577v1).
 
 The following generative models are available currently : 
 
-* Stochastic Block Models (for directed and un-directed graphs, see ``?`sbm-class` ``), 
-* Degree Corrected Stochastic Block Models (for directed and un-directed graphs, see ``?`dcsbm-class` ``),
-* Stochastic Block Models with Mutlinomial observations (experimental, see `?multsbm-class`),
+* Stochastic Block Models (for **directed** and **un-directed** graphs, see ``?`sbm-class` ``), 
+* Degree Corrected Stochastic Block Models (for **directed** and **un-directed** graphs, see ``?`dcsbm-class` ``),
+* Stochastic Block Models with Mutlinomial observations (**experimental**, see ``?`multsbm-class` ``),
 * Degree Corrected Latent Block Models (see ``?`co_dcsbm-class` ``),
 * Mixture of Multinomials (see ``?`mm-class` ``), 
-* Gaussian Mixture Model (experimental, see ``?`gmm-class` ``),
-* Multivariate Mixture of Gaussian Regression Model (experimental, see ``?`mvmreg-class` ``).
+* Gaussian Mixture Model (**experimental**, see ``?`gmm-class` ``),
+* Multivariate Mixture of Gaussian Regression Model (**experimental**, see ``?`mvmreg-class` ``).
 
 
-With the Integrated Classification Likelihood the parameters of the models are integrated out. Since the Integrated Classification Likelihood introduces a natural regularization for complex models such strategy automatically find a "natural" value for the number of cluster, the user needs only to provide an initial guess. The optimization is performed by default thanks to a combination of greedy local search and a genetic algorithm, several optimization algorithms are available.
+With the Integrated Classification Likelihood the parameters of the models are integrated out and therefore introduces a natural regularization for complex models. Since the Integrated Classification Likelihood penalize complex models it enable to automatically find a "natural" value for the number of cluster $K^*$, the user needs only to provide an initial guess and value for the prior parameters (sensible default values are used if no prior information is available). The optimization is performed by default thanks to a combination of greedy local search and a genetic algorithm, several optimization algorithms are available.
 
-Eventually, the whole path of solutions from K* to 1 cluster is extracted. This enable a partial ordering of the clusters, and the evaluation of simpler clustering. The package also provides some plotting functionality.
+Eventually, the whole path of solutions from $K^*$ to 1 cluster is extracted. This enable a partial ordering of the clusters, and the evaluation of simpler clustering. The package also provides some plotting functionality.
 
 
 ## Installation
@@ -56,7 +57,7 @@ data(Jazz)
 sol=greed(Jazz)
 ```
 
-Here Jazz is a square sparse matrix and a dcsbm model will be used by default. Some plotting function enable the exploration of the clustering results:
+Here Jazz is a square sparse matrix and a ``?`dcsbm-class` `` model will be used by default. Some plotting function enable the exploration of the clustering results:
 ```{r plot,message=FALSE,results="hide"}
 plot(sol)
 ```
@@ -71,7 +72,7 @@ Eventually, one may explore some coarser clustering using the cut function:
 plot(cut(sol,5))
 ```
 
-For large datasets, it's possible to use parallelism to speed-up the computation thanks to the future package. You only need to specify the type of parallelism.
+For large datasets, it's possible to use parallelism to speed-up the computation thanks to the [future](https://github.com/HenrikBengtsson/future) package. You only need to specify the type of backend you ant to use.
 ```{r future}
 library(future)
 plan(multisession)

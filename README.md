@@ -16,28 +16,30 @@ proposed by this package can be found in this pre-print
 
 The following generative models are available currently :
 
-  - Stochastic Block Models (for directed and un-directed graphs, see
-    ``?`sbm-class` ``),
-  - Degree Corrected Stochastic Block Models (for directed and
-    un-directed graphs, see ``?`dcsbm-class` ``),
-  - Stochastic Block Models with Mutlinomial observations (experimental,
-    see `?multsbm-class`),
-  - Latent Block Models (see ``?`co_sbm-class` ``),
-  - Degree Corrected Latent Block Models (see ``?`co_dcsbm-class` ``),
-  - Mixture of Multinomials (see ``?`mm-class` ``),
-  - Gaussian Mixture Model (experimental, see ``?`gmm-class` ``),
-  - Multivariate Mixture of Gaussian Regression Model (experimental, see
-    ``?`mvmreg-class` ``).
+  - Stochastic Block Models (for **directed** and **un-directed**
+    graphs, see `` ?`sbm-class` ``),
+  - Degree Corrected Stochastic Block Models (for **directed** and
+    **un-directed** graphs, see `` ?`dcsbm-class` ``),
+  - Stochastic Block Models with Mutlinomial observations
+    (**experimental**, see `` ?`multsbm-class` ``),
+  - Degree Corrected Latent Block Models (see `` ?`co_dcsbm-class` ``),
+  - Mixture of Multinomials (see `` ?`mm-class` ``),
+  - Gaussian Mixture Model (**experimental**, see `` ?`gmm-class` ``),
+  - Multivariate Mixture of Gaussian Regression Model (**experimental**,
+    see `` ?`mvmreg-class` ``).
 
 With the Integrated Classification Likelihood the parameters of the
-models are integrated out. Since the Integrated Classification
-Likelihood introduces a natural regularization for complex models such
-strategy automatically find a “natural” value for the number of cluster,
-the user needs only to provide an initial guess. The optimization is
-performed by default thanks to a combination of greedy local search and
-a genetic algorithm, several optimization algorithms are available.
+models are integrated out and therefore introduces a natural
+regularization for complex models. Since the Integrated Classification
+Likelihood penalize complex models it enable to automatically find a
+“natural” value for the number of cluster \(K^*\), the user needs only
+to provide an initial guess and value for the prior parameters (sensible
+default values are used if no prior information is available). The
+optimization is performed by default thanks to a combination of greedy
+local search and a genetic algorithm, several optimization algorithms
+are available.
 
-Eventually, the whole path of solutions from K\* to 1 cluster is
+Eventually, the whole path of solutions from \(K^*\) to 1 cluster is
 extracted. This enable a partial ordering of the clusters, and the
 evaluation of simpler clustering. The package also provides some
 plotting functionality.
@@ -64,17 +66,21 @@ network:
 library(greed)
 data(Jazz)
 sol=greed(Jazz)
-#> ------- Fitting a dcsbm model ------
-#> ################# Generation  1: best solution with an ICL of -29393 and 17 clusters #################
-#> ################# Generation  2: best solution with an ICL of -29320 and 21 clusters #################
-#> ################# Generation  3: best solution with an ICL of -29306 and 19 clusters #################
-#> ################# Generation  4: best solution with an ICL of -29306 and 19 clusters #################
-#> 18
+#> ------- Fitting a DCSBM model ------
+#> ################# Generation  1: best solution with an ICL of -29423 and 16 clusters #################
+#> ################# Generation  2: best solution with an ICL of -29353 and 21 clusters #################
+#> ################# Generation  3: best solution with an ICL of -29305 and 22 clusters #################
+#> ################# Generation  4: best solution with an ICL of -29298 and 21 clusters #################
+#> ################# Generation  5: best solution with an ICL of -29295 and 21 clusters #################
+#> ################# Generation  6: best solution with an ICL of -29293 and 21 clusters #################
+#> ################# Generation  7: best solution with an ICL of -29293 and 21 clusters #################
+#> ------- Final clustering -------
+#> ICL clustering with a DCSBM model, 20 clusters and an icl of -29268.
 ```
 
-Here Jazz is a square sparse matrix and a dcsbm model will be used by
-default. Some plotting function enable the exploration of the clustering
-results:
+Here Jazz is a square sparse matrix and a `` ?`dcsbm-class` `` model
+will be used by default. Some plotting function enable the exploration
+of the clustering results:
 
 ``` r
 plot(sol)
@@ -100,22 +106,23 @@ plot(cut(sol,5))
 <img src="man/figures/cut-1.png" width="60%" />
 
 For large datasets, it’s possible to use parallelism to speed-up the
-computation thanks to the future package. You only need to specify the
-type of parallelism.
+computation thanks to the
+[future](https://github.com/HenrikBengtsson/future) package. You only
+need to specify the type of backend you ant to use.
 
 ``` r
 library(future)
 plan(multisession)
 data("Blogs")
 sol=greed(Blogs$X)
-#> ------- Fitting a dcsbm model ------
-#> ################# Generation  1: best solution with an ICL of -84392 and 15 clusters #################
-#> ################# Generation  2: best solution with an ICL of -84331 and 18 clusters #################
-#> ################# Generation  3: best solution with an ICL of -84264 and 17 clusters #################
-#> ################# Generation  4: best solution with an ICL of -84236 and 18 clusters #################
-#> ################# Generation  5: best solution with an ICL of -84176 and 18 clusters #################
-#> ################# Generation  6: best solution with an ICL of -84176 and 18 clusters #################
-#> 17
+#> ------- Fitting a DCSBM model ------
+#> ################# Generation  1: best solution with an ICL of -84448 and 16 clusters #################
+#> ################# Generation  2: best solution with an ICL of -84255 and 18 clusters #################
+#> ################# Generation  3: best solution with an ICL of -84232 and 19 clusters #################
+#> ################# Generation  4: best solution with an ICL of -84196 and 18 clusters #################
+#> ################# Generation  5: best solution with an ICL of -84196 and 18 clusters #################
+#> ------- Final clustering -------
+#> ICL clustering with a DCSBM model, 17 clusters and an icl of -84137.
 plot(sol)
 ```
 

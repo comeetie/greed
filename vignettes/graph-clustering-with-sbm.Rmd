@@ -56,10 +56,12 @@ Plot the results with a node link diagram.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='nodelink')
 ```
+
 Or a dendrogram for selecting a smaller value for K.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='tree')
 ```
+
 Eventually study the evolution of $-log(\alpha)$ with respect to $K$.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='path')

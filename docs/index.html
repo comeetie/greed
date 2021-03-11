@@ -71,33 +71,32 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="greed-bayesian-greedy-clustering" class="section level1">
+<div id="greed--bayesian-greedy-clustering-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#greed-bayesian-greedy-clustering" class="anchor"></a>GREED : Bayesian greedy clustering <img src="reference/figures/greed.png" width="200" align="right">
+<a href="#greed--bayesian-greedy-clustering-" class="anchor"></a>GREED : Bayesian greedy clustering <img src="reference/figures/greed.png" width="200" align="right">
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
 <p>Greed enable model based clustering of networks, counts data matrix and much more with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details on the algorithms and methods proposed by this package can be found in this pre-print <a href="https://arxiv.org/abs/2002.11577v1" class="uri">https://arxiv.org/abs/2002.11577v1</a>.</p>
 <p>The following generative models are available currently :</p>
 <ul>
-<li>Stochastic Block Models (for directed and un-directed graphs, see <code><a href="reference/sbm-class.html">?`sbm-class`</a></code>),</li>
-<li>Degree Corrected Stochastic Block Models (for directed and un-directed graphs, see <code><a href="reference/dcsbm-class.html">?`dcsbm-class`</a></code>),</li>
-<li>Stochastic Block Models with Mutlinomial observations (experimental, see <code>?multsbm-class</code>),</li>
-<li>Latent Block Models (see <code>?`co_sbm-class`</code>),</li>
+<li>Stochastic Block Models (for <strong>directed</strong> and <strong>un-directed</strong> graphs, see <code><a href="reference/sbm-class.html">?`sbm-class`</a></code>),</li>
+<li>Degree Corrected Stochastic Block Models (for <strong>directed</strong> and <strong>un-directed</strong> graphs, see <code><a href="reference/dcsbm-class.html">?`dcsbm-class`</a></code>),</li>
+<li>Stochastic Block Models with Mutlinomial observations (<strong>experimental</strong>, see <code><a href="reference/multsbm-class.html">?`multsbm-class`</a></code>),</li>
 <li>Degree Corrected Latent Block Models (see <code><a href="reference/co_dcsbm-class.html">?`co_dcsbm-class`</a></code>),</li>
 <li>Mixture of Multinomials (see <code><a href="reference/mm-class.html">?`mm-class`</a></code>),</li>
-<li>Gaussian Mixture Model (experimental, see <code><a href="reference/gmm-class.html">?`gmm-class`</a></code>),</li>
-<li>Multivariate Mixture of Gaussian Regression Model (experimental, see <code><a href="reference/mvmreg-class.html">?`mvmreg-class`</a></code>).</li>
+<li>Gaussian Mixture Model (<strong>experimental</strong>, see <code><a href="reference/gmm-class.html">?`gmm-class`</a></code>),</li>
+<li>Multivariate Mixture of Gaussian Regression Model (<strong>experimental</strong>, see <code><a href="reference/mvmreg-class.html">?`mvmreg-class`</a></code>).</li>
 </ul>
-<p>With the Integrated Classification Likelihood the parameters of the models are integrated out. Since the Integrated Classification Likelihood introduces a natural regularization for complex models such strategy automatically find a “natural” value for the number of cluster, the user needs only to provide an initial guess. The optimization is performed by default thanks to a combination of greedy local search and a genetic algorithm, several optimization algorithms are available.</p>
-<p>Eventually, the whole path of solutions from K* to 1 cluster is extracted. This enable a partial ordering of the clusters, and the evaluation of simpler clustering. The package also provides some plotting functionality.</p>
+<p>With the Integrated Classification Likelihood the parameters of the models are integrated out and therefore introduces a natural regularization for complex models. Since the Integrated Classification Likelihood penalize complex models it enable to automatically find a “natural” value for the number of cluster <span class="math inline"><em>K</em><sup>*</sup></span>, the user needs only to provide an initial guess and value for the prior parameters (sensible default values are used if no prior information is available). The optimization is performed by default thanks to a combination of greedy local search and a genetic algorithm, several optimization algorithms are available.</p>
+<p>Eventually, the whole path of solutions from <span class="math inline"><em>K</em><sup>*</sup></span> to 1 cluster is extracted. This enable a partial ordering of the clusters, and the evaluation of simpler clustering. The package also provides some plotting functionality.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install the released version of greed from <a href="https://github.com/">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"comeetie/greed"</span><span class="op">)</span></code></pre></div>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"comeetie/greed"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
@@ -107,39 +106,43 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">greed</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Jazz</span><span class="op">)</span>
 <span class="va">sol</span><span class="op">=</span><span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Jazz</span><span class="op">)</span>
-<span class="co">#&gt; ------- Fitting a dcsbm model ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -29393 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -29320 and 21 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -29306 and 19 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -29306 and 19 clusters #################</span>
-<span class="co">#&gt; 18</span></code></pre></div>
-<p>Here Jazz is a square sparse matrix and a dcsbm model will be used by default. Some plotting function enable the exploration of the clustering results:</p>
+<span class="co">#&gt; ------- Fitting a DCSBM model ------</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -29423 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -29353 and 21 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -29305 and 22 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -29298 and 21 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -29295 and 21 clusters #################</span>
+<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -29293 and 21 clusters #################</span>
+<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -29293 and 21 clusters #################</span>
+<span class="co">#&gt; ------- Final clustering -------</span>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 20 clusters and an icl of -29268.</span></code></pre></div>
+<p>Here Jazz is a square sparse matrix and a <code><a href="reference/dcsbm-class.html">?`dcsbm-class`</a></code> model will be used by default. Some plotting function enable the exploration of the clustering results:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/plot-1.png" width="60%"></p>
 <p>And the hierarchical structure between clusters:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/tree-1.png" width="60%"></p>
 <p>Eventually, one may explore some coarser clustering using the cut function:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">sol</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">sol</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/cut-1.png" width="60%"></p>
-<p>For large datasets, it’s possible to use parallelism to speed-up the computation thanks to the future package. You only need to specify the type of parallelism.</p>
+<p>For large datasets, it’s possible to use parallelism to speed-up the computation thanks to the <a href="https://github.com/HenrikBengtsson/future">future</a> package. You only need to specify the type of backend you ant to use.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future">future</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"Blogs"</span><span class="op">)</span>
 <span class="va">sol</span><span class="op">=</span><span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Blogs</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>
-<span class="co">#&gt; ------- Fitting a dcsbm model ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -84392 and 15 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -84331 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -84264 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -84236 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -84176 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -84176 and 18 clusters #################</span>
-<span class="co">#&gt; 17</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
+<span class="co">#&gt; ------- Fitting a DCSBM model ------</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -84448 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -84255 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -84232 and 19 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -84196 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -84196 and 18 clusters #################</span>
+<span class="co">#&gt; ------- Final clustering -------</span>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 17 clusters and an icl of -84137.</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/future-1.png" width="60%"></p>
 </div>
 </div>
