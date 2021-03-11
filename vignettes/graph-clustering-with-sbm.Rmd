@@ -18,13 +18,13 @@ knitr::opts_chunk$set(
 ```
 
 
-Loads packages and set a future plan for parallel processing.
+Loads packages and set a future plan for parallel processing if you want.
 ```{r}
-library(future)
+#library(future)
 library(Matrix)
 library(ggplot2)
 library(greed)
-plan(multicore)
+#plan(multicore)
 ```
 
 Simulation of an SBM graph with a hierarchical structure.
