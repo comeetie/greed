@@ -20,7 +20,7 @@
 </head>
 <body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -38,10 +38,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+  <a>
+    <span class="fas fa-home"></span>
      
   </a>
+</li>
+<li>
+  <a href="../index.html">Home</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -54,12 +57,22 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/graph-clustering-with-sbm.html">Graph clustering with SBM</a>
+      <a href="../articles/graph-clustering-with-sbm.html">Graph clustering</a>
     </li>
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a>
+    <span class="fas fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/comeetie/greed">github</a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -84,13 +97,13 @@
 
     
     
-<p>Loads packages and set a future plan for parallel processing.</p>
+<p>Loads packages and set a future plan for parallel processing if you want.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future">future</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://Matrix.R-forge.R-project.org/">Matrix</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">greed</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></code></pre></div>
+<span class="co">#plan(multicore)</span></code></pre></div>
 <p>Simulation of an SBM graph with a hierarchical structure.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">N</span><span class="op">=</span><span class="fl">800</span>
@@ -105,11 +118,10 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">sbm</span><span class="op">$</span><span class="va">x</span>,model<span class="op">=</span><span class="fu">new</span><span class="op">(</span><span class="st">"sbm"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- Fitting a SBM model ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -47721 and 9 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -47651 and 8 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -47651 and 8 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -47289 and 8 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -47289 and 8 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a SBM model, 8 clusters and an icl of -47651.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a SBM model, 8 clusters and an icl of -47289.</span></code></pre></div>
 <p>Plot the results using a block representation.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
@@ -135,69 +147,6 @@
 <code class="sourceCode R"><span class="va">sol2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">sol</span>,<span class="fl">2</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol2</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
 <p><img src="graph-clustering-with-sbm_files/figure-html/unnamed-chunk-9-1.png" width="70%"></p>
-<p>Eventually, you may change the algorithm from <strong>hybrid</strong> (default) to <strong>multistart</strong> for greedy with random multiple starts or <strong>seed</strong> for greedy initialized with spectral clustering. See the doc for details on the algorithm parameters.</p>
-<p>One example with the polbooks dataset:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"Books"</span><span class="op">)</span>
-<span class="va">solbooks</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">X</span>,<span class="fl">10</span>,<span class="fu">new</span><span class="op">(</span><span class="st">"dcsbm"</span><span class="op">)</span>,<span class="fu">new</span><span class="op">(</span><span class="st">"hybrid"</span>,pop_size<span class="op">=</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; ------- Fitting a DCSBM model ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -3050 and 8 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -3032 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -3028 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -3026 and 8 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -3026 and 8 clusters #################</span>
-<span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 7 clusters and an icl of -3023.</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">solbooks</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
-<p><img src="graph-clustering-with-sbm_files/figure-html/unnamed-chunk-10-1.png" width="70%"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">solbooks</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">label</span>,<span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">solbooks</span>,<span class="fl">3</span><span class="op">)</span><span class="op">@</span><span class="va">cl</span><span class="op">)</span>
-<span class="co">#&gt;    </span>
-<span class="co">#&gt;      1  2  3</span>
-<span class="co">#&gt;   c  1  3 45</span>
-<span class="co">#&gt;   l 38  5  0</span>
-<span class="co">#&gt;   n  2  6  5</span></code></pre></div>
-<p><img src="graph-clustering-with-sbm_files/figure-html/unnamed-chunk-11-1.png" width="70%"></p>
-<p>One with the polblogs dataset:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"Blogs"</span><span class="op">)</span>
-<span class="va">solblogs</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Blogs</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>
-<span class="co">#&gt; ------- Fitting a DCSBM model ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -84505 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -84355 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -84251 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -84192 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -84151 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -84138 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -84128 and 15 clusters #################</span>
-<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -84120 and 15 clusters #################</span>
-<span class="co">#&gt; ################# Generation  9: best solution with an ICL of -84114 and 15 clusters #################</span>
-<span class="co">#&gt; ################# Generation 10: best solution with an ICL of -84114 and 15 clusters #################</span>
-<span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 15 clusters and an icl of -84114.</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">solblogs</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
-<p><img src="graph-clustering-with-sbm_files/figure-html/unnamed-chunk-12-1.png" width="70%"></p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">solblogs</span>,type<span class="op">=</span><span class="st">'front'</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">Blogs</span><span class="op">$</span><span class="va">label</span>,<span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">solblogs</span>,<span class="fl">2</span><span class="op">)</span><span class="op">@</span><span class="va">cl</span><span class="op">)</span>
-<span class="co">#&gt;    </span>
-<span class="co">#&gt;       1   2</span>
-<span class="co">#&gt;   0  24 562</span>
-<span class="co">#&gt;   1 600  36</span></code></pre></div>
-<p><img src="graph-clustering-with-sbm_files/figure-html/unnamed-chunk-13-1.png" width="70%"></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"Football"</span><span class="op">)</span>
-<span class="va">solfoot</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Football</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>
-<span class="co">#&gt; ------- Fitting a DCSBM model ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -4440 and 11 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -4393 and 12 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -4393 and 12 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -4393 and 12 clusters #################</span>
-<span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 11 clusters and an icl of -4384.</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">solfoot</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
-<p><img src="graph-clustering-with-sbm_files/figure-html/unnamed-chunk-14-1.png" width="70%"></p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
