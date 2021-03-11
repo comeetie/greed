@@ -47,7 +47,7 @@ arma::mat submatcross(int oldcl,int newcl,int K){
     result(i,1)=i;
     result(i+K,0)=newcl;
     result(i+K,1)=i;
-    if(i==oldcl | i==newcl){
+    if((i==oldcl) || (i==newcl)){
       nbr = nbr + 1;
     }else{
       result(i+2*K-nbr,1)=oldcl;

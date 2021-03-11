@@ -204,7 +204,7 @@ rmultsbm = function (N,pi,mu,lambda){
   x = array(dim=c(N,N,dim(mu)[3]))
   for (i in 1:N){
     for (j in 1:N){
-      x[i,j,]=rmultinom(1,rpois(1,lambda),mu[cl[i],cl[j],]) 
+      x[i,j,]=stats::rmultinom(1,stats::rpois(1,lambda),mu[cl[i],cl[j],]) 
     }
   }
   list(cl=cl, x = x, K=K,N=N,pi=pi,mu=mu)
