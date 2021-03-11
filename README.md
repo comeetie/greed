@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# GREED : Bayesian greedy clustering <img src="./inst/exdata/greed.png" width=200 align="right" />
+# GREED : Bayesian greedy clustering <img src="man/figures/greed.png" width=200 align="right" />
 
 <!-- badges: start -->
 
@@ -16,17 +16,18 @@ proposed by this package can be found in this pre-print
 
 The following generative models are available currently :
 
-  - sbm : Stochastic Block Models (for directed and un-directed graphs),
-  - dcsbm : Degree Corrected Stochastic Block Models (for directed and
-    un-directed graphs),
-  - co\_sbm : Latent Block Models,
-  - multsbm : Stochastic Block Models with Mutlinomial observations
-    (experimental),
-  - co\_dcsbm: Degree Corrected Latent Block Models,
-  - mm: Mixture of Multinomials,
-  - gmm : Gaussian Mixture Model (experimental),
-  - mvmreg : Multivariate Mixture of Gaussian Regression Model
-    (experimental).
+  - Stochastic Block Models (for directed and un-directed graphs, see
+    ``?`sbm-class` ``),
+  - Degree Corrected Stochastic Block Models (for directed and
+    un-directed graphs, see ``?`dcsbm-class` ``),
+  - Stochastic Block Models with Mutlinomial observations (experimental,
+    see `?multsbm-class`),
+  - Latent Block Models (see ``?`co_sbm-class` ``),
+  - Degree Corrected Latent Block Models (see ``?`co_dcsbm-class` ``),
+  - Mixture of Multinomials (see ``?`mm-class` ``),
+  - Gaussian Mixture Model (experimental, see ``?`gmm-class` ``),
+  - Multivariate Mixture of Gaussian Regression Model (experimental, see
+    ``?`mvmreg-class` ``).
 
 With the Integrated Classification Likelihood the parameters of the
 models are integrated out. Since the Integrated Classification
@@ -53,25 +54,22 @@ devtools::install_github("comeetie/greed")
 
 ## Usage
 
-The main function is simply the greed function. The generative model
-will be chosen automatically to fit with the data provided, but you may
-specify another choice with the model parameter. This is a basic example
-with the classical blogs network:
+The main entry point for using the package is simply the greed function
+(`?greed`). The generative model will be chosen automatically to fit
+with the data provided, but you may specify another choice with the
+model parameter. This is a basic example with the classical blogs
+network:
 
 ``` r
 library(greed)
 data(Jazz)
 sol=greed(Jazz)
-#> ------- Fitting a DCSBM model ------
-#> ################# Generation  1: best solution with an ICL of -29418 and 16 clusters #################
-#> ################# Generation  2: best solution with an ICL of -29360 and 20 clusters #################
-#> ################# Generation  3: best solution with an ICL of -29329 and 21 clusters #################
-#> ################# Generation  4: best solution with an ICL of -29322 and 20 clusters #################
-#> ################# Generation  5: best solution with an ICL of -29320 and 20 clusters #################
-#> ################# Generation  6: best solution with an ICL of -29319 and 21 clusters #################
-#> ################# Generation  7: best solution with an ICL of -29319 and 21 clusters #################
-#> ------- Final clustering -------
-#> ICL clustering with a DCSBM model, 19 clusters and an icl of -29287.
+#> ------- Fitting a dcsbm model ------
+#> ################# Generation  1: best solution with an ICL of -29393 and 17 clusters #################
+#> ################# Generation  2: best solution with an ICL of -29320 and 21 clusters #################
+#> ################# Generation  3: best solution with an ICL of -29306 and 19 clusters #################
+#> ################# Generation  4: best solution with an ICL of -29306 and 19 clusters #################
+#> 18
 ```
 
 Here Jazz is a square sparse matrix and a dcsbm model will be used by
@@ -82,7 +80,7 @@ results:
 plot(sol)
 ```
 
-<img src="man/figures/README-plot-1.png" width="60%" />
+<img src="man/figures/plot-1.png" width="60%" />
 
 And the hierarchical structure between clusters:
 
@@ -90,7 +88,7 @@ And the hierarchical structure between clusters:
 plot(sol,type='tree')
 ```
 
-<img src="man/figures/README-tree-1.png" width="60%" />
+<img src="man/figures/tree-1.png" width="60%" />
 
 Eventually, one may explore some coarser clustering using the cut
 function:
@@ -99,7 +97,7 @@ function:
 plot(cut(sol,5))
 ```
 
-<img src="man/figures/README-cut-1.png" width="60%" />
+<img src="man/figures/cut-1.png" width="60%" />
 
 For large datasets, it’s possible to use parallelism to speed-up the
 computation thanks to the future package. You only need to specify the
@@ -110,20 +108,15 @@ library(future)
 plan(multisession)
 data("Blogs")
 sol=greed(Blogs$X)
-#> ------- Fitting a DCSBM model ------
-#> ################# Generation  1: best solution with an ICL of -84444 and 17 clusters #################
-#> ################# Generation  2: best solution with an ICL of -84393 and 17 clusters #################
-#> ################# Generation  3: best solution with an ICL of -84296 and 16 clusters #################
-#> ################# Generation  4: best solution with an ICL of -84233 and 17 clusters #################
-#> ################# Generation  5: best solution with an ICL of -84228 and 18 clusters #################
-#> ################# Generation  6: best solution with an ICL of -84209 and 16 clusters #################
-#> ################# Generation  7: best solution with an ICL of -84188 and 17 clusters #################
-#> ################# Generation  8: best solution with an ICL of -84183 and 17 clusters #################
-#> ################# Generation  9: best solution with an ICL of -84178 and 17 clusters #################
-#> ################# Generation 10: best solution with an ICL of -84177 and 17 clusters #################
-#> ------- Final clustering -------
-#> ICL clustering with a DCSBM model, 16 clusters and an icl of -84156.
+#> ------- Fitting a dcsbm model ------
+#> ################# Generation  1: best solution with an ICL of -84392 and 15 clusters #################
+#> ################# Generation  2: best solution with an ICL of -84331 and 18 clusters #################
+#> ################# Generation  3: best solution with an ICL of -84264 and 17 clusters #################
+#> ################# Generation  4: best solution with an ICL of -84236 and 18 clusters #################
+#> ################# Generation  5: best solution with an ICL of -84176 and 18 clusters #################
+#> ################# Generation  6: best solution with an ICL of -84176 and 18 clusters #################
+#> 17
 plot(sol)
 ```
 
-<img src="man/figures/README-future-1.png" width="60%" />
+<img src="man/figures/future-1.png" width="60%" />

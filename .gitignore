@@ -1,5 +1,6 @@
 inst/doc
 .Rproj.user
+.Rhistory
 data-raw/FD_MIGCOM_2015.txt
 *.o
 *.so
