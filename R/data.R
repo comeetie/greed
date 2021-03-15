@@ -62,6 +62,27 @@
 "Blogs"
 
 
+#' Smart card validation dataset
+#' 
+#' 
+#' @docType data
+#'
+#' @usage data(valcovid)
+#'
+#' @format An object of class \code{list} with two fields; 
+#'  \describe{
+#'   \item{data_clean}{row data}
+#'   \item{X}{matrix}
+#' }
+#'
+#' @keywords datasets
+#'
+#'
+#' @examples
+#' data(valcovid)
+"valcovid"
+
+
 
 #' Books about US politics network dataset
 #' 
