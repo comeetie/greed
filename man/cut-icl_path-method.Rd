@@ -2,7 +2,7 @@
 % Please edit documentation in R/alg_classes.R
 \name{cut,icl_path-method}
 \alias{cut,icl_path-method}
-\title{method to cut a path solution to a desired number of cluster}
+\title{Method to cut a path solution to a desired number of cluster}
 \usage{
 \S4method{cut}{icl_path}(x, K)
 }

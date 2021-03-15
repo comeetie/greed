@@ -2,10 +2,18 @@
 NULL
 
 
-#' @title Clustering with a stochastic block model description class
+#' @title Stochastic Block Model class
 #' 
 #' @description 
-#' An S4 class to represent a a stochastic block model, extend \code{\link{icl_model-class}}.
+#' An S4 class to represent a Stochastic Block Model, extend \code{\link{icl_model-class}}. 
+#' Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :  
+#' \deqn{ \begin{aligned}
+#' \pi &\sim Dirichlet(\alpha)\\
+#' Z_i & \sim \mathcal{M}(1,\pi)\\
+#' \theta_{kl} & \sim Beta(a_0,b_0)\\
+#' X_{ij}|Z_{ik}Z_{jl}=1 & \sim \mathcal{B}(\theta_{kl})\\
+#' \end{aligned}}
+#' This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model in the following slots:
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter
 #' @slot a0 Beta prior parameter over links

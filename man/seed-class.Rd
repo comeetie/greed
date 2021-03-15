@@ -3,7 +3,7 @@
 \docType{class}
 \name{seed-class}
 \alias{seed-class}
-\title{greedy algorithm with seeded initialization}
+\title{Greedy algorithm with seeded initialization}
 \description{
 An S4 class to represent a greedy algorithm with initialization from spectral clustering and or k-means (extends \code{\link{alg-class}} class ).
 }

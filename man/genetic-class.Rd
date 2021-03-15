@@ -3,7 +3,7 @@
 \docType{class}
 \name{genetic-class}
 \alias{genetic-class}
-\title{genetic optimization algorithm}
+\title{Genetic optimization algorithm}
 \description{
 An S4 class to represent a genetic algorithm (extends \code{\link{alg-class}} class).
 }

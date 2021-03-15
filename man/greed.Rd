@@ -3,7 +3,7 @@
 \docType{package}
 \name{greed}
 \alias{greed}
-\title{model based hierarchical clustering with icl}
+\title{Model based hierarchical clustering}
 \usage{
 greed(
   X,
@@ -14,7 +14,7 @@ greed(
 )
 }
 \arguments{
-\item{X}{data to cluster either a matrix or a \code{\link{dgCMatrix-class}}}
+\item{X}{data to cluster either a matrix,an array or a \code{\link{dgCMatrix-class}}}
 
 \item{K}{initial number of cluster}
 

@@ -3,7 +3,7 @@
 \docType{class}
 \name{multistarts-class}
 \alias{multistarts-class}
-\title{greedy algorithm with multiple start class}
+\title{Greedy algorithm with multiple start class}
 \description{
 An S4 class to represent a greedy algorithm  with multiple start (extends \code{\link{alg-class}} class).
 }

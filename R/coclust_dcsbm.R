@@ -113,7 +113,7 @@ setMethod(f = "cut",
               }
               
               x@path=x@path[(i+1):length(x@path)]
-              postprocess(x)
+              x=postprocess(x)
             }else{
               warning(paste0("This clustering has ",x@K," clusters and you requested ",K ," clusters. Please provide a value for K smaller than ",x@K,"."),call. = FALSE)
             }
@@ -195,7 +195,6 @@ setMethod(f = "preprocess",
 setMethod(f = "postprocess", 
           signature = signature("co_dcsbm_path"), 
           definition = function(path,data=NULL){
-
             sol = path
             if(!is.null(data)){
               sol@Nrow = data$Nrows
@@ -229,7 +228,7 @@ setMethod(f = "postprocess",
               rowtree=tree[tree$x>=min(xrow)&tree$x<=max(xrow),]
               
               
-              cat('-- post-processing --')
+              #cat('-- post-processing --')
               # tree= sol@ggtree[order(sol@ggtree$H,sol@ggtree$node),]
               # coltree = tree[tree$node %in% clust_cols,]
               # coltree$x = seq(1,-1,length.out = length(clust_cols))

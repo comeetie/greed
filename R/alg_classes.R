@@ -9,7 +9,7 @@ NULL
 NULL
 
 
-#' @title represent an abstract optimization algorithm
+#' @title Abstract optimization algorithm class
 #' 
 #' @description
 #' An S4 class to represent an abstract optimization algorithm.
@@ -19,7 +19,7 @@ setClass("alg",slots = list(name = "character"))
 
 
 
-#' @title greedy algorithm with multiple start class
+#' @title Greedy algorithm with multiple start class
 #' 
 #' @description 
 #' An S4 class to represent a greedy algorithm  with multiple start (extends \code{\link{alg-class}} class).
@@ -32,7 +32,7 @@ setClass("multistarts",
 
 
 
-#' @title greedy algorithm with seeded initialization
+#' @title Greedy algorithm with seeded initialization
 #' 
 #' @description
 #' An S4 class to represent a greedy algorithm with initialization from spectral clustering and or k-means (extends \code{\link{alg-class}} class ).
@@ -44,23 +44,23 @@ setClass("seed",
 
 
 
-#' @title hybrid optimization algorithm 
+#' @title Hybrid optimization algorithm 
 #' 
 #' @description 
 #' An S4 class to represent an hybrid genetic/greedy algorithm (extends \code{\link{alg-class}} class).
 #' @slot pop_size size of the solutions populations (default to 20)
 #' @slot nb_max_gen maximal number of generation to produce (default to 10)
 #' @slot prob_mutation mutation probability (default to 0.25)
-#' @slot Kmax maximum number of clusters (default to 400) 
+#' @slot Kmax maximum number of clusters (default to 100) 
 #' @export
 setClass("hybrid",
          contains = "alg",
          representation =  list(pop_size = "numeric",nb_max_gen = "numeric",prob_mutation = "numeric",Kmax="numeric"),
-         prototype(name="hybrid",pop_size=20, nb_max_gen = 10,prob_mutation=0.25,Kmax=400))
+         prototype(name="hybrid",pop_size=20, nb_max_gen = 10,prob_mutation=0.25,Kmax=100))
 
 
 
-#' @title genetic optimization algorithm
+#' @title Genetic optimization algorithm
 #' 
 #' @description
 #' An S4 class to represent a genetic algorithm (extends \code{\link{alg-class}} class).
@@ -78,7 +78,7 @@ setClass("genetic",
 
 
 
-#' @title method to cut a path solution to a desired number of cluster 
+#' @title Method to cut a path solution to a desired number of cluster 
 #' 
 #' @description This method take a \code{\link{icl_path-class}} object and an integer K and return the solution from the path with K clusters 
 #' @param x A an \code{icl_path} solution 
@@ -107,11 +107,11 @@ setMethod(f = "cut",
             
 })
 
-#' @title model based hierarchical clustering with icl
+#' @title Model based hierarchical clustering 
 #' 
 #' @description 
 #' 
-#' @param X data to cluster either a matrix or a \code{\link{dgCMatrix-class}}
+#' @param X data to cluster either a matrix,an array or a \code{\link{dgCMatrix-class}}
 #' @param K initial number of cluster
 #' @param model a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}} or \code{\link{mvmreg-class}}
 #' @param alg an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
@@ -125,6 +125,7 @@ greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=F
   sol = postprocess(sol,data)
   cat("------- Final clustering -------\n")
   print(sol)
+  cat("\n")
   sol
 }
 
@@ -157,7 +158,7 @@ find_model = function(X){
   model
 }
 
-#' @title conditional model based hierarchical clustering
+#' @title Conditional model based hierarchical clustering
 #' 
 #' @param X design matrix
 #' @param Y target variables

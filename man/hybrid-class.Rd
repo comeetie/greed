@@ -3,7 +3,7 @@
 \docType{class}
 \name{hybrid-class}
 \alias{hybrid-class}
-\title{hybrid optimization algorithm}
+\title{Hybrid optimization algorithm}
 \description{
 An S4 class to represent an hybrid genetic/greedy algorithm (extends \code{\link{alg-class}} class).
 }

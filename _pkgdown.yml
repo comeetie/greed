@@ -73,19 +73,13 @@ reference:
     - '`gmm_path-class`'
     - '`mvmreg_path-class`'
 
-- title: 'Main methods hierarchical fit methods'
+- title: 'Main methods to explore a hierarchical fit'
   desc: >
-    Description of method for cuting/ploting a hierachical model fit.
+    Description of methods for cuting/ploting a hierachical model fit.
   contents:
-    - '`cut-icl_path-method`'
-    - '`cut-co_dcsbm_path-method`'
-    - '`plot-multsbm_path-method`'
-    - '`plot-co_dcsbm_path-method`'
-    - '`plot-mm_path-method`'
-    - '`plot-gmm_path-method`'
-    - '`plot-mvmreg_path-method`'
-
-
+    - starts_with("cut")
+    - starts_with("plot")
+    
 - title: 'Misc tools'
   desc: >
     Miscaelenous utility functions.
