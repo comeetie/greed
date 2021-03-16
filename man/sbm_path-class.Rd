@@ -26,7 +26,7 @@ An S4 class to represent a hierarchical fit of a stochastic block model, extend 
 \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
 }}
 
-\item{\code{path}}{a list of size K-1 with each part of the path described by:
+\item{\code{path}}{a list of size K-1 with that store all the solutions along the path. Each element is a list with the following fields:
 \itemize{
 \item icl1: icl value reach with this solution for alpha=1 
 \item logalpha: log(alpha) value were this solution is better than its parent

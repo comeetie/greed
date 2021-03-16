@@ -15,9 +15,17 @@ NULL
 #' \end{aligned}}
 #' This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model in the following slots:
 #' @slot name name of the model
-#' @slot alpha Dirichlet over cluster proportions prior parameter
-#' @slot a0 Beta prior parameter over links
-#' @slot b0 Beta prior parameter over no-links
+#' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
+#' @slot a0 Beta prior parameter over links (default to 1)
+#' @slot b0 Beta prior parameter over no-links (default to 1)
+#' @seealso \code{\link{sbm_fit-class}},\code{\link{sbm_path-class}}  
+#' @seealso \code{\link{greed}}
+#' @examples 
+#' new("sbm")
+#' new("sbm",a0=0.5, b0= 0.5,alpha=0.5)
+#' sbm = rsbm(100,c(0.5,0.5),diag(2)*0.1+0.01)
+#' sol = greed(sbm$x,model=new("sbm",a0=0.5, b0= 0.5,alpha=0.5))
+#' @references Nowicki, Krzysztof and Tom A B Snijders (2001). “Estimation and prediction for stochastic block structures”. In:Journal of the American statistical association 96.455, pp. 1077–1087
 #' @export 
 setClass("sbm",
          representation = list(a0 = "numeric",b0="numeric"),
@@ -26,13 +34,13 @@ setClass("sbm",
 
 
 
-#' @title Clustering with stochastic block model fit results class
+#' @title Stochastic Block Model fit results class
 #' 
-#' @description An S4 class to represent a fit of a stochastic block model, extend \code{\link{icl_fit-class}}.
+#' @description An S4 class to represent a fit of a Stochastic Block Model, extend \code{\link{icl_fit-class}}.
 #' @slot model a \code{\link{sbm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
-#' @slot K number of extracted clusters over row and columns
+#' @slot K number of extracted clusters over rows and columns
 #' @slot cl a numeric vector with row and columns cluster indexes
 #' @slot obs_stats a list with the following elements:
 #' \itemize{
@@ -59,7 +67,7 @@ setClass("sbm_fit",slots = list(model="sbm"),contains="icl_fit")
 #' \item counts: numeric vector of size K with number of elements in each clusters
 #' \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
 #' }
-#' @slot path a list of size K-1 with each part of the path described by:
+#' @slot path a list of size K-1 with that store all the solutions along the path. Each element is a list with the following fields:
 #' \itemize{
 #' \item icl1: icl value reach with this solution for alpha=1 
 #' \item logalpha: log(alpha) value were this solution is better than its parent

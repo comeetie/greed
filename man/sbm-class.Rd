@@ -20,10 +20,24 @@ This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this 
 \describe{
 \item{\code{name}}{name of the model}
 
-\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter}
+\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
 
-\item{\code{a0}}{Beta prior parameter over links}
+\item{\code{a0}}{Beta prior parameter over links (default to 1)}
 
-\item{\code{b0}}{Beta prior parameter over no-links}
+\item{\code{b0}}{Beta prior parameter over no-links (default to 1)}
 }}
 
+\examples{
+new("sbm")
+new("sbm",a0=0.5, b0= 0.5,alpha=0.5)
+sbm = rsbm(100,c(0.5,0.5),diag(2)*0.1+0.01)
+sol = greed(sbm$x,model=new("sbm",a0=0.5, b0= 0.5,alpha=0.5))
+}
+\references{
+Nowicki, Krzysztof and Tom A B Snijders (2001). “Estimation and prediction for stochastic block structures”. In:Journal of the American statistical association 96.455, pp. 1077–1087
+}
+\seealso{
+\code{\link{sbm_fit-class}},\code{\link{sbm_path-class}}
+
+\code{\link{greed}}
+}

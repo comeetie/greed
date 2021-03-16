@@ -225,18 +225,19 @@ extract_front_height=function(sol){
 
 # clean the merge path 
 cleanpathopt = function(pathsol){
-  if(is.infinite(pathsol@path[[length(pathsol@path)]]$icl1)){
-    pathsol@path[[length(pathsol@path)]]$icl1=pathsol@path[[length(pathsol@path)-1]]$icl1
-    pathsol@path[[length(pathsol@path)]]$logalpha=pathsol@path[[length(pathsol@path)-1]]$logalpha
-  }
-  
-  K=pathsol@K
-  pathsol@logalpha = 0
-  path=pathsol@path
-  
+  if(length(pathsol@path)>0){
+    if(is.infinite(pathsol@path[[length(pathsol@path)]]$icl1)){
+      pathsol@path[[length(pathsol@path)]]$icl1=pathsol@path[[length(pathsol@path)-1]]$icl1
+      pathsol@path[[length(pathsol@path)]]$logalpha=pathsol@path[[length(pathsol@path)-1]]$logalpha
+    }
+    
+    K=pathsol@K
+    pathsol@logalpha = 0
+    path=pathsol@path
+    
   
   # check for possible better solution than init with alpha=1 along the path
-  if(length(path)>0){
+  
     icli = sapply(path,function(p){p$icl1})
     if(max(icli)>pathsol@icl){
       im = which.max(icli)

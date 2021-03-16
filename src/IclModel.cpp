@@ -104,6 +104,9 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
           hasMoved=true;
           ++nbmove;
           // workingset(cnode)=1;
+          if(K==1){
+            break;
+          }
         }else{
           arma::vec deltaneg = delta.elem(arma::find(delta<0));
           int bmn= deltaneg.index_max();
@@ -174,6 +177,9 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::sp_mat & mo
           hasMoved=true;
           ++nbmove;
           // workingset(cnode)=1;
+          if(K==1){
+            break;
+          }
         }else{
           arma::vec deltaneg = delta.elem(arma::find(delta<0));
           int bmn= deltaneg.index_max();

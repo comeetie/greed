@@ -3,9 +3,9 @@
 \docType{class}
 \name{sbm_fit-class}
 \alias{sbm_fit-class}
-\title{Clustering with stochastic block model fit results class}
+\title{Stochastic Block Model fit results class}
 \description{
-An S4 class to represent a fit of a stochastic block model, extend \code{\link{icl_fit-class}}.
+An S4 class to represent a fit of a Stochastic Block Model, extend \code{\link{icl_fit-class}}.
 }
 \section{Slots}{
 
@@ -16,7 +16,7 @@ An S4 class to represent a fit of a stochastic block model, extend \code{\link{i
 
 \item{\code{icl}}{icl value of the fitted model}
 
-\item{\code{K}}{number of extracted clusters over row and columns}
+\item{\code{K}}{number of extracted clusters over rows and columns}
 
 \item{\code{cl}}{a numeric vector with row and columns cluster indexes}
 

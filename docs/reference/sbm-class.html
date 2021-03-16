@@ -41,12 +41,12 @@
 
 <meta property="og:title" content="Stochastic Block Model class — sbm-class" />
 <meta property="og:description" content="An S4 class to represent a Stochastic Block Model, extend icl_model-class. 
-Such models can be used to cluster graph vertex, and model a square adjacency matrix \(X\) with the following generative model :  
+Such model can be used to cluster graph vertex, and model a square adjacency matrix \(X\) with the following generative model :  
 $$ \begin{aligned}
 \pi &amp;amp;\sim Dirichlet(\alpha)\\
 Z_i &amp;amp; \sim \mathcal{M}(1,\pi)\\
 \theta_{kl} &amp;amp; \sim Beta(a_0,b_0)\\
-X_{ij}|Z_{ik}Z_{jl}=1 &amp;amp; \sim \mathcal{B}(\theta_kl)\\
+X_{ij}|Z_{ik}Z_{jl}=1 &amp;amp; \sim \mathcal{B}(\theta_{kl})\\
 \end{aligned}$$
 This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this generative model in the following slots:" />
 
@@ -80,7 +80,7 @@ This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this ge
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">greed</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -135,18 +135,18 @@ This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this ge
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Stochastic Block Model class</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/sbm.R'><code>R/sbm.R</code></a></small>
     <div class="hidden name"><code>sbm-class.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>An S4 class to represent a Stochastic Block Model, extend <code><a href='icl_model-class.html'>icl_model-class</a></code>. 
-Such models can be used to cluster graph vertex, and model a square adjacency matrix \(X\) with the following generative model :  
+Such model can be used to cluster graph vertex, and model a square adjacency matrix \(X\) with the following generative model :  
 $$ \begin{aligned}
 \pi &amp;\sim Dirichlet(\alpha)\\
 Z_i &amp; \sim \mathcal{M}(1,\pi)\\
 \theta_{kl} &amp; \sim Beta(a_0,b_0)\\
-X_{ij}|Z_{ik}Z_{jl}=1 &amp; \sim \mathcal{B}(\theta_kl)\\
+X_{ij}|Z_{ik}Z_{jl}=1 &amp; \sim \mathcal{B}(\theta_{kl})\\
 \end{aligned}$$
 This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this generative model in the following slots:</p>
     </div>
@@ -160,14 +160,56 @@ This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this ge
 <dl>
 <dt><code>name</code></dt><dd><p>name of the model</p></dd>
 
-<dt><code>alpha</code></dt><dd><p>Dirichlet over cluster proportions prior parameter</p></dd>
+<dt><code>alpha</code></dt><dd><p>Dirichlet over cluster proportions prior parameter (default to 1)</p></dd>
 
-<dt><code>a0</code></dt><dd><p>Beta prior parameter over links</p></dd>
+<dt><code>a0</code></dt><dd><p>Beta prior parameter over links (default to 1)</p></dd>
 
-<dt><code>b0</code></dt><dd><p>Beta prior parameter over no-links</p></dd>
+<dt><code>b0</code></dt><dd><p>Beta prior parameter over no-links (default to 1)</p></dd>
 
 </dl>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
+    <p>Nowicki, Krzysztof and Tom A B Snijders (2001). “Estimation and prediction for stochastic block structures”. In:Journal of the American statistical association 96.455, pp. 1077–1087</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='sbm_fit-class.html'>sbm_fit-class</a></code>,<code><a href='sbm_path-class.html'>sbm_path-class</a></code></p>
+<p><code><a href='greed.html'>greed</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>new</span><span class='op'>(</span><span class='st'>"sbm"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; An object of class "sbm"
+#&gt; Slot "a0":
+#&gt; [1] 1
+#&gt; 
+#&gt; Slot "b0":
+#&gt; [1] 1
+#&gt; 
+#&gt; Slot "name":
+#&gt; [1] "sbm"
+#&gt; 
+#&gt; Slot "alpha":
+#&gt; [1] 1
+#&gt; </div><div class='input'><span class='fu'>new</span><span class='op'>(</span><span class='st'>"sbm"</span>,a0<span class='op'>=</span><span class='fl'>0.5</span>, b0<span class='op'>=</span> <span class='fl'>0.5</span>,alpha<span class='op'>=</span><span class='fl'>0.5</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; An object of class "sbm"
+#&gt; Slot "a0":
+#&gt; [1] 0.5
+#&gt; 
+#&gt; Slot "b0":
+#&gt; [1] 0.5
+#&gt; 
+#&gt; Slot "name":
+#&gt; [1] "sbm"
+#&gt; 
+#&gt; Slot "alpha":
+#&gt; [1] 0.5
+#&gt; </div><div class='input'><span class='va'>sbm</span> <span class='op'>=</span> <span class='fu'><a href='rsbm.html'>rsbm</a></span><span class='op'>(</span><span class='fl'>100</span>,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.5</span>,<span class='fl'>0.5</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>*</span><span class='fl'>0.1</span><span class='op'>+</span><span class='fl'>0.01</span><span class='op'>)</span>
+<span class='va'>sol</span> <span class='op'>=</span> <span class='fu'><a href='greed.html'>greed</a></span><span class='op'>(</span><span class='va'>sbm</span><span class='op'>$</span><span class='va'>x</span>,model<span class='op'>=</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"sbm"</span>,a0<span class='op'>=</span><span class='fl'>0.5</span>, b0<span class='op'>=</span> <span class='fl'>0.5</span>,alpha<span class='op'>=</span><span class='fl'>0.5</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; ------- Fitting a SBM model ------
+#&gt; ################# Generation  1: best solution with an ICL of -2029 and 3 clusters #################
+#&gt; ################# Generation  2: best solution with an ICL of -2022 and 2 clusters #################
+#&gt; ################# Generation  3: best solution with an ICL of -2022 and 2 clusters #################
+#&gt; ------- Final clustering -------
+#&gt; ICL clustering with a SBM model, 2 clusters and an icl of -2022.</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -179,7 +221,7 @@ This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this ge
 
       <footer>
       <div class="copyright">
-  <p>Developed by Etienne Come.</p>
+  <p>Developed by .</p>
 </div>
 
 <div class="pkgdown">

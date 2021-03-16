@@ -118,7 +118,6 @@ arma::mat MultSbm::delta_swap(int i,arma::uvec iclust){
     }
     
   }
-  
   return delta;
 }
 
