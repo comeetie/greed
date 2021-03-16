@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">greed</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -127,7 +127,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Clustering with a stochastic block model path extraction results class</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/sbm.R'><code>R/sbm.R</code></a></small>
     <div class="hidden name"><code>sbm_path-class.Rd</code></div>
     </div>
 
@@ -158,7 +158,7 @@
 <li><p>x_counts: matrix of size K*K with the number of links between each pair of clusters</p></li>
 </ul></p></dd>
 
-<dt><code>path</code></dt><dd><p>a list of size K-1 with each part of the path described by:
+<dt><code>path</code></dt><dd><p>a list of size K-1 with that store all the solutions along the path. Each element is a list with the following fields:
 <ul>
 <li><p>icl1: icl value reach with this solution for alpha=1</p></li>
 <li><p>logalpha: log(alpha) value were this solution is better than its parent</p></li>
@@ -190,7 +190,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Etienne Come.</p>
+  <p>Developed by Etienne Côme, Nicolas Jouvin.</p>
 </div>
 
 <div class="pkgdown">
