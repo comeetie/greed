@@ -7,12 +7,12 @@
 #include "DcSbm.h"
 #include "DcSbmUndirected.h"
 #include "MultSbm.h"
+#include "MultSbmUndirected.h"
 #include "CoDcSbm.h"
 #include "Mm.h"
 #include "Gmm.h"
 #include "Mvmregcomp.h"
 using namespace Rcpp;
-
 
 
 IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
@@ -56,8 +56,16 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       }
     }
     if(strcmp(model.slot("name"),"multsbm")==0){
+      if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0)){
+        stop("Unsuported model type only directed / undirected are allowed");
+      } 
       arma::cube xp = as<arma::cube>(data["X"]);
-      M = new MultSbm(xp,model.slot("alpha"),model.slot("beta"),clt,verbose);
+      if(strcmp(model.slot("type"),"directed")==0){
+        M = new MultSbm(xp,model.slot("alpha"),model.slot("beta"),clt,verbose);
+      }
+      if(strcmp(model.slot("type"),"undirected")==0){
+        M = new MultSbmUndirected(xp,model.slot("alpha"),model.slot("beta"),clt,verbose);
+      }
     }
     if(strcmp(model.slot("name"),"co_dcsbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);

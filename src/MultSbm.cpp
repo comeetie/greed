@@ -267,8 +267,6 @@ double MultSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & 
   }
   
   return icl_cor;
-  
-  return 0;
 }
 
 

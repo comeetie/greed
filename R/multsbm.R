@@ -11,9 +11,9 @@ NULL
 #' @slot beta Dirichlet prior parameter over Multinomial links
 #' @export 
 setClass("multsbm",
-         representation = list(beta = "numeric"),
+         representation = list(beta = "numeric",type="character"),
          contains = "icl_model",
-         prototype(name="multsbm",alpha=1,beta=1))
+         prototype(name="multsbm",alpha=1,beta=1,type="directed"))
 
 
 
@@ -140,4 +140,32 @@ setMethod(f = "seed",
           })
 
 
+setMethod(f = "preprocess", 
+          signature = signature("multsbm"), 
+          definition = function(model, data){
+            if(!methods::is(data,"array") ){
+              stop("A multsbm model expect an array with 3 dimensions.",call. = FALSE)
+            }
+            if(length(dim(data))!=3){
+              stop("A multsbm model expect an array with 3 dimensions.",call. = FALSE)
+            }
+            if(dim(data)[1]!=dim(data)[2]){
+              stop("A multsbm model expect an array of 3 dimensions with as many rows as columns.",call. = FALSE)
+            }
+            if(!all(round(data)==data) || min(data)<0){
+              stop("A multsbm model expect an array of 3 dimensions with as many rows as columns filled with postive integers.",call. = FALSE)
+            }
+            issym = all(sapply(1:dim(data)[3],function(d){ isSymmetric(data[,,d])}))
+            if(model@type=="undirected" & !issym){
+              stop("An undirected multsbm expect a symmetric array.",call. = FALSE)
+            }
+            selfloop = all(sapply(1:dim(data)[3],function(d){ sum(diag(data[,,d]))}))
+            if(model@type=="undirected" & !all(selfloop==0)) {
+              for (d in 1:dim(data)[3]){
+                diag(data[,,d])=0
+              }
+              warning("An undirected multsbm model does not allow self loops, self loops were removed from the graph.",call. = FALSE)
+            }
+            list(X=data,N=nrow(data))
+          })
 

@@ -20,7 +20,7 @@ public:
   double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats);
   void merge_update(int k, int l);
   List get_obs_stats();
-private:
+protected:
   int M;
   double beta;
   // matrix of observed counts for each clusters
