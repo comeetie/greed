@@ -9,11 +9,12 @@ NULL
 #' An S4 class to represent a degree corrected stochastic block model, extend \code{\link{icl_model-class}}.
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter
+#' @slot type define the type of networks (either "directed" or "undirected", default to "directed")
 #' @export 
 setClass("dcsbm",
-         representation = list(),
+         representation = list(type="character"),
          contains = "icl_model",
-         prototype(name="dcsbm",alpha=1))
+         prototype(name="dcsbm",alpha=1,type="directed"))
 
 
 
@@ -151,6 +152,27 @@ setMethod(f = "seed",
             spectral(data$X,K)
           })
 
+setMethod(f = "preprocess", 
+          signature = signature("dcsbm"), 
+          definition = function(model, data){
+            if(!(methods::is(data,"dgCMatrix") | methods::is(data,"matrix"))){
+              stop("An dcsbm model expect a matrix or a sparse (dgCMatrix) matrix.",call. = FALSE)
+            }
+            if(nrow(data)!=ncol(data)){
+              stop("A dcsbm model expect a square matrix.",call. = FALSE)
+            }
+            if(!all(round(data)==data) || min(data)<0){
+              stop("An dcsbm model expect an integer matrix with postive values.",call. = FALSE)
+            }
+            if(model@type=="undirected" & !isSymmetric(data)){
+              stop("An undirected dcsbm model expect a symmetric matrix.",call. = FALSE)
+            }
+            if(model@type=="undirected" & sum(diag(data))!=0){
+              diag(data)=0
+              warning("An undirected dcsbm model does not allow self loops, self loops were removed from the graph.",call. = FALSE)
+            }
+            list(X=as.sparse(data),N=nrow(data))
+          })
 
 
 

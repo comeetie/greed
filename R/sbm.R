@@ -18,6 +18,7 @@ NULL
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot a0 Beta prior parameter over links (default to 1)
 #' @slot b0 Beta prior parameter over no-links (default to 1)
+#' @slot type define the type of networks (either "directed" or "undirected", default to "directed")
 #' @seealso \code{\link{sbm_fit-class}},\code{\link{sbm_path-class}}  
 #' @seealso \code{\link{greed}}
 #' @examples 
@@ -28,9 +29,9 @@ NULL
 #' @references Nowicki, Krzysztof and Tom A B Snijders (2001). “Estimation and prediction for stochastic block structures”. In:Journal of the American statistical association 96.455, pp. 1077–1087
 #' @export 
 setClass("sbm",
-         representation = list(a0 = "numeric",b0="numeric"),
+         representation = list(a0 = "numeric",b0="numeric",type="character"),
          contains = "icl_model",
-         prototype(name="sbm",a0=1,b0=1,alpha=1))
+         prototype(name="sbm",a0=1,b0=1,alpha=1,type="directed"))
 
 
 
@@ -154,5 +155,26 @@ setMethod(f = "seed",
             spectral(data$X,K)
           })
 
+setMethod(f = "preprocess", 
+          signature = signature("sbm"), 
+          definition = function(model, data){
+            if(!(methods::is(data,"dgCMatrix") | methods::is(data,"matrix"))){
+              stop("An sbm model expect a matrix or a sparse (dgCMatrix) matrix.",call. = FALSE)
+            }
+            if(nrow(data)!=ncol(data)){
+              stop("An sbm model expect a square matrix.",call. = FALSE)
+            }
+            if(!all(round(data)==data) || min(data)!=0 || max(data)!=1){
+              stop("An sbm model expect a binary matrix.",call. = FALSE)
+            }
+            if(model@type=="undirected" & !isSymmetric(data)){
+              stop("An undirected sbm model expect a symmetric matrix.",call. = FALSE)
+            }
+            if(model@type=="undirected" & sum(diag(data))!=0){
+              diag(data)=0
+              warning("An undirected sbm model does not allow self loops, self loops were removed from the graph.",call. = FALSE)
+            }
+            list(X=as.sparse(data),N=nrow(data))
+          })
 
 

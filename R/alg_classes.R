@@ -120,7 +120,11 @@ setMethod(f = "cut",
 #' @export
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
   data = preprocess(model,X)
-  cat(paste0("------- Fitting a ",toupper(model@name), " model ------\n"))
+  modelname = toupper(model@name)
+  if("type" %in% slotNames(model)){
+    modelname = paste(model@type,modelname)
+  }
+  cat(paste0("------- ",modelname, " model fitting ------\n"))
   sol = fit(model,alg,data,K,verbose)
   sol = postprocess(sol,data)
   cat("------- Final clustering -------\n")
@@ -143,7 +147,12 @@ find_model = function(X){
   }else{
     if(methods::is(X,"dgCMatrix") | methods::is(X,"matrix")){
       if(nrow(X)==ncol(X)){
-        model = methods::new("dcsbm")
+        if(isSymmetric(X)){
+          model = methods::new("dcsbm",type="undirected")
+        }else{
+          model = methods::new("dcsbm")
+        }
+        
       }else{
         if(all(round(X)==X)){
           model = methods::new("co_dcsbm")  
@@ -152,7 +161,7 @@ find_model = function(X){
         }
       }
     }else{
-      stop(paste0("Unsupported data type: ", class(X) ," use matrix, sparse dgCMatrix or array."))
+      stop(paste0("Unsupported data type: ", class(X) ," use matrix, sparse dgCMatrix or array."),call. = FALSE)
     }
   }
   model
