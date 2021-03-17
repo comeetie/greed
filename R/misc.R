@@ -87,3 +87,39 @@ as.sparse = function(X){
   }
   S
 }
+
+#' @title Convert a binary adjacency matrix with missing value to a cube
+#' 
+#' @description 
+#' Convert a binary adjacency matrix with missing value to a cube
+#' @param X A binary adjacency matrix 
+#' @return a cube 
+#' @export
+to_multinomial = function(X){
+  if(nrow(X)!=ncol(X)){
+    stop("Expect a square adjacency matrix")
+  }
+  if(max(X,na.rm = TRUE)>1){
+    stop("Expect an adjacency matrix with values in {0,1,NA}")
+  }
+  if(min(X,na.rm = TRUE)<0){
+    stop("Expect an adjacency matrix with values in {0,1,NA}")
+  }
+  
+  if(all(!(round(X)!=X & !is.na(X)))){
+    N = nrow(X)
+    Xc = array(0,c(N,N,3))
+    Xs=matrix(0,N,N)
+    Xs[X==1]=1
+    Xc[,,1]=Xs
+    Xs=matrix(0,N,N)
+    Xs[X==0]=1
+    Xc[,,2]=Xs
+    Xs=matrix(0,N,N)
+    Xs[is.na(X)]=1
+    Xc[,,3]=Xs
+  }else{
+    stop("Expect an adjacency matrix with values in {0,1,NA}")
+  }
+  Xc
+}

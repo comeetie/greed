@@ -402,7 +402,7 @@ graph_blocks_cube = function(x){
                                      lc=rep(cumsum(x@obs_stats$counts),K),
                                      sizek = rep(x@obs_stats$counts,each=K),
                                      sizel = rep(x@obs_stats$counts,K), 
-                                     count=as.vector(x@obs_stats$x_counts),m=paste("Slice ",m),stringsAsFactors = FALSE)})
+                                     count=as.vector(x@obs_stats$x_counts[,,m]),m=paste("Slice ",m),stringsAsFactors = FALSE)})
   
   gg=do.call(rbind,ggl);
   

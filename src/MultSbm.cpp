@@ -38,7 +38,7 @@ double MultSbm::icl_emiss(const List & obs_stats){
       icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
     }
   }
-  return icl_emiss+cst;
+  return icl_emiss/2+cst;
 }
 
 double MultSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
@@ -58,7 +58,7 @@ double MultSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
     }
     
   }
-  return icl_emiss;
+  return icl_emiss/2;
 }
 
 
