@@ -92,7 +92,7 @@ as.sparse = function(X){
 #' 
 #' @description 
 #' Convert a binary adjacency matrix with missing value to a cube
-#' @param X A binary adjacency matrix 
+#' @param X A binary adjacency matrix with NA
 #' @return a cube 
 #' @export
 to_multinomial = function(X){
@@ -118,6 +118,13 @@ to_multinomial = function(X){
     Xs=matrix(0,N,N)
     Xs[is.na(X)]=1
     Xc[,,3]=Xs
+    issym = all(sapply(1:3,function(d){ isSymmetric(Xc[,,d])}))
+    if(issym){
+      diag(Xc[,,1])=0
+      diag(Xc[,,2])=0
+      diag(Xc[,,3])=0
+    }
+    
   }else{
     stop("Expect an adjacency matrix with values in {0,1,NA}")
   }

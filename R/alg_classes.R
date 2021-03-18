@@ -121,7 +121,7 @@ setMethod(f = "cut",
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
   data = preprocess(model,X)
   modelname = toupper(model@name)
-  if("type" %in% slotNames(model)){
+  if("type" %in% methods::slotNames(model)){
     modelname = paste(model@type,modelname)
   }
   cat(paste0("------- ",modelname, " model fitting ------\n"))
@@ -143,7 +143,13 @@ find_model = function(X){
     if(length(dimensions)!=3){
       stop(paste0("Multinomial SBM expect a cube found an array od dimensions:",dimensions,collapse = " x "))
     }
-    model = methods::new("multsbm")
+    issym = all(sapply(1:dim(X)[3],function(d){ isSymmetric(X[,,d])}))
+    if(issym){
+      model = methods::new("multsbm",type="undirected")
+    }else{
+      model = methods::new("multsbm")
+    }
+    
   }else{
     if(methods::is(X,"dgCMatrix") | methods::is(X,"matrix")){
       if(nrow(X)==ncol(X)){

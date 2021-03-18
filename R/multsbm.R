@@ -159,8 +159,8 @@ setMethod(f = "preprocess",
             if(model@type=="undirected" & !issym){
               stop("An undirected multsbm expect a symmetric array.",call. = FALSE)
             }
-            selfloop = all(sapply(1:dim(data)[3],function(d){ sum(diag(data[,,d]))}))
-            if(model@type=="undirected" & !all(selfloop==0)) {
+            selfloops = sapply(1:dim(data)[3],function(d){ sum(diag(data[,,d]))})
+            if(model@type=="undirected" & !all(selfloops==0)) {
               for (d in 1:dim(data)[3]){
                 diag(data[,,d])=0
               }
