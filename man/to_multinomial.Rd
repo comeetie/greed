@@ -7,7 +7,7 @@
 to_multinomial(X)
 }
 \arguments{
-\item{X}{A binary adjacency matrix}
+\item{X}{A binary adjacency matrix with NA}
 }
 \value{
 a cube

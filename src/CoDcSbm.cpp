@@ -100,6 +100,7 @@ double CoDcSbm::icl_emiss(const List & obs_stats){
   arma::mat edges_counts =as<arma::mat>(obs_stats["x_counts"]);
   arma::mat sub_edges = edges_counts.submat(arma::find(clusttypes==1),arma::find(clusttypes==2)); 
   arma::mat matcount = counts*counts.t();
+  
   arma::mat sub_mc = matcount.submat(arma::find(clusttypes==1),arma::find(clusttypes==2)); 
 
   // deggree correction

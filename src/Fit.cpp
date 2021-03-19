@@ -4,6 +4,10 @@
 #include "MergeMat.h"
 #include "Sbm.h"
 #include "SbmUndirected.h"
+#include "MarSbm.h"
+#include "MarSbmUndirected.h"
+#include "NmarBdSbm.h"
+#include "NmarBdSbmUndirected.h"
 #include "DcSbm.h"
 #include "DcSbmUndirected.h"
 #include "MultSbm.h"
@@ -23,6 +27,7 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
   S4 sol;
   try{
     if((strcmp(model.slot("name"),"sbm")!=0) && 
+       (strcmp(model.slot("name"),"misssbm")!=0) && 
        (strcmp(model.slot("name"),"dcsbm")!=0) &&
        (strcmp(model.slot("name"),"multsbm")!=0) &&
        (strcmp(model.slot("name"),"co_dcsbm")!=0) && 
@@ -41,6 +46,34 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       }
       if(strcmp(model.slot("type"),"undirected")==0){
         M = new SbmUndirected(xp,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt,verbose);
+      }
+    }
+    if(strcmp(model.slot("name"),"misssbm")==0){
+      if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0)){
+        stop("Unsuported model type only directed / undirected are allowed");
+      } 
+      if((strcmp(model.slot("sampling"),"dyad")!=0) && (strcmp(model.slot("sampling"),"block-dyad")!=0)){
+        stop("Unsuported sampling scheme only  'dyad' / 'block-dyad' are allowed");
+      } 
+      
+      arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
+      arma::sp_mat xpobs = as<arma::sp_mat>(data["Xobs"]);
+      List priors = model.slot("sampling_priors");
+      if(strcmp(model.slot("sampling"),"dyad")==0){
+        if(strcmp(model.slot("type"),"directed")==0){
+          M = new MarSbm(xp,xpobs,model.slot("alpha"),model.slot("a0"),model.slot("b0"),priors["a0obs"],priors["b0obs"],clt,verbose);
+        }
+        if(strcmp(model.slot("type"),"undirected")==0){
+          M = new MarSbmUndirected(xp,xpobs,model.slot("alpha"),model.slot("a0"),model.slot("b0"),priors["a0obs"],priors["b0obs"],clt,verbose);
+        }
+      }
+      if(strcmp(model.slot("sampling"),"block-dyad")==0){
+        if(strcmp(model.slot("type"),"directed")==0){
+          M = new NmarBdSbm(xp,xpobs,model.slot("alpha"),model.slot("a0"),model.slot("b0"),priors["a0obs"],priors["b0obs"],clt,verbose);
+        }
+        if(strcmp(model.slot("type"),"undirected")==0){
+          M = new NmarBdSbmUndirected(xp,xpobs,model.slot("alpha"),model.slot("a0"),model.slot("b0"),priors["a0obs"],priors["b0obs"],clt,verbose);
+        }
       }
     }
     if(strcmp(model.slot("name"),"dcsbm")==0){
@@ -224,6 +257,7 @@ S4 fit_greed_path(List data, S4 init_fit) {
   arma::vec clt = init_fit.slot("cl");
   IclModel * M = init(model,data,clt,false);
   S4 sol = init_sol(model,"path");
+  sol.slot("model")=model;
   List obs_stats = M->get_obs_stats();
   sol.slot("obs_stats") = obs_stats;
   sol.slot("cl") = M->get_cl()+1 ;
@@ -252,4 +286,9 @@ arma::mat merge_mat(List data, S4 init_fit) {
 
 
 
-
+bool test_swap(List data, S4 model,arma::vec& clt) {
+  IclModel * M = init(model,data,clt,false);
+  List obs_stats = M->get_obs_stats();
+  double icl_init =  M->icl(obs_stats);
+  return(true);
+}

@@ -48,9 +48,10 @@ Collate:
     'mvmreg.R'
     'gmm.R'
     'greed.R'
+    'sbm.R'
+    'misssbm.R'
     'mm.R'
     'multistart_alg.R'
     'multsbm.R'
     'plot.R'
-    'sbm.R'
 Language: en-US

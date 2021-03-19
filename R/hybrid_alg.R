@@ -67,7 +67,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
                 i2 = sample(ip[-i1],1,prob=ip[-i1])
                 s1 = solutions[[i1]]
                 s2 = solutions[[i2]]
-                new_solutions[[i]] %<-% full_cross_over(s1,s2,fimerge,fiswap,pmut,Kmax)  %globals% c("s1","s2","fimerge","fiswap","pmut","full_cross_over","Kmax")
+                new_solutions[[i]] = full_cross_over(s1,s2,fimerge,fiswap,pmut,Kmax)  %globals% c("s1","s2","fimerge","fiswap","pmut","full_cross_over","Kmax")
               }
               solutions = c(bres,as.list(new_solutions))
               icls = sapply(solutions,function(s){s@icl})
@@ -109,6 +109,16 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
 
 
 full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
+  
+  
+  if(sol1@K==1){
+    return(sol2)
+  }
+  if(sol2@K==1){
+    return(sol1)
+  }
+  
+  
   # cartesian product on the z of the two solution
   #ncl = unclass(factor(paste(sol1@cl,sol2@cl)))
   sol = sol1
@@ -171,7 +181,6 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
   if(nrow(ijAm)>0){
     sol= fiswap(ncl,move_mat)
   }
-
   sol
 }
 

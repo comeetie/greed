@@ -13,5 +13,7 @@ An S4 class to represent a degree corrected stochastic block model, extend \code
 \item{\code{name}}{name of the model}
 
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter}
+
+\item{\code{type}}{define the type of networks (either "directed" or "undirected", default to "directed")}
 }}
 

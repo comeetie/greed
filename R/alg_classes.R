@@ -124,6 +124,9 @@ greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=F
   if("type" %in% methods::slotNames(model)){
     modelname = paste(model@type,modelname)
   }
+  if("sampling" %in% methods::slotNames(model)){
+    modelname = paste(modelname,"with",model@sampling,"sampling")
+  }
   cat(paste0("------- ",modelname, " model fitting ------\n"))
   sol = fit(model,alg,data,K,verbose)
   sol = postprocess(sol,data)
@@ -153,12 +156,19 @@ find_model = function(X){
   }else{
     if(methods::is(X,"dgCMatrix") | methods::is(X,"matrix")){
       if(nrow(X)==ncol(X)){
-        if(isSymmetric(X)){
-          model = methods::new("dcsbm",type="undirected")
+        if(sum(is.na(X))>0){
+          if(isSymmetric(X)){
+            model = methods::new("misssbm",type="undirected")
+          }else{
+            model = methods::new("misssbm")
+          } 
         }else{
-          model = methods::new("dcsbm")
+          if(isSymmetric(X)){
+            model = methods::new("dcsbm",type="undirected")
+          }else{
+            model = methods::new("dcsbm")
+          } 
         }
-        
       }else{
         if(all(round(X)==X)){
           model = methods::new("co_dcsbm")  

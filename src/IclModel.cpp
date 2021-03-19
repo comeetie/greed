@@ -312,6 +312,7 @@ SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph){
 SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int obl,const List & old_stats){
   // optimized version to compute only new values of the merge mat
   //delta = delta(arma::find(arma::linspace(0,K,K+1)!=obk),arma::find(arma::linspace(0,K,K+1)!=obk));
+  
   arma::sp_mat deltaO = merge_graph;
   delrowcol(deltaO,obk);
   arma::sp_mat delta = deltaO;
@@ -356,8 +357,8 @@ arma::sp_mat IclModel::greedy_merge(const arma::sp_mat & merge_graph){
   double bicl= cicl;
   arma::sp_mat best_merge_mat = delta;
   arma::vec bcl = cl;
-  // while teir are merge to explore
-  while(delta.n_nonzero>0){
+  // while their are merge to explore
+  while(delta.n_nonzero>0 && K>1){
     
     // increment
     ++nbmerge;
@@ -373,10 +374,10 @@ arma::sp_mat IclModel::greedy_merge(const arma::sp_mat & merge_graph){
     //merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL(),old_stats);
 
     //Rcout << delta.n_nonzero << std::endl;
-    //Rcout << cicl << std::endl;
+    
     cicl = cicl + merge_mat.getValue();
 
-
+    // Rcout << merge_mat.getMergeMat() << std::endl;
     // int Ko = merge_mat.getK();
     merge_mat = this->delta_merge(delta,merge_mat.getK(),merge_mat.getL(),old_stats);
     
