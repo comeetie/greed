@@ -287,8 +287,8 @@ arma::mat merge_mat(List data, S4 init_fit) {
 
 
 bool test_swap(List data, S4 model,arma::vec& clt) {
-  IclModel * M = init(model,data,clt,false);
-  List obs_stats = M->get_obs_stats();
-  double icl_init =  M->icl(obs_stats);
+  //IclModel * M = init(model,data,clt,false);
+  //List obs_stats = M->get_obs_stats();
+  //double icl_init =  M->icl(obs_stats);
   return(true);
 }

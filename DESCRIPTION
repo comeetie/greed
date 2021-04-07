@@ -2,8 +2,7 @@ Package: greed
 Type: Package
 Title: Clustering and Model Selection with the Integrated Classification Likelihood
 Version: 0.5.0
-Date: 2021-03-05
-Author: Etienne Côme
+Date: 2021-04-07
 Authors@R: 
     c(person(given = "Etienne",
              family = "Côme",
@@ -12,7 +11,7 @@ Authors@R:
     person(given = "Nicolas",
              family = "Jouvin",
              role = c("aut")))
-URL: https://comeetie.github.io/greed, https://github.com/comeetie/greed
+URL: https://comeetie.github.io/greed/, https://github.com/comeetie/greed
 BugReports: https://github.com/comeetie/greed/issues
 Maintainer: Etienne Côme <etienne.come@univ-eiffel.fr>
 Description: An ensemble of algorithms that enable the clustering of networks and data matrix such as document/term matrix with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood (which is equivalent to minimizing the description length). Several models are available such as: Stochastic Block Model, degree corrected Stochastic Block Model, Mixtures of Multinomial, Latent Block Model. The optimization is performed thanks to a combination of greedy local search and a genetic algorithm.

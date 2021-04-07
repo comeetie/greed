@@ -7,12 +7,10 @@ NULL
 #' @description 
 #' An S4 class to represent a Stochastic Block Model with a sampling scheme for missing data, extend \code{\link{icl_model-class}}. 
 #' Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :  
-#' \deqn{ \begin{aligned}
-#' \pi &\sim Dirichlet(\alpha)\\
-#' Z_i & \sim \mathcal{M}(1,\pi)\\
-#' \theta_{kl} & \sim Beta(a_0,b_0)\\
-#' X_{ij}|Z_{ik}Z_{jl}=1 & \sim \mathcal{B}(\theta_{kl})\\
-#' \end{aligned}}
+#' \deqn{ \pi \sim Dirichlet(\alpha}
+#' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
+#' \deqn{ \theta_{kl} \sim Beta(a_0,b_0)}
+#' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\theta_{kl})}
 #' This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model in the following slots:
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
@@ -101,9 +99,9 @@ setClass("misssbm_path",contains=c("icl_path","sbm_fit"))
 #' @return a \code{\link{ggplot2}} graphic
 #' @export 
 setMethod(f = "plot", 
-          signature = signature("sbm_fit","missing"),
+          signature = signature("misssbm_fit","missing"),
           definition = function(x,type="blocks"){
-            switch(type,blocks=graph_blocks_miss(x),nodelink=nodelink(x))
+            switch(type,blocks=graph_blocks(x),nodelink=nodelink(x))
           });
 
 
@@ -121,7 +119,7 @@ setMethod(f = "plot",
 #' @return a \code{\link{ggplot2}} graphic
 #' @export 
 setMethod(f = "plot", 
-          signature = signature("sbm_path","missing"),
+          signature = signature("misssbm_path","missing"),
           definition = function(x,type='blocks'){
             switch(type,tree = {
               dendo(x)

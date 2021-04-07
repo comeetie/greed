@@ -9,6 +9,7 @@ NULL
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter
 #' @slot beta Dirichlet prior parameter over Multinomial links
+#' @slot type define the type of networks (either "directed" or "undirected", default to "directed")
 #' @export 
 setClass("multsbm",
          representation = list(beta = "numeric",type="character"),

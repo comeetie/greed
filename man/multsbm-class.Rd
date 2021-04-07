@@ -15,5 +15,7 @@ An S4 class to represent a Multinomial Stochastic Block Model, extend \code{\lin
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter}
 
 \item{\code{beta}}{Dirichlet prior parameter over Multinomial links}
+
+\item{\code{type}}{define the type of networks (either "directed" or "undirected", default to "directed")}
 }}
 

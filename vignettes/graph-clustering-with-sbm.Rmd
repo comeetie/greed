@@ -24,17 +24,16 @@ library(future)
 library(Matrix)
 library(ggplot2)
 library(greed)
-#plan(multicore)
 ```
 
 Simulation of an SBM graph with a hierarchical structure.
 ```{r, fig.show='hold'}
-N=800
-K=8
+N=400
+K=6
 pi=rep(1/K,K)
 lambda  = 0.1
 lambda_o = 0.01
-Ks=4
+Ks=3
 mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
 sbm = rsbm(N,pi,mu)
 ```

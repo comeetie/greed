@@ -67,7 +67,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
                 i2 = sample(ip[-i1],1,prob=ip[-i1])
                 s1 = solutions[[i1]]
                 s2 = solutions[[i2]]
-                new_solutions[[i]] = full_cross_over(s1,s2,fimerge,fiswap,pmut,Kmax)  %globals% c("s1","s2","fimerge","fiswap","pmut","full_cross_over","Kmax")
+                new_solutions[[i]] %<-% full_cross_over(s1,s2,fimerge,fiswap,pmut,Kmax)  %globals% c("s1","s2","fimerge","fiswap","pmut","full_cross_over","Kmax")
               }
               solutions = c(bres,as.list(new_solutions))
               icls = sapply(solutions,function(s){s@icl})
@@ -97,6 +97,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             res = solutions[[order(icls,decreasing = TRUE)[1]]]
             # compute merge path
             path = fit_greed_path(data,res)
+            
             # clean the resuts (compute, merge tree,...)
             path = cleanpathopt(path)
             # store train history

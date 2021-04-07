@@ -48,7 +48,6 @@ double MultSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
   double icl_emiss = 0;
   int k = 0;
   int l = 0;
-  int cc = 0;
   for (arma::uword i = 0;i<si.n_rows;++i){
     k=si(i,0);
     l=si(i,1);
@@ -80,7 +79,7 @@ arma::mat MultSbm::delta_swap(int i,arma::uvec iclust){
   cur_row.fill(0);
   arma::mat cur_col(M,K);
   cur_col.fill(0);
-  for(int j = 0; j < x.n_rows; ++j) {
+  for(arma::uword j = 0; j < x.n_rows; ++j) {
     if(j!=i){
       arma::colvec curr = x.tube(i,j);
       cur_row.col(cl(j))=cur_row.col(cl(j))+curr;
@@ -92,20 +91,20 @@ arma::mat MultSbm::delta_swap(int i,arma::uvec iclust){
   
   int k = 0;
   // for each possible move
-  for(int j = 0; j < iclust.n_elem; ++j) {
+  for(arma::uword j = 0; j < iclust.n_elem; ++j) {
     k=iclust(j);
     if(k!=oldcl){
       arma::cube new_ec = x_counts;
       arma::vec new_counts = update_count(counts,oldcl,k);
       // todo
       
-      for (int m=0;m<M;++m){
+      for (arma::uword  m=0;m<M;++m){
         new_ec(oldcl,oldcl,m)=new_ec(oldcl,oldcl,m)-self(m);
         new_ec(k,k,m)=new_ec(k,k,m)+self(m);
       }
       
-      for (int l=0; l<K;++l){
-        for (int m=0;m<M;++m){
+      for (arma::uword  l=0; l<K;++l){
+        for (arma::uword  m=0;m<M;++m){
           new_ec(oldcl,l,m)=new_ec(oldcl,l,m)-cur_row(m,l);
           new_ec(k,l,m)=new_ec(k,l,m)+cur_row(m,l);
           new_ec(l,oldcl,m)=new_ec(l,oldcl,m)-cur_col(m,l);
@@ -129,7 +128,7 @@ void MultSbm::swap_update(const int i,const int newcl){
   cur_row.fill(0);
   arma::mat cur_col(M,K);
   cur_col.fill(0);
-  for(int j = 0; j < x.n_rows; ++j) {
+  for(arma::uword  j = 0; j < x.n_rows; ++j) {
     if(j!=i){
       arma::colvec curr = x.tube(i,j);
       cur_row.col(cl(j))=cur_row.col(cl(j))+curr;
@@ -139,12 +138,12 @@ void MultSbm::swap_update(const int i,const int newcl){
   }
   counts = update_count(counts,oldcl,newcl);
   
-  for (int m=0;m<M;m++){
+  for (arma::uword m=0;m<M;m++){
     x_counts(oldcl,oldcl,m)=x_counts(oldcl,oldcl,m)-self(m);
     x_counts(newcl,newcl,m)=x_counts(newcl,newcl,m)+self(m);
   }
-  for (int l=0; l<K;++l){
-    for (int m=0;m<M;m++){
+  for (arma::uword  l=0; l<K;++l){
+    for (arma::uword  m=0;m<M;m++){
       x_counts(oldcl,l,m)=x_counts(oldcl,l,m)-cur_row(m,l);
       x_counts(newcl,l,m)=x_counts(newcl,l,m)+cur_row(m,l);
       x_counts(l,oldcl,m)=x_counts(l,oldcl,m)-cur_col(m,l);
@@ -174,8 +173,8 @@ double MultSbm::delta_merge(int k, int l){
   
   new_ec.tube(l,l)=new_ec.tube(l,l)+new_ec.tube(k,k);
   new_ec.tube(k,k)=new_ec.tube(k,k)-new_ec.tube(k,k);
-  for (int h=0; h<K;++h){
-    for (int m=0;m<M;m++){
+  for (arma::uword  h=0; h<K;++h){
+    for (arma::uword  m=0;m<M;m++){
       new_ec(l,h,m)=new_ec(l,h,m)+new_ec(k,h,m);
       new_ec(k,h,m)=new_ec(k,h,m)-new_ec(k,h,m);
       new_ec(h,l,m)=new_ec(h,l,m)+new_ec(h,k,m);
@@ -211,8 +210,8 @@ double MultSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & 
   }else{
     lo=l;
   }
-  for(int i=0;i<2;i++){
-    for (int j=0;j<2;j++){
+  for(arma::uword  i=0;i<2;i++){
+    for (arma::uword  j=0;j<2;j++){
       
       
       a = kl(i);
@@ -278,8 +277,8 @@ void MultSbm::merge_update(int k, int l){
   new_counts(k)=0;
   new_ec.tube(l,l)=new_ec.tube(l,l)+new_ec.tube(k,k);
   new_ec.tube(k,k)=new_ec.tube(k,k)-new_ec.tube(k,k);
-  for (int h=0; h<K;++h){
-    for (int m=0;m<M;m++){
+  for (arma::uword  h=0; h<K;++h){
+    for (arma::uword  m=0;m<M;m++){
       new_ec(l,h,m)=new_ec(l,h,m)+new_ec(k,h,m);
       new_ec(k,h,m)=new_ec(k,h,m)-new_ec(k,h,m);
       new_ec(h,l,m)=new_ec(h,l,m)+new_ec(h,k,m);
