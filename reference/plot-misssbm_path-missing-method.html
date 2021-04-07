@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Clustering with a Multinomial Stochastic Block Model description class — multsbm-class • greed</title>
+<title>plot a sbm_path-class object — plot,misssbm_path,missing-method • greed</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Clustering with a Multinomial Stochastic Block Model description class — multsbm-class" />
-<meta property="og:description" content="An S4 class to represent a Multinomial Stochastic Block Model, extend icl_model-class." />
+<meta property="og:title" content="plot a sbm_path-class object — plot,misssbm_path,missing-method" />
+<meta property="og:description" content="plot a sbm_path-class object" />
 
 
 
@@ -126,31 +126,40 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Clustering with a Multinomial Stochastic Block Model description class</h1>
-    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/multsbm.R'><code>R/multsbm.R</code></a></small>
-    <div class="hidden name"><code>multsbm-class.Rd</code></div>
+    <h1>plot a <code><a href='sbm_path-class.html'>sbm_path-class</a></code> object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/misssbm.R'><code>R/misssbm.R</code></a></small>
+    <div class="hidden name"><code>plot-misssbm_path-missing-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An S4 class to represent a Multinomial Stochastic Block Model, extend <code><a href='icl_model-class.html'>icl_model-class</a></code>.</p>
+    <p>plot a <code><a href='sbm_path-class.html'>sbm_path-class</a></code> object</p>
     </div>
 
+    <pre class="usage"><span class='co'># S4 method for misssbm_path,missing</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>, type <span class='op'>=</span> <span class='st'>"blocks"</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>an <code><a href='sbm_path-class.html'>sbm_path-class</a></code> object</p></td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td><p>a string which specify plot type:</p><ul>
+<li><p><code>'blocks'</code>: plot a block matrix with summarizing connections between clusters</p></li>
+<li><p><code>'nodelink'</code>: plot a nodelink diagram of the bipartite graph summarizing connections between clusters</p></li>
+<li><p><code>'front'</code>: plot the extracted front ICL, log(alpha)</p></li>
+<li><p><code>'path'</code>: plot the evolution of ICL with respect to K</p></li>
+<li><p><code>'tree'</code>: plot the associated dendrogram</p></li>
+</ul></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-
-<dl>
-<dt><code>name</code></dt><dd><p>name of the model</p></dd>
-
-<dt><code>alpha</code></dt><dd><p>Dirichlet over cluster proportions prior parameter</p></dd>
-
-<dt><code>beta</code></dt><dd><p>Dirichlet prior parameter over Multinomial links</p></dd>
-
-<dt><code>type</code></dt><dd><p>define the type of networks (either "directed" or "undirected", default to "directed")</p></dd>
-
-</dl>
+    <p>a <code>ggplot2</code> graphic</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
