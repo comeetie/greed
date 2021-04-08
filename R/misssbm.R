@@ -147,19 +147,19 @@ reorder_misssbm = function(obs_stats,or){
 
 
 setMethod(f = "reorder", 
-          signature = signature("sbm", "list","integer"), 
+          signature = signature("misssbm", "list","integer"), 
           definition = function(model, obs_stats,order){
             reorder_misssbm(obs_stats,order)
           })
 
 setMethod(f = "seed", 
-          signature = signature("sbm","list","numeric"), 
+          signature = signature("misssbm","list","numeric"), 
           definition = function(model,data, K){
             spectral(data$X,K)
           })
 
 setMethod(f = "preprocess", 
-          signature = signature("sbm"), 
+          signature = signature("misssbm"), 
           definition = function(model, data){
             if(!(methods::is(data,"dgCMatrix") | methods::is(data,"matrix"))){
               stop("An sbm model expect a matrix or a sparse (dgCMatrix) matrix.",call. = FALSE)

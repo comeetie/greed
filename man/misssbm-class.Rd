@@ -9,7 +9,7 @@ An S4 class to represent a Stochastic Block Model with a sampling scheme for mis
 Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :  
 \deqn{ \pi \sim Dirichlet(\alpha}
 \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
-\deqn{ \theta_{kl} & \sim Beta(a_0,b_0)}
+\deqn{ \theta_{kl} \sim Beta(a_0,b_0)}
 \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\theta_{kl})}
 This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model in the following slots:
 }
