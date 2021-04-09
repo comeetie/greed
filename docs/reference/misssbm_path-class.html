@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Hybrid optimization algorithm — hybrid-class • greed</title>
+<title>Stochastic Block Model with sampling scheme hierarchical fit results class — misssbm_path-class • greed</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Hybrid optimization algorithm — hybrid-class" />
-<meta property="og:description" content="An S4 class to represent an hybrid genetic/greedy algorithm (extends alg-class class)." />
+<meta property="og:title" content="Stochastic Block Model with sampling scheme hierarchical fit results class — misssbm_path-class" />
+<meta property="og:description" content="An S4 class to represent a hierarchical fit of a stochastic block model, extend icl_path-class." />
 
 
 
@@ -126,13 +126,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Hybrid optimization algorithm</h1>
-    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/alg_classes.R'><code>R/alg_classes.R</code></a></small>
-    <div class="hidden name"><code>hybrid-class.Rd</code></div>
+    <h1>Stochastic Block Model with sampling scheme hierarchical fit results class</h1>
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/misssbm.R'><code>R/misssbm.R</code></a></small>
+    <div class="hidden name"><code>misssbm_path-class.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An S4 class to represent an hybrid genetic/greedy algorithm (extends <code><a href='alg-class.html'>alg-class</a></code> class).</p>
+    <p>An S4 class to represent a hierarchical fit of a stochastic block model, extend <code><a href='icl_path-class.html'>icl_path-class</a></code>.</p>
     </div>
 
 
@@ -142,13 +142,30 @@
     
 
 <dl>
-<dt><code>pop_size</code></dt><dd><p>size of the solutions populations (default to 20)</p></dd>
+<dt><code>model</code></dt><dd><p>a <code><a href='sbm-class.html'>sbm-class</a></code> object to store the model fitted</p></dd>
 
-<dt><code>nb_max_gen</code></dt><dd><p>maximal number of generation to produce (default to 10)</p></dd>
+<dt><code>name</code></dt><dd><p>generative model name</p></dd>
 
-<dt><code>prob_mutation</code></dt><dd><p>mutation probability (default to 0.25)</p></dd>
+<dt><code>icl</code></dt><dd><p>icl value of the fitted model</p></dd>
 
-<dt><code>Kmax</code></dt><dd><p>maximum number of clusters (default to 100)</p></dd>
+<dt><code>K</code></dt><dd><p>number of extracted clusters over row and columns</p></dd>
+
+<dt><code>cl</code></dt><dd><p>a numeric vector with row and columns cluster indexes</p></dd>
+
+<dt><code>obs_stats</code></dt><dd><p>a list with the following elements:
+<ul>
+<li><p>counts: numeric vector of size K with number of elements in each clusters</p></li>
+<li><p>x_counts: matrix of size K*K with the number of observed links between each pair of clusters</p></li>
+<li><p>x_counts_obs: matrix of size K*K with the number of observed dyads between each pair of clusters</p></li>
+</ul></p></dd>
+
+<dt><code>logalpha</code></dt><dd><p>value of log(alpha)</p></dd>
+
+<dt><code>ggtree</code></dt><dd><p>data.frame with complete merge tree for easy plotting with <code>ggplot2</code></p></dd>
+
+<dt><code>tree</code></dt><dd><p>numeric vector with merge tree <code>tree[i]</code> contains the index of <code>i</code> father</p></dd>
+
+<dt><code>train_hist</code></dt><dd><p>data.frame with training history information (details depends on the training procedure)</p></dd>
 
 </dl>
 

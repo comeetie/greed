@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Hybrid optimization algorithm — hybrid-class • greed</title>
+<title>plot a sbm_path-class object — plot,misssbm_path,missing-method • greed</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Hybrid optimization algorithm — hybrid-class" />
-<meta property="og:description" content="An S4 class to represent an hybrid genetic/greedy algorithm (extends alg-class class)." />
+<meta property="og:title" content="plot a sbm_path-class object — plot,misssbm_path,missing-method" />
+<meta property="og:description" content="plot a sbm_path-class object" />
 
 
 
@@ -126,31 +126,40 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Hybrid optimization algorithm</h1>
-    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/alg_classes.R'><code>R/alg_classes.R</code></a></small>
-    <div class="hidden name"><code>hybrid-class.Rd</code></div>
+    <h1>plot a <code><a href='sbm_path-class.html'>sbm_path-class</a></code> object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/misssbm.R'><code>R/misssbm.R</code></a></small>
+    <div class="hidden name"><code>plot-misssbm_path-missing-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An S4 class to represent an hybrid genetic/greedy algorithm (extends <code><a href='alg-class.html'>alg-class</a></code> class).</p>
+    <p>plot a <code><a href='sbm_path-class.html'>sbm_path-class</a></code> object</p>
     </div>
 
+    <pre class="usage"><span class='co'># S4 method for misssbm_path,missing</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>, type <span class='op'>=</span> <span class='st'>"blocks"</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>an <code><a href='sbm_path-class.html'>sbm_path-class</a></code> object</p></td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td><p>a string which specify plot type:</p><ul>
+<li><p><code>'blocks'</code>: plot a block matrix with summarizing connections between clusters</p></li>
+<li><p><code>'nodelink'</code>: plot a nodelink diagram of the bipartite graph summarizing connections between clusters</p></li>
+<li><p><code>'front'</code>: plot the extracted front ICL, log(alpha)</p></li>
+<li><p><code>'path'</code>: plot the evolution of ICL with respect to K</p></li>
+<li><p><code>'tree'</code>: plot the dendrogram</p></li>
+</ul></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-
-<dl>
-<dt><code>pop_size</code></dt><dd><p>size of the solutions populations (default to 20)</p></dd>
-
-<dt><code>nb_max_gen</code></dt><dd><p>maximal number of generation to produce (default to 10)</p></dd>
-
-<dt><code>prob_mutation</code></dt><dd><p>mutation probability (default to 0.25)</p></dd>
-
-<dt><code>Kmax</code></dt><dd><p>maximum number of clusters (default to 100)</p></dd>
-
-</dl>
+    <p>a <code>ggplot2</code> graphic</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

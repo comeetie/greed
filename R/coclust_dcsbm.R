@@ -3,9 +3,18 @@ NULL
 
 
 
-#' @title Co-clustering with a degree corrected stochastic block model class
+#' @title Degree Corrected Stochastic Block Model for bipartite graph class
 #' 
-#' @description An S4 class to represent a degree corrected stochastic block model for co_clustering, extends \code{\link{icl_model-class}} class.
+#' @description An S4 class to represent a degree corrected stochastic block model for co_clustering of bipartite graph, extends \code{\link{icl_model-class}} class.
+#' Such model can be used to cluster graph vertex, and model a bipartite graph adjacency matrix \eqn{X} with the following generative model :  
+#' \deqn{ \pi \sim Dirichlet(\alpha)}
+#' \deqn{ Z_i^r  \sim \mathcal{M}(1,\pi^r)}
+#' \deqn{ Z_j^c  \sim \mathcal{M}(1,\pi^c)}
+#' \deqn{ \theta_{kl} \sim Exponential(p)}
+#' \deqn{ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)}
+#' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)}
+#' The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity. 
+#' These parameters have uniform priors over simplex \eqn{S_k}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
 #' @slot alpha Dirichlet parameters for the prior over clusters proportions (default to 1)
 #' @examples 
 #' new("co_dcsbm")

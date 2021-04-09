@@ -7,7 +7,7 @@ NULL
 #' @description 
 #' An S4 class to represent a Stochastic Block Model, extend \code{\link{icl_model-class}}. 
 #' Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :  
-#' \deqn{ \pi \sim Dirichlet(\alpha}
+#' \deqn{ \pi \sim Dirichlet(\alpha)}
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 #' \deqn{ \theta_{kl} \sim Beta(a_0,b_0)}
 #' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\theta_{kl})}
@@ -16,8 +16,8 @@ NULL
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot a0 Beta prior parameter over links (default to 1)
 #' @slot b0 Beta prior parameter over no-links (default to 1)
-#' @slot type define the type of networks (either "directed" or "undirected", default to "directed")
-#' @seealso \code{\link{sbm_fit-class}},\code{\link{sbm_path-class}}  
+#' @slot type define the type of networks (either "directed" or "undirected", default to "directed"), for undirected graphs the adjacency matrix is supposed to be symetric.
+#' @seealso \code{\link{sbm_fit-class}},\code{\link{sbm_path-class}}
 #' @seealso \code{\link{greed}}
 #' @examples 
 #' new("sbm")
@@ -52,8 +52,7 @@ setClass("sbm",
 setClass("sbm_fit",slots = list(model="sbm"),contains="icl_fit")
 
 
-#' @title Clustering with a stochastic block model path extraction results class
-#' 
+#' @title Stochastic Block Model hierarchical fit results class
 #' 
 #' @description An S4 class to represent a hierarchical fit of a stochastic block model, extend \code{\link{icl_path-class}}.
 #' @slot model a \code{\link{sbm-class}} object to store the model fitted
@@ -74,7 +73,11 @@ setClass("sbm_fit",slots = list(model="sbm"),contains="icl_fit")
 #' \item cl: vector of cluster indexes
 #' \item k,l: index of the cluster that were merged at this step
 #' \item merge_mat: lower triangular matrix of delta icl values 
-#' \item obs_stats: a list with the same elements
+#' \item obs_stats: a list with the following elements:
+#' \itemize{
+#' \item counts: numeric vector of size K with number of elements in each clusters
+#' \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
+#' }
 #' }
 #' @slot logalpha value of log(alpha)
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
@@ -93,6 +96,7 @@ setClass("sbm_path",contains=c("icl_path","sbm_fit"))
 #' \item \code{'nodelink'}: plot a nodelink diagram of the graph summarizing connections between clusters
 #' }
 #' @return a \code{\link{ggplot2}} graphic
+#' @rdname plot-sbm_fit
 #' @export 
 setMethod(f = "plot", 
           signature = signature("sbm_fit","missing"),

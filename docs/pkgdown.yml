@@ -3,6 +3,5 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   graph-clustering-with-sbm: graph-clustering-with-sbm.html
-  missingdata: missingdata.html
-last_built: 2021-03-16T11:58Z
+last_built: 2021-04-09T14:08Z
 

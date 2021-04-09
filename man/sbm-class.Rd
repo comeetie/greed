@@ -7,7 +7,7 @@
 \description{
 An S4 class to represent a Stochastic Block Model, extend \code{\link{icl_model-class}}. 
 Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :  
-\deqn{ \pi \sim Dirichlet(\alpha}
+\deqn{ \pi \sim Dirichlet(\alpha)}
 \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 \deqn{ \theta_{kl} \sim Beta(a_0,b_0)}
 \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\theta_{kl})}
@@ -24,7 +24,7 @@ This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this 
 
 \item{\code{b0}}{Beta prior parameter over no-links (default to 1)}
 
-\item{\code{type}}{define the type of networks (either "directed" or "undirected", default to "directed")}
+\item{\code{type}}{define the type of networks (either "directed" or "undirected", default to "directed"), for undirected graphs the adjacency matrix is supposed to be symetric.}
 }}
 
 \examples{

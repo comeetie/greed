@@ -3,9 +3,17 @@
 \docType{class}
 \name{dcsbm-class}
 \alias{dcsbm-class}
-\title{Clustering with a degree corrected stochastic block model description class}
+\title{Degree Corrected Stochastic Block Model class}
 \description{
 An S4 class to represent a degree corrected stochastic block model, extend \code{\link{icl_model-class}}.
+Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :  
+\deqn{ \pi \sim Dirichlet(\alpha)}
+\deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
+\deqn{ \theta_{kl} \sim Exponential(p)}
+\deqn{ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)}
+\deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)}
+The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity. 
+These parameters have uniform priors over simplex \eqn{S_k}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
 }
 \section{Slots}{
 

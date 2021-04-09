@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Hybrid optimization algorithm — hybrid-class • greed</title>
+<title>Convert a binary adjacency matrix with missing value to a cube — to_multinomial • greed</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Hybrid optimization algorithm — hybrid-class" />
-<meta property="og:description" content="An S4 class to represent an hybrid genetic/greedy algorithm (extends alg-class class)." />
+<meta property="og:title" content="Convert a binary adjacency matrix with missing value to a cube — to_multinomial" />
+<meta property="og:description" content="Convert a binary adjacency matrix with missing value to a cube" />
 
 
 
@@ -126,31 +126,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Hybrid optimization algorithm</h1>
-    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/alg_classes.R'><code>R/alg_classes.R</code></a></small>
-    <div class="hidden name"><code>hybrid-class.Rd</code></div>
+    <h1>Convert a binary adjacency matrix with missing value to a cube</h1>
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/misc.R'><code>R/misc.R</code></a></small>
+    <div class="hidden name"><code>to_multinomial.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An S4 class to represent an hybrid genetic/greedy algorithm (extends <code><a href='alg-class.html'>alg-class</a></code> class).</p>
+    <p>Convert a binary adjacency matrix with missing value to a cube</p>
     </div>
 
+    <pre class="usage"><span class='fu'>to_multinomial</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>X</th>
+      <td><p>A binary adjacency matrix with NA</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-
-<dl>
-<dt><code>pop_size</code></dt><dd><p>size of the solutions populations (default to 20)</p></dd>
-
-<dt><code>nb_max_gen</code></dt><dd><p>maximal number of generation to produce (default to 10)</p></dd>
-
-<dt><code>prob_mutation</code></dt><dd><p>mutation probability (default to 0.25)</p></dd>
-
-<dt><code>Kmax</code></dt><dd><p>maximum number of clusters (default to 100)</p></dd>
-
-</dl>
+    <p>a cube</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
