@@ -42,11 +42,19 @@
 <meta property="og:title" content="Stochastic Block Model with sampling scheme class — misssbm-class" />
 <meta property="og:description" content="An S4 class to represent a Stochastic Block Model with a sampling scheme for missing data, extend icl_model-class. 
 Such model can be used to cluster graph vertex, and model a square adjacency matrix \(X\) with the following generative model :  
-$$ \pi \sim Dirichlet(\alpha$$
+$$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
 $$ \theta_{kl} \sim Beta(a_0,b_0)$$
 $$ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\theta_{kl})$$
-This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this generative model in the following slots:" />
+Missing value are supposed to be generated afterwards, the observation process correspond to a binary matrix \(R\) of the same size as \(X\), 
+with \(R_{ij}=1\) for observed entries and \(R_{ij}=0\) for missing ones. \(R\) may be supposed to be MAR:
+$$ \epsilon \sim Beta(a_{0obs},b_{0obs})$$
+$$ R_{ij} \sim \mathcal{B}(\epsilon)$$
+this correspond to the &quot;dyad&quot; sampling scheme. But the sampling scheme can also be NMAR:
+$$ \epsilon_{kl} \sim Beta(a_{0obs},b_{0obs})$$
+$$ R_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\epsilon_{kl})$$
+this correspond to the &quot;block-dyad&quot; sampling scheme.
+This class mainly store the prior parameters value \(\alpha,a_0,b_0,a_{0obs},b_{0obs}\) of this generative model in the following slots:" />
 
 
 
@@ -140,11 +148,19 @@ This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this ge
     <div class="ref-description">
     <p>An S4 class to represent a Stochastic Block Model with a sampling scheme for missing data, extend <code><a href='icl_model-class.html'>icl_model-class</a></code>. 
 Such model can be used to cluster graph vertex, and model a square adjacency matrix \(X\) with the following generative model :  
-$$ \pi \sim Dirichlet(\alpha$$
+$$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
 $$ \theta_{kl} \sim Beta(a_0,b_0)$$
 $$ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\theta_{kl})$$
-This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this generative model in the following slots:</p>
+Missing value are supposed to be generated afterwards, the observation process correspond to a binary matrix \(R\) of the same size as \(X\), 
+with \(R_{ij}=1\) for observed entries and \(R_{ij}=0\) for missing ones. \(R\) may be supposed to be MAR:
+$$ \epsilon \sim Beta(a_{0obs},b_{0obs})$$
+$$ R_{ij} \sim \mathcal{B}(\epsilon)$$
+this correspond to the "dyad" sampling scheme. But the sampling scheme can also be NMAR:
+$$ \epsilon_{kl} \sim Beta(a_{0obs},b_{0obs})$$
+$$ R_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\epsilon_{kl})$$
+this correspond to the "block-dyad" sampling scheme.
+This class mainly store the prior parameters value \(\alpha,a_0,b_0,a_{0obs},b_{0obs}\) of this generative model in the following slots:</p>
     </div>
 
 
@@ -164,9 +180,9 @@ This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this ge
 
 <dt><code>type</code></dt><dd><p>define the type of networks (either "directed" or "undirected", default to "directed")</p></dd>
 
-<dt><code>sampling</code></dt><dd><p>define the sampling process (either "diad" or "block-diad" )</p></dd>
+<dt><code>sampling</code></dt><dd><p>define the sampling process (either "dyad" or "block-dyad" )</p></dd>
 
-<dt><code>sampling_priors</code></dt><dd><p>define the sampling process priors paramters (list with <code>a0obs</code> and <code>b0obs</code> fields.)</p></dd>
+<dt><code>sampling_priors</code></dt><dd><p>define the sampling process priors parameters (list with <code>a0obs</code> and <code>b0obs</code> fields.)</p></dd>
 
 </dl>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
@@ -174,12 +190,23 @@ This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this ge
     <p>Nowicki, Krzysztof and Tom A B Snijders (2001). “Estimation and prediction for stochastic block structures”. In:Journal of the American statistical association 96.455, pp. 1077–1087</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='sbm_fit-class.html'>sbm_fit-class</a></code>,<code><a href='sbm_path-class.html'>sbm_path-class</a></code></p>
+    <div class='dont-index'><p><code><a href='misssbm_fit-class.html'>misssbm_fit-class</a></code>,<code><a href='misssbm_path-class.html'>misssbm_path-class</a></code></p>
 <p><code><a href='greed.html'>greed</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>new</span><span class='op'>(</span><span class='st'>"sbm"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; An object of class "sbm"
+    <pre class="examples"><div class='input'><span class='fu'>new</span><span class='op'>(</span><span class='st'>"misssbm"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; An object of class "misssbm"
+#&gt; Slot "sampling":
+#&gt; [1] "block-dyad"
+#&gt; 
+#&gt; Slot "sampling_priors":
+#&gt; $a0obs
+#&gt; [1] 1
+#&gt; 
+#&gt; $b0obs
+#&gt; [1] 1
+#&gt; 
+#&gt; 
 #&gt; Slot "a0":
 #&gt; [1] 1
 #&gt; 
@@ -190,12 +217,23 @@ This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this ge
 #&gt; [1] "directed"
 #&gt; 
 #&gt; Slot "name":
-#&gt; [1] "sbm"
+#&gt; [1] "misssbm"
 #&gt; 
 #&gt; Slot "alpha":
 #&gt; [1] 1
-#&gt; </div><div class='input'><span class='fu'>new</span><span class='op'>(</span><span class='st'>"sbm"</span>,a0<span class='op'>=</span><span class='fl'>0.5</span>, b0<span class='op'>=</span> <span class='fl'>0.5</span>,alpha<span class='op'>=</span><span class='fl'>0.5</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; An object of class "sbm"
+#&gt; </div><div class='input'><span class='fu'>new</span><span class='op'>(</span><span class='st'>"misssbm"</span>,a0<span class='op'>=</span><span class='fl'>0.5</span>, b0<span class='op'>=</span> <span class='fl'>0.5</span>,alpha<span class='op'>=</span><span class='fl'>0.5</span>,sampling<span class='op'>=</span><span class='st'>"dyad"</span>,sampling_priors<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>a0obs <span class='op'>=</span> <span class='fl'>2</span>,b0obs <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; An object of class "misssbm"
+#&gt; Slot "sampling":
+#&gt; [1] "dyad"
+#&gt; 
+#&gt; Slot "sampling_priors":
+#&gt; $a0obs
+#&gt; [1] 2
+#&gt; 
+#&gt; $b0obs
+#&gt; [1] 1
+#&gt; 
+#&gt; 
 #&gt; Slot "a0":
 #&gt; [1] 0.5
 #&gt; 
@@ -206,18 +244,18 @@ This class mainly store the prior parameters value \(\alpha,a_0,b_0\) of this ge
 #&gt; [1] "directed"
 #&gt; 
 #&gt; Slot "name":
-#&gt; [1] "sbm"
+#&gt; [1] "misssbm"
 #&gt; 
 #&gt; Slot "alpha":
 #&gt; [1] 0.5
 #&gt; </div><div class='input'><span class='va'>sbm</span> <span class='op'>=</span> <span class='fu'><a href='rsbm.html'>rsbm</a></span><span class='op'>(</span><span class='fl'>100</span>,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.5</span>,<span class='fl'>0.5</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>*</span><span class='fl'>0.1</span><span class='op'>+</span><span class='fl'>0.01</span><span class='op'>)</span>
-<span class='va'>sol</span> <span class='op'>=</span> <span class='fu'><a href='greed.html'>greed</a></span><span class='op'>(</span><span class='va'>sbm</span><span class='op'>$</span><span class='va'>x</span>,model<span class='op'>=</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"sbm"</span>,a0<span class='op'>=</span><span class='fl'>0.5</span>, b0<span class='op'>=</span> <span class='fl'>0.5</span>,alpha<span class='op'>=</span><span class='fl'>0.5</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; ------- directed SBM model fitting ------
-#&gt; ################# Generation  1: best solution with an ICL of -2132 and 4 clusters #################
-#&gt; ################# Generation  2: best solution with an ICL of -2105 and 2 clusters #################
-#&gt; ################# Generation  3: best solution with an ICL of -2105 and 2 clusters #################
+<span class='va'>sbm</span><span class='op'>$</span><span class='va'>x</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'>base</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>,<span class='fl'>50</span><span class='op'>)</span>,<span class='fu'>base</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>,<span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span><span class='op'>]</span><span class='op'>=</span><span class='cn'>NA</span>
+<span class='va'>sol</span> <span class='op'>=</span> <span class='fu'><a href='greed.html'>greed</a></span><span class='op'>(</span><span class='va'>sbm</span><span class='op'>$</span><span class='va'>x</span>,model<span class='op'>=</span><span class='fu'>new</span><span class='op'>(</span><span class='st'>"misssbm"</span>,sampling<span class='op'>=</span><span class='st'>"dyad"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; ------- directed MISSSBM with dyad sampling model fitting ------
+#&gt; ################# Generation  1: best solution with an ICL of -2419 and 2 clusters #################
+#&gt; ################# Generation  2: best solution with an ICL of -2419 and 2 clusters #################
 #&gt; ------- Final clustering -------
-#&gt; ICL clustering with a SBM model, 2 clusters and an icl of -2105.</div></pre>
+#&gt; ICL clustering with a MISSSBM model, 2 clusters and an icl of -2419.</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

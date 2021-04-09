@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Clustering with a Multinomial Stochastic Block Model description class — multsbm-class • greed</title>
+<title>Multinomial Stochastic Block Model class — multsbm-class • greed</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,13 @@
 
 
 
-<meta property="og:title" content="Clustering with a Multinomial Stochastic Block Model description class — multsbm-class" />
-<meta property="og:description" content="An S4 class to represent a Multinomial Stochastic Block Model, extend icl_model-class." />
+<meta property="og:title" content="Multinomial Stochastic Block Model class — multsbm-class" />
+<meta property="og:description" content="An S4 class to represent a Multinomial Stochastic Block Model, extend icl_model-class. Such model can be used to cluster multilayer-graph vertex, and model a square adjacency cube \(X\) of size NxNxM with the following generative model :  
+$$ \pi \sim Dirichlet(\alpha)$$
+$$ Z_i  \sim \mathcal{M}(1,\pi)$$
+$$ \theta_{kl} \sim Dirichlet(\beta)$$
+$$ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{M}(L_{ij},\theta_{kl})$$
+With \(L_{ij}=\sum_{m=1}^MX_{ijm}\). This class mainly store the prior parameters value \(\alpha,\beta\) of this generative model in the following slots:" />
 
 
 
@@ -126,13 +131,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Clustering with a Multinomial Stochastic Block Model description class</h1>
+    <h1>Multinomial Stochastic Block Model class</h1>
     <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/multsbm.R'><code>R/multsbm.R</code></a></small>
     <div class="hidden name"><code>multsbm-class.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An S4 class to represent a Multinomial Stochastic Block Model, extend <code><a href='icl_model-class.html'>icl_model-class</a></code>.</p>
+    <p>An S4 class to represent a Multinomial Stochastic Block Model, extend <code><a href='icl_model-class.html'>icl_model-class</a></code>. Such model can be used to cluster multilayer-graph vertex, and model a square adjacency cube \(X\) of size NxNxM with the following generative model :  
+$$ \pi \sim Dirichlet(\alpha)$$
+$$ Z_i  \sim \mathcal{M}(1,\pi)$$
+$$ \theta_{kl} \sim Dirichlet(\beta)$$
+$$ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{M}(L_{ij},\theta_{kl})$$
+With \(L_{ij}=\sum_{m=1}^MX_{ijm}\). This class mainly store the prior parameters value \(\alpha,\beta\) of this generative model in the following slots:</p>
     </div>
 
 
@@ -151,6 +161,9 @@
 <dt><code>type</code></dt><dd><p>define the type of networks (either "directed" or "undirected", default to "directed")</p></dd>
 
 </dl>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='multsbm_fit-class.html'>multsbm_fit-class</a></code>, <code><a href='multsbm_path-class.html'>multsbm_path-class</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

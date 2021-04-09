@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Model based hierarchical clustering — greed • greed</title>
+<title>plot a sbm_fit-class object — plot,sbm_fit,missing-method • greed</title>
 
 
 <!-- jquery -->
@@ -39,14 +39,8 @@
 
 
 
-<meta property="og:title" content="Model based hierarchical clustering — greed" />
-<meta property="og:description" content="
-
-
-Greed enable the clustering of networks and counts data such as document/term matrix with different model. 
-Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood.
-The optimization is performed thanks to a combination of greedy local search and a genetic algorithm. 
-The main entry point is the greed function to perform the clustering." />
+<meta property="og:title" content="plot a sbm_fit-class object — plot,sbm_fit,missing-method" />
+<meta property="og:description" content="plot a sbm_fit-class object" />
 
 
 
@@ -132,57 +126,37 @@ The main entry point is the greed function to perform the clustering." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Model based hierarchical clustering</h1>
-    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/alg_classes.R'><code>R/alg_classes.R</code></a>, <a href='https://github.com/comeetie/greed/blob/master/R/greed.R'><code>R/greed.R</code></a></small>
-    <div class="hidden name"><code>greed.Rd</code></div>
+    <h1>plot a <code><a href='sbm_fit-class.html'>sbm_fit-class</a></code> object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/sbm.R'><code>R/sbm.R</code></a></small>
+    <div class="hidden name"><code>plot-sbm_fit.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    
-
-
-<p>Greed enable the clustering of networks and counts data such as document/term matrix with different model. 
-Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood.
-The optimization is performed thanks to a combination of greedy local search and a genetic algorithm. 
-The main entry point is the <code>greed</code> function to perform the clustering.</p>
+    <p>plot a <code><a href='sbm_fit-class.html'>sbm_fit-class</a></code> object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>greed</span><span class='op'>(</span>
-  <span class='va'>X</span>,
-  K <span class='op'>=</span> <span class='fl'>20</span>,
-  model <span class='op'>=</span> <span class='fu'>find_model</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>,
-  alg <span class='op'>=</span> <span class='fu'>methods</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/methods/new.html'>new</a></span><span class='op'>(</span><span class='st'>"hybrid"</span><span class='op'>)</span>,
-  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='co'># S4 method for sbm_fit,missing</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>, type <span class='op'>=</span> <span class='st'>"blocks"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>X</th>
-      <td><p>data to cluster either a matrix,an array or a <code>dgCMatrix-class</code></p></td>
+      <th>x</th>
+      <td><p>a <code><a href='sbm_fit-class.html'>sbm_fit-class</a></code></p></td>
     </tr>
     <tr>
-      <th>K</th>
-      <td><p>initial number of cluster</p></td>
-    </tr>
-    <tr>
-      <th>model</th>
-      <td><p>a generative model to fit <code><a href='sbm-class.html'>sbm-class</a></code>, <code><a href='dcsbm-class.html'>dcsbm-class</a></code>, <code><a href='co_dcsbm-class.html'>co_dcsbm-class</a></code>, <code><a href='mm-class.html'>mm-class</a></code> or <code><a href='mvmreg-class.html'>mvmreg-class</a></code></p></td>
-    </tr>
-    <tr>
-      <th>alg</th>
-      <td><p>an optimization algorithm of class <code><a href='hybrid-class.html'>hybrid-class</a></code> (default), <code><a href='multistarts-class.html'>multistarts-class</a></code>, <code><a href='seed-class.html'>seed-class</a></code> or <code><a href='genetic-class.html'>genetic-class</a></code></p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>Boolean for verbose mode</p></td>
+      <th>type</th>
+      <td><p>a string which specify plot type:</p><ul>
+<li><p><code>'blocks'</code>: plot a block matrix with summarizing connections between clusters</p></li>
+<li><p><code>'nodelink'</code>: plot a nodelink diagram of the graph summarizing connections between clusters</p></li>
+</ul></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an <code><a href='icl_path-class.html'>icl_path-class</a></code> object</p>
+    <p>a <code>ggplot2</code> graphic</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
