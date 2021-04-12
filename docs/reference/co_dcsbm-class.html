@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Co-clustering with a degree corrected stochastic block model class — co_dcsbm-class • greed</title>
+<title>Degree Corrected Stochastic Block Model for bipartite graph class — co_dcsbm-class • greed</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,18 @@
 
 
 
-<meta property="og:title" content="Co-clustering with a degree corrected stochastic block model class — co_dcsbm-class" />
-<meta property="og:description" content="An S4 class to represent a degree corrected stochastic block model for co_clustering, extends icl_model-class class." />
+<meta property="og:title" content="Degree Corrected Stochastic Block Model for bipartite graph class — co_dcsbm-class" />
+<meta property="og:description" content="An S4 class to represent a degree corrected stochastic block model for co_clustering of bipartite graph, extends icl_model-class class.
+Such model can be used to cluster graph vertex, and model a bipartite graph adjacency matrix \(X\) with the following generative model :  
+$$ \pi \sim Dirichlet(\alpha)$$
+$$ Z_i^r  \sim \mathcal{M}(1,\pi^r)$$
+$$ Z_j^c  \sim \mathcal{M}(1,\pi^c)$$
+$$ \theta_{kl} \sim Exponential(p)$$
+$$ \gamma_i^r\sim \mathcal{U}(S_k)$$
+$$ \gamma_i^c\sim \mathcal{U}(S_l)$$
+$$ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)$$
+The individuals parameters \(\gamma_i^r,\gamma_j^-c\) allow to take into account the node degree heterogeneity. 
+These parameters have uniform priors over simplex \(S_k\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):" />
 
 
 
@@ -126,13 +136,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Co-clustering with a degree corrected stochastic block model class</h1>
+    <h1>Degree Corrected Stochastic Block Model for bipartite graph class</h1>
     <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/coclust_dcsbm.R'><code>R/coclust_dcsbm.R</code></a></small>
     <div class="hidden name"><code>co_dcsbm-class.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An S4 class to represent a degree corrected stochastic block model for co_clustering, extends <code><a href='icl_model-class.html'>icl_model-class</a></code> class.</p>
+    <p>An S4 class to represent a degree corrected stochastic block model for co_clustering of bipartite graph, extends <code><a href='icl_model-class.html'>icl_model-class</a></code> class.
+Such model can be used to cluster graph vertex, and model a bipartite graph adjacency matrix \(X\) with the following generative model :  
+$$ \pi \sim Dirichlet(\alpha)$$
+$$ Z_i^r  \sim \mathcal{M}(1,\pi^r)$$
+$$ Z_j^c  \sim \mathcal{M}(1,\pi^c)$$
+$$ \theta_{kl} \sim Exponential(p)$$
+$$ \gamma_i^r\sim \mathcal{U}(S_k)$$
+$$ \gamma_i^c\sim \mathcal{U}(S_l)$$
+$$ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)$$
+The individuals parameters \(\gamma_i^r,\gamma_j^-c\) allow to take into account the node degree heterogeneity. 
+These parameters have uniform priors over simplex \(S_k\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):</p>
     </div>
 
 

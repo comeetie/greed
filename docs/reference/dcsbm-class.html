@@ -41,14 +41,14 @@
 
 <meta property="og:title" content="Degree Corrected Stochastic Block Model class — dcsbm-class" />
 <meta property="og:description" content="An S4 class to represent a degree corrected stochastic block model, extend icl_model-class.
-#' Such model can be used to cluster graph vertex, and model a square adjacency matrix \(X\) with the following generative model :  
+Such model can be used to cluster graph vertex, and model a square adjacency matrix \(X\) with the following generative model :  
 $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
 $$ \theta_{kl} \sim Exponential(p)$$
 $$ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)$$
 $$ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)$$
 The individuals parameters \(\gamma_i^+,\gamma_i^-\) allow to take into account the node degree heterogeneity. 
-These parameters have uniform priors over simplex \(S_k\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connexion between two nodes):" />
+These parameters have uniform priors over simplex \(S_k\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):" />
 
 
 
@@ -141,14 +141,14 @@ These parameters have uniform priors over simplex \(S_k\). This class mainly sto
 
     <div class="ref-description">
     <p>An S4 class to represent a degree corrected stochastic block model, extend <code><a href='icl_model-class.html'>icl_model-class</a></code>.
-#' Such model can be used to cluster graph vertex, and model a square adjacency matrix \(X\) with the following generative model :  
+Such model can be used to cluster graph vertex, and model a square adjacency matrix \(X\) with the following generative model :  
 $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
 $$ \theta_{kl} \sim Exponential(p)$$
 $$ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)$$
 $$ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)$$
 The individuals parameters \(\gamma_i^+,\gamma_i^-\) allow to take into account the node degree heterogeneity. 
-These parameters have uniform priors over simplex \(S_k\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connexion between two nodes):</p>
+These parameters have uniform priors over simplex \(S_k\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):</p>
     </div>
 
 

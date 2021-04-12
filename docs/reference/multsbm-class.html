@@ -44,8 +44,8 @@
 $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
 $$ \theta_{kl} \sim Dirichlet(\beta)$$
-$$ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{m}(L_{ij},\theta_{kl})$$
-This class mainly store the prior parameters value \(\alpha,\beta\) of this generative model in the following slots:" />
+$$ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{M}(L_{ij},\theta_{kl})$$
+With \(L_{ij}=\sum_{m=1}^MX_{ijm}\). This class mainly store the prior parameters value \(\alpha,\beta\) of this generative model in the following slots:" />
 
 
 
@@ -141,8 +141,8 @@ This class mainly store the prior parameters value \(\alpha,\beta\) of this gene
 $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
 $$ \theta_{kl} \sim Dirichlet(\beta)$$
-$$ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{m}(L_{ij},\theta_{kl})$$
-This class mainly store the prior parameters value \(\alpha,\beta\) of this generative model in the following slots:</p>
+$$ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{M}(L_{ij},\theta_{kl})$$
+With \(L_{ij}=\sum_{m=1}^MX_{ijm}\). This class mainly store the prior parameters value \(\alpha,\beta\) of this generative model in the following slots:</p>
     </div>
 
 
@@ -161,6 +161,9 @@ This class mainly store the prior parameters value \(\alpha,\beta\) of this gene
 <dt><code>type</code></dt><dd><p>define the type of networks (either "directed" or "undirected", default to "directed")</p></dd>
 
 </dl>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='multsbm_fit-class.html'>multsbm_fit-class</a></code>, <code><a href='multsbm_path-class.html'>multsbm_path-class</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

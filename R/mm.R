@@ -1,10 +1,16 @@
 #' @include models_classes.R fit_classes.R
 NULL
 
-#' @title Clustering with a mixture of Multinomial model description class
+#' @title Mixture of Multinomial model description class
 #' 
 #' @description 
 #' An S4 class to represent a Multinomial model model, extend \code{\link{icl_model-class}}.
+#' Such model can be used to cluster a data matrix \eqn{X} with the following generative model :  
+#' \deqn{ \pi \sim Dirichlet(\alpha)}
+#' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
+#' \deqn{ \theta_{k} \sim Dirichlet(\beta)}
+#' \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{M}(L_i,\theta_{k})}
+#' With \eqn{L_i=\sum_d=1^DX_{id}}. This class mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model in the following slots:
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot beta Dirichlet over vocabulary prior parameter (default to 1)
@@ -17,7 +23,7 @@ setClass("mm",
          contains = "icl_model",
          prototype(name="mm",beta=1,alpha=1))
 
-#' @title Clustering with a degree corrected stochastic block model fit results class
+#' @title Mixture of Multinomial fit results class
 #' 
 #' @description
 #'  An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{icl_fit-class}}.
@@ -37,7 +43,7 @@ setClass("mm",
 setClass("mm_fit",slots = list(model="mm"),contains="icl_fit")
 
 
-#' @title Clustering with a  mixture of multinomial model path extraction results class
+#' @title Mixture of Multinomial hierarchical fit results class
 #' 
 #' 
 #' @description An S4 class to represent a fit of a stochastic block model, extend \code{\link{icl_path-class}}.
@@ -59,7 +65,11 @@ setClass("mm_fit",slots = list(model="mm"),contains="icl_fit")
 #' \item cl: vector of cluster indexes
 #' \item k,l: index of the cluster that were merged at this step
 #' \item merge_mat: lower triangular matrix of delta icl values 
-#' \item obs_stats: a list with the same elements
+#' \item obs_stats a list with the following elements:
+#' \itemize{
+#' \item counts: numeric vector of size K with number of elements in each clusters
+#' \item x_counts: matrix of size K*D with the number of occurrence of modality word in each clusters
+#' }
 #' }
 #' @slot logalpha value of log(alpha)
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}

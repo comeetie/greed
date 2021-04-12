@@ -11,9 +11,10 @@ NULL
 #' \deqn{ Z_i^r  \sim \mathcal{M}(1,\pi^r)}
 #' \deqn{ Z_j^c  \sim \mathcal{M}(1,\pi^c)}
 #' \deqn{ \theta_{kl} \sim Exponential(p)}
-#' \deqn{ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)}
-#' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)}
-#' The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity. 
+#' \deqn{ \gamma_i^r\sim \mathcal{U}(S_k)}
+#' \deqn{ \gamma_i^c\sim \mathcal{U}(S_l)}
+#' \deqn{ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)}
+#' The individuals parameters \eqn{\gamma_i^r,\gamma_j^-c} allow to take into account the node degree heterogeneity. 
 #' These parameters have uniform priors over simplex \eqn{S_k}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
 #' @slot alpha Dirichlet parameters for the prior over clusters proportions (default to 1)
 #' @examples 
@@ -26,7 +27,7 @@ setClass("co_dcsbm",
 
 
 
-#' @title Co-clustering with a degree corrected stochastic block model fit results class
+#' @title Degree corrected stochastic block model for bipartite graph fit results class
 #' 
 #' @description An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{icl_fit-class}}.
 #' @slot model a \code{\link{co_dcsbm-class}} object to store the model fitted
@@ -56,7 +57,7 @@ setClass("co_dcsbm_fit",slots = list(model="co_dcsbm",clrow="numeric",clcol="num
 
 
 
-#' @title Co-clustering with a degree corrected stochastic block model path extraction results class
+#' @title Degree corrected stochastic block model for bipartite graph hierarchical fit results class
 #' 
 #' 
 #' @description An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{icl_path-class}}.
@@ -87,7 +88,14 @@ setClass("co_dcsbm_fit",slots = list(model="co_dcsbm",clrow="numeric",clcol="num
 #' \item cl: vector of cluster indexes
 #' \item k,l: index of the cluster that were merged at this step
 #' \item merge_mat: lower triangular matrix of delta icl values 
-#' \item obs_stats: a list with the same elements
+#' \item obs_stats: a list with the elements:
+#' \itemize{
+#' \item counts: numeric vector of size K with number of elements in each clusters
+#' \item din: numeric vector of size K which store the sums of in-degrees for each clusters
+#' \item dout: numeric vector of size K which store the sums of out-degrees for each clusters 
+#' \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
+#' \item co_x_counts: matrix of size Krow*Kcol with the number of links between each pair of row and column cluster 
+#' }
 #' }
 #' @slot logalpha value of log(alpha)
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Clustering with a Gaussian mixture model description class — gmm-class • greed</title>
+<title>Gaussian mixture model description class — gmm-class • greed</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,14 @@
 
 
 
-<meta property="og:title" content="Clustering with a Gaussian mixture model description class — gmm-class" />
-<meta property="og:description" content="An S4 class to represent a multivariate mixture of regression model, extend icl_model-class." />
+<meta property="og:title" content="Gaussian mixture model description class — gmm-class" />
+<meta property="og:description" content="An S4 class to represent a multivariate Gaussian mixture  model, extend icl_model-class.
+The model follow minka-linear and correspond to the following generative model:
+$$ \pi \sim Dirichlet(\alpha)$$
+$$ Z_i  \sim \mathcal{M}(1,\pi)$$
+$$ V_k \sim \mathcal{W}^{-1}(\epsilon I,n_0)$$
+$$ \mu_k \sim \mathcal{N}(0,\frac{V_k}{\tau N})$$
+$$ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k})$$" />
 
 
 
@@ -126,13 +132,19 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Clustering with a Gaussian mixture model description class</h1>
+    <h1>Gaussian mixture model description class</h1>
     <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/gmm.R'><code>R/gmm.R</code></a></small>
     <div class="hidden name"><code>gmm-class.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An S4 class to represent a multivariate mixture of regression model, extend <code><a href='icl_model-class.html'>icl_model-class</a></code>.</p>
+    <p>An S4 class to represent a multivariate Gaussian mixture  model, extend <code><a href='icl_model-class.html'>icl_model-class</a></code>.
+The model follow <a href='https://tminka.github.io/papers/minka-linear.pdf'>minka-linear</a> and correspond to the following generative model:
+$$ \pi \sim Dirichlet(\alpha)$$
+$$ Z_i  \sim \mathcal{M}(1,\pi)$$
+$$ V_k \sim \mathcal{W}^{-1}(\epsilon I,n_0)$$
+$$ \mu_k \sim \mathcal{N}(0,\frac{V_k}{\tau N})$$
+$$ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k})$$</p>
     </div>
 
 

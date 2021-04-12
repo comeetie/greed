@@ -11,9 +11,10 @@ Such model can be used to cluster graph vertex, and model a bipartite graph adja
 \deqn{ Z_i^r  \sim \mathcal{M}(1,\pi^r)}
 \deqn{ Z_j^c  \sim \mathcal{M}(1,\pi^c)}
 \deqn{ \theta_{kl} \sim Exponential(p)}
-\deqn{ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)}
-\deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)}
-The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity. 
+\deqn{ \gamma_i^r\sim \mathcal{U}(S_k)}
+\deqn{ \gamma_i^c\sim \mathcal{U}(S_l)}
+\deqn{ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)}
+The individuals parameters \eqn{\gamma_i^r,\gamma_j^-c} allow to take into account the node degree heterogeneity. 
 These parameters have uniform priors over simplex \eqn{S_k}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
 }
 \section{Slots}{
