@@ -31,7 +31,7 @@ A list with fields:
 }
 }
 \description{
-\code{rdcsbm} returns an adjacency matrix and the cluster labels generated randomly using a Degree Corrected Stochastich Block Model.
+\code{rdcsbm} returns an adjacency matrix and the cluster labels generated randomly using a Degree Corrected Stochastic Block Model.
 }
 \details{
 It take the sample size, cluster proportions and emission matrix, and   as input and sample a graph accordingly together with the clusters labels.

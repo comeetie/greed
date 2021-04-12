@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{NMI}
 \alias{NMI}
-\title{Compute the normalized mutual information of two discretes samples}
+\title{Compute the normalized mutual information of two discrete samples}
 \usage{
 NMI(cl1, cl2)
 }
@@ -15,7 +15,7 @@ NMI(cl1, cl2)
 the normalized mutual information between the two discrete samples
 }
 \description{
-Compute the normalized mutual information of two discretes samples
+Compute the normalized mutual information of two discrete samples
 }
 \examples{
 cl1 =sample(2,500,replace=TRUE)

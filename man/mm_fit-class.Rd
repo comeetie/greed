@@ -3,9 +3,9 @@
 \docType{class}
 \name{mm_fit-class}
 \alias{mm_fit-class}
-\title{Clustering with a degree correted stochastick block model fit results class}
+\title{Mixture of Multinomial fit results class}
 \description{
-An S4 class to represent a fit of a degree corrected stochastick block model for co_clustering, extend \code{\link{icl_fit-class}}.
+An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{icl_fit-class}}.
 }
 \section{Slots}{
 
@@ -18,16 +18,16 @@ An S4 class to represent a fit of a degree corrected stochastick block model for
 
 \item{\code{K}}{number of extracted clusters over row and columns}
 
-\item{\code{cl}}{a numeric vector with row and clolumns cluster indexes}
+\item{\code{cl}}{a numeric vector with row and columns cluster indexes}
 
 \item{\code{obs_stats}}{a list with the following elements:
 \itemize{
 \item counts: numeric vector of size K with number of elements in each clusters
-\item x_counts: matrix of size K*D with the number of occurence of modality word in each clusters
+\item x_counts: matrix of size K*D with the number of occurrences of each modality for each clusters
 }}
 
 \item{\code{move_mat}}{binary matrix which store move constraints}
 
-\item{\code{train_hist}}{data.frame with training history infromation (details depends on the training procedure)}
+\item{\code{train_hist}}{data.frame with training history information (details depends on the training procedure)}
 }}
 

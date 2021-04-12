@@ -9,17 +9,17 @@ NULL
 NULL
 
 
-#' @title represent an abstract optimisation algorithm
+#' @title Abstract optimization algorithm class
 #' 
 #' @description
-#' An S4 class to represent an abstract optimisation algorithm.
+#' An S4 class to represent an abstract optimization algorithm.
 #' @slot name algorithm name
 #' @export
 setClass("alg",slots = list(name = "character"))
 
 
 
-#' @title greedy algorithm with multiple start class
+#' @title Greedy algorithm with multiple start class
 #' 
 #' @description 
 #' An S4 class to represent a greedy algorithm  with multiple start (extends \code{\link{alg-class}} class).
@@ -32,7 +32,7 @@ setClass("multistarts",
 
 
 
-#' @title greedy algorithm with seeded initialisation
+#' @title Greedy algorithm with seeded initialization
 #' 
 #' @description
 #' An S4 class to represent a greedy algorithm with initialization from spectral clustering and or k-means (extends \code{\link{alg-class}} class ).
@@ -44,29 +44,29 @@ setClass("seed",
 
 
 
-#' @title hybrid optimization algorithm 
+#' @title Hybrid optimization algorithm 
 #' 
 #' @description 
 #' An S4 class to represent an hybrid genetic/greedy algorithm (extends \code{\link{alg-class}} class).
 #' @slot pop_size size of the solutions populations (default to 20)
 #' @slot nb_max_gen maximal number of generation to produce (default to 10)
 #' @slot prob_mutation mutation probability (default to 0.25)
-#' @slot Kmax maximum number of clusters (default to 400) 
+#' @slot Kmax maximum number of clusters (default to 100) 
 #' @export
 setClass("hybrid",
          contains = "alg",
          representation =  list(pop_size = "numeric",nb_max_gen = "numeric",prob_mutation = "numeric",Kmax="numeric"),
-         prototype(name="hybrid",pop_size=20, nb_max_gen = 10,prob_mutation=0.25,Kmax=400))
+         prototype(name="hybrid",pop_size=20, nb_max_gen = 10,prob_mutation=0.25,Kmax=100))
 
 
 
-#' @title genetic optimization algorithm
+#' @title Genetic optimization algorithm
 #' 
 #' @description
 #' An S4 class to represent a genetic algorithm (extends \code{\link{alg-class}} class).
 #' @slot pop_size size of the solutions populations (default to 10)
 #' @slot nb_max_gen maximal number of generation to produce (default to 4) 
-#' @slot prob_mutation probability of muattion (default to 0.25)
+#' @slot prob_mutation probability of mutation (default to 0.25)
 #' @slot sel_frac fraction of best solutions selected for crossing  (default to 0.75)
 #' @export
 setClass("genetic",
@@ -78,7 +78,7 @@ setClass("genetic",
 
 
 
-#' @title method to cut a path solution to a desired number of cluster 
+#' @title Method to cut a path solution to a desired number of cluster 
 #' 
 #' @description This method take a \code{\link{icl_path-class}} object and an integer K and return the solution from the path with K clusters 
 #' @param x A an \code{icl_path} solution 
@@ -88,65 +88,109 @@ setClass("genetic",
 setMethod(f = "cut", 
           signature = signature("icl_path"), 
           definition = function(x, K){
-            i = which(sapply(x@path,function(p){p$K})==K)
-            x@K = K
-            x@logalpha=x@path[[i]]$logalpha
-            x@icl = x@path[[i]]$icl
-            x@cl = as.vector(x@path[[i]]$cl)
-            for(st in names(x@obs_stats)){
-              x@obs_stats[st] = x@path[[i]]$obs_stats[st]
+            if(K<x@K){
+              i = which(sapply(x@path,function(p){p$K})==K)
+              x@K = K
+              x@logalpha=x@path[[i]]$logalpha
+              x@icl = x@path[[i]]$icl
+              x@cl = as.vector(x@path[[i]]$cl)
+              for(st in names(x@obs_stats)){
+                x@obs_stats[st] = x@path[[i]]$obs_stats[st]
+              }
+              
+              x@path=x@path[(i+1):length(x@path)]
+              x
+            }else{
+              warning(paste0("This clustering has ",x@K," clusters and you requested ",K ," clusters. Please provide a value for K smaller than ",x@K,"."),call. = FALSE)
             }
-
-            x@path=x@path[(i+1):length(x@path)]
             x
             
 })
 
-#' @title model based hierachical clustering with icl
+#' @title Model based hierarchical clustering 
 #' 
 #' @description 
 #' 
-#' @param X data to cluster either a matrix or a \code{\link{dgCMatrix-class}}
+#' @param X data to cluster either a matrix,an array or a \code{\link{dgCMatrix-class}}
 #' @param K initial number of cluster
 #' @param model a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}} or \code{\link{mvmreg-class}}
-#' @param alg an optimisation algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
-#' @param verbose boolean for verbose mode 
+#' @param alg an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
+#' @param verbose Boolean for verbose mode 
 #' @return an \code{\link{icl_path-class}} object
 #' @export
 greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=FALSE){
   data = preprocess(model,X)
-  cat(paste0("------- Fitting a ",model@name, " model ------\n"))
+  modelname = toupper(model@name)
+  if("type" %in% methods::slotNames(model)){
+    modelname = paste(model@type,modelname)
+  }
+  if("sampling" %in% methods::slotNames(model)){
+    modelname = paste(modelname,"with",model@sampling,"sampling")
+  }
+  cat(paste0("------- ",modelname, " model fitting ------\n"))
   sol = fit(model,alg,data,K,verbose)
   sol = postprocess(sol,data)
+  cat("------- Final clustering -------\n")
+  print(sol)
+  cat("\n")
   sol
 }
 
 
 find_model = function(X){
-  if(class(X)=="dgCMatrix" | class(X)=="matrix"){
-    if(nrow(X)==ncol(X)){
-      model = methods::new("dcsbm")
-    }else{
-      if(all(round(X)==X)){
-        model = methods::new("co_dcsbm")  
-      }else{
-        model = methods::new("gmm",N0=ncol(X),epsilon=cov(X),mu=apply(X,2,mean),tau=0.0001)
-      }
+  if(methods::is(X,"array") && length(dim(X))>2){
+    dimensions = dim(X)
+    if(dimensions[1]!=dimensions[2]){
+      stop(paste0("Multinomial SBM expect a cube with as many rows as columns:",dimensions,collapse = " x "))
     }
+    if(length(dimensions)!=3){
+      stop(paste0("Multinomial SBM expect a cube found an array od dimensions:",dimensions,collapse = " x "))
+    }
+    issym = all(sapply(1:dim(X)[3],function(d){ isSymmetric(X[,,d])}))
+    if(issym){
+      model = methods::new("multsbm",type="undirected")
+    }else{
+      model = methods::new("multsbm")
+    }
+    
   }else{
-    stop(paste0("Unsupported data type: ", class(X) ," use matrix or sparse dgCMatrix."))
+    if(methods::is(X,"dgCMatrix") | methods::is(X,"matrix")){
+      if(nrow(X)==ncol(X)){
+        if(sum(is.na(X))>0){
+          if(isSymmetric(X)){
+            model = methods::new("misssbm",type="undirected")
+          }else{
+            model = methods::new("misssbm")
+          } 
+        }else{
+          if(isSymmetric(X)){
+            model = methods::new("dcsbm",type="undirected")
+          }else{
+            model = methods::new("dcsbm")
+          } 
+        }
+      }else{
+        if(all(round(X)==X)){
+          model = methods::new("co_dcsbm")  
+        }else{
+          model = methods::new("gmm",N0=ncol(X),epsilon=stats::cov(X),mu=apply(X,2,mean),tau=0.0001)
+        }
+      }
+    }else{
+      stop(paste0("Unsupported data type: ", class(X) ," use matrix, sparse dgCMatrix or array."),call. = FALSE)
+    }
   }
   model
 }
 
-#' @title conditional model based hierachical clustering
+#' @title Conditional model based hierarchical clustering
 #' 
-#' @param X covariates data 
+#' @param X design matrix
 #' @param Y target variables
 #' @param K Desired number of cluster
 #' @param model a conditional generative model \code{\link{mvmreg-class}}
-#' @param alg an optimisation algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
-#' @param verbose boolean for verbose mode 
+#' @param alg an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
+#' @param verbose Boolean for verbose mode 
 #' @return an \code{\link{icl_path-class}} object
 #' @export
 greed_cond = function(X,Y,K=20,model=methods::new("mvmreg",N0=ncol(Y)+1),alg=methods::new("hybrid"),verbose=FALSE){

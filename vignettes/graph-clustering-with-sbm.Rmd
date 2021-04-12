@@ -18,23 +18,22 @@ knitr::opts_chunk$set(
 ```
 
 
-Loads packages and set a future plan for parallel processing.
+Loads packages and set a future plan for parallel processing if you want.
 ```{r}
 library(future)
 library(Matrix)
 library(ggplot2)
 library(greed)
-plan(multisession)
 ```
 
 Simulation of an SBM graph with a hierarchical structure.
 ```{r, fig.show='hold'}
-N=800
-K=8
+N=400
+K=6
 pi=rep(1/K,K)
 lambda  = 0.1
 lambda_o = 0.01
-Ks=4
+Ks=3
 mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
 sbm = rsbm(N,pi,mu)
 ```
@@ -56,10 +55,12 @@ Plot the results with a node link diagram.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='nodelink')
 ```
-Or a dendogram for selecting a smaller value for K.
+
+Or a dendrogram for selecting a smaller value for K.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='tree')
 ```
+
 Eventually study the evolution of $-log(\alpha)$ with respect to $K$.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='path')
@@ -74,38 +75,4 @@ And select a smaller value to extract a new solution.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 sol2 = cut(sol,2)
 plot(sol2,type='blocks')
-```
-
-
-Eventualy you may change the algorithm "hybrid" (default), "multistart" for greedy with random multiple start and "seed"" for greedy initialized with spectral clustering. See the doc for details on the algorithm parameters. 
-
-One example with the polbooks dataset:
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-data("Books")
-solbooks=greed(Books$X,10,new("dcsbm"),new("hybrid",pop_size=30))
-plot(solbooks,type='blocks')
-```
-
-
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-plot(solbooks,type='tree')
-table(Books$label,cut(solbooks,3)@cl)
-```
-
-
-One with the polblogs dataset:
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-data("Blogs")
-solblogs=greed(Blogs$X)
-plot(solblogs,type='blocks')
-```
-
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-plot(solblogs,type='front')
-table(Blogs$label,cut(solblogs,2)@cl)
-```
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
-data("Football")
-solfoot=greed(Football$X)
-plot(solfoot,type='blocks')
 ```

@@ -3,9 +3,10 @@
 \docType{class}
 \name{mvmreg-class}
 \alias{mvmreg-class}
-\title{Clustering with a multivariate mixture of regression model description class}
+\title{Multivariate mixture of regression model description class}
 \description{
 An S4 class to represent a multivariate mixture of regression model, extend \code{\link{icl_model-class}}.
+#' The model follow \href{https://tminka.github.io/papers/minka-linear.pdf}{minka-linear}.
 }
 \section{Slots}{
 
@@ -16,7 +17,7 @@ An S4 class to represent a multivariate mixture of regression model, extend \cod
 
 \item{\code{beta}}{Prior parameter (inverse variance) default 0.01}
 
-\item{\code{N0}}{Prior parameter (pseudo count) defulat to 10 ! should be > number of features}
+\item{\code{N0}}{Prior parameter (pseudo count) default to 10 ! should be > number of features}
 }}
 
 \examples{

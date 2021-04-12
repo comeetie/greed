@@ -11,6 +11,8 @@ arma::sp_mat sp_cross(arma::sp_mat colvec,arma::sp_mat rowvec,int self, int oldc
 
 arma::vec count(arma::vec cl,int K);
 
+arma::cube gsum_cube(arma::vec cl,const arma::cube& x, int K);
+
 arma::mat gsum_mat(arma::vec cl,const arma::sp_mat& x, int K);
 arma::mat gsum_bimat(arma::vec clr,arma::vec clc, const arma::sp_mat& x,int K);
 

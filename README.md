@@ -1,38 +1,49 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# GREED : Bayesian greedy clustering <img src="./inst/exdata/greed.png" width=200 align="right" />
+# GREED : Bayesian greedy clustering <img src="man/figures/greed.png" width=200 align="right" />
 
 <!-- badges: start -->
 
-<!-- badges: end -->
+[![R build
+status](https://github.com/comeetie/greed/workflows/R-CMD-check/badge.svg)](https://github.com/comeetie/greed/actions)
+<!-- badges: end --> Greed enable model based clustering of networks,
+counts data matrix and much more with different type of generative
+models. Model selection and clustering is performed in combination by
+optimizing the Integrated Classification Likelihood. Details on the
+algorithms and methods proposed by this package can be found in this
+[arxiv 2002.11577v1](https://arxiv.org/abs/2002.11577v1) pre-print.
 
-Greed enable model based clustering of networks, counts data matrix and
-much more with different type of generative models. Model selection and
-clustering is performed in combination by optimizing the Integrated
-Classification Likelihood.
+The following generative models are available currently :
 
-Four generative models are availables currently :
-
-  - sbm : Stochastick Block Models (for directed and undirected graphs),
-  - dcsbm : Degree Corrected Stochastick Block Models (for directed and
-    undirected graphs),
-  - co\_dcsbm: Degree Corrected Latent Block Models,
-  - mm: Mixture of Multinomials,
-  - gmm : Gaussian Mixture Model.
+  - Stochastic Block Models (for **directed** and **un-directed**
+    graphs, see `` ?`sbm-class` ``; to deal with missing values see
+    `` ?`misssbm-class` ``),
+  - Degree Corrected Stochastic Block Models (for **directed** and
+    **un-directed** graphs, see `` ?`dcsbm-class` ``),
+  - Stochastic Block Models with Multinomial observations
+    (**experimental**, see `` ?`multsbm-class` ``),
+  - Degree Corrected Latent Block Models (see `` ?`co_dcsbm-class` ``),
+  - Mixture of Multinomials (see `` ?`mm-class` ``),
+  - Gaussian Mixture Model (**experimental**, see `` ?`gmm-class` ``),
+  - Multivariate Mixture of Gaussian Regression Model (**experimental**,
+    see `` ?`mvmreg-class` ``).
 
 With the Integrated Classification Likelihood the parameters of the
-models are integrated out. Since the Integrated Classification
-Likelihood introduces a natural regularisation for complex models such
-strategie automaticaly find a “natural” value for the number of cluster,
-the user needs only to provide an initial guess. The optimization is
-performed by default thanks to a combination of greedy local search and
-a genetic algorithm, several optimization algorithms are available.
+models are integrated out and therefore introduces a natural
+regularization for complex models. Since the Integrated Classification
+Likelihood penalize complex models it enable to automatically find a
+“natural” value for the number of cluster \(K^*\), the user needs only
+to provide an initial guess and value for the prior parameters (sensible
+default values are used if no prior information is available). The
+optimization is performed by default thanks to a combination of greedy
+local search and a genetic algorithm, several optimization algorithms
+are available.
 
-Eventually, the whole path of solutions from K\* to 1 cluster is
+Eventually, the whole path of solutions from \(K^*\) to 1 cluster is
 extracted. This enable a partial ordering of the clusters, and the
-evaluation of simpler clustering. The package also provides some ploting
-functionality.
+evaluation of simpler clustering. The package also provides some
+plotting functionality.
 
 ## Installation
 
@@ -44,38 +55,45 @@ install.packages("devtools")
 devtools::install_github("comeetie/greed")
 ```
 
-## Example
+## Usage
 
-This is a basic example whith the classical blogs network:
+The main entry point for using the package is simply the greed function
+(`?greed`). The generative model will be chosen automatically to fit
+with the data provided, but you may specify another choice with the
+model parameter. This is a basic example with the classical blogs
+network:
 
 ``` r
 library(greed)
 data(Jazz)
 sol=greed(Jazz)
-#> ------- Fitting a dcsbm model ------
-#> ################# Generation  1: best solution with an ICL of -29391 and 17 clusters #################
-#> ################# Generation  2: best solution with an ICL of -29308 and 19 clusters #################
-#> ################# Generation  3: best solution with an ICL of -29308 and 19 clusters #################
+#> ------- undirected DCSBM model fitting ------
+#> ################# Generation  1: best solution with an ICL of -28641 and 17 clusters #################
+#> ################# Generation  2: best solution with an ICL of -28607 and 15 clusters #################
+#> ################# Generation  3: best solution with an ICL of -28593 and 17 clusters #################
+#> ################# Generation  4: best solution with an ICL of -28583 and 16 clusters #################
+#> ################# Generation  5: best solution with an ICL of -28583 and 16 clusters #################
+#> ------- Final clustering -------
+#> ICL clustering with a DCSBM model, 14 clusters and an icl of -28556.
 ```
 
-The generative model will be chosen automatically to fit with the data
-provided. Here Jazz is a square sparse matrix and a dcsbm model will be
-used by default. Some plotting function enable the exploraiton of the
-clustering results:
+Here Jazz is a square sparse matrix and a `` ?`dcsbm-class` `` model
+will be used by default. Some plotting function enable the exploration
+of the clustering results:
 
 ``` r
 plot(sol)
 ```
 
-<img src="man/figures/README-plot-1.png" width="60%" />
+<img src="man/figures/plot-1.png" width="60%" />
 
-And the hierarhical structure between clusters:
+And the hierarchical structure between clusters:
 
 ``` r
 plot(sol,type='tree')
 ```
 
-<img src="man/figures/README-tree-1.png" width="60%" />
+<img src="man/figures/tree-1.png" width="60%" />
 
 Eventually, one may explore some coarser clustering using the cut
 function:
@@ -84,24 +102,30 @@ function:
 plot(cut(sol,5))
 ```
 
-<img src="man/figures/README-cut-1.png" width="60%" />
+<img src="man/figures/cut-1.png" width="60%" />
 
 For large datasets, it’s possible to use parallelism to speed-up the
-computation thanks to the future package. You only need to specify the
-type of parralelism.
+computation thanks to the
+[future](https://github.com/HenrikBengtsson/future) package. You only
+need to specify the type of backend you ant to use.
 
 ``` r
 library(future)
 plan(multisession)
 data("Blogs")
 sol=greed(Blogs$X)
-#> ------- Fitting a dcsbm model ------
-#> ################# Generation  1: best solution with an ICL of -84490 and 16 clusters #################
-#> ################# Generation  2: best solution with an ICL of -84209 and 17 clusters #################
-#> ################# Generation  3: best solution with an ICL of -84152 and 17 clusters #################
-#> ################# Generation  4: best solution with an ICL of -84146 and 17 clusters #################
-#> ################# Generation  5: best solution with an ICL of -84146 and 17 clusters #################
+#> ------- directed DCSBM model fitting ------
+#> ################# Generation  1: best solution with an ICL of -84433 and 17 clusters #################
+#> ################# Generation  2: best solution with an ICL of -84352 and 18 clusters #################
+#> ################# Generation  3: best solution with an ICL of -84250 and 17 clusters #################
+#> ################# Generation  4: best solution with an ICL of -84202 and 17 clusters #################
+#> ################# Generation  5: best solution with an ICL of -84196 and 15 clusters #################
+#> ################# Generation  6: best solution with an ICL of -84167 and 15 clusters #################
+#> ################# Generation  7: best solution with an ICL of -84152 and 15 clusters #################
+#> ################# Generation  8: best solution with an ICL of -84152 and 15 clusters #################
+#> ------- Final clustering -------
+#> ICL clustering with a DCSBM model, 14 clusters and an icl of -84133.
 plot(sol)
 ```
 
-<img src="man/figures/README-future-1.png" width="60%" />
+<img src="man/figures/future-1.png" width="60%" />

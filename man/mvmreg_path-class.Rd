@@ -3,7 +3,7 @@
 \docType{class}
 \name{mvmreg_path-class}
 \alias{mvmreg_path-class}
-\title{Clustering with a multivariate mixture of regression model path extraction results class}
+\title{Multivariate mixture of regression model hierarchical fit results class}
 \description{
 An S4 class to represent a hierarchical fit of a multivariate mixture of regression model, extend \code{\link{icl_path-class}}.
 }
@@ -18,7 +18,7 @@ An S4 class to represent a hierarchical fit of a multivariate mixture of regress
 
 \item{\code{K}}{number of extracted clusters over row and columns}
 
-\item{\code{cl}}{a numeric vector with row and clolumns cluster indexes}
+\item{\code{cl}}{a numeric vector with row and columns cluster indexes}
 
 \item{\code{obs_stats}}{a list with the following elements:
 \itemize{
@@ -34,15 +34,19 @@ An S4 class to represent a hierarchical fit of a multivariate mixture of regress
 \item cl: vector of cluster indexes
 \item k,l: index of the cluster that were merged at this step
 \item merge_mat: lower triangular matrix of delta icl values 
-\item obs_stats: a list with the same elements
+\item obs_stats: a list with the following elements:
+\itemize{
+\item counts: numeric vector of size K with number of elements in each clusters
+\item regs: list of size $K$ with statistics for each clusters
+}
 }}
 
 \item{\code{logalpha}}{value of log(alpha)}
 
-\item{\code{ggtree}}{data.frame with complete merge tree for easy ploting with gggplot}
+\item{\code{ggtree}}{data.frame with complete merge tree for easy plotting with \code{ggplot2}}
 
 \item{\code{tree}}{numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father}
 
-\item{\code{train_hist}}{data.frame with training history infromation (details depends on the training procedure)}
+\item{\code{train_hist}}{data.frame with training history information (details depends on the training procedure)}
 }}
 

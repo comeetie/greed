@@ -21,7 +21,7 @@ public:
   MergeMat delta_merge(arma::mat delta, int obk, int obl, const List & old_stats);
   void merge_update(int k, int l);
   List get_obs_stats();
-private:
+protected:
   arma::sp_mat x;
   arma::sp_mat xt;
   // matrix of observed counts for each clusters

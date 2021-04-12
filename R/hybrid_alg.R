@@ -2,6 +2,8 @@
 #' @importFrom Rcpp sourceCpp
 #' @importFrom future %<-%
 #' @name %<-%
+NULL
+
 #' @importFrom future %globals%
 #' @name %globals%
 NULL
@@ -38,6 +40,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             icls=icls[!is.nan(icls)]
             old_best = -Inf
             best_icl = max(icls)
+            cK = solutions[[order(icls,decreasing = TRUE)[1]]]@K
             nbgen = 1
             # while maximum number of generation // all solutions are equals // no improvements
             pmut = alg@prob_mutation
@@ -46,7 +49,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             cat(paste0("Generation ",sprintf("%2i",nbgen), ": best solution with an ICL of ",round(solutions[[which.max(icls)]]@icl)," and ",solutions[[which.max(icls)]]@K," clusters "))
             cat("#################\n")
             
-            while((max(icls)-min(icls))>1  & nbgen < alg@nb_max_gen & best_icl>old_best){
+            while((max(icls)-min(icls))>1  & nbgen < alg@nb_max_gen & best_icl>old_best & cK < Kmax){
               
 
               train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
@@ -77,13 +80,16 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
               icls=icls[!is.nan(icls)]
               old_best=best_icl
               best_icl = max(icls)
+              cK = solutions[[order(icls,decreasing = TRUE)[1]]]@K
               nbgen = nbgen + 1;
               
               cat("################# ")
               cat(paste0("Generation ",sprintf("%2i",nbgen), ": best solution with an ICL of ",round(solutions[[which.max(icls)]]@icl)," and ",solutions[[which.max(icls)]]@K," clusters "))
               cat("#################\n")
             }
-            
+            if( cK > Kmax){
+              warning("The number of clusters has reached the upper limit.\n Increase Kmax (see ?hybrid-class) if you want to explore clusterings with more clusters.")
+            }
 
             train.hist=rbind(train.hist,data.frame(generation=nbgen,icl=icls,K=sapply(solutions,function(s){max(s@cl)})))
             #parallel::stopCluster(cl)
@@ -91,6 +97,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             res = solutions[[order(icls,decreasing = TRUE)[1]]]
             # compute merge path
             path = fit_greed_path(data,res)
+            
             # clean the resuts (compute, merge tree,...)
             path = cleanpathopt(path)
             # store train history
@@ -103,6 +110,16 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
 
 
 full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
+  
+  
+  if(sol1@K==1){
+    return(sol2)
+  }
+  if(sol2@K==1){
+    return(sol1)
+  }
+  
+  
   # cartesian product on the z of the two solution
   #ncl = unclass(factor(paste(sol1@cl,sol2@cl)))
   sol = sol1
@@ -113,10 +130,10 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
 
   Ta=table(sol@cl,cl2)
   nbclust = sol@K-colSums(t(apply(Ta,1,function(r){cumsum(r>0)}))==matrix(rowSums(Ta>0),nrow=nrow(Ta),ncol=ncol(Ta)))+cumsum(colSums(Ta>0))
-  if(max(nbclust)>Kmax){
-    K2 = which(nbclust>Kmax)[1]
-    cl2[cl2>K2]=K2
-  }
+#  if(max(nbclust)>Kmax){
+#    K2 = which(nbclust>Kmax)[1]
+#    cl2[cl2>K2]=K2
+#  }
   ij=which(table(sol@cl,cl2)>0,arr.ind = TRUE)
   ncl = as.numeric(factor(paste(sol@cl,"_",cl2,sep=""),levels=paste(ij[,1],"_",ij[,2],sep="")))
   
@@ -165,7 +182,6 @@ full_cross_over = function(sol1,sol2,fimerge,fiswap,pmutation,Kmax){
   if(nrow(ijAm)>0){
     sol= fiswap(ncl,move_mat)
   }
-
   sol
 }
 

@@ -104,6 +104,9 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
           hasMoved=true;
           ++nbmove;
           // workingset(cnode)=1;
+          if(K==1){
+            break;
+          }
         }else{
           arma::vec deltaneg = delta.elem(arma::find(delta<0));
           int bmn= deltaneg.index_max();
@@ -151,7 +154,7 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::sp_mat & mo
     for (int i=0;i<N ;++i){
       // current node
       cnode=pass(i);
-      //Rcout << cnode << "K:" << K << std::endl;
+      // Rcout << cnode << "K:" << K << std::endl;
       if (workingset(cnode)==1){
         // compute delta swap
         arma::uvec iclust = possible_moves(cl(cnode),moves_mat);
@@ -174,6 +177,9 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::sp_mat & mo
           hasMoved=true;
           ++nbmove;
           // workingset(cnode)=1;
+          if(K==1){
+            break;
+          }
         }else{
           arma::vec deltaneg = delta.elem(arma::find(delta<0));
           int bmn= deltaneg.index_max();
@@ -251,7 +257,7 @@ MergeMat IclModel::delta_merge(arma::mat delta, int obk, int obl, const List & o
   double bv = -std::numeric_limits<double>::infinity();
   for(int k = 1; k < K; ++k) {
     for (int l = 0;l<k;++l){
-      if(k == obl | l == obl){
+      if((k == obl) | (l == obl)){
         delta(k,l)=this->delta_merge(k,l);
       }else{
         //Rcout << k <<" : " <<l << " - " << obk <<" : " << obl <<std::endl;
@@ -306,6 +312,7 @@ SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph){
 SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int obl,const List & old_stats){
   // optimized version to compute only new values of the merge mat
   //delta = delta(arma::find(arma::linspace(0,K,K+1)!=obk),arma::find(arma::linspace(0,K,K+1)!=obk));
+  
   arma::sp_mat deltaO = merge_graph;
   delrowcol(deltaO,obk);
   arma::sp_mat delta = deltaO;
@@ -319,7 +326,7 @@ SpMergeMat IclModel::delta_merge(const arma::sp_mat & merge_graph, int obk, int 
      if(i.col()<i.row()){
       k=i.row();
       l=i.col();
-      if(k == obl | l == obl){
+      if((k == obl) | (l == obl)){
         delta(k,l)=this->delta_merge(k,l);
       }else{
         delta(k,l)=delta(k,l)+this->delta_merge_correction(k,l,obk,obl,old_stats);
@@ -350,8 +357,8 @@ arma::sp_mat IclModel::greedy_merge(const arma::sp_mat & merge_graph){
   double bicl= cicl;
   arma::sp_mat best_merge_mat = delta;
   arma::vec bcl = cl;
-  // while teir are merge to explore
-  while(delta.n_nonzero>0){
+  // while their are merge to explore
+  while(delta.n_nonzero>0 && K>1){
     
     // increment
     ++nbmerge;
@@ -367,10 +374,10 @@ arma::sp_mat IclModel::greedy_merge(const arma::sp_mat & merge_graph){
     //merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL(),old_stats);
 
     //Rcout << delta.n_nonzero << std::endl;
-    //Rcout << cicl << std::endl;
+    
     cicl = cicl + merge_mat.getValue();
 
-
+    // Rcout << merge_mat.getMergeMat() << std::endl;
     // int Ko = merge_mat.getK();
     merge_mat = this->delta_merge(delta,merge_mat.getK(),merge_mat.getL(),old_stats);
     
@@ -408,6 +415,7 @@ void IclModel::greedy_merge(){
   
   // init the merge matrix(K,K) with the delta icl of each merge 
   MergeMat merge_mat = this->delta_merge();
+
   // init merge counter
   int nbmerge = 0;
   

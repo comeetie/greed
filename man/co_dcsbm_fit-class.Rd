@@ -3,9 +3,9 @@
 \docType{class}
 \name{co_dcsbm_fit-class}
 \alias{co_dcsbm_fit-class}
-\title{Co-clustering with a degree correted stochastick block model fit results class}
+\title{Degree corrected stochastic block model for bipartite graph fit results class}
 \description{
-An S4 class to represent a fit of a degree corrected stochastick block model for co_clustering, extend \code{\link{icl_fit-class}}.
+An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{icl_fit-class}}.
 }
 \section{Slots}{
 
@@ -22,13 +22,13 @@ An S4 class to represent a fit of a degree corrected stochastick block model for
 
 \item{\code{Kcol}}{number of extracted column clusters}
 
-\item{\code{cl}}{a numeric vector with row and clolumns cluster indexes}
+\item{\code{cl}}{a numeric vector with row and columns cluster indexes}
 
 \item{\code{obs_stats}}{a list with the following elements:
 \itemize{
 \item counts: numeric vector of size K with number of elements in each clusters
-\item din: numeric vector of size K wich store the sums of in-degrees for each clusters
-\item dout: numeric vector of size K wich store the sums of out-degrees for each clusters 
+\item din: numeric vector of size K which store the sums of in-degrees for each clusters
+\item dout: numeric vector of size K which store the sums of out-degrees for each clusters 
 \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
 \item co_x_counts: matrix of size Krow*Kcol with the number of links between each pair of row and column cluster 
 }}
@@ -43,6 +43,6 @@ An S4 class to represent a fit of a degree corrected stochastick block model for
 
 \item{\code{move_mat}}{binary matrix which store move constraints}
 
-\item{\code{train_hist}}{data.frame with training history infromation (details depends on the training procedure)}
+\item{\code{train_hist}}{data.frame with training history information (details depends on the training procedure)}
 }}
 

@@ -47,7 +47,7 @@ arma::mat submatcross(int oldcl,int newcl,int K){
     result(i,1)=i;
     result(i+K,0)=newcl;
     result(i+K,1)=i;
-    if(i==oldcl | i==newcl){
+    if((i==oldcl) || (i==newcl)){
       nbr = nbr + 1;
     }else{
       result(i+2*K-nbr,1)=oldcl;
@@ -148,8 +148,17 @@ void delrowcol(arma::sp_mat & a, int ci){
 }
 
 
-
-
+// [[Rcpp::export]]
+arma::cube gsum_cube(arma::vec cl,const arma::cube& x, int K){
+  arma::cube res = arma::cube(K,K,x.n_slices);
+  res.fill(0);
+  for(int i = 0; i < cl.n_elem; ++i) {
+    for(int j = 0; j < cl.n_elem; ++j) {
+      res.tube( cl(i), cl(j) )=res.tube( cl(i), cl(j) )+ x.tube(i,j);
+    }  
+  }
+  return res;
+}
 
 arma::vec count(arma::vec cl,int K){
   arma::vec result(K);

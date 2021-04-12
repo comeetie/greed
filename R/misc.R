@@ -1,7 +1,7 @@
 #' Compute the entropy of a discrete sample
 #'
 #' @param cl vector of discrete labels
-#' @return the entropie of the sample   
+#' @return the entropy of the sample   
 #' @examples
 #' cl =sample(2,500,replace=TRUE)
 #' H(cl)
@@ -12,7 +12,7 @@ H = function(cl){
   -sum(p*log(p))
 }
 
-#' Compute the mutual information of two discretes samples
+#' Compute the mutual information of two discrete samples
 #'
 #' @param cl1 vector of discrete labels
 #' @param cl2 vector of discrete labels
@@ -28,7 +28,7 @@ MI = function(cl1,cl2){
   sum(pj[pj!=0]*log(pj[pj!=0])-pj[pj!=0]*log(pi[pj!=0]))
 }
 
-#' Compute the normalized mutual information of two discretes samples
+#' Compute the normalized mutual information of two discrete samples
 #'
 #' @param cl1 vector of discrete labels
 #' @param cl2 vector of discrete labels
@@ -48,9 +48,9 @@ NMI = function(cl1,cl2){
 #' @title Regularized spectral clustering 
 #' 
 #' @description 
-#' performs regularized spectral clustering of a sparce adjacency matrix
-#' @references Tai Qin, Karl Rohe. Regularized Spectral Clustering under the Degree-Corrected Stochastic Blockmodel. Nips 2013.
-#' @param X An adjacency matrix in sparse format
+#' performs regularized spectral clustering of a sparse adjacency matrix
+#' @references Tai Qin, Karl Rohe. Regularized Spectral Clustering under the Degree-Corrected Stochastic Block Model. Nips 2013.
+#' @param X An adjacency matrix in sparse format (see the \code{Matrix} package)
 #' @param K Desired number of cluster
 #' @return cl Vector of cluster labels
 #' @export
@@ -81,9 +81,52 @@ zscore = function(X){
 
 as.sparse = function(X){
   S = X
-  if(class(X)=="matrix"){
+  if(methods::is(X,"matrix")){
     ij= which(X!=0,arr.ind=TRUE)
     S = Matrix::sparseMatrix(ij[,1],ij[,2],x = X[ij]) 
   }
   S
+}
+
+#' @title Convert a binary adjacency matrix with missing value to a cube
+#' 
+#' @description 
+#' Convert a binary adjacency matrix with missing value to a cube
+#' @param X A binary adjacency matrix with NA
+#' @return a cube 
+#' @export
+to_multinomial = function(X){
+  if(nrow(X)!=ncol(X)){
+    stop("Expect a square adjacency matrix")
+  }
+  if(max(X,na.rm = TRUE)>1){
+    stop("Expect an adjacency matrix with values in {0,1,NA}")
+  }
+  if(min(X,na.rm = TRUE)<0){
+    stop("Expect an adjacency matrix with values in {0,1,NA}")
+  }
+  
+  if(all(!(round(X)!=X & !is.na(X)))){
+    N = nrow(X)
+    Xc = array(0,c(N,N,3))
+    Xs=matrix(0,N,N)
+    Xs[X==1]=1
+    Xc[,,1]=Xs
+    Xs=matrix(0,N,N)
+    Xs[X==0]=1
+    Xc[,,2]=Xs
+    Xs=matrix(0,N,N)
+    Xs[is.na(X)]=1
+    Xc[,,3]=Xs
+    issym = all(sapply(1:3,function(d){ isSymmetric(Xc[,,d])}))
+    if(issym){
+      diag(Xc[,,1])=0
+      diag(Xc[,,2])=0
+      diag(Xc[,,3])=0
+    }
+    
+  }else{
+    stop("Expect an adjacency matrix with values in {0,1,NA}")
+  }
+  Xc
 }

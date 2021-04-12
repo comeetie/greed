@@ -11,9 +11,9 @@ rlbm(Nr, Nc, pir, pic, mu)
 
 \item{Nc}{desired Number of column}
 
-\item{pir}{A numeric vector of length Kr with rows clusters proportions (will be normalized to sumup to 1).}
+\item{pir}{A numeric vector of length Kr with rows clusters proportions (will be normalized to sum up to 1).}
 
-\item{pic}{A numeric vector of length Kc with columns clusters proportions (will be normalized to sumup to 1).}
+\item{pic}{A numeric vector of length Kc with columns clusters proportions (will be normalized to sum up to 1).}
 
 \item{mu}{A numeric matrix of dim Kr x Kc with the connectivity pattern to generate. elements in [0,1].}
 }
@@ -28,12 +28,12 @@ A list with fields:
 \item Nr: number of rows
 \item Nc: number of column
 \item pir: row clusters proportions
-\item pic: colum clusters proportions
+\item pic: column clusters proportions
 \item mu: connectivity matrix
 }
 }
 \description{
-\code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Latent Block Model.
+\code{rsbm} returns the adjacency matrix and the cluster labels generated randomly with a Latent Block Model.
 }
 \details{
 This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.

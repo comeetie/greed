@@ -21,9 +21,9 @@ genetic = function(model,alg,data,K,verbose=FALSE){
   # first generation of solutions
   pop_size = alg@pop_size
   for (i in 1:pop_size){
-    Kc = sample(2:K,1)
-    cl = sample(Kc,data$N,replace = TRUE)
-    solutions[[i]] %<-% fit_greed(model,data,cl,type="none")
+    cli = sample_cl(model,data,K)
+    cli=as.numeric(factor(cli))
+    solutions[[i]] %<-% fit_greed(model,data,cli,type="none")
   }
   solutions = as.list(solutions)
   icls  = sapply(solutions,function(s){s@icl})
@@ -46,6 +46,7 @@ genetic = function(model,alg,data,K,verbose=FALSE){
     bres = solutions[[order(icls,decreasing = TRUE)[1]]]
     new_solutions = listenv::listenv()
     children = listenv::listenv()
+    
     for (i in 1:(alg@pop_size-1)){
       ip = 1:Nsel
       i1 = sample(ip,1,prob=ip)

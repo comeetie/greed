@@ -183,6 +183,19 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// gsum_cube
+arma::cube gsum_cube(arma::vec cl, const arma::cube& x, int K);
+RcppExport SEXP _greed_gsum_cube(SEXP clSEXP, SEXP xSEXP, SEXP KSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type cl(clSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type K(KSEXP);
+    rcpp_result_gen = Rcpp::wrap(gsum_cube(cl, x, K));
+    return rcpp_result_gen;
+END_RCPP
+}
 // gsum_mat
 arma::mat gsum_mat(arma::vec cl, const arma::sp_mat& x, int K);
 RcppExport SEXP _greed_gsum_mat(SEXP clSEXP, SEXP xSEXP, SEXP KSEXP) {
@@ -549,6 +562,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_which_spmatpat", (DL_FUNC) &_greed_which_spmatpat, 2},
     {"_greed_delcol", (DL_FUNC) &_greed_delcol, 2},
     {"_greed_delrowcol", (DL_FUNC) &_greed_delrowcol, 2},
+    {"_greed_gsum_cube", (DL_FUNC) &_greed_gsum_cube, 3},
     {"_greed_gsum_mat", (DL_FUNC) &_greed_gsum_mat, 3},
     {"_greed_gsum_bimat", (DL_FUNC) &_greed_gsum_bimat, 4},
     {"_greed_gsum_mat_sp", (DL_FUNC) &_greed_gsum_mat_sp, 3},

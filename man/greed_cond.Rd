@@ -2,13 +2,19 @@
 % Please edit documentation in R/alg_classes.R
 \name{greed_cond}
 \alias{greed_cond}
-\title{conditional model based hierachical clustering}
+\title{Conditional model based hierarchical clustering}
 \usage{
-greed_cond(X, Y, K = 20, model = methods::new("mvmreg", N0 = ncol(Y) +
-  1), alg = methods::new("hybrid"), verbose = FALSE)
+greed_cond(
+  X,
+  Y,
+  K = 20,
+  model = methods::new("mvmreg", N0 = ncol(Y) + 1),
+  alg = methods::new("hybrid"),
+  verbose = FALSE
+)
 }
 \arguments{
-\item{X}{covariates data}
+\item{X}{design matrix}
 
 \item{Y}{target variables}
 
@@ -16,13 +22,13 @@ greed_cond(X, Y, K = 20, model = methods::new("mvmreg", N0 = ncol(Y) +
 
 \item{model}{a conditional generative model \code{\link{mvmreg-class}}}
 
-\item{alg}{an optimisation algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}}
+\item{alg}{an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}}
 
-\item{verbose}{boolean for verbose mode}
+\item{verbose}{Boolean for verbose mode}
 }
 \value{
 an \code{\link{icl_path-class}} object
 }
 \description{
-conditional model based hierachical clustering
+Conditional model based hierarchical clustering
 }

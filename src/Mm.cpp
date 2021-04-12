@@ -99,7 +99,7 @@ arma::mat Mm::delta_swap(int i,arma::uvec iclust){
 
   int k = 0;
   // for each possible move
-  for(int j = 0; j < iclust.n_elem; ++j) {
+  for(arma::uword j = 0; j < iclust.n_elem; ++j) {
     k=iclust(j);
     if(k!=oldcl){
       // construct new stats

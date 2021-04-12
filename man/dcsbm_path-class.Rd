@@ -3,9 +3,9 @@
 \docType{class}
 \name{dcsbm_path-class}
 \alias{dcsbm_path-class}
-\title{Clustering with a degree correted stochastick block model path extraction results class}
+\title{Degree Corrected Stochastic Block Model hierarchical fit results class}
 \description{
-An S4 class to represent a fit of a stochastick block model, extend \code{\link{icl_path-class}}.
+An S4 class to represent a hierarchical fit of a degree corrected stochastic block model, extend \code{\link{icl_path-class}}.
 }
 \section{Slots}{
 
@@ -18,13 +18,13 @@ An S4 class to represent a fit of a stochastick block model, extend \code{\link{
 
 \item{\code{K}}{number of extracted clusters over row and columns}
 
-\item{\code{cl}}{a numeric vector with row and clolumns cluster indexes}
+\item{\code{cl}}{a numeric vector with row and columns cluster indexes}
 
 \item{\code{obs_stats}}{a list with the following elements:
 \itemize{
 \item counts: numeric vector of size K with number of elements in each clusters
-\item din: numeric vector of size K wich store the sums of in-degrees for each clusters
-\item dout: numeric vector of size K wich store the sums of out-degrees for each clusters 
+\item din: numeric vector of size K which store the sums of in-degrees for each clusters
+\item dout: numeric vector of size K which store the sums of out-degrees for each clusters 
 \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
 }}
 
@@ -36,15 +36,21 @@ An S4 class to represent a fit of a stochastick block model, extend \code{\link{
 \item cl: vector of cluster indexes
 \item k,l: index of the cluster that were merged at this step
 \item merge_mat: lower triangular matrix of delta icl values 
-\item obs_stats: a list with the same elements
+\item obs_stats: a list with the elements:
+\itemize{
+\item counts: numeric vector of size K with number of elements in each clusters
+\item din: numeric vector of size K which store the sums of in-degrees for each clusters
+\item dout: numeric vector of size K which store the sums of out-degrees for each clusters 
+\item x_counts: matrix of size K*K with the number of links between each pair of clusters 
+}
 }}
 
 \item{\code{logalpha}}{value of log(alpha)}
 
-\item{\code{ggtree}}{data.frame with complete merge tree for easy ploting with gggplot}
+\item{\code{ggtree}}{data.frame with complete merge tree for easy plotting with \code{ggplot2}}
 
 \item{\code{tree}}{numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father}
 
-\item{\code{train_hist}}{data.frame with training history infromation (details depends on the training procedure)}
+\item{\code{train_hist}}{data.frame with training history information (details depends on the training procedure)}
 }}
 

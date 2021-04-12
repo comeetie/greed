@@ -1,11 +1,11 @@
-#' Generate a graph adjacency matrix using a Stochastick Block Model
+#' Generate a graph adjacency matrix using a Stochastic Block Model
 #'
-#' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Stochastick Block Model.
+#' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly with a Stochastic Block Model.
 #'
 #' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 #'
 #' @param N The size of the graph to generate
-#' @param pi A numeric vector of length K with clusters proportions (will be normalized to sumup to 1). 
+#' @param pi A numeric vector of length K with clusters proportions (will be normalized to sum up to 1). 
 #' @param mu A numeric matrix of dim K x K with the connectivity pattern to generate. elements in [0,1].
 #' @return A list with fields:
 #' \itemize{
@@ -29,14 +29,14 @@ rsbm = function (N,pi,mu){
 
 #' Generate a data matrix using a Latent Block Model
 #'
-#' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly unsing a Latent Block Model.
+#' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly with a Latent Block Model.
 #'
 #' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 #'
 #' @param Nr desired Number of rows
 #' @param Nc desired Number of column
-#' @param pir A numeric vector of length Kr with rows clusters proportions (will be normalized to sumup to 1). 
-#' @param pic A numeric vector of length Kc with columns clusters proportions (will be normalized to sumup to 1). 
+#' @param pir A numeric vector of length Kr with rows clusters proportions (will be normalized to sum up to 1). 
+#' @param pic A numeric vector of length Kc with columns clusters proportions (will be normalized to sum up to 1). 
 #' @param mu A numeric matrix of dim Kr x Kc with the connectivity pattern to generate. elements in [0,1].
 #' @return A list with fields:
 #' \itemize{
@@ -48,7 +48,7 @@ rsbm = function (N,pi,mu){
 #' \item Nr: number of rows
 #' \item Nc: number of column
 #' \item pir: row clusters proportions
-#' \item pic: colum clusters proportions
+#' \item pic: column clusters proportions
 #' \item mu: connectivity matrix
 #' }
 #' @examples
@@ -71,7 +71,7 @@ rlbm = function (Nr,Nc,pir,pic,mu){
 
 #' Generate data using a Multinomial Mixture
 #'
-#' \code{rmm} returns a count matrix and the cluster labels generated randomly unsig a Mixture of Multinomial model.
+#' \code{rmm} returns a count matrix and the cluster labels generated randomly with a Mixture of Multinomial model.
 #'
 #' It take the sample size, cluster proportions and emission matrix, and  as input and sample a graph accordingly together with the clusters labels.
 #'
@@ -110,7 +110,7 @@ rmm = function (N,pi,mu,lambda){
 
 #' Generate graph adjacency matrix using a degree corrected SBM
 #'
-#' \code{rdcsbm} returns an adjacency matrix and the cluster labels generated randomly using a Degree Corrected Stochastich Block Model.
+#' \code{rdcsbm} returns an adjacency matrix and the cluster labels generated randomly using a Degree Corrected Stochastic Block Model.
 #'
 #' It take the sample size, cluster proportions and emission matrix, and   as input and sample a graph accordingly together with the clusters labels.
 #'
@@ -146,7 +146,7 @@ rdcsbm = function (N,pi,mu,betain,betaout){
 
 #' Generate data from a mixture of regression model
 #'
-#' \code{rmreg} returns an X matrix, a y vector and the cluster labels generated randomly unsig a Mixture of regression model.
+#' \code{rmreg} returns an X matrix, a y vector and the cluster labels generated randomly with a Mixture of regression model.
 #'
 #' It take the sample size, cluster proportions and regression parameters matrix and variance  as input accordingly
 #'
@@ -175,3 +175,37 @@ rmreg = function (N,pi,mu,sigma,X=cbind(matrix(stats::rnorm(N*(nrow(mu)-1)),N,nr
   list(cl=cl, X = X,y=y, K=K,N=N,pi=pi,mu=mu,sigma=sigma)
 }
 
+#' Generate a graph adjacency matrix using a Stochastic Block Model
+#'
+#' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly with a Stochastic Block Model.
+#'
+#' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
+#'
+#' @param N The size of the graph to generate
+#' @param pi A numeric vector of length K with clusters proportions (will be normalized to sum up to 1). 
+#' @param mu A numeric array of dim K x K x M with the connectivity pattern to generate. elements in [0,1].
+#' @param lambda A double with the Poisson intensity to generate the total counts
+#' @return A list with fields:
+#' \itemize{
+#' \item x: the multi-graph adjacency matrix as an \code{array}
+#' \item K: number of generated clusters
+#' \item N: number of vertex
+#' \item cl: vector of clusters labels
+#' \item pi: clusters proportions
+#' \item mu: connectivity matrix
+#' \item lambda:
+#' }
+#' @examples
+#' simu = rsbm(100,rep(1/5,5),diag(rep(0.1,5))+0.001)
+#' @export
+rmultsbm = function (N,pi,mu,lambda){
+  K  = length(pi)
+  cl = sample(1:K,N,replace=TRUE,prob = pi)
+  x = array(dim=c(N,N,dim(mu)[3]))
+  for (i in 1:N){
+    for (j in 1:N){
+      x[i,j,]=stats::rmultinom(1,stats::rpois(1,lambda),mu[cl[i],cl[j],]) 
+    }
+  }
+  list(cl=cl, x = x, K=K,N=N,pi=pi,mu=mu)
+}

@@ -60,7 +60,7 @@ double DcSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
   int k = 0;
   int l = 0;
   int cc = 0;
-  for (int i = 0;i<si.n_rows;++i){
+  for (arma::uword i = 0;i<si.n_rows;++i){
     k=si(i,0);
     l=si(i,1);
     if(counts(k)*counts(l)!=0){
@@ -96,7 +96,7 @@ arma::mat DcSbm::delta_swap(int i,arma::uvec iclust){
   List old_stats = List::create(Named("counts", counts),Named("din", din),Named("dout", dout), Named("x_counts", x_counts));
   int k = 0;
   // for each possible move
-  for(int j = 0; j < iclust.n_elem; ++j) {
+  for(arma::uword j = 0; j < iclust.n_elem; ++j) {
     k=iclust(j);
     if(k!=oldcl){
       arma::mat new_ec = x_counts;
@@ -226,7 +226,7 @@ double DcSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & ol
       }
       
       // new stats fusion k/l
-      if(j==1 & i==0){
+      if((j==1) & (i==0)){
         cc = (counts(k)+counts(l))*counts(b);
         xc    = x_counts(k,b)+x_counts(l,b);
         icl_cor += lgamma(xc+1)-(xc+1)*log(p*cc+1);

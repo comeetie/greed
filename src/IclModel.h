@@ -22,13 +22,13 @@ public:
   // compute icl optimized for deltas and sparse updates
   double icl(const List & obs_stats,const List & up_stats,int oldcl,int newcl);
   // virtual methods to be implemented by models to compute log(p(X|Z))
-  virtual double icl_emiss(const List & obs_stats){};
+  virtual double icl_emiss(const List & obs_stats){return 0;};
   // virtual methods to be implemented by models to compute log(p(X|Z)) optimized for deltas
-  virtual double icl_emiss(const List & obs_stats,int oldcl,int newcl){};
+  virtual double icl_emiss(const List & obs_stats,int oldcl,int newcl){return 0;};
   // virtual methods to be implemented by models to compute log(p(X|Z)) optimized for deltas and sparse updates
-  virtual double icl_emiss(const List & obs_stats,const List & up_stats,int oldcl,int newcl){};
+  virtual double icl_emiss(const List & obs_stats,const List & up_stats,int oldcl,int newcl){return 0;};
   // compute the delta for each possible swap of a node
-  virtual arma::mat delta_swap(const int i,arma::uvec iclust){};
+  virtual arma::mat delta_swap(const int i,arma::uvec iclust){return NULL;};
   // update the stats when a node is swaped
   virtual void swap_update(const int i,const int newcl){};
   // main method for greedy swaping
@@ -36,11 +36,11 @@ public:
   // main method for greedy swaping with move constraints KxK sparse matrix
   void greedy_swap(int nbpassmax, arma::vec workingset,arma::sp_mat & move_mat);
   // virtual methods to be implemented by models to compute merge deltas
-  virtual double delta_merge(int k, int l){};
+  virtual double delta_merge(int k, int l){return 0;};
   // update the stats when two clusters are merged
   virtual void merge_update(const int k,const int l){};
   // compute correction if needed to merge matrix
-  virtual double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats){};
+  virtual double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats){return 0;};
   // methods  to compute merge matrix deltas 
   MergeMat delta_merge();
   // update version
@@ -59,7 +59,7 @@ public:
   // get posterior probs p(Zi|X,Z-i)
   arma::mat get_probs();
   // accessors
-  virtual List get_obs_stats(){};
+  virtual List get_obs_stats(){return List::create();};
   arma::vec get_cl(){return cl;};
   arma::vec get_counts(){return counts;};
   int get_K(){return K;};

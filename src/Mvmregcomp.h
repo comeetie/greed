@@ -1,5 +1,5 @@
 #ifndef MREGCOMP
-#define MERGCOMP
+#define MREGCOMP
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>

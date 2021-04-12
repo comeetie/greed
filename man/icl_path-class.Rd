@@ -5,16 +5,16 @@
 \alias{icl_path-class}
 \title{abstract class to represent a hierarchical clustering result}
 \description{
-An S4 class to represent a hierachical path of solution.
+An S4 class to represent a hierarchical path of solution.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{path}}{a list of merge moves describing the hierachie of merge followed to complete totaly the merge path.}
+\item{\code{path}}{a list of merge moves describing the hierarchy of merge followed to complete totally the merge path.}
 
 \item{\code{tree}}{a tree representation of the merges.}
 
-\item{\code{ggtree}}{a data.frame for easy ploting of the dendogram}
+\item{\code{ggtree}}{a data.frame for easy plotting of the dendrogram}
 
 \item{\code{logalpha}}{a numeric value which corresponds to the starting value of log(alpha).}
 }}

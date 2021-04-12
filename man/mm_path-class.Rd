@@ -3,9 +3,9 @@
 \docType{class}
 \name{mm_path-class}
 \alias{mm_path-class}
-\title{Clustering with a  mixture of multinomial model path extraction results class}
+\title{Mixture of Multinomial hierarchical fit results class}
 \description{
-An S4 class to represent a fit of a stochastick block model, extend \code{\link{icl_path-class}}.
+An S4 class to represent a fit of a stochastic block model, extend \code{\link{icl_path-class}}.
 }
 \section{Slots}{
 
@@ -18,12 +18,12 @@ An S4 class to represent a fit of a stochastick block model, extend \code{\link{
 
 \item{\code{K}}{number of extracted clusters over row and columns}
 
-\item{\code{cl}}{a numeric vector with row and clolumns cluster indexes}
+\item{\code{cl}}{a numeric vector with row and columns cluster indexes}
 
 \item{\code{obs_stats}}{a list with the following elements:
 \itemize{
 \item counts: numeric vector of size K with number of elements in each clusters
-\item x_counts: matrix of size K*D with the number of occurence of modality word in each clusters
+\item x_counts: matrix of size K*D with the number of occurrence of modality word in each clusters
 }}
 
 \item{\code{path}}{a list of size K-1 with each part of the path described by:
@@ -34,15 +34,19 @@ An S4 class to represent a fit of a stochastick block model, extend \code{\link{
 \item cl: vector of cluster indexes
 \item k,l: index of the cluster that were merged at this step
 \item merge_mat: lower triangular matrix of delta icl values 
-\item obs_stats: a list with the same elements
+\item obs_stats a list with the following elements:
+\itemize{
+\item counts: numeric vector of size K with number of elements in each clusters
+\item x_counts: matrix of size K*D with the number of occurrence of modality word in each clusters
+}
 }}
 
 \item{\code{logalpha}}{value of log(alpha)}
 
-\item{\code{ggtree}}{data.frame with complete merge tree for easy ploting with gggplot}
+\item{\code{ggtree}}{data.frame with complete merge tree for easy plotting with \code{ggplot2}}
 
 \item{\code{tree}}{numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father}
 
-\item{\code{train_hist}}{data.frame with training history infromation (details depends on the training procedure)}
+\item{\code{train_hist}}{data.frame with training history information (details depends on the training procedure)}
 }}
 

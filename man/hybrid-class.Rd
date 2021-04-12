@@ -3,7 +3,7 @@
 \docType{class}
 \name{hybrid-class}
 \alias{hybrid-class}
-\title{hybrid optimization algorithm}
+\title{Hybrid optimization algorithm}
 \description{
 An S4 class to represent an hybrid genetic/greedy algorithm (extends \code{\link{alg-class}} class).
 }
@@ -16,6 +16,6 @@ An S4 class to represent an hybrid genetic/greedy algorithm (extends \code{\link
 
 \item{\code{prob_mutation}}{mutation probability (default to 0.25)}
 
-\item{\code{Kmax}}{maximum number of clusters (default to 400)}
+\item{\code{Kmax}}{maximum number of clusters (default to 100)}
 }}
 
