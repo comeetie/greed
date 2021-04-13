@@ -46,9 +46,10 @@ $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i^r  \sim \mathcal{M}(1,\pi^r)$$
 $$ Z_j^c  \sim \mathcal{M}(1,\pi^c)$$
 $$ \theta_{kl} \sim Exponential(p)$$
-$$ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)$$
-$$ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)$$
-The individuals parameters \(\gamma_i^+,\gamma_i^-\) allow to take into account the node degree heterogeneity. 
+$$ \gamma_i^r\sim \mathcal{U}(S_k)$$
+$$ \gamma_i^c\sim \mathcal{U}(S_l)$$
+$$ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)$$
+The individuals parameters \(\gamma_i^r,\gamma_j^-c\) allow to take into account the node degree heterogeneity. 
 These parameters have uniform priors over simplex \(S_k\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):" />
 
 
@@ -147,9 +148,10 @@ $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i^r  \sim \mathcal{M}(1,\pi^r)$$
 $$ Z_j^c  \sim \mathcal{M}(1,\pi^c)$$
 $$ \theta_{kl} \sim Exponential(p)$$
-$$ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)$$
-$$ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)$$
-The individuals parameters \(\gamma_i^+,\gamma_i^-\) allow to take into account the node degree heterogeneity. 
+$$ \gamma_i^r\sim \mathcal{U}(S_k)$$
+$$ \gamma_i^c\sim \mathcal{U}(S_l)$$
+$$ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)$$
+The individuals parameters \(\gamma_i^r,\gamma_j^-c\) allow to take into account the node degree heterogeneity. 
 These parameters have uniform priors over simplex \(S_k\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):</p>
     </div>
 

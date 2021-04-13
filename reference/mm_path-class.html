@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Clustering with a  mixture of multinomial model path extraction results class — mm_path-class • greed</title>
+<title>Mixture of Multinomial hierarchical fit results class — mm_path-class • greed</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Clustering with a  mixture of multinomial model path extraction results class — mm_path-class" />
+<meta property="og:title" content="Mixture of Multinomial hierarchical fit results class — mm_path-class" />
 <meta property="og:description" content="An S4 class to represent a fit of a stochastic block model, extend icl_path-class." />
 
 
@@ -126,7 +126,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Clustering with a  mixture of multinomial model path extraction results class</h1>
+    <h1>Mixture of Multinomial hierarchical fit results class</h1>
     <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/mm.R'><code>R/mm.R</code></a></small>
     <div class="hidden name"><code>mm_path-class.Rd</code></div>
     </div>
@@ -166,7 +166,10 @@
 <li><p>cl: vector of cluster indexes</p></li>
 <li><p>k,l: index of the cluster that were merged at this step</p></li>
 <li><p>merge_mat: lower triangular matrix of delta icl values</p></li>
-<li><p>obs_stats: a list with the same elements</p></li>
+<li><p>obs_stats a list with the following elements:</p><ul>
+<li><p>counts: numeric vector of size K with number of elements in each clusters</p></li>
+<li><p>x_counts: matrix of size K*D with the number of occurrence of modality word in each clusters</p></li>
+</ul></li>
 </ul></p></dd>
 
 <dt><code>logalpha</code></dt><dd><p>value of log(alpha)</p></dd>
