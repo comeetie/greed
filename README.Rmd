@@ -20,7 +20,8 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R build status](https://github.com/comeetie/greed/workflows/R-CMD-check/badge.svg)](https://github.com/comeetie/greed/actions)
 <!-- badges: end -->
-Greed enables model based clustering of networks, matrices of count data and much more with different types of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details of the algorithms and methods proposed by this package can be found in this [arxiv 2002.11577v1](https://arxiv.org/abs/2002.11577v1) pre-print.
+
+Greed enables model based clustering of networks, matrices of count data and much more with different types of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details of the algorithms and methods proposed by this package can be found in this [arxiv 2002.11577](https://arxiv.org/abs/2002.11577) pre-print.
 
 The following generative models are available currently : 
 
@@ -72,7 +73,8 @@ Eventually, one may explore some coarser clustering using the cut function:
 plot(cut(sol,5))
 ```
 
-For large datasets, it is possible to use parallelism to speed-up the computation thanks to the [future](https://github.com/HenrikBengtsson/future) package. You only need to specify the type of backend you ant to use.
+
+For large datasets, it is possible to use parallelism to speed-up the computation thanks to the [future](https://github.com/HenrikBengtsson/future) package. You only need to specify the type of backend you want to use.
 ```{r future}
 library(future)
 plan(multisession)

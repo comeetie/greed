@@ -4,7 +4,7 @@ NULL
 #' @title Mixture of Multinomial model description class
 #' 
 #' @description 
-#' An S4 class to represent a Multinomial model model, extend \code{\link{icl_model-class}}.
+#' An S4 class to represent a Multinomial model model, extends \code{\link{icl_model-class}}.
 #' Such model can be used to cluster a data matrix \eqn{X} with the following generative model :  
 #' \deqn{ \pi \sim Dirichlet(\alpha)}
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}

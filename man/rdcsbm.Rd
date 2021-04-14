@@ -2,7 +2,7 @@
 % Please edit documentation in R/generator.R
 \name{rdcsbm}
 \alias{rdcsbm}
-\title{Generate graph adjacency matrix using a degree corrected SBM}
+\title{Generates graph adjacency matrix using a degree corrected SBM}
 \usage{
 rdcsbm(N, pi, mu, betain, betaout)
 }
@@ -34,5 +34,5 @@ A list with fields:
 \code{rdcsbm} returns an adjacency matrix and the cluster labels generated randomly using a Degree Corrected Stochastic Block Model.
 }
 \details{
-It take the sample size, cluster proportions and emission matrix, and   as input and sample a graph accordingly together with the clusters labels.
+It takes the sample size, cluster proportions and emission matrix, and   as input and sample a graph accordingly together with the clusters labels.
 }
