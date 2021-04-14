@@ -33,7 +33,7 @@ A list with fields:
 }
 }
 \description{
-\code{rsbm} returns the adjacency matrix and the cluster labels generated randomly with a Latent Block Model.
+\code{rlbm} returns the adjacency matrix and the cluster labels generated randomly with a Latent Block Model.
 }
 \details{
 This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
