@@ -5,7 +5,7 @@
 \alias{mvmreg-class}
 \title{Multivariate mixture of regression model description class}
 \description{
-An S4 class to represent a multivariate mixture of regression model, extend \code{\link{icl_model-class}}.
+An S4 class to represent a multivariate mixture of regression model, extends \code{\link{icl_model-class}}.
 #' The model follow \href{https://tminka.github.io/papers/minka-linear.pdf}{minka-linear}.
 }
 \section{Slots}{

@@ -29,7 +29,7 @@ rsbm = function (N,pi,mu){
 
 #' Generate a data matrix using a Latent Block Model
 #'
-#' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly with a Latent Block Model.
+#' \code{rlbm} returns the adjacency matrix and the cluster labels generated randomly with a Latent Block Model.
 #'
 #' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 #'
@@ -73,7 +73,7 @@ rlbm = function (Nr,Nc,pir,pic,mu){
 #'
 #' \code{rmm} returns a count matrix and the cluster labels generated randomly with a Mixture of Multinomial model.
 #'
-#' It take the sample size, cluster proportions and emission matrix, and  as input and sample a graph accordingly together with the clusters labels.
+#' It takes the sample size, cluster proportions and emission matrix, and  as input and sample a graph accordingly together with the clusters labels.
 #'
 #' @param N A numeric value the size of the graph to generate
 #' @param pi A numeric vector of length K with clusters proportions. Must sum up to 1.
@@ -108,11 +108,11 @@ rmm = function (N,pi,mu,lambda){
   list(cl=cl, x = Matrix::sparseMatrix(links[,1],links[,2], x = X[links]), K=K,N=N,pi=pi,mu=mu, lambda=lambda)
 }
 
-#' Generate graph adjacency matrix using a degree corrected SBM
+#' Generates graph adjacency matrix using a degree corrected SBM
 #'
 #' \code{rdcsbm} returns an adjacency matrix and the cluster labels generated randomly using a Degree Corrected Stochastic Block Model.
 #'
-#' It take the sample size, cluster proportions and emission matrix, and   as input and sample a graph accordingly together with the clusters labels.
+#' It takes the sample size, cluster proportions and emission matrix, and   as input and sample a graph accordingly together with the clusters labels.
 #'
 #' @param N A numeric value the size of the graph to generate
 #' @param pi A numeric vector of length K with clusters proportions. Must sum up to 1.
@@ -148,7 +148,7 @@ rdcsbm = function (N,pi,mu,betain,betaout){
 #'
 #' \code{rmreg} returns an X matrix, a y vector and the cluster labels generated randomly with a Mixture of regression model.
 #'
-#' It take the sample size, cluster proportions and regression parameters matrix and variance  as input accordingly
+#' It takes the sample size, cluster proportions and regression parameters matrix and variance  as input accordingly
 #'
 #' @param N A numeric value the size of the graph to generate
 #' @param pi A numeric vector of length K with clusters proportions (must sum up to 1)
@@ -177,7 +177,7 @@ rmreg = function (N,pi,mu,sigma,X=cbind(matrix(stats::rnorm(N*(nrow(mu)-1)),N,nr
 
 #' Generate a graph adjacency matrix using a Stochastic Block Model
 #'
-#' \code{rsbm} returns the adjacency matrix and the cluster labels generated randomly with a Stochastic Block Model.
+#' \code{rmultsbm} returns the multi-graph adjacency matrix and the cluster labels generated randomly with a Multinomial Stochastic Block Model.
 #'
 #' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 #'

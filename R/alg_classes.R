@@ -109,7 +109,7 @@ setMethod(f = "cut",
 
 #' @title Model based hierarchical clustering 
 #' 
-#' @description 
+#' @description
 #' 
 #' @param X data to cluster either a matrix,an array or a \code{\link{dgCMatrix-class}}
 #' @param K initial number of cluster

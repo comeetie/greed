@@ -5,7 +5,7 @@ NULL
 #' @title Stochastic Block Model class
 #' 
 #' @description 
-#' An S4 class to represent a Stochastic Block Model, extend \code{\link{icl_model-class}}. 
+#' An S4 class to represent a Stochastic Block Model, extends \code{\link{icl_model-class}}. 
 #' Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :  
 #' \deqn{ \pi \sim Dirichlet(\alpha)}
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
