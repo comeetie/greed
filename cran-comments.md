@@ -34,10 +34,6 @@
       data   6.0Mb
       libs   4.6Mb
 
-❯ running examples for arch 'i386' ... NOTE
-  Examples with CPU (user + system) or elapsed time > 5s
-           user system elapsed
-  valcovid 5.27   0.06    5.33
   
 0 errors ✔ | 0 warnings ✔ | 3 notes ✖
 
