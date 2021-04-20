@@ -8,8 +8,9 @@
 #' @title print an icl_path object
 #' 
 #' @description
-#' print an \code{\link{icl_path-class}} object
+#' Print an \code{\link{icl_path-class}} object, model type and number of found clusters are provided.
 #' @param x \code{\link{icl_path-class}} object to print
+#' @return None (invisible NULL). No return value, called for side effects.
 #' @export
 setMethod(f = "print", 
           signature = signature("icl_path"),
