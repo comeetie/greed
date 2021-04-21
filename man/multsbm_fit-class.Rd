@@ -3,7 +3,7 @@
 \docType{class}
 \name{multsbm_fit-class}
 \alias{multsbm_fit-class}
-\title{Clustering with Multinomial Stochastic Block Model fit results class}
+\title{Multinomial Stochastic Block Model fit results class}
 \description{
 An S4 class to represent a fit of a Multinomial Stochastic Block Model, extend \code{\link{icl_fit-class}}.
 }

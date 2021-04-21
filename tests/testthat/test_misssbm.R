@@ -41,7 +41,7 @@ test_that("MISSSBM seed", {
 
 
 test_that("MISSSBM multitstart", {
-  N = 100
+  N = 150
   K = 3
   pi = rep(1/K,K)
   mu = diag(rep(1/5,K))+runif(K*K)*0.01
@@ -50,12 +50,11 @@ test_that("MISSSBM multitstart", {
   sol=greed(sbm$x,model=new('misssbm'),alg=new("multistarts"))
   expect_gte(sol@K, K-2)
   expect_lte(sol@K, K+2)
-  solc = cut(sol,2)
-  expect_true(is.ggplot(plot(solc,type='tree')))
-  expect_true(is.ggplot(plot(solc,type='path')))
-  expect_true(is.ggplot(plot(solc,type='front')))
-  expect_true(is.ggplot(plot(solc,type='blocks')))
-  expect_true(is.ggplot(plot(solc,type='nodelink')))
+  expect_true(is.ggplot(plot(sol,type='tree')))
+  expect_true(is.ggplot(plot(sol,type='path')))
+  expect_true(is.ggplot(plot(sol,type='front')))
+  expect_true(is.ggplot(plot(sol,type='blocks')))
+  expect_true(is.ggplot(plot(sol,type='nodelink')))
 })
 
 test_that("MISSSBM genetic", {

@@ -3,7 +3,7 @@
 \docType{class}
 \name{misssbm_fit-class}
 \alias{misssbm_fit-class}
-\title{Stochastic Block Model fit results class}
+\title{Stochastic Block Model with sampling scheme fit results class}
 \description{
 An S4 class to represent a fit of a Stochastic Block Model, extend \code{\link{icl_fit-class}}.
 }

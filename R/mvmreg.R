@@ -2,10 +2,11 @@
 NULL
 
 
-#' @title Clustering with a multivariate mixture of regression model description class
+#' @title Multivariate mixture of regression model description class
 #' 
 #' @description 
-#' An S4 class to represent a multivariate mixture of regression model, extend \code{\link{icl_model-class}}.
+#' An S4 class to represent a multivariate mixture of regression model, extends \code{\link{icl_model-class}}.
+#' #' The model follow [minka-linear](https://tminka.github.io/papers/minka-linear.pdf).
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot beta Prior parameter (inverse variance) default 0.01 
@@ -13,6 +14,7 @@ NULL
 #' @examples
 #' new("mvmreg")
 #' new("mvmreg",alpha=1,beta=0.1,N0=15)
+#' @md
 #' @export
 setClass("mvmreg",
          representation = list(beta = "numeric",N0="numeric"),
@@ -39,7 +41,7 @@ setClass("mvmreg",
 setClass("mvmreg_fit",slots = list(model="mvmreg"),contains="icl_fit")
 
 
-#' @title Clustering with a multivariate mixture of regression model path extraction results class
+#' @title Multivariate mixture of regression model hierarchical fit results class
 #' 
 #' 
 #' @description An S4 class to represent a hierarchical fit of a multivariate mixture of regression model, extend \code{\link{icl_path-class}}.
@@ -61,7 +63,11 @@ setClass("mvmreg_fit",slots = list(model="mvmreg"),contains="icl_fit")
 #' \item cl: vector of cluster indexes
 #' \item k,l: index of the cluster that were merged at this step
 #' \item merge_mat: lower triangular matrix of delta icl values 
-#' \item obs_stats: a list with the same elements
+#' \item obs_stats: a list with the following elements:
+#' \itemize{
+#' \item counts: numeric vector of size K with number of elements in each clusters
+#' \item regs: list of size $K$ with statistics for each clusters
+#' }
 #' }
 #' @slot logalpha value of log(alpha)
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}

@@ -3,7 +3,7 @@
 \docType{class}
 \name{sbm_path-class}
 \alias{sbm_path-class}
-\title{Clustering with a stochastic block model path extraction results class}
+\title{Stochastic Block Model hierarchical fit results class}
 \description{
 An S4 class to represent a hierarchical fit of a stochastic block model, extend \code{\link{icl_path-class}}.
 }
@@ -34,7 +34,11 @@ An S4 class to represent a hierarchical fit of a stochastic block model, extend 
 \item cl: vector of cluster indexes
 \item k,l: index of the cluster that were merged at this step
 \item merge_mat: lower triangular matrix of delta icl values 
-\item obs_stats: a list with the same elements
+\item obs_stats: a list with the following elements:
+\itemize{
+\item counts: numeric vector of size K with number of elements in each clusters
+\item x_counts: matrix of size K*K with the number of links between each pair of clusters 
+}
 }}
 
 \item{\code{logalpha}}{value of log(alpha)}

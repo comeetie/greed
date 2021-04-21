@@ -3,7 +3,7 @@
 \docType{class}
 \name{gmm_path-class}
 \alias{gmm_path-class}
-\title{Clustering with a multivariate mixture of regression model path extraction results class}
+\title{Gaussian mixture model hierarchical fit results class}
 \description{
 An S4 class to represent a hierarchical fit of a gaussian mixture model, extend \code{\link{icl_path-class}}.
 }
@@ -34,7 +34,11 @@ An S4 class to represent a hierarchical fit of a gaussian mixture model, extend 
 \item cl: vector of cluster indexes
 \item k,l: index of the cluster that were merged at this step
 \item merge_mat: lower triangular matrix of delta icl values 
-\item obs_stats: a list with the same elements
+\item obs_stats: a list with the following elements:
+\itemize{
+\item counts: numeric vector of size K with number of elements in each clusters
+\item regs: list of size $K$ with statistics for each clusters
+} 
 }}
 
 \item{\code{logalpha}}{value of log(alpha)}

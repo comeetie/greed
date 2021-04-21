@@ -3,10 +3,18 @@ NULL
 
 
 
-#' @title Clustering with a degree corrected stochastic block model description class
+#' @title Degree Corrected Stochastic Block Model class
 #' 
 #' @description 
 #' An S4 class to represent a degree corrected stochastic block model, extend \code{\link{icl_model-class}}.
+#' Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :  
+#' \deqn{ \pi \sim Dirichlet(\alpha)}
+#' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
+#' \deqn{ \theta_{kl} \sim Exponential(p)}
+#' \deqn{ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)}
+#' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)}
+#' The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity. 
+#' These parameters have uniform priors over simplex \eqn{S_k}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter
 #' @slot type define the type of networks (either "directed" or "undirected", default to "directed")
@@ -18,7 +26,7 @@ setClass("dcsbm",
 
 
 
-#' @title Clustering with a degree corrected stochastic block model fit results class
+#' @title Degree Corrected Stochastic Block Model fit results class
 #' 
 #' @description
 #'  An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{icl_fit-class}}.
@@ -43,10 +51,10 @@ setClass("dcsbm_fit",slots = list(model="dcsbm"),contains="icl_fit")
 
 
 
-#' @title Clustering with a degree corrected stochastic block model path extraction results class
+#' @title Degree Corrected Stochastic Block Model hierarchical fit results class
 #' 
 #' 
-#' @description An S4 class to represent a fit of a stochastic block model, extend \code{\link{icl_path-class}}.
+#' @description An S4 class to represent a hierarchical fit of a degree corrected stochastic block model, extend \code{\link{icl_path-class}}.
 #' @slot model a \code{\link{dcsbm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
@@ -67,7 +75,13 @@ setClass("dcsbm_fit",slots = list(model="dcsbm"),contains="icl_fit")
 #' \item cl: vector of cluster indexes
 #' \item k,l: index of the cluster that were merged at this step
 #' \item merge_mat: lower triangular matrix of delta icl values 
-#' \item obs_stats: a list with the same elements
+#' \item obs_stats: a list with the elements:
+#' \itemize{
+#' \item counts: numeric vector of size K with number of elements in each clusters
+#' \item din: numeric vector of size K which store the sums of in-degrees for each clusters
+#' \item dout: numeric vector of size K which store the sums of out-degrees for each clusters 
+#' \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
+#' }
 #' }
 #' @slot logalpha value of log(alpha)
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}

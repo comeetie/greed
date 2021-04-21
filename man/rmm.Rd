@@ -31,5 +31,5 @@ A list with fields:
 \code{rmm} returns a count matrix and the cluster labels generated randomly with a Mixture of Multinomial model.
 }
 \details{
-It take the sample size, cluster proportions and emission matrix, and  as input and sample a graph accordingly together with the clusters labels.
+It takes the sample size, cluster proportions and emission matrix, and  as input and sample a graph accordingly together with the clusters labels.
 }

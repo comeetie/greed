@@ -89,7 +89,7 @@
       <h1 data-toc-skip>Graph clustering with SBM</h1>
                         <h4 class="author">Etienne Côme</h4>
             
-            <h4 class="date">2021-03-16</h4>
+            <h4 class="date">2021-04-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/comeetie/greed/blob/master/vignettes/graph-clustering-with-sbm.Rmd"><code>vignettes/graph-clustering-with-sbm.Rmd</code></a></small>
       <div class="hidden name"><code>graph-clustering-with-sbm.Rmd</code></div>
@@ -103,26 +103,26 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future">future</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://Matrix.R-forge.R-project.org/">Matrix</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">greed</span><span class="op">)</span>
-<span class="co">#plan(multicore)</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/">greed</a></span><span class="op">)</span></code></pre></div>
 <p>Simulation of an SBM graph with a hierarchical structure.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">N</span><span class="op">=</span><span class="fl">800</span>
-<span class="va">K</span><span class="op">=</span><span class="fl">8</span>
+<code class="sourceCode R"><span class="va">N</span><span class="op">=</span><span class="fl">400</span>
+<span class="va">K</span><span class="op">=</span><span class="fl">6</span>
 <span class="va">pi</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">K</span>,<span class="va">K</span><span class="op">)</span>
 <span class="va">lambda</span>  <span class="op">=</span> <span class="fl">0.1</span>
 <span class="va">lambda_o</span> <span class="op">=</span> <span class="fl">0.01</span>
-<span class="va">Ks</span><span class="op">=</span><span class="fl">4</span>
+<span class="va">Ks</span><span class="op">=</span><span class="fl">3</span>
 <span class="va">mu</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/bdiag.html">bdiag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">K</span><span class="op">/</span><span class="va">Ks</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">k</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="va">lambda_o</span>,<span class="va">Ks</span>,<span class="va">Ks</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">lambda</span>,<span class="va">Ks</span><span class="op">)</span><span class="op">)</span><span class="op">}</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fl">0.001</span>
 <span class="va">sbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/rsbm.html">rsbm</a></span><span class="op">(</span><span class="va">N</span>,<span class="va">pi</span>,<span class="va">mu</span><span class="op">)</span></code></pre></div>
 <p>Perform the clustering with default model and algorithm. We specify to choose an sbm model since for squared sparse matrix the default is a dc-sbm model. An hybrid algorithm is selected by default and the default value for the parameter K is 20.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">sbm</span><span class="op">$</span><span class="va">x</span>,model<span class="op">=</span><span class="fu">new</span><span class="op">(</span><span class="st">"sbm"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; ------- Fitting a SBM model ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -47123 and 8 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -47123 and 8 clusters #################</span>
+<span class="co">#&gt; ------- directed SBM model fitting ------</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -14610 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -14580 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -14580 and 6 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a SBM model, 8 clusters and an icl of -47123.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a SBM model, 6 clusters and an icl of -14580.</span></code></pre></div>
 <p>Plot the results using a block representation.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
@@ -159,7 +159,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by .</p>
+  <p>Developed by Etienne Côme, Nicolas Jouvin.</p>
 </div>
 
 <div class="pkgdown">

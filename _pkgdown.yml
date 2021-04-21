@@ -30,7 +30,7 @@ reference:
     - '`greed`'
     - '`greed_cond`'
     
-- title: 'Main classes fitting algorithms'
+- title: 'Fitting algorithms classes'
   desc: >
     Description of classes that describe the possible fitting algorithms.
   contents:
@@ -38,22 +38,24 @@ reference:
     - '`multistarts-class`'
     - '`genetic-class`'
     - '`seed-class`'
-- title: 'Main classes of models'
+- title: 'Supported generative models'
   desc: >
     Description of classes that corresponds to the different type of generative models that greed may use.
   contents:
     - '`sbm-class`'
+    - '`misssbm-class`'
     - '`dcsbm-class`'
     - '`multsbm-class`'
     - '`co_dcsbm-class`'
     - '`mm-class`'
     - '`gmm-class`'
     - '`mvmreg-class`'
-- title: 'Main classes for models fit'
+- title: 'Models fit classes'
   desc: >
     Description of classes that describe a model fit.
   contents:
     - '`sbm_fit-class`'
+    - '`misssbm_fit-class`'
     - '`dcsbm_fit-class`'
     - '`multsbm_fit-class`'
     - '`co_dcsbm_fit-class`'
@@ -61,11 +63,12 @@ reference:
     - '`gmm_fit-class`'
     - '`mvmreg_fit-class`'
 
-- title: 'Main classes for models hierarchical fit'
+- title: 'Hierarchical models fit classes'
   desc: >
     Description of classes that describe a hierachical model fit.
   contents:
     - '`sbm_path-class`'
+    - '`misssbm_path-class`'
     - '`dcsbm_path-class`'
     - '`multsbm_path-class`'
     - '`co_dcsbm_path-class`'
@@ -73,7 +76,7 @@ reference:
     - '`gmm_path-class`'
     - '`mvmreg_path-class`'
 
-- title: 'Main methods to explore a hierarchical fit'
+- title: 'Methods to explore a hierarchical fit'
   desc: >
     Description of methods for cuting/ploting a hierachical model fit.
   contents:
@@ -89,7 +92,7 @@ reference:
     - '`MI`'
     - '`spectral`'
 
-- title: 'Main function for data generation'
+- title: 'Data generation function'
   desc: >
     Functions to generate data from a specified generative model.
   contents:

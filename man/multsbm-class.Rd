@@ -3,9 +3,14 @@
 \docType{class}
 \name{multsbm-class}
 \alias{multsbm-class}
-\title{Clustering with a Multinomial Stochastic Block Model description class}
+\title{Multinomial Stochastic Block Model class}
 \description{
-An S4 class to represent a Multinomial Stochastic Block Model, extend \code{\link{icl_model-class}}.
+An S4 class to represent a Multinomial Stochastic Block Model, extends \code{\link{icl_model-class}}. Such model can be used to cluster multilayer-graph vertex, and model a square adjacency cube \eqn{X} of size NxNxM with the following generative model :  
+\deqn{ \pi \sim Dirichlet(\alpha)}
+\deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
+\deqn{ \theta_{kl} \sim Dirichlet(\beta)}
+\deqn{ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{M}(L_{ij},\theta_{kl})}
+With \eqn{L_{ij}=\sum_{m=1}^MX_{ijm}}. This class mainly store the prior parameters value \eqn{\alpha,\beta} of this generative model in the following slots:
 }
 \section{Slots}{
 
@@ -19,3 +24,6 @@ An S4 class to represent a Multinomial Stochastic Block Model, extend \code{\lin
 \item{\code{type}}{define the type of networks (either "directed" or "undirected", default to "directed")}
 }}
 
+\seealso{
+\code{\link{multsbm_fit-class}}, \code{\link{multsbm_path-class}}
+}

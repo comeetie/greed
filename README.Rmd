@@ -20,22 +20,23 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R build status](https://github.com/comeetie/greed/workflows/R-CMD-check/badge.svg)](https://github.com/comeetie/greed/actions)
 <!-- badges: end -->
-Greed enable model based clustering of networks, counts data matrix and much more with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details on the algorithms and methods proposed by this package can be found in this [arxiv 2002.11577v1](https://arxiv.org/abs/2002.11577v1) pre-print.
+
+Greed enables model based clustering of networks, matrices of count data and much more with different types of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details of the algorithms and methods proposed by this package can be found in Côme, Jouvin, Latouche, and Bouveyron (2021) [10.1007/s11634-021-00440-z](https://doi.org/10.1007/s11634-021-00440-z).
 
 The following generative models are available currently : 
 
-* Stochastic Block Models (for **directed** and **un-directed** graphs, see ``?`sbm-class` ``), 
+* Stochastic Block Models (for **directed** and **un-directed** graphs, see ``?`sbm-class` ``; to deal with missing values see ``?`misssbm-class` ``),
 * Degree Corrected Stochastic Block Models (for **directed** and **un-directed** graphs, see ``?`dcsbm-class` ``),
-* Stochastic Block Models with Mutlinomial observations (**experimental**, see ``?`multsbm-class` ``),
+* Stochastic Block Models with Multinomial observations (**experimental**, see ``?`multsbm-class` ``),
 * Degree Corrected Latent Block Models (see ``?`co_dcsbm-class` ``),
 * Mixture of Multinomials (see ``?`mm-class` ``), 
 * Gaussian Mixture Model (**experimental**, see ``?`gmm-class` ``),
 * Multivariate Mixture of Gaussian Regression Model (**experimental**, see ``?`mvmreg-class` ``).
 
 
-With the Integrated Classification Likelihood the parameters of the models are integrated out and therefore introduces a natural regularization for complex models. Since the Integrated Classification Likelihood penalize complex models it enable to automatically find a "natural" value for the number of cluster $K^*$, the user needs only to provide an initial guess and value for the prior parameters (sensible default values are used if no prior information is available). The optimization is performed by default thanks to a combination of greedy local search and a genetic algorithm, several optimization algorithms are available.
+With the Integrated Classification Likelihood, the parameters of the models are integrated out. This allows a natural regularization for complex models. Since the Integrated Classification Likelihood penalizes complex models it allows to automatically find a "natural" value for the number of clusters $K^*$, the user only needs to provide an initial guess as well as values for the prior parameters (sensible default values are used if no prior information is available). The optimization is performed by default thanks to a combination of a greedy local search and a genetic algorithm. Several optimization algorithms are available.
 
-Eventually, the whole path of solutions from $K^*$ to 1 cluster is extracted. This enable a partial ordering of the clusters, and the evaluation of simpler clustering. The package also provides some plotting functionality.
+Eventually, the whole path of solutions from $K^*$ to 1 cluster is extracted. This enables a partial ordering of the clusters, and the evaluation of simpler clustering. The package also provides some plotting functionality.
 
 
 ## Installation
@@ -49,7 +50,7 @@ devtools::install_github("comeetie/greed")
 
 ## Usage
 
-The main entry point for using the package is simply the greed function (`?greed`). The generative model will be chosen automatically to fit with the data provided, but you may specify another choice with the model parameter. This is a basic example with the classical blogs network:
+The main entry point for using the package is simply the greed function (`?greed`). The generative model will be chosen automatically to fit with the data provided, but you may specify another choice with the model parameter. This is a basic example with the classical Jazz network:
 
 ```{r example}
 library(greed)
@@ -72,7 +73,8 @@ Eventually, one may explore some coarser clustering using the cut function:
 plot(cut(sol,5))
 ```
 
-For large datasets, it's possible to use parallelism to speed-up the computation thanks to the [future](https://github.com/HenrikBengtsson/future) package. You only need to specify the type of backend you ant to use.
+
+For large datasets, it is possible to use parallelism to speed-up the computation thanks to the [future](https://github.com/HenrikBengtsson/future) package. You only need to specify the type of backend you want to use.
 ```{r future}
 library(future)
 plan(multisession)

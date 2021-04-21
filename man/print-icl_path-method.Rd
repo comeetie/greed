@@ -9,6 +9,9 @@
 \arguments{
 \item{x}{\code{\link{icl_path-class}} object to print}
 }
+\value{
+None (invisible NULL). No return value, called for side effects.
+}
 \description{
-print an \code{\link{icl_path-class}} object
+Print an \code{\link{icl_path-class}} object, model type and number of found clusters are provided.
 }

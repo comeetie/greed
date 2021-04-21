@@ -3,7 +3,7 @@
 \docType{class}
 \name{misssbm_path-class}
 \alias{misssbm_path-class}
-\title{Clustering with a stochastic block model path extraction results class}
+\title{Stochastic Block Model with sampling scheme hierarchical fit results class}
 \description{
 An S4 class to represent a hierarchical fit of a stochastic block model, extend \code{\link{icl_path-class}}.
 }
@@ -25,17 +25,6 @@ An S4 class to represent a hierarchical fit of a stochastic block model, extend 
 \item counts: numeric vector of size K with number of elements in each clusters
 \item x_counts: matrix of size K*K with the number of observed links between each pair of clusters 
 \item x_counts_obs: matrix of size K*K with the number of observed dyads between each pair of clusters 
-}}
-
-\item{\code{path}}{a list of size K-1 with that store all the solutions along the path. Each element is a list with the following fields:
-\itemize{
-\item icl1: icl value reach with this solution for alpha=1 
-\item logalpha: log(alpha) value were this solution is better than its parent
-\item K: number of clusters
-\item cl: vector of cluster indexes
-\item k,l: index of the cluster that were merged at this step
-\item merge_mat: lower triangular matrix of delta icl values 
-\item obs_stats: a list with the same elements
 }}
 
 \item{\code{logalpha}}{value of log(alpha)}

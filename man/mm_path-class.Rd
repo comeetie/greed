@@ -3,7 +3,7 @@
 \docType{class}
 \name{mm_path-class}
 \alias{mm_path-class}
-\title{Clustering with a  mixture of multinomial model path extraction results class}
+\title{Mixture of Multinomial hierarchical fit results class}
 \description{
 An S4 class to represent a fit of a stochastic block model, extend \code{\link{icl_path-class}}.
 }
@@ -34,7 +34,11 @@ An S4 class to represent a fit of a stochastic block model, extend \code{\link{i
 \item cl: vector of cluster indexes
 \item k,l: index of the cluster that were merged at this step
 \item merge_mat: lower triangular matrix of delta icl values 
-\item obs_stats: a list with the same elements
+\item obs_stats a list with the following elements:
+\itemize{
+\item counts: numeric vector of size K with number of elements in each clusters
+\item x_counts: matrix of size K*D with the number of occurrence of modality word in each clusters
+}
 }}
 
 \item{\code{logalpha}}{value of log(alpha)}

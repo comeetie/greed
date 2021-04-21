@@ -3,9 +3,15 @@
 \docType{class}
 \name{mm-class}
 \alias{mm-class}
-\title{Clustering with a mixture of Multinomial model description class}
+\title{Mixture of Multinomial model description class}
 \description{
-An S4 class to represent a Multinomial model model, extend \code{\link{icl_model-class}}.
+An S4 class to represent a Multinomial model model, extends \code{\link{icl_model-class}}.
+Such model can be used to cluster a data matrix \eqn{X} with the following generative model :  
+\deqn{ \pi \sim Dirichlet(\alpha)}
+\deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
+\deqn{ \theta_{k} \sim Dirichlet(\beta)}
+\deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{M}(L_i,\theta_{k})}
+With \eqn{L_i=\sum_d=1^DX_{id}}. This class mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model in the following slots:
 }
 \section{Slots}{
 

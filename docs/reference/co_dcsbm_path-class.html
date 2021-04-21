@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Co-clustering with a degree corrected stochastic block model path extraction results class — co_dcsbm_path-class • greed</title>
+<title>Degree corrected stochastic block model for bipartite graph hierarchical fit results class — co_dcsbm_path-class • greed</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Co-clustering with a degree corrected stochastic block model path extraction results class — co_dcsbm_path-class" />
+<meta property="og:title" content="Degree corrected stochastic block model for bipartite graph hierarchical fit results class — co_dcsbm_path-class" />
 <meta property="og:description" content="An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend icl_path-class." />
 
 
@@ -126,7 +126,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Co-clustering with a degree corrected stochastic block model path extraction results class</h1>
+    <h1>Degree corrected stochastic block model for bipartite graph hierarchical fit results class</h1>
     <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/coclust_dcsbm.R'><code>R/coclust_dcsbm.R</code></a></small>
     <div class="hidden name"><code>co_dcsbm_path-class.Rd</code></div>
     </div>
@@ -181,7 +181,13 @@
 <li><p>cl: vector of cluster indexes</p></li>
 <li><p>k,l: index of the cluster that were merged at this step</p></li>
 <li><p>merge_mat: lower triangular matrix of delta icl values</p></li>
-<li><p>obs_stats: a list with the same elements</p></li>
+<li><p>obs_stats: a list with the elements:</p><ul>
+<li><p>counts: numeric vector of size K with number of elements in each clusters</p></li>
+<li><p>din: numeric vector of size K which store the sums of in-degrees for each clusters</p></li>
+<li><p>dout: numeric vector of size K which store the sums of out-degrees for each clusters</p></li>
+<li><p>x_counts: matrix of size K*K with the number of links between each pair of clusters</p></li>
+<li><p>co_x_counts: matrix of size Krow*Kcol with the number of links between each pair of row and column cluster</p></li>
+</ul></li>
 </ul></p></dd>
 
 <dt><code>logalpha</code></dt><dd><p>value of log(alpha)</p></dd>
@@ -209,7 +215,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by .</p>
+  <p>Developed by Etienne Côme, Nicolas Jouvin.</p>
 </div>
 
 <div class="pkgdown">

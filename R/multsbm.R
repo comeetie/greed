@@ -2,14 +2,20 @@
 NULL
 
 
-#' @title Clustering with a Multinomial Stochastic Block Model description class
+#' @title Multinomial Stochastic Block Model class
 #' 
 #' @description 
-#' An S4 class to represent a Multinomial Stochastic Block Model, extend \code{\link{icl_model-class}}.
+#' An S4 class to represent a Multinomial Stochastic Block Model, extends \code{\link{icl_model-class}}. Such model can be used to cluster multilayer-graph vertex, and model a square adjacency cube \eqn{X} of size NxNxM with the following generative model :  
+#' \deqn{ \pi \sim Dirichlet(\alpha)}
+#' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
+#' \deqn{ \theta_{kl} \sim Dirichlet(\beta)}
+#' \deqn{ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{M}(L_{ij},\theta_{kl})}
+#' With \eqn{L_{ij}=\sum_{m=1}^MX_{ijm}}. This class mainly store the prior parameters value \eqn{\alpha,\beta} of this generative model in the following slots:
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter
 #' @slot beta Dirichlet prior parameter over Multinomial links
 #' @slot type define the type of networks (either "directed" or "undirected", default to "directed")
+#' @seealso \code{\link{multsbm_fit-class}}, \code{\link{multsbm_path-class}}
 #' @export 
 setClass("multsbm",
          representation = list(beta = "numeric",type="character"),
@@ -18,7 +24,7 @@ setClass("multsbm",
 
 
 
-#' @title Clustering with Multinomial Stochastic Block Model fit results class
+#' @title Multinomial Stochastic Block Model fit results class
 #' 
 #' @description An S4 class to represent a fit of a Multinomial Stochastic Block Model, extend \code{\link{icl_fit-class}}.
 #' @slot model a \code{\link{multsbm-class}} object to store the model fitted
@@ -37,7 +43,7 @@ setClass("multsbm",
 setClass("multsbm_fit",slots = list(model="multsbm"),contains="icl_fit")
 
 
-#' @title Clustering with a Multinomial Stochastic Block Model path extraction results class
+#' @title Multinomial Stochastic Block Model hierachical fit results class
 #' 
 #' 
 #' @description An S4 class to represent a hierarchical fit of a Multinomial Stochastic Block Model, extend \code{\link{icl_path-class}}.
@@ -59,7 +65,11 @@ setClass("multsbm_fit",slots = list(model="multsbm"),contains="icl_fit")
 #' \item cl: vector of cluster indexes
 #' \item k,l: index of the cluster that were merged at this step
 #' \item merge_mat: lower triangular matrix of delta icl values 
-#' \item obs_stats: a list with the same elements
+#' \item obs_stats: a list with the elements:
+#' \itemize{
+#' \item counts: numeric vector of size K with number of elements in each clusters
+#' \item x_counts: matrix of size KxKxM with the number of links between each pair of clusters 
+#' }
 #' }
 #' @slot logalpha value of log(alpha)
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}

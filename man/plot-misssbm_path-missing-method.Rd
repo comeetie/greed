@@ -15,7 +15,7 @@
 \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between clusters
 \item \code{'front'}: plot the extracted front ICL, log(alpha)
 \item \code{'path'}: plot the evolution of ICL with respect to K
-\item \code{'tree'}: plot the associated dendrogram
+\item \code{'tree'}: plot the dendrogram
 }}
 }
 \value{

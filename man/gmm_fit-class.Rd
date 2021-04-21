@@ -3,7 +3,7 @@
 \docType{class}
 \name{gmm_fit-class}
 \alias{gmm_fit-class}
-\title{Clustering with a Gaussian mixture model fit results class}
+\title{Gaussian mixture model fit results class}
 \description{
 An S4 class to represent a fit of a multivariate mixture of regression model, extend \code{\link{icl_fit-class}}.
 }

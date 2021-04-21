@@ -3,7 +3,7 @@
 \docType{class}
 \name{co_dcsbm_fit-class}
 \alias{co_dcsbm_fit-class}
-\title{Co-clustering with a degree corrected stochastic block model fit results class}
+\title{Degree corrected stochastic block model for bipartite graph fit results class}
 \description{
 An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{icl_fit-class}}.
 }
