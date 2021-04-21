@@ -4,7 +4,7 @@ using namespace Rcpp;
 
 
 double golden_search(std::function<double(double)> f,double lower_bound,double upper_bound,double tol){
-  double golden = 2/(sqrt(5) + 1);
+  double golden = 2/(sqrt(static_cast<double>(5)) + 1);
   
   
   double x1 = upper_bound - golden*(upper_bound - lower_bound);
