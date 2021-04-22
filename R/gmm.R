@@ -124,7 +124,13 @@ setMethod(f = "seed",
 setMethod(f = "preprocess", 
           signature = signature("gmm"), 
           definition = function(model, data){
-            list(X=as.matrix(data),N=nrow(data))
+            X=as.matrix(data)
+            if(sum(apply(X,2,stats::sd)==0)>0){
+              rem_var = colnames(X)[apply(X,2,stats::sd)==0]
+              X=X[,apply(X,2,stats::sd)!=0]
+              warning(paste0("Some features (",paste(rem_var,collapse = ", "),") are constants, they were removed."),call. = FALSE)
+            }
+            list(X=X,N=nrow(X))
           })
 
 reorder_gmm = function(obs_stats,or){

@@ -75,6 +75,8 @@ zscore = function(X){
   X=t(t(X)-m)
   s=apply(X,2,stats::sd)
   X=t(t(X)/s)
+  X[,s==0]=0
+  X
 }
 
 

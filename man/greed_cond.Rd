@@ -8,7 +8,7 @@ greed_cond(
   X,
   Y,
   K = 20,
-  model = methods::new("mvmreg", N0 = ncol(Y) + 1),
+  model = find_model_cond(X, Y),
   alg = methods::new("hybrid"),
   verbose = FALSE
 )
