@@ -134,7 +134,10 @@ setMethod(f = "seed",
 setMethod(f = "preprocess", 
           signature = signature("mvmreg"), 
           definition = function(model, data,K){
-            list(Y=as.matrix(data),X=matrix(1,ncol=1,nrow=nrow(data)),N=nrow(data),moves=as.sparse(matrix(1,K,K)))
+            if(nrow(data$X)!=nrow(data$Y)){
+              stop("Incomptible sizes between X and Y.")
+            }
+            list(Y=as.matrix(data$Y),X=as.matrix(data$X),N=nrow(data$X))
           })
 
 

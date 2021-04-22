@@ -22,12 +22,10 @@ Mvmregcomp::Mvmregcomp(const arma::mat & Xi,const arma::mat & Yi, double alphai,
 
   Kp  =  betai*X.t()*X/N;
   
-  Rcout << Kp  << std::endl;
 
   arma::mat R  = Y-X*M;
   arma::mat RR = R.t()*R;
   
-  Rcout << RR/N  << std::endl;
 
   S0 = RR;
   S0.zeros();

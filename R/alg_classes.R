@@ -193,13 +193,28 @@ find_model = function(X){
 #' @param verbose Boolean for verbose mode 
 #' @return an \code{\link{icl_path-class}} object
 #' @export
-greed_cond = function(X,Y,K=20,model=methods::new("mvmreg",N0=ncol(Y)+1),alg=methods::new("hybrid"),verbose=FALSE){
-  if(nrow(X)!=nrow(Y)){
-    stop("Incomptible sizes between X and Y.")
+greed_cond = function(X,Y,K=20,model=find_model_cond(X,Y),alg=methods::new("hybrid"),verbose=FALSE){
+  data = preprocess(model,list(X=X,Y=Y))
+  modelname = toupper(model@name)
+  if("type" %in% methods::slotNames(model)){
+    modelname = paste(model@type,modelname)
   }
-  fit(model,alg,list(X=X,Y=Y,N=nrow(X),moves=as.sparse(matrix(1,K,K))),K,verbose)
+  if("sampling" %in% methods::slotNames(model)){
+    modelname = paste(modelname,"with",model@sampling,"sampling")
+  }
+  cat(paste0("------- ",modelname, " model fitting ------\n"))
+  sol = fit(model,alg,data,K,verbose)
+  sol = postprocess(sol,data)
+  cat("------- Final clustering -------\n")
+  print(sol)
+  cat("\n")
+  sol
 }
 
+
+find_model_cond = function(X,Y){
+  methods::new("mvmreg",N0=ncol(X)+1)
+}
 setGeneric("reorder", function(model, obs_stats,order) standardGeneric("reorder")) 
 
 setGeneric("fit",function(model,alg,...) standardGeneric("fit")) 
