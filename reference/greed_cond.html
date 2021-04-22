@@ -139,7 +139,7 @@
   <span class='va'>X</span>,
   <span class='va'>Y</span>,
   K <span class='op'>=</span> <span class='fl'>20</span>,
-  model <span class='op'>=</span> <span class='fu'>methods</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/methods/new.html'>new</a></span><span class='op'>(</span><span class='st'>"mvmreg"</span>, N0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>Y</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>)</span>,
+  model <span class='op'>=</span> <span class='fu'>find_model_cond</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>Y</span><span class='op'>)</span>,
   alg <span class='op'>=</span> <span class='fu'>methods</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/methods/new.html'>new</a></span><span class='op'>(</span><span class='st'>"hybrid"</span><span class='op'>)</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
