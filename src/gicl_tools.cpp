@@ -115,29 +115,29 @@ arma::sp_mat delcol(const arma::sp_mat & a, int ci){
   return result;
 }
 
-// // [[Rcpp::export]]
-// arma::sp_mat delrowcol(const arma::sp_mat & a, int ci){
+
+arma::sp_mat delrowcol_copy(const arma::sp_mat & a, int ci){
 //   //a.shed_row(ci);
 //   //a.shed_col(ci);
-//   arma::sp_mat result(a.n_rows-1,a.n_cols-1);
-//   int k=0;
-//   int l=0;
-//   for (arma::sp_mat::const_iterator i = a.begin(); i != a.end(); ++i) {
-//     k = i.row();
-//     if(i.row()>ci){
-//       k --; 
-//     }
-//     l=i.col();
-//     if(i.col()>ci){
-//       l--;
-//     }
-//     if(i.row()!=ci & i.col()!=ci){
-//       result(k,l) = a(i.row(),i.col());
-//     }
-//     
-//   }
-//   return result;
-// }
+  arma::sp_mat result(a.n_rows-1,a.n_cols-1);
+  int k=0;
+  int l=0;
+  for (arma::sp_mat::const_iterator i = a.begin(); i != a.end(); ++i) {
+    k = i.row();
+    if(i.row()>ci){
+      k --;
+    }
+    l=i.col();
+    if(i.col()>ci){
+      l--;
+    }
+    if(i.row()!=ci & i.col()!=ci){
+      result(k,l) = a(i.row(),i.col());
+    }
+
+  }
+  return result;
+}
 
 
 

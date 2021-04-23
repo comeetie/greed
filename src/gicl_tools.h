@@ -26,6 +26,7 @@ arma::mat update_count(arma::vec counts,int oldcl, int newcl);
 
 arma::sp_mat delcol(const arma::sp_mat & a, int ci);
 void delrowcol(arma::sp_mat & a, int ci);
+arma::sp_mat delrowcol_copy(const arma::sp_mat & a, int ci);
 arma::sp_mat add_sppat(const arma::sp_mat & a, const arma::sp_mat & b);
 arma::sp_mat add_spmatpat(const arma::sp_mat & a, const arma::sp_mat & b);
 arma::sp_mat which_spmatpat(const arma::sp_mat & a, const arma::sp_mat & b);

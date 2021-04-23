@@ -49,7 +49,7 @@ public:
   SpMergeMat nasty_delta_merge(const arma::sp_mat & merge_graph);
   SpMergeMat delta_merge(const arma::sp_mat & merge_graph);
   // method  to compute merge matrix deltas with constraints on possible merge (update version)
-  SpMergeMat delta_merge(const arma::sp_mat & merge_graph, int obk, int obl,const List & old_stats);
+  SpMergeMat delta_merge(arma::sp_mat & merge_graph, int obk, int obl,const List & old_stats);
   // main method for greedy swaping
   void greedy_merge();
   arma::sp_mat greedy_merge(const arma::sp_mat & merge_graph);
