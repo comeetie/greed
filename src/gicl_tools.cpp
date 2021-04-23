@@ -131,7 +131,7 @@ arma::sp_mat delrowcol_copy(const arma::sp_mat & a, int ci){
     if(i.col()>ci){
       l--;
     }
-    if(i.row()!=ci & i.col()!=ci){
+    if((i.row()!=ci) & (i.col()!=ci)){
       result(k,l) = a(i.row(),i.col());
     }
 
