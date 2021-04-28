@@ -1,7 +1,8 @@
-pandoc: 2.7.3
+pandoc: 2.3.1
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  GMM: GMM.html
   graph-clustering-with-sbm: graph-clustering-with-sbm.html
-last_built: 2021-04-12T13:38Z
+last_built: 2021-04-28T16:09Z
 

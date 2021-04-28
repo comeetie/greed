@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">greed</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -89,6 +89,9 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">News</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
@@ -98,6 +101,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/graph-clustering-with-sbm.html">Graph clustering</a>
+    </li>
+    <li>
+      <a href="../articles/GMM.html">Gaussian Mixture Model Clustering</a>
     </li>
   </ul>
 </li>
@@ -255,6 +261,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="diaggmm-class.html">diaggmm-class</a></code> </p>
+        </td>
+        <td><p>Diagonal Gaussian mixture model description class</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="mvmreg-class.html">mvmreg-class</a></code> </p>
         </td>
         <td><p>Multivariate mixture of regression model description class</p></td>
@@ -313,6 +325,12 @@
           <p><code><a href="gmm_fit-class.html">gmm_fit-class</a></code> </p>
         </td>
         <td><p>Gaussian mixture model fit results class</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="diaggmm_fit-class.html">diaggmm_fit-class</a></code> </p>
+        </td>
+        <td><p>Diagonal Gaussian mixture model fit results class</p></td>
       </tr><tr>
         
         <td>
@@ -377,6 +395,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="diaggmm_path-class.html">diaggmm_path-class</a></code> </p>
+        </td>
+        <td><p>Diagonal Gaussian mixture model hierarchical fit results class</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="mvmreg_path-class.html">mvmreg_path-class</a></code> </p>
         </td>
         <td><p>Multivariate mixture of regression model hierarchical fit results class</p></td>
@@ -385,7 +409,7 @@
       <tr>
         <th colspan="2">
           <h2 id="section-methods-to-explore-a-hierarchical-fit" class="hasAnchor"><a href="#section-methods-to-explore-a-hierarchical-fit" class="anchor"></a>Methods to explore a hierarchical fit</h2>
-          <p class="section-desc"><p>Description of methods for cuting/ploting a hierachical model fit.</p></p>
+          <p class="section-desc"><p>Description of methods to extract coefficients and cut/plot a hierachical model fit.</p></p>
         </th>
       </tr>
       
@@ -394,6 +418,54 @@
       
       
       <tr>
+        
+        <td>
+          <p><code><a href="gmmpairs.html">gmmpairs()</a></code> </p>
+        </td>
+        <td><p>Make a matrix of plots with a given data and gmm fitted parameters</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-dcsbm_fit-method.html">coef(<i>&lt;dcsbm_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract parameters from an <code><a href='https://comeetie.github.io/greed/reference/dcsbm_fit-class.html'>dcsbm_fit-class</a></code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-diaggmm_fit-method.html">coef(<i>&lt;diaggmm_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract mixture parameters from <code><a href='https://comeetie.github.io/greed/reference/diaggmm_fit-class.html'>diaggmm_fit-class</a></code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-gmm_fit-method.html">coef(<i>&lt;gmm_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract mixture parameters from <code><a href='https://comeetie.github.io/greed/reference/gmm_fit-class.html'>gmm_fit-class</a></code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-misssbm_fit-method.html">coef(<i>&lt;misssbm_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract parameters from an <code><a href='https://comeetie.github.io/greed/reference/misssbm_fit-class.html'>misssbm_fit-class</a></code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-mm_fit-method.html">coef(<i>&lt;mm_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract parameters from an <code><a href='https://comeetie.github.io/greed/reference/mm_fit-class.html'>mm_fit-class</a></code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-multsbm_fit-method.html">coef(<i>&lt;multsbm_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract parameters from an <code><a href='https://comeetie.github.io/greed/reference/multsbm_fit-class.html'>multsbm_fit-class</a></code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-sbm_fit-method.html">coef(<i>&lt;sbm_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract parameters from an <code><a href='https://comeetie.github.io/greed/reference/sbm_fit-class.html'>sbm_fit-class</a></code> object</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="cut-co_dcsbm_path-method.html">cut(<i>&lt;co_dcsbm_path&gt;</i>)</a></code> </p>
@@ -410,85 +482,91 @@
         <td>
           <p><code><a href="plot-co_dcsbm_fit-missing-method.html">plot(<i>&lt;co_dcsbm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>co_dcsbm_fit-class</code></p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/co_dcsbm_fit-class.html'>co_dcsbm_fit-class</a></code></p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-co_dcsbm_path-missing-method.html">plot(<i>&lt;co_dcsbm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>co_dcsbm_path-class</code></p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/co_dcsbm_path-class.html'>co_dcsbm_path-class</a></code></p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-dcsbm_fit-missing-method.html">plot(<i>&lt;dcsbm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>sbm_fit-class</code> object</p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/sbm_fit-class.html'>sbm_fit-class</a></code> object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-dcsbm_path-missing-method.html">plot(<i>&lt;dcsbm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>sbm_path-class</code> object</p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/sbm_path-class.html'>sbm_path-class</a></code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot-diaggmm_path-missing-method.html">plot(<i>&lt;diaggmm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/diaggmm_path-class.html'>diaggmm_path-class</a></code> object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-gmm_path-missing-method.html">plot(<i>&lt;gmm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>gmm_path-class</code> object</p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/gmm_path-class.html'>gmm_path-class</a></code> object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-misssbm_fit-missing-method.html">plot(<i>&lt;misssbm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>sbm_fit-class</code> object</p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/misssbm_fit-class.html'>misssbm_fit-class</a></code> object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-misssbm_path-missing-method.html">plot(<i>&lt;misssbm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>sbm_path-class</code> object</p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/misssbm_path-class.html'>misssbm_path-class</a></code> object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-mm_fit-missing-method.html">plot(<i>&lt;mm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>mm_fit-class</code> object</p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/mm_fit-class.html'>mm_fit-class</a></code> object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-mm_path-missing-method.html">plot(<i>&lt;mm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>mm_path-class</code> object</p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/mm_path-class.html'>mm_path-class</a></code> object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-multsbm_fit-missing-method.html">plot(<i>&lt;multsbm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>multsbm_fit-class</code> object</p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/multsbm_fit-class.html'>multsbm_fit-class</a></code> object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-multsbm_path-missing-method.html">plot(<i>&lt;multsbm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>sbm_path-class</code> object</p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/sbm_path-class.html'>sbm_path-class</a></code> object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-mvmreg_path-missing-method.html">plot(<i>&lt;mvmreg_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>mvmreg_path-class</code> object</p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/mvmreg_path-class.html'>mvmreg_path-class</a></code> object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-sbm_fit.html">plot(<i>&lt;sbm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>sbm_fit-class</code> object</p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/sbm_fit-class.html'>sbm_fit-class</a></code> object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-sbm_path-missing-method.html">plot(<i>&lt;sbm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>sbm_path-class</code> object</p></td>
+        <td><p>plot a <code><a href='https://comeetie.github.io/greed/reference/sbm_path-class.html'>sbm_path-class</a></code> object</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -550,7 +628,7 @@
         <td>
           <p><code><a href="rdcsbm.html">rdcsbm()</a></code> </p>
         </td>
-        <td><p>Generate graph adjacency matrix using a degree corrected SBM</p></td>
+        <td><p>Generates graph adjacency matrix using a degree corrected SBM</p></td>
       </tr><tr>
         
         <td>
@@ -618,6 +696,12 @@
           <p><code><a href="Xvlegislature.html">Xvlegislature</a></code> </p>
         </td>
         <td><p>French Parliament votes dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fashion.html">fashion</a></code> </p>
+        </td>
+        <td><p>Fashion mnist dataset</p></td>
       </tr>
     </tbody>
     </table>

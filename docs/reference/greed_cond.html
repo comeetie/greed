@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">greed</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -90,6 +90,9 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">News</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
@@ -99,6 +102,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/graph-clustering-with-sbm.html">Graph clustering</a>
+    </li>
+    <li>
+      <a href="../articles/GMM.html">Gaussian Mixture Model Clustering</a>
     </li>
   </ul>
 </li>
@@ -139,7 +145,7 @@
   <span class='va'>X</span>,
   <span class='va'>Y</span>,
   K <span class='op'>=</span> <span class='fl'>20</span>,
-  model <span class='op'>=</span> <span class='fu'>methods</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/methods/new.html'>new</a></span><span class='op'>(</span><span class='st'>"mvmreg"</span>, N0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>Y</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>)</span>,
+  model <span class='op'>=</span> <span class='fu'>find_model_cond</span><span class='op'>(</span><span class='va'>X</span>, <span class='va'>Y</span><span class='op'>)</span>,
   alg <span class='op'>=</span> <span class='fu'>methods</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/methods/new.html'>new</a></span><span class='op'>(</span><span class='st'>"hybrid"</span><span class='op'>)</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>

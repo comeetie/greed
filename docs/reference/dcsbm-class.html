@@ -48,7 +48,7 @@ $$ \theta_{kl} \sim Exponential(p)$$
 $$ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)$$
 $$ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)$$
 The individuals parameters \(\gamma_i^+,\gamma_i^-\) allow to take into account the node degree heterogeneity. 
-These parameters have uniform priors over simplex \(S_k\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):" />
+These parameters have uniform priors over the simplex \(S_k\) ie. \(\sum_i\in C_k\gamma_i^+=1\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):" />
 
 
 
@@ -80,7 +80,7 @@ These parameters have uniform priors over simplex \(S_k\). This class mainly sto
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">greed</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -98,6 +98,9 @@ These parameters have uniform priors over simplex \(S_k\). This class mainly sto
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">News</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
@@ -107,6 +110,9 @@ These parameters have uniform priors over simplex \(S_k\). This class mainly sto
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/graph-clustering-with-sbm.html">Graph clustering</a>
+    </li>
+    <li>
+      <a href="../articles/GMM.html">Gaussian Mixture Model Clustering</a>
     </li>
   </ul>
 </li>
@@ -148,7 +154,7 @@ $$ \theta_{kl} \sim Exponential(p)$$
 $$ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)$$
 $$ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)$$
 The individuals parameters \(\gamma_i^+,\gamma_i^-\) allow to take into account the node degree heterogeneity. 
-These parameters have uniform priors over simplex \(S_k\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):</p>
+These parameters have uniform priors over the simplex \(S_k\) ie. \(\sum_i\in C_k\gamma_i^+=1\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):</p>
     </div>
 
 

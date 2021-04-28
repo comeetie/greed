@@ -13,10 +13,14 @@ navbar:
       href: index.html
     - text: "Reference"
       href: "reference/index.html"
+    - text: "News"
+      href: "news/index.html"
     - text: "Articles"
       menu:
       - text: "Graph clustering"
         href: articles/graph-clustering-with-sbm.html
+      - text: "Gaussian Mixture Model Clustering"
+        href: articles/GMM.html
   right:
     - icon: fa-github
     - text: github
@@ -81,8 +85,9 @@ reference:
 
 - title: 'Methods to explore a hierarchical fit'
   desc: >
-    Description of methods for extractiong coefficients and cuting/ploting a hierachical model fit.
+    Description of methods to extract coefficients and cut/plot a hierachical model fit.
   contents:
+    - '`gmmpairs`'
     - starts_with("coef")
     - starts_with("cut")
     - starts_with("plot")
@@ -115,4 +120,5 @@ reference:
     - '`Jazz`'
     - '`Jazz_full`'
     - '`Xvlegislature`'
+    - '`fashion`'
 
