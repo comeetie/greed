@@ -49,6 +49,7 @@ reference:
     - '`co_dcsbm-class`'
     - '`mm-class`'
     - '`gmm-class`'
+    - '`diaggmm-class`'
     - '`mvmreg-class`'
 - title: 'Models fit classes'
   desc: >
@@ -61,6 +62,7 @@ reference:
     - '`co_dcsbm_fit-class`'
     - '`mm_fit-class`'
     - '`gmm_fit-class`'
+    - '`diaggmm_fit-class`'
     - '`mvmreg_fit-class`'
 
 - title: 'Hierarchical models fit classes'
@@ -74,12 +76,14 @@ reference:
     - '`co_dcsbm_path-class`'
     - '`mm_path-class`'
     - '`gmm_path-class`'
+    - '`diaggmm_path-class`'
     - '`mvmreg_path-class`'
 
 - title: 'Methods to explore a hierarchical fit'
   desc: >
-    Description of methods for cuting/ploting a hierachical model fit.
+    Description of methods for extractiong coefficients and cuting/ploting a hierachical model fit.
   contents:
+    - starts_with("coef")
     - starts_with("cut")
     - starts_with("plot")
     

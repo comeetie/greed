@@ -458,10 +458,10 @@ nodelink_cube = function(sol){
 #' @return a \code{\link{ggplot2}} graphic 
 #' @export
 pairs = function(sol,X){
-  if(!(is(sol,"gmm_fit") | is(sol,"diaggmm_fit") )){
+  if(!(methods::is(sol,"gmm_fit") | methods::is(sol,"diaggmm_fit") )){
     stop("Input sol must be a gmm_fit or diaggmm_fit object.",call. = FALSE)
   }
-  if(!(is(X,"matrix") | is(X,"data.frame") )){
+  if(!(methods::is(X,"matrix") | methods::is(X,"data.frame") )){
     stop("Input X must be a matrix or data.frame.",call. = FALSE)
   }
   if(nrow(X)!=length(sol@cl) | ncol(X)!=length(sol@obs_stats$regs[[1]]$m) ){
