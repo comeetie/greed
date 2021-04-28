@@ -30,7 +30,7 @@ The following generative models are available currently :
 * Stochastic Block Models with Multinomial observations (**experimental**, see ``?`multsbm-class` ``),
 * Degree Corrected Latent Block Models (see ``?`co_dcsbm-class` ``),
 * Mixture of Multinomials (see ``?`mm-class` ``), 
-* Gaussian Mixture Model (**experimental**, see ``?`gmm-class` ``),
+* Gaussian Mixture Model (**experimental**, see ``?`gmm-class` `` and ``?`diaggmm-class` ``),
 * Multivariate Mixture of Gaussian Regression Model (**experimental**, see ``?`mvmreg-class` ``).
 
 

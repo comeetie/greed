@@ -153,11 +153,10 @@ setMethod(f = "seed",
 setMethod(f = "preprocess", 
           signature = signature("gmm"), 
           definition = function(model, data){
-            X=as.matrix(data)
-            if(sum(apply(X,2,stats::sd)==0)>0){
-              rem_var = colnames(X)[apply(X,2,stats::sd)==0]
-              X=X[,apply(X,2,stats::sd)!=0]
-              warning(paste0("Some features (",paste(rem_var,collapse = ", "),") are constants, they were removed."),call. = FALSE)
+            if(methods::is(data,"matrix") | methods::is(data,"data.frame") | methods::is(data,"dgCMatrix")){
+              X=as.matrix(data)  
+            }else{
+              stop(paste0("Unsupported data type: ", class(X) ," use a data.frame, a matrix, a sparse dgCMatrix."),call. = FALSE)
             }
             list(X=X,N=nrow(X))
           })

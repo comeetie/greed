@@ -93,7 +93,6 @@ setClass("dcsbm_path",contains=c("icl_path","dcsbm_fit"))
 
 #' @title plot a \code{\link{sbm_fit-class}} object
 #' 
-#' 
 #' @param x a \code{\link{sbm_fit-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
@@ -169,8 +168,11 @@ setMethod(f = "seed",
 setMethod(f = "preprocess", 
           signature = signature("dcsbm"), 
           definition = function(model, data){
-            if(!(methods::is(data,"dgCMatrix") | methods::is(data,"matrix"))){
-              stop("An dcsbm model expect a matrix or a sparse (dgCMatrix) matrix.",call. = FALSE)
+            if(!(methods::is(data,"dgCMatrix") | methods::is(data,"matrix")| methods::is(data,"data.frame"))){
+              stop("An dcsbm model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.",call. = FALSE)
+            }
+            if(methods::is(data,"data.frame")){
+              data=as.matrix(data)
             }
             if(nrow(data)!=ncol(data)){
               stop("A dcsbm model expect a square matrix.",call. = FALSE)

@@ -449,8 +449,24 @@ nodelink_cube = function(sol){
     ggplot2::theme_minimal()
 }
 
-
+#' @title Make a matrix of plots with a given data and gmm fitted parameters
+#' 
+#' @description 
+#' Make a matrix of plots with a given data and gmm fitted parameters with ellipses.
+#' @param sol a \code{\link{gmm_fit-class}} or \code{\link{diaggmm_fit-class}}
+#' @param X the data used for the fit a data.frame or matrix.
+#' @return a \code{\link{ggplot2}} graphic 
+#' @export
 pairs = function(sol,X){
+  if(!(is(sol,"gmm_fit") | is(sol,"diaggmm_fit") )){
+    stop("Input sol must be a gmm_fit or diaggmm_fit object.",call. = FALSE)
+  }
+  if(!(is(X,"matrix") | is(X,"data.frame") )){
+    stop("Input X must be a matrix or data.frame.",call. = FALSE)
+  }
+  if(nrow(X)!=length(sol@cl) | ncol(X)!=length(sol@obs_stats$regs[[1]]$m) ){
+    stop("Dimension mismatch between the fitted model and the data.",call. = FALSE)
+  }
   vnames = names(X)
   plts.df = list()
   ii=1
