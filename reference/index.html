@@ -89,6 +89,9 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">News</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
@@ -98,6 +101,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/graph-clustering-with-sbm.html">Graph clustering</a>
+    </li>
+    <li>
+      <a href="../articles/GMM.html">Gaussian Mixture Model Clustering</a>
     </li>
   </ul>
 </li>
@@ -403,7 +409,7 @@
       <tr>
         <th colspan="2">
           <h2 id="section-methods-to-explore-a-hierarchical-fit" class="hasAnchor"><a href="#section-methods-to-explore-a-hierarchical-fit" class="anchor"></a>Methods to explore a hierarchical fit</h2>
-          <p class="section-desc"><p>Description of methods for extractiong coefficients and cuting/ploting a hierachical model fit.</p></p>
+          <p class="section-desc"><p>Description of methods to extract coefficients and cut/plot a hierachical model fit.</p></p>
         </th>
       </tr>
       
@@ -412,6 +418,18 @@
       
       
       <tr>
+        
+        <td>
+          <p><code><a href="gmmpairs.html">gmmpairs()</a></code> </p>
+        </td>
+        <td><p>Make a matrix of plots with a given data and gmm fitted parameters</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-dcsbm_fit-method.html">coef(<i>&lt;dcsbm_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract parameters from an <code>dcsbm_fit-class</code> object</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="coef-diaggmm_fit-method.html">coef(<i>&lt;diaggmm_fit&gt;</i>)</a></code> </p>
@@ -423,6 +441,30 @@
           <p><code><a href="coef-gmm_fit-method.html">coef(<i>&lt;gmm_fit&gt;</i>)</a></code> </p>
         </td>
         <td><p>Extract mixture parameters from <code>gmm_fit-class</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-misssbm_fit-method.html">coef(<i>&lt;misssbm_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract parameters from an <code>misssbm_fit-class</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-mm_fit-method.html">coef(<i>&lt;mm_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract parameters from an <code>mm_fit-class</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-multsbm_fit-method.html">coef(<i>&lt;multsbm_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract parameters from an <code>multsbm_fit-class</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-sbm_fit-method.html">coef(<i>&lt;sbm_fit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract parameters from an <code>sbm_fit-class</code> object</p></td>
       </tr><tr>
         
         <td>
@@ -476,13 +518,13 @@
         <td>
           <p><code><a href="plot-misssbm_fit-missing-method.html">plot(<i>&lt;misssbm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>sbm_fit-class</code> object</p></td>
+        <td><p>plot a <code>misssbm_fit-class</code> object</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="plot-misssbm_path-missing-method.html">plot(<i>&lt;misssbm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>sbm_path-class</code> object</p></td>
+        <td><p>plot a <code>misssbm_path-class</code> object</p></td>
       </tr><tr>
         
         <td>
@@ -654,6 +696,12 @@
           <p><code><a href="Xvlegislature.html">Xvlegislature</a></code> </p>
         </td>
         <td><p>French Parliament votes dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fashion.html">fashion</a></code> </p>
+        </td>
+        <td><p>Fashion mnist dataset</p></td>
       </tr>
     </tbody>
     </table>
