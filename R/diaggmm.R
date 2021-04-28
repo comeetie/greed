@@ -1,39 +1,39 @@
-#' @include models_classes.R fit_classes.R mvmreg.R
+#' @include models_classes.R fit_classes.R 
 NULL
 
 
-#' @title Gaussian mixture model description class
+#' @title Diagonal Gaussian mixture model description class
 #' 
 #' @description 
-#' An S4 class to represent a multivariate Gaussian mixture  model, extend \code{\link{icl_model-class}}. 
+#' An S4 class to represent a multivariate diagonal Gaussian mixture model, extend \code{\link{icl_model-class}}. 
 #' The model corresponds to the following generative model:
 #' \deqn{ \pi \sim Dirichlet(\alpha)}
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
-#' \deqn{ V_k \sim \mathcal{W}(\epsilon^{-1},n_0)}
-#' \deqn{ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})}
-#' \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})}
-#' with \eqn{\mathcal{W}(\epsilon^{-1},n_0)} the Whishart distribution. 
+#' \deqn{ \lambda_k^{(d)} \sim \mathcal{G}(\kappa,\beta)}
+#' \deqn{ \mu_k^{(d)} \sim \mathcal{N}(\mu,(\tau \lambda_k)^{-1})}
+#' \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,\lambda_{k}^{-1})}
+#' with \eqn{\mathcal{G}(\kappa,\beta)} the Gamma distribution with shape parameter \eqn{\kappa} and rate parameter \eqn{\beta}. 
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot tau Prior parameter (inverse variance) default 0.01 
-#' @slot N0 Prior parameter (pseudo count) should be > number of features
-#' @slot epsilon Prior parameter co-variance matrix prior
-#' @slot mu mean prior
+#' @slot kappa Prior parameter (gamma shape) default to 1
+#' @slot beta Prior parameter (gamma rate) default to 0.1
+#' @slot mu mean prior (vector of size D)
 #' @examples
-#' new("gmm")
-#' new("gmm",alpha=1,tau=0.1,N0=15)
+#' new("diaggmm")
+#' new("diaggmm",alpha=1,tau=0.1,beta=0.1)
 #' @md
 #' @references Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5. #' 
 #' @export
-setClass("gmm", representation = list(tau = "numeric",mu="numeric",epsilon="matrix",N0="numeric"),
+setClass("diaggmm", representation = list(tau = "numeric",kappa="numeric",beta="numeric",mu="numeric"),
          contains = "icl_model",
-         prototype(name="gmm",tau=0.01,N0=10,mu=1,epsilon=matrix(1,1,1),alpha=1))
+         prototype(name="diaggmm",tau=0.01,kappa=1,beta=0.01,mu=1,alpha=1))
 
 
-#' @title Gaussian mixture model fit results class
+#' @title Diagonal Gaussian mixture model fit results class
 #' 
-#' @description An S4 class to represent a fit of a multivariate mixture of regression model, extend \code{\link{icl_fit-class}}.
-#' @slot model a \code{\link{gmm-class}} object to store the model fitted
+#' @description An S4 class to represent a fit of a multivariate diagonal Gaussian mixture model, extend \code{\link{icl_fit-class}}.
+#' @slot model a \code{\link{diaggmm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
@@ -46,14 +46,14 @@ setClass("gmm", representation = list(tau = "numeric",mu="numeric",epsilon="matr
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
 #' @export 
-setClass("gmm_fit",slots = list(model="gmm"),contains="icl_fit")
+setClass("diaggmm_fit",slots = list(model="diaggmm"),contains="icl_fit")
 
 
-#' @title  Gaussian mixture model hierarchical fit results class
+#' @title  Diagonal Gaussian mixture model hierarchical fit results class
 #' 
 #' 
-#' @description An S4 class to represent a hierarchical fit of a gaussian mixture model, extend \code{\link{icl_path-class}}.
-#' @slot model a \code{\link{gmm-class}} object to store the model fitted
+#' @description An S4 class to represent a hierarchical fit of a diagonal gaussian mixture model, extend \code{\link{icl_path-class}}.
+#' @slot model a \code{\link{diaggmm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
@@ -82,14 +82,14 @@ setClass("gmm_fit",slots = list(model="gmm"),contains="icl_fit")
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father  
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
 #' @export 
-setClass("gmm_path",contains=c("icl_path","gmm_fit"))
+setClass("diaggmm_path",contains=c("icl_path","diaggmm_fit"))
 
 
 
-#' @title plot a \code{\link{gmm_path-class}} object
+#' @title plot a \code{\link{diaggmm_path-class}} object
 #' 
 #' 
-#' @param x a \code{\link{gmm_path-class}}
+#' @param x a \code{\link{diaggmm_path-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'front'}: plot the extracted front ICL, log(alpha)
@@ -99,7 +99,7 @@ setClass("gmm_path",contains=c("icl_path","gmm_fit"))
 #' @return a \code{\link{ggplot2}} graphic
 #' @export 
 setMethod(f = "plot", 
-          signature = signature("gmm_path","missing"),
+          signature = signature("diaggmm_path","missing"),
           definition = function(x,type='tree'){
             switch(type,tree = {
               dendo(x)
@@ -112,9 +112,9 @@ setMethod(f = "plot",
             })
           })
 
-#' @title Extract mixture parameters from \code{\link{gmm_fit-class}} object
+#' @title Extract mixture parameters from \code{\link{diaggmm_fit-class}} object
 #' 
-#' @param object a \code{\link{gmm_fit-class}}
+#' @param object a \code{\link{diaggmm_fit-class}}
 #' @return a list with the mixture parameters estimates (MAP), the fields are:
 #' \itemize{
 #' \item \code{'pi'}: cluster proportions 
@@ -123,26 +123,23 @@ setMethod(f = "plot",
 #' }
 #' @export 
 setMethod(f = "coef", 
-          signature = signature(object = "gmm_fit"),
+          signature = signature(object = "diaggmm_fit"),
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
             muk = lapply(sol@obs_stats$regs, function(r){(sol@model@tau*sol@model@mu+r$ng*r$m)/(sol@model@tau+r$ng)})
             Sigmak = lapply(sol@obs_stats$regs, function(r){
-              mu = (sol@model@tau*sol@model@mu+r$ng*r$m)/(sol@model@tau+r$ng)
-              Sc= r$S+t(r$m)%*%r$m-t(mu)%*%mu
-              S = (Sc+sol@model@tau*t(mu-sol@model@mu)%*%(mu-sol@model@mu)+sol@model@epsilon)/(r$ng+sol@model@N0-length(mu))
-              S
+              betan = sol@model@beta +0.5*r$S+(sol@model@tau*r$ng*(r$m-sol@model@mu)^2)/(2*sol@model@tau+r$ng)
+              alphan = sol@model@kappa+r$ng/2
+              mode =  diag(as.vector(betan/(alphan-1)))
+              mode
             })
             list(pi=pi,muk=muk,Sigmak=Sigmak)
           })
-          
-
-
 
 
 setMethod(f = "seed", 
-          signature = signature("gmm","list","numeric"), 
+          signature = signature("diaggmm","list","numeric"), 
           definition = function(model,data, K){
             km=stats::kmeans(zscore(data$X),K)
             km$cluster
@@ -151,14 +148,14 @@ setMethod(f = "seed",
 
 
 setMethod(f = "preprocess", 
-          signature = signature("gmm"), 
+          signature = signature("diaggmm"), 
           definition = function(model, data){
             X=as.matrix(data)
-            if(sum(apply(X,2,stats::sd)==0)>0){
-              rem_var = colnames(X)[apply(X,2,stats::sd)==0]
-              X=X[,apply(X,2,stats::sd)!=0]
-              warning(paste0("Some features (",paste(rem_var,collapse = ", "),") are constants, they were removed."),call. = FALSE)
-            }
+            #if(sum(apply(X,2,stats::sd)==0)>0){
+            #  rem_var = colnames(X)[apply(X,2,stats::sd)==0]
+            #  X=X[,apply(X,2,stats::sd)!=0]
+            #  warning(paste0("Some features (",paste(rem_var,collapse = ", "),") are constants, they were removed."),call. = FALSE)
+            #}
             list(X=X,N=nrow(X))
           })
 
@@ -170,7 +167,7 @@ reorder_gmm = function(obs_stats,or){
 
 
 setMethod(f = "reorder", 
-          signature = signature("gmm", "list","integer"), 
+          signature = signature("diaggmm", "list","integer"), 
           definition = function(model, obs_stats,order){
             reorder_gmm(obs_stats,order)
           })

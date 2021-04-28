@@ -113,7 +113,7 @@ setMethod(f = "cut",
 #' 
 #' @param X data to cluster either a matrix,an array or a \code{\link{dgCMatrix-class}}
 #' @param K initial number of cluster
-#' @param model a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}} or \code{\link{mvmreg-class}}
+#' @param model a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}},\code{\link{gmm-class}}, \code{\link{diaggmm-class}} or \code{\link{mvmreg-class}}
 #' @param alg an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
 #' @param verbose Boolean for verbose mode 
 #' @return an \code{\link{icl_path-class}} object
@@ -154,6 +154,9 @@ find_model = function(X){
     }
     
   }else{
+    if(methods::is(X,"data.frame")){
+      X=as.matrix(X)
+    }
     if(methods::is(X,"dgCMatrix") | methods::is(X,"matrix")){
       if(nrow(X)==ncol(X)){
         if(sum(is.na(X))>0){
@@ -173,12 +176,12 @@ find_model = function(X){
         if(all(round(X)==X)){
           model = methods::new("co_dcsbm")  
         }else{
-          data = preprocess(methods::new("gmm"),X)
-          model = methods::new("gmm",N0=ncol(data$X)+1,epsilon=diag(diag(stats::cov(data$X))),mu=apply(data$X,2,mean),tau=0.00001)
+          #model = methods::new("gmm",N0=ncol(X)+1,epsilon=100*diag(1/diag(stats::cov(X))),mu=apply(X,2,mean),tau=0.01)
+          model = methods::new("diaggmm",mu=apply(X,2,mean),beta=0.1)
         }
       }
     }else{
-      stop(paste0("Unsupported data type: ", class(X) ," use matrix, sparse dgCMatrix or array."),call. = FALSE)
+      stop(paste0("Unsupported data type: ", class(X) ," use a data.frame, a matrix, a sparse dgCMatrix or an array."),call. = FALSE)
     }
   }
   model

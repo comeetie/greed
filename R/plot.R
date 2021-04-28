@@ -450,7 +450,62 @@ nodelink_cube = function(sol){
 }
 
 
+pairs = function(sol,X){
+  vnames = names(X)
+  plts.df = list()
+  ii=1
+  nb_ech = 500
+  params = coef(sol)
+  for(i in 1: ncol(X)){
+    for (j in 1:ncol(X)){
+      if(i==j){
+        #plt = ggally_text(paste("Plot #", i, sep = ""))
+        limsi=c(range(X[,vnames[i]])[1]-diff(range(X[,vnames[i]]))*0.1,range(X[,i])[2]+diff(range(X[,vnames[i]]))*0.1)
+        x = seq(limsi[1],limsi[2],length.out = nb_ech)
+        pdfs    = lapply(1:sol@K,function(k){params$pi[k]*stats::dnorm(x,mean=params$muk[[k]][j],sd=sqrt(params$Sigmak[[k]][j,j]))})
+        pdfs.df = data.frame(pdf=do.call(c,pdfs),cl=rep(1:sol@K,each=nb_ech),x=rep(x,sol@K))
+        pdfmix  = data.frame(pdf=colSums(do.call(rbind,pdfs)),x=x)
+        
+        plt = ggplot2::ggplot()+
+          ggplot2::geom_line(data=pdfmix,ggplot2::aes_(x=~x,y=~pdf))+
+          ggplot2::geom_line(data=pdfs.df,ggplot2::aes_(x=~x,y=~pdf,color=~factor(cl),group=~cl))+
+          ggplot2::geom_segment(data=X,ggplot2::aes_(x=as.name(vnames[i]),xend=as.name(vnames[i]),y=0,yend=max(pdfs.df$pdf)*0.05,col=factor(sol@cl)))+
+          ggplot2::scale_x_continuous(limits=limsi)
+      }else{
+        elipses.df = do.call(rbind,lapply(1:sol@K,function(k){ 
+          el.df = ellips(params$muk[[k]][c(i,j)],params$Sigmak[[k]][c(i,j),c(i,j)],nb_ech = nb_ech)
+          el.df$cl=k
+          el.df
+          }))
+        limsi=c(range(X[,vnames[i]])[1]-diff(range(X[,vnames[i]]))*0.1,range(X[,i])[2]+diff(range(X[,vnames[i]]))*0.1)
+        limsj=c(range(X[,vnames[j]])[1]-diff(range(X[,vnames[j]]))*0.1,range(X[,j])[2]+diff(range(X[,vnames[j]]))*0.1)
+        plt = ggplot2::ggplot(X,ggplot2::aes_(as.name(vnames[i]),as.name(vnames[j]),color=factor(sol@cl)))+
+          ggplot2::geom_point()+ggplot2::geom_path(data=elipses.df,ggplot2::aes_(x=~x,y=~y,color=~factor(cl)))+
+          ggplot2::scale_x_continuous(limits=limsi)+
+          ggplot2::scale_y_continuous(limits=limsj)
+      }
+      plts.df[[ii]]= plt
+      ii=ii+1
+    }
+  }
+  pm <- GGally::ggmatrix(plts.df,3, 3,xAxisLabels = vnames,yAxisLabels = vnames,byrow = FALSE)+ggplot2::theme_bw()
+  pm
+  
+}
 
+
+
+ellips <- function(mu = c(0,0), Sigma=diag(rep(1,2)), nb_ech = 100, l=stats::qchisq(.95, df=2)){
+  t <- seq(0, 2*pi, len=nb_ech)
+  a <- sqrt(l*eigen(Sigma)$values[1])
+  b <- sqrt(l*eigen(Sigma)$values[2])
+  x <- a*cos(t)
+  y <- b*sin(t)
+  X <- cbind(x, y)
+  R <- eigen(Sigma)$vectors
+  Xf = X%*%t(R)
+  data.frame(x=Xf[,1]+mu[1],y=Xf[,2]+mu[2])
+}
 
 
 

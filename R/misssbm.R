@@ -93,6 +93,7 @@ setClass("misssbm_fit",slots = list(model="misssbm"),contains="icl_fit")
 #' \item x_counts: matrix of size K*K with the number of observed links between each pair of clusters 
 #' \item x_counts_obs: matrix of size K*K with the number of observed dyads between each pair of clusters 
 #' }
+#' }
 #' @slot logalpha value of log(alpha)
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father  

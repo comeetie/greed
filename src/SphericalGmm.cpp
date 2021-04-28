@@ -2,12 +2,12 @@
 #include "gicl_tools.h"
 #include "MergeMat.h"
 #include "IclModel.h"
-#include "Gmm.h"
+#include "SphericalGmm.h"
 using namespace Rcpp;
 
 
 
-Gmm::Gmm(const arma::mat & Xi,double alphai,double taui,int N0i, const arma::mat epsiloni, const arma::rowvec mui, arma::vec& cli,bool verb){
+SphericalGmm::SphericalGmm(const arma::mat & Xi,double alphai,double taui,double kappai,double betai, const arma::rowvec mui, arma::vec& cli,bool verb){
   // dirichlet prior parameter on proportion
   alpha = alphai;
 
@@ -17,25 +17,22 @@ Gmm::Gmm(const arma::mat & Xi,double alphai,double taui,int N0i, const arma::mat
   N  = X.n_rows;
 
   tau = taui;
-  N0 = N0i;
-  epsilon = epsiloni;
+  kappa = kappai;
+  beta= betai;
   mu = mui;
   set_cl(cli);
-  S = cov(X);
-  //normfact = -N/2*log(det(S));
-  List normref = as<List>(gmm_marginal(X,tau,N0,epsilon,mu));
-  normfact = normref["log_evidence"];
 
-  // TODO : add a filed to store the icl const ?
+
+
   verbose=verb;
 }
 
-void Gmm::set_cl(arma::vec cli){
+void SphericalGmm::set_cl(arma::vec cli){
   // construct oberved stats 
   cl = cli;
   K = arma::max(cl)+1;
   for(int k=0;k<K;k++){
-    regs.push_back(gmm_marginal(X.rows(arma::find(cl==k)),tau,N0,epsilon,mu));
+    regs.push_back(gmm_marginal_spherical(X.rows(arma::find(cl==k)),kappa,tau,beta,mu));
   }
   // counts : number of row in each cluster
   counts = count(cl,K);
@@ -43,12 +40,12 @@ void Gmm::set_cl(arma::vec cli){
 
 
 
-List Gmm::get_obs_stats(){
+List SphericalGmm::get_obs_stats(){
   // return observed stats
   return List::create(Named("counts", counts), Named("regs", regs));
 }
 
-double Gmm::icl_emiss(const List & obs_stats){
+double SphericalGmm::icl_emiss(const List & obs_stats){
   // compute log(p(X|Z))
   List regs =as<List>(obs_stats["regs"]);
   int K = regs.size();
@@ -61,7 +58,7 @@ double Gmm::icl_emiss(const List & obs_stats){
   return icl_emiss;
 }
 
-double Gmm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
+double SphericalGmm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
   // compute log(p(X|Z)) but only for the 2 classes which haved changed (oldcl,newcl)
   List regs =as<List>(obs_stats["regs"]);
   int K = regs.size();
@@ -80,7 +77,7 @@ double Gmm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
 }
 
 
-arma::mat Gmm::delta_swap(int i,arma::uvec iclust){
+arma::mat SphericalGmm::delta_swap(int i,arma::uvec iclust){
   
   // old cluster
   int oldcl = cl(i);
@@ -107,11 +104,11 @@ arma::mat Gmm::delta_swap(int i,arma::uvec iclust){
       
       List regk = new_regs[k];
       
-      new_regs[k]=gmm_marginal_add1(regk,xc,tau,N0,epsilon,mu);
+      new_regs[k]=gmm_marginal_spherical_add1(regk,xc,kappa,tau,beta,mu);
       
       List regold = new_regs[oldcl];
       
-      new_regs[oldcl]=gmm_marginal_del1(regold,xc,tau,N0,epsilon,mu);
+      new_regs[oldcl]=gmm_marginal_spherical_del1(regold,xc,kappa,tau,beta,mu);
       // update cluster counts
       
  
@@ -128,7 +125,7 @@ arma::mat Gmm::delta_swap(int i,arma::uvec iclust){
 }
 
 
-void Gmm::swap_update(int i,int newcl){
+void SphericalGmm::swap_update(int i,int newcl){
   // a swap is done !
   // old cluster
   int oldcl = cl(i);
@@ -139,8 +136,8 @@ void Gmm::swap_update(int i,int newcl){
   // update regs
   List new_regs = clone(regs);
   // switch row x from cluster oldcl to k
-  new_regs[newcl]=gmm_marginal_add1(new_regs[newcl],xc,tau,N0,epsilon,mu);
-  new_regs[oldcl]=gmm_marginal_del1(new_regs[oldcl],xc,tau,N0,epsilon,mu);
+  new_regs[newcl]=gmm_marginal_spherical_add1(new_regs[newcl],xc,kappa,tau,beta,mu);
+  new_regs[oldcl]=gmm_marginal_spherical_del1(new_regs[oldcl],xc,kappa,tau,beta,mu);
   // update counts
   arma::mat new_counts = update_count(counts,oldcl,newcl);
   // update cl
@@ -166,7 +163,7 @@ void Gmm::swap_update(int i,int newcl){
 }
 
 
-double Gmm::delta_merge(int k, int l){
+double SphericalGmm::delta_merge(int k, int l){
   
   List old_stats = List::create(Named("counts", counts), Named("regs", regs));
   // for each possible merge
@@ -177,7 +174,7 @@ double Gmm::delta_merge(int k, int l){
   new_counts(k) = 0;
   // x_counts after merge on l
   // row/col k will not be taken into account since counts(k)==0
-  new_regs[l] = gmm_marginal_merge(regs[k],regs[l],tau,N0,epsilon,mu);
+  new_regs[l] = gmm_marginal_spherical_merge(regs[k],regs[l],kappa,tau,beta,mu);
   
   List new_stats = List::create(Named("counts", new_counts), Named("regs", new_regs));
   // delta
@@ -188,7 +185,7 @@ double Gmm::delta_merge(int k, int l){
 
 
 // Merge update between k and l
-void Gmm::merge_update(int k,int l){
+void SphericalGmm::merge_update(int k,int l){
   // update cl
   cl(arma::find(cl==k))=arma::ones(counts(k),1)*l;
   cl.elem(arma::find(cl>k))=cl.elem(arma::find(cl>k))-1;
@@ -197,7 +194,7 @@ void Gmm::merge_update(int k,int l){
   counts    = counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
   // update x_counts
   regs = clone(regs);
-  regs[l] = gmm_marginal_merge(regs[k],regs[l],tau,N0,epsilon,mu);
+  regs[l] = gmm_marginal_spherical_merge(regs[k],regs[l],kappa,tau,beta,mu);
   IntegerVector idx = seq_len(regs.length()) - 1;
   regs = regs[idx!=k];
   // update K

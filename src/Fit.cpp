@@ -15,6 +15,7 @@
 #include "CoDcSbm.h"
 #include "Mm.h"
 #include "Gmm.h"
+#include "SphericalGmm.h"
 #include "Mvmregcomp.h"
 using namespace Rcpp;
 
@@ -33,6 +34,7 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
        (strcmp(model.slot("name"),"co_dcsbm")!=0) && 
        (strcmp(model.slot("name"),"mm")!=0) &&
        (strcmp(model.slot("name"),"mvmreg")!=0) &&
+       (strcmp(model.slot("name"),"diaggmm")!=0) &&
        (strcmp(model.slot("name"),"gmm")!=0)){
        stop("Unsuported model");
     }
@@ -115,6 +117,10 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       M = new Gmm(X,model.slot("alpha"),model.slot("tau"),model.slot("N0"),model.slot("epsilon"),model.slot("mu"),clt,verbose);
     }
     
+    if(strcmp(model.slot("name"),"diaggmm")==0){
+      arma::mat X = as<arma::mat>(data["X"]);
+      M = new SphericalGmm(X,model.slot("alpha"),model.slot("tau"),model.slot("kappa"),model.slot("beta"),model.slot("mu"),clt,verbose);
+    }
     if(strcmp(model.slot("name"),"mvmreg")==0 ){
       arma::mat X = as<arma::mat>(data["X"]);
       arma::mat Y = as<arma::mat>(data["Y"]);

@@ -6,12 +6,13 @@
 \title{Gaussian mixture model description class}
 \description{
 An S4 class to represent a multivariate Gaussian mixture  model, extend \code{\link{icl_model-class}}.
-The model follow \href{https://tminka.github.io/papers/minka-linear.pdf}{minka-linear} and correspond to the following generative model:
+The model corresponds to the following generative model:
 \deqn{ \pi \sim Dirichlet(\alpha)}
 \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
-\deqn{ V_k \sim \mathcal{W}^{-1}(\epsilon I,n_0)}
-\deqn{ \mu_k \sim \mathcal{N}(0,\frac{V_k}{\tau N})}
-\deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k})}
+\deqn{ V_k \sim \mathcal{W}(\epsilon^{-1},n_0)}
+\deqn{ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})}
+\deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})}
+with \eqn{\mathcal{W}(\epsilon^{-1},n_0)} the Whishart distribution.
 }
 \section{Slots}{
 
@@ -22,7 +23,7 @@ The model follow \href{https://tminka.github.io/papers/minka-linear.pdf}{minka-l
 
 \item{\code{tau}}{Prior parameter (inverse variance) default 0.01}
 
-\item{\code{N0}}{Prior parameter (pseudo count) default to 10 ! should be > number of features}
+\item{\code{N0}}{Prior parameter (pseudo count) should be > number of features}
 
 \item{\code{epsilon}}{Prior parameter co-variance matrix prior}
 
@@ -32,4 +33,7 @@ The model follow \href{https://tminka.github.io/papers/minka-linear.pdf}{minka-l
 \examples{
 new("gmm")
 new("gmm",alpha=1,tau=0.1,N0=15)
+}
+\references{
+Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5. #'
 }

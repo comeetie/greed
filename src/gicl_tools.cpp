@@ -585,6 +585,27 @@ List gmm_marginal(const arma::mat X,double tau,int N0i, const arma::mat epsilon,
 }
 
 
+List gmm_marginal_spherical(const arma::mat X,double kappa,double tau,double beta, const arma::rowvec mu) {
+  
+  
+  double ng = X.n_rows, d = X.n_cols;
+  arma::rowvec m = arma::mean(X,0);
+  arma::mat M(ng,d);
+  M.each_row() = m;
+  arma::rowvec S = arma::sum(arma::pow(X-M,2),0);
+  arma::rowvec betan = beta +0.5*S + (tau*ng)/(2*(tau+ng))*arma::pow(m-mu,2);
+  double taun = tau+ng;
+  double kappan = kappa+(ng/2);
+  double log_evidence = arma::accu(lgamma(kappan)-lgamma(kappa)+kappa*log(beta)-kappan*log(betan)+0.5*log(tau)-0.5*log(taun)-ng/2*log(2*M_PI));
+    
+  return List::create(Named("S")  = S,
+                      Named("m") = m,
+                      Named("ng")  = ng,
+                      Named("log_evidence")=log_evidence);
+}
+
+
+
 double gauss_evidence(double d, double ng,double N0, double tau,double eps,arma::mat epsilon, arma::mat S, arma::rowvec m, arma::rowvec mu){
   arma::mat Sp = eps*epsilon+S;
   arma::vec di = arma::linspace<arma::vec>(1, d,d);
@@ -650,6 +671,27 @@ List gmm_marginal_add1(List current, const arma::rowvec X,double tau,int N0i, co
                       Named("log_evidence")=log_evidence);
 }
 
+
+
+List gmm_marginal_spherical_add1(List current, const arma::rowvec X,double kappa,double tau,double beta, const arma::rowvec mu) {
+  
+  
+  arma::mat mold = as<arma::mat>(current["m"]);
+  double ngold = as<double>(current["ng"]);
+  double ng = ngold +1;
+  arma::rowvec m = (mold*ngold+X)/ng;
+  arma::rowvec S = as<arma::rowvec>(current["S"])+((X-mold)%(X-m));
+  arma::rowvec betan = beta +0.5*S + (tau*ng)/(2*(tau+ng))*arma::pow(m-mu,2);
+  double taun = tau+ng;
+  double kappan = kappa+(ng/2);
+  double log_evidence = arma::accu(lgamma(kappan)-lgamma(kappa)+kappa*log(beta)-kappan*log(betan)+0.5*log(tau)-0.5*log(taun)-ng/2*log(2*M_PI));
+  
+  return List::create(Named("S")  = S,
+                      Named("m") = m,
+                      Named("ng")  = ng,
+                      Named("log_evidence")=log_evidence);
+}
+
 // [[Rcpp::export]]
 List gmm_marginal_add1_eb(List current, const arma::rowvec X,double tau,int N0i, const arma::mat epsilon, const arma::rowvec mu) {
   
@@ -702,6 +744,28 @@ List gmm_marginal_del1(List current, const arma::rowvec X,double tau,int N0i, co
                       Named("ng")  = ng,
                       Named("log_evidence")=log_evidence);
 }
+
+List gmm_marginal_spherical_del1(List current, const arma::rowvec X,double kappa,double tau,double beta, const arma::rowvec mu) {
+  
+  
+  arma::mat mold = as<arma::mat>(current["m"]);
+  double ngold = as<double>(current["ng"]);
+  double ng = ngold  - 1;
+  arma::rowvec m = (mold*ngold-X)/ng;
+  arma::rowvec S = as<arma::rowvec>(current["S"])-((X-mold)%(X-m));
+  arma::rowvec betan = beta +0.5*S + (tau*ng)/(2*(tau+ng))*arma::pow(m-mu,2);
+  double taun = tau+ng;
+  double kappan = kappa+(ng/2);
+  double log_evidence = arma::accu(lgamma(kappan)-lgamma(kappa)+kappa*log(beta)-kappan*log(betan)+0.5*log(tau)-0.5*log(taun)-ng/2*log(2*M_PI));
+
+  return List::create(Named("S")  = S,
+                      Named("m") = m,
+                      Named("ng")  = ng,
+                      Named("log_evidence")=log_evidence);
+}
+
+
+
 
 
 // [[Rcpp::export]]
@@ -757,6 +821,34 @@ List gmm_marginal_merge(List current1, List current2,double tau,int N0i, const a
   double log_evidence = arma::accu(lgamma((ng+N0+1-di)/2)) - arma::accu(lgamma((N0+1-di)/2));
   log_evidence = log_evidence - ng*d/2*log(M_PI) + d/2*log(tau) - d/2*log(tau+ng) ;
   log_evidence = log_evidence + N0/2*log(det(epsilon))-(ng+N0)/2*log(det(Sp));
+  
+  return List::create(Named("S")  = S,
+                      Named("m") = m,
+                      Named("ng")  = ng,
+                      Named("log_evidence")=log_evidence);
+}
+
+
+List gmm_marginal_spherical_merge(List current1, List current2,double kappa,double tau,double beta, const arma::rowvec mu) {
+  
+  double ng1 = as<double>(current1["ng"]);
+  double ng2 = as<double>(current2["ng"]);
+  double ng  = ng1+ng2;
+  
+  arma::rowvec m1 = as<arma::rowvec>(current1["m"]);
+  arma::rowvec m2 = as<arma::rowvec>(current2["m"]);
+  arma::rowvec m = m1*(ng1/ng)+m2*(ng2/ng);
+  
+  double d = m1.n_cols;
+  arma::rowvec S1 =  as<arma::rowvec>(current1["S"]);
+  arma::rowvec S2 =  as<arma::rowvec>(current2["S"]);
+  arma::rowvec S = S1+ng1*arma::pow(m1-m,2)+S2+ng2*arma::pow(m2-m,2);
+  
+  
+  arma::rowvec betan = beta +0.5*S + (tau*ng)/(2*(tau+ng))*arma::pow(m-mu,2);
+  double taun = tau+ng;
+  double kappan = kappa+(ng/2);
+  double log_evidence = arma::accu(lgamma(kappan)-lgamma(kappa)+kappa*log(beta)-kappan*log(betan)+0.5*log(tau)-0.5*log(taun)-ng/2*log(2*M_PI));
   
   return List::create(Named("S")  = S,
                       Named("m") = m,
