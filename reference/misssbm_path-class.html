@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">greed</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -157,6 +157,21 @@
 <li><p>counts: numeric vector of size K with number of elements in each clusters</p></li>
 <li><p>x_counts: matrix of size K*K with the number of observed links between each pair of clusters</p></li>
 <li><p>x_counts_obs: matrix of size K*K with the number of observed dyads between each pair of clusters</p></li>
+</ul></p></dd>
+
+<dt><code>path</code></dt><dd><p>a list of size K-1 with that store all the solutions along the path. Each element is a list with the following fields:
+<ul>
+<li><p>icl1: icl value reach with this solution for alpha=1</p></li>
+<li><p>logalpha: log(alpha) value were this solution is better than its parent</p></li>
+<li><p>K: number of clusters</p></li>
+<li><p>cl: vector of cluster indexes</p></li>
+<li><p>k,l: index of the cluster that were merged at this step</p></li>
+<li><p>merge_mat: lower triangular matrix of delta icl values</p></li>
+<li><p>obs_stats: a list with the following elements:</p><ul>
+<li><p>counts: numeric vector of size K with number of elements in each clusters</p></li>
+<li><p>x_counts: matrix of size K*K with the number of observed links between each pair of clusters</p></li>
+<li><p>x_counts_obs: matrix of size K*K with the number of observed dyads between each pair of clusters</p></li>
+</ul></li>
 </ul></p></dd>
 
 <dt><code>logalpha</code></dt><dd><p>value of log(alpha)</p></dd>

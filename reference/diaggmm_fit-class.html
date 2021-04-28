@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>abstract class to represent a clustering result — icl_fit-class • greed</title>
+<title>Diagonal Gaussian mixture model fit results class — diaggmm_fit-class • greed</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="abstract class to represent a clustering result — icl_fit-class" />
-<meta property="og:description" content="An S4 abstract class to represent an icl fit of a clustering model." />
+<meta property="og:title" content="Diagonal Gaussian mixture model fit results class — diaggmm_fit-class" />
+<meta property="og:description" content="An S4 class to represent a fit of a multivariate diagonal Gaussian mixture model, extend icl_fit-class." />
 
 
 
@@ -126,13 +126,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>abstract class to represent a clustering result</h1>
-    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/fit_classes.R'><code>R/fit_classes.R</code></a></small>
-    <div class="hidden name"><code>icl_fit-class.Rd</code></div>
+    <h1>Diagonal Gaussian mixture model fit results class</h1>
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/diaggmm.R'><code>R/diaggmm.R</code></a></small>
+    <div class="hidden name"><code>diaggmm_fit-class.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An S4 abstract class to represent an icl fit of a clustering model.</p>
+    <p>An S4 class to represent a fit of a multivariate diagonal Gaussian mixture model, extend <code><a href='icl_fit-class.html'>icl_fit-class</a></code>.</p>
     </div>
 
 
@@ -142,24 +142,27 @@
     
 
 <dl>
-<dt><code>K</code></dt><dd><p>a numeric vector of length 1 which correspond to the number of clusters</p></dd>
-
-<dt><code>icl</code></dt><dd><p>a numeric vector of length 1 which store the the icl value</p></dd>
-
-<dt><code>cl</code></dt><dd><p>a numeric vector of length N which store the clusters labels</p></dd>
-
-<dt><code>obs_stats</code></dt><dd><p>a list to store the observed statistics of the model needed to compute ICL.</p></dd>
-
-<dt><code>move_mat</code></dt><dd><p>binary matrix which store move constraints</p></dd>
-
-<dt><code>train_hist</code></dt><dd><p>a data.frame to store training history (format depends on the used algorithm used).</p></dd>
+<dt><code>model</code></dt><dd><p>a <code><a href='diaggmm-class.html'>diaggmm-class</a></code> object to store the model fitted</p></dd>
 
 <dt><code>name</code></dt><dd><p>generative model name</p></dd>
 
-</dl>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+<dt><code>icl</code></dt><dd><p>icl value of the fitted model</p></dd>
 
-    <div class='dont-index'><p><code><a href='sbm_fit-class.html'>sbm_fit-class</a></code>, <code><a href='dcsbm_fit-class.html'>dcsbm_fit-class</a></code>, <code><a href='co_dcsbm_fit-class.html'>co_dcsbm_fit-class</a></code></p></div>
+<dt><code>K</code></dt><dd><p>number of extracted clusters over row and columns</p></dd>
+
+<dt><code>cl</code></dt><dd><p>a numeric vector with row and columns cluster indexes</p></dd>
+
+<dt><code>obs_stats</code></dt><dd><p>a list with the following elements:
+<ul>
+<li><p>counts: numeric vector of size K with number of elements in each clusters</p></li>
+<li><p>regs: list of size $K$ with statistics for each clusters</p></li>
+</ul></p></dd>
+
+<dt><code>move_mat</code></dt><dd><p>binary matrix which store move constraints</p></dd>
+
+<dt><code>train_hist</code></dt><dd><p>data.frame with training history information (details depends on the training procedure)</p></dd>
+
+</dl>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

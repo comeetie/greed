@@ -41,12 +41,13 @@
 
 <meta property="og:title" content="Gaussian mixture model description class — gmm-class" />
 <meta property="og:description" content="An S4 class to represent a multivariate Gaussian mixture  model, extend icl_model-class.
-The model follow minka-linear and correspond to the following generative model:
+The model corresponds to the following generative model:
 $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
-$$ V_k \sim \mathcal{W}^{-1}(\epsilon I,n_0)$$
-$$ \mu_k \sim \mathcal{N}(0,\frac{V_k}{\tau N})$$
-$$ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k})$$" />
+$$ V_k \sim \mathcal{W}(\epsilon^{-1},n_0)$$
+$$ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})$$
+$$ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})$$
+with \(\mathcal{W}(\epsilon^{-1},n_0)\) the Whishart distribution." />
 
 
 
@@ -78,7 +79,7 @@ $$ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k})$$" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">greed</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -139,12 +140,13 @@ $$ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k})$$" />
 
     <div class="ref-description">
     <p>An S4 class to represent a multivariate Gaussian mixture  model, extend <code><a href='icl_model-class.html'>icl_model-class</a></code>.
-The model follow <a href='https://tminka.github.io/papers/minka-linear.pdf'>minka-linear</a> and correspond to the following generative model:
+The model corresponds to the following generative model:
 $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
-$$ V_k \sim \mathcal{W}^{-1}(\epsilon I,n_0)$$
-$$ \mu_k \sim \mathcal{N}(0,\frac{V_k}{\tau N})$$
-$$ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k})$$</p>
+$$ V_k \sim \mathcal{W}(\epsilon^{-1},n_0)$$
+$$ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})$$
+$$ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})$$
+with \(\mathcal{W}(\epsilon^{-1},n_0)\) the Whishart distribution.</p>
     </div>
 
 
@@ -160,19 +162,22 @@ $$ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k})$$</p>
 
 <dt><code>tau</code></dt><dd><p>Prior parameter (inverse variance) default 0.01</p></dd>
 
-<dt><code>N0</code></dt><dd><p>Prior parameter (pseudo count) default to 10 ! should be &gt; number of features</p></dd>
+<dt><code>N0</code></dt><dd><p>Prior parameter (pseudo count) should be &gt; number of features</p></dd>
 
 <dt><code>epsilon</code></dt><dd><p>Prior parameter co-variance matrix prior</p></dd>
 
 <dt><code>mu</code></dt><dd><p>mean prior</p></dd>
 
 </dl>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Bertoletti, Marco &amp; Friel, Nial &amp; Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5. #'</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>new</span><span class='op'>(</span><span class='st'>"gmm"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; An object of class "gmm"
 #&gt; Slot "tau":
-#&gt; [1] 0.1
+#&gt; [1] 0.01
 #&gt; 
 #&gt; Slot "mu":
 #&gt; [1] 1
