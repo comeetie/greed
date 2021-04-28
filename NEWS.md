@@ -2,7 +2,7 @@
 
 * New Gaussian mixture model diaggmm for diagonal mixture models
 * New generic function coef to extract MAP estimate of the models parameters
-* New plot function pairs to explore gmm fit results
+* New plot function gmmpairs to explore gmm fit results
 * Better input checking for mvmreg and gmm
 * Better input checking for greed_cond
 * Correction of compilation problems on solaris

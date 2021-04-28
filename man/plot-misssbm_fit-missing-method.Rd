@@ -2,12 +2,12 @@
 % Please edit documentation in R/misssbm.R
 \name{plot,misssbm_fit,missing-method}
 \alias{plot,misssbm_fit,missing-method}
-\title{plot a \code{\link{sbm_fit-class}} object}
+\title{plot a \code{\link{misssbm_fit-class}} object}
 \usage{
 \S4method{plot}{misssbm_fit,missing}(x, type = "blocks")
 }
 \arguments{
-\item{x}{a \code{\link{sbm_fit-class}}}
+\item{x}{a \code{\link{misssbm_fit-class}}}
 
 \item{type}{a string which specify plot type:
 \itemize{
@@ -19,5 +19,5 @@
 a \code{\link{ggplot2}} graphic
 }
 \description{
-plot a \code{\link{sbm_fit-class}} object
+plot a \code{\link{misssbm_fit-class}} object
 }

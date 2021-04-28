@@ -27,7 +27,7 @@ NULL
 #' @export
 setClass("diaggmm", representation = list(tau = "numeric",kappa="numeric",beta="numeric",mu="numeric"),
          contains = "icl_model",
-         prototype(name="diaggmm",tau=0.01,kappa=1,beta=0.01,mu=1,alpha=1))
+         prototype(name="diaggmm",tau=0.01,kappa=1,beta=0.1,mu=1,alpha=1))
 
 
 #' @title Diagonal Gaussian mixture model fit results class
@@ -131,8 +131,12 @@ setMethod(f = "coef",
             Sigmak = lapply(sol@obs_stats$regs, function(r){
               betan = sol@model@beta +0.5*r$S+(sol@model@tau*r$ng*(r$m-sol@model@mu)^2)/(2*sol@model@tau+r$ng)
               alphan = sol@model@kappa+r$ng/2
-              mode =  diag(as.vector(betan/(alphan-1)))
-              mode
+              dd=as.vector(betan/(alphan-1))
+              if(length(dd)>1){
+                mode =  diag(dd)
+              }else{
+                mode = as.matrix(dd)
+              }
             })
             list(pi=pi,muk=muk,Sigmak=Sigmak)
           })

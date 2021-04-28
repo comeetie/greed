@@ -138,6 +138,25 @@ setMethod(f = "plot",
             })   
           })
 
+#' @title Extract parameters from an \code{\link{sbm_fit-class}} object
+#' 
+#' @param object a \code{\link{sbm_fit-class}}
+#' @return a list with the model parameters estimates (MAP), the fields are:
+#' \itemize{
+#' \item \code{'pi'}: cluster proportions 
+#' \item \code{'thetakl'}: beetween clusters connections probabilities (matrix of size K x K)
+#' }
+#' @export 
+setMethod(f = "coef", 
+          signature = signature(object = "sbm_fit"),
+          definition = function(object){
+            sol=object
+            pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
+            thetakl=(sol@obs_stats$x_counts+sol@model@a0-1)/(t(t(sol@obs_stats$counts))%*%sol@obs_stats$counts+sol@model@a0+sol@model@b0-2)
+            list(pi=pi,thetakl=thetakl)
+          })
+
+
 reorder_sbm = function(obs_stats,or){
   obs_stats$counts = obs_stats$counts[or]
   obs_stats$x_counts = obs_stats$x_counts[or,or]
@@ -160,8 +179,11 @@ setMethod(f = "seed",
 setMethod(f = "preprocess", 
           signature = signature("sbm"), 
           definition = function(model, data){
-            if(!(methods::is(data,"dgCMatrix") | methods::is(data,"matrix"))){
-              stop("An sbm model expect a matrix or a sparse (dgCMatrix) matrix.",call. = FALSE)
+            if(!(methods::is(data,"dgCMatrix") | methods::is(data,"matrix")| methods::is(data,"data.frame"))){
+              stop("An sbm model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.",call. = FALSE)
+            }
+            if(methods::is(data,"data.frame")){
+              data=as.matrix(data)
             }
             if(nrow(data)!=ncol(data)){
               stop("An sbm model expect a square matrix.",call. = FALSE)

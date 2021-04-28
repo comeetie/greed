@@ -1,0 +1,81 @@
+---
+title: "GMM"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{GMM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(greed)
+library(mclust)
+library(dplyr)
+library(ggplot2)
+set.seed(2134)
+```
+
+
+```{r diabetes-gmm, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+data(diabetes)
+X=diabetes[,-1]
+sol = greed(X,model=new("gmm",mu=apply(X,2,mean),epsilon=0.1*diag(diag(cov(X))),N0=ncol(X)))
+gmmpairs(sol,X)
+table(diabetes$cl,sol@cl)
+```
+
+
+```{r diabetes-diaggmm, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+data(diabetes)
+X=diabetes[,-1]
+sol = greed(X,model=new("diaggmm",mu=apply(X,2,mean),beta=0.1*mean(diag(cov((X))))))
+gmmpairs(sol,X)
+table(diabetes$cl,sol@cl)
+```
+
+
+```{r diabetes-diaggmm-cut, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+plot(sol,type='tree')
+solK3 = cut(sol,3)
+gmmpairs(solK3,X)
+table(diabetes$cl,sol@cl)
+coef(solK3)
+```
+
+```{r galaxies-gmm, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+data(galaxies, package = "MASS") 
+X=data.frame(x=galaxies)
+sol = greed(X,model=new("gmm",mu=apply(X,2,mean),epsilon=0.1*cov(X),N0=ncol(X)))
+gmmpairs(sol,X)
+```
+
+
+
+```{r fashion-diaggmm, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+data("fashion")
+prior = new("diaggmm",mu=apply(fashion$X,2,mean),beta=0.1*mean(diag(cov((fashion$X)))))
+sol=greed(fashion$X,model=prior,alg=new("seed"),K=60)
+plot(sol,type='tree')
+```
+
+```{r fashion-means, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+im_list=lapply(1:sol@K,function(k){
+    tibble(i=rep(28:1,each=28),j=rep(1:28,28),v=t(sol@obs_stats$regs[[k]]$m),k=k)
+    })
+
+ims = do.call(rbind,im_list)
+ggplot(ims)+
+  geom_tile(aes(y=i,x=j,fill=v))+
+  scale_fill_gradientn(colors=c("#ffffff","#000000"),guide="none")+
+  scale_x_continuous(breaks=c())+scale_y_continuous(breaks=c())+facet_wrap(~k)+
+  coord_equal()+theme_minimal()+
+  theme(axis.title.x = element_blank(),axis.title.y = element_blank())
+```
+

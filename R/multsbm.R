@@ -129,6 +129,28 @@ setMethod(f = "plot",
             })   
           })
 
+#' @title Extract parameters from an \code{\link{multsbm_fit-class}} object
+#' 
+#' @param object a \code{\link{multsbm_fit-class}}
+#' @return a list with the model parameters estimates (MAP), the fields are:
+#' \itemize{
+#' \item \code{'pi'}: cluster proportions 
+#' \item \code{'thetakl'}: cluster profile probabilites (array of size K x K x D), 
+#' }
+#' @export 
+setMethod(f = "coef", 
+          signature = signature(object = "multsbm_fit"),
+          definition = function(object){
+            sol=object
+            pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
+            thetakl=sol@obs_stats$x_counts+sol@model@beta-1
+            norm=colSums(aperm(thetakl,c(3,1,2)),2)
+            for (d in 1:dim(thetakl)[3]){
+              thetakl[,,d]=thetakl[,,d]/norm
+            }
+            list(pi=pi,thetakl=thetakl)
+          })
+
 reorder_multsbm = function(obs_stats,or){
   obs_stats$counts = obs_stats$counts[or]
   obs_stats$x_counts = obs_stats$x_counts[or,or,]

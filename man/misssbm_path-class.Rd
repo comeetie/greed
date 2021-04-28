@@ -10,7 +10,7 @@ An S4 class to represent a hierarchical fit of a stochastic block model, extend 
 \section{Slots}{
 
 \describe{
-\item{\code{model}}{a \code{\link{sbm-class}} object to store the model fitted}
+\item{\code{model}}{a \code{\link{misssbm-class}} object to store the model fitted}
 
 \item{\code{name}}{generative model name}
 

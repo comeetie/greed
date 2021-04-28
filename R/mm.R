@@ -129,6 +129,26 @@ setMethod(f = "plot",
             })   
           })
 
+
+#' @title Extract parameters from an \code{\link{mm_fit-class}} object
+#' 
+#' @param object a \code{\link{mm_fit-class}}
+#' @return a list with the model parameters estimates (MAP), the fields are:
+#' \itemize{
+#' \item \code{'pi'}: cluster proportions 
+#' \item \code{'thetak'}: cluster profile probabilites (matrix of size K x D), 
+#' }
+#' @export 
+setMethod(f = "coef", 
+          signature = signature(object = "mm_fit"),
+          definition = function(object){
+            sol=object
+            pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
+            thetak=(t(sol@obs_stats$x_counts)+sol@model@beta-1)
+            thetak=as.matrix(thetak/rowSums(thetak))
+            list(pi=pi,thetak=thetak)
+          })
+
 reorder_mm = function(obs_stats,or){
   obs_stats$counts = obs_stats$counts[or]
   obs_stats$x_counts = obs_stats$x_counts[,or]
@@ -157,3 +177,17 @@ setMethod(f = "sample_cl",
             sample(1:K,data$N,replace = TRUE)
           })
 
+setMethod(f = "preprocess", 
+          signature = signature("mm"), 
+          definition = function(model, data){
+            if(!(methods::is(data,"dgCMatrix") | methods::is(data,"matrix")| methods::is(data,"data.frame"))){
+              stop("n dcsbm model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.",call. = FALSE)
+            }
+            if(methods::is(data,"data.frame")){
+              data=as.matrix(data)
+            }
+            if(!all(round(data)==data) || min(data)<0){
+              stop("A mm model expect an integer matrix with postive values.",call. = FALSE)
+            }
+            list(X=as.sparse(data),N=nrow(data))
+          })

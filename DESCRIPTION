@@ -22,6 +22,7 @@ LinkingTo: Rcpp, RcppArmadillo
 Suggests: 
     testthat,
     MASS,
+    mclust,
     knitr,
     rmarkdown,
     igraph,

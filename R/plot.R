@@ -53,6 +53,10 @@ groupspy = function(x,clust){
 
 
 plot_front = function(sol){
+  if(sol@K==1){
+    message("The fit contains only one cluster, an empty plot was produced.")
+    return(ggplot2::ggplot())
+  }
   icl = c(sol@icl,sapply(sol@path,function(v){v$icl1}))
   ggicl = data.frame(icl = icl[length(icl):1], K  = 1:length(icl))
   #ggfront= sol@ggtree %>% mutate(x=-H) %>% select(x,K) %>% arrange(x) %>% head(sol@K) %>% left_join(ggicl) %>% mutate(xp=lag(x)) 
@@ -71,6 +75,10 @@ plot_front = function(sol){
 }
 
 lapath = function(x){
+  if(x@K==1){
+    message("The fit contains only one cluster, an empty plot was produced.")
+    return(ggplot2::ggplot())
+  }
   gg = data.frame(k=sapply(x@path,function(p){p$K}),logalpha=sapply(x@path,function(p){p$logalpha}))
   gg = rbind(gg,data.frame(k=length(x@obs_stats$counts),logalpha=x@logalpha)) 
   ggplot2::ggplot(data=gg)+ggplot2::geom_line(ggplot2::aes_(x=~k,y=~-logalpha))+
@@ -82,6 +90,10 @@ lapath = function(x){
 
 
 iclpath = function(x){
+  if(x@K==1){
+    message("The fit contains only one cluster, an empty plot was produced.")
+    return(ggplot2::ggplot())
+  }
   gg = data.frame(k=sapply(x@path,function(p){length(p$counts)}),icl=sapply(x@path,function(p){p$icl}))
   gg = rbind(gg,data.frame(k=length(x@obs_stats$counts),icl=x@icl)) 
   ggplot2::ggplot(data=gg)+ggplot2::geom_line(ggplot2::aes_(x=~k,y=~icl))+
@@ -166,6 +178,10 @@ co_nodelink = function(sol){
 # dendogram visualisation
 
 dendo = function(x){
+  if(x@K==1){
+    message("The fit contains only one cluster, an empty plot was produced.")
+    return(ggplot2::ggplot())
+  }
   ggtree = x@ggtree
   tree=ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
     ggplot2::geom_segment(data=ggtree[-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
@@ -457,7 +473,7 @@ nodelink_cube = function(sol){
 #' @param X the data used for the fit a data.frame or matrix.
 #' @return a \code{\link{ggplot2}} graphic 
 #' @export
-pairs = function(sol,X){
+gmmpairs = function(sol,X){
   if(!(methods::is(sol,"gmm_fit") | methods::is(sol,"diaggmm_fit") )){
     stop("Input sol must be a gmm_fit or diaggmm_fit object.",call. = FALSE)
   }
@@ -493,10 +509,13 @@ pairs = function(sol,X){
           el.df$cl=k
           el.df
           }))
+        
         limsi=c(range(X[,vnames[i]])[1]-diff(range(X[,vnames[i]]))*0.1,range(X[,i])[2]+diff(range(X[,vnames[i]]))*0.1)
         limsj=c(range(X[,vnames[j]])[1]-diff(range(X[,vnames[j]]))*0.1,range(X[,j])[2]+diff(range(X[,vnames[j]]))*0.1)
+        #elipses.df = elipses.df[elipses.df$x >= limsi[1] & elipses.df$x <= limsi[2] & elipses.df$y >= limsj[1] & elipses.df$y <= limsj[2], ]
         plt = ggplot2::ggplot(X,ggplot2::aes_(as.name(vnames[i]),as.name(vnames[j]),color=factor(sol@cl)))+
-          ggplot2::geom_point()+ggplot2::geom_path(data=elipses.df,ggplot2::aes_(x=~x,y=~y,color=~factor(cl)))+
+          ggplot2::geom_point()+
+          ggplot2::geom_path(data=elipses.df,ggplot2::aes_(x=~x,y=~y,color=~factor(cl),group=~cl),na.rm=TRUE)+
           ggplot2::scale_x_continuous(limits=limsi)+
           ggplot2::scale_y_continuous(limits=limsj)
       }
@@ -504,7 +523,7 @@ pairs = function(sol,X){
       ii=ii+1
     }
   }
-  pm <- GGally::ggmatrix(plts.df,3, 3,xAxisLabels = vnames,yAxisLabels = vnames,byrow = FALSE)+ggplot2::theme_bw()
+  pm <- GGally::ggmatrix(plts.df,3, 3,xAxisLabels = vnames,yAxisLabels = vnames,byrow = FALSE,legend = c(1,i))+ggplot2::theme_bw()
   pm
   
 }

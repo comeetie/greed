@@ -14,7 +14,7 @@ NULL
 #' \deqn{ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)}
 #' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)}
 #' The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity. 
-#' These parameters have uniform priors over simplex \eqn{S_k}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
+#' These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_i\in C_k\gamma_i^+=1}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter
 #' @slot type define the type of networks (either "directed" or "undirected", default to "directed")
@@ -141,6 +141,27 @@ setMethod(f = "plot",
             })   
           })
 
+
+#' @title Extract parameters from an \code{\link{dcsbm_fit-class}} object
+#' 
+#' @param object a \code{\link{dcsbm_fit-class}}
+#' @return a list with the model parameters estimates (MAP), the fields are:
+#' \itemize{
+#' \item \code{'pi'}: cluster proportions 
+#' \item \code{'thetakl'}: beetween clusters connections normalized intensities (matrix of size K x K), 
+#' }
+#' @details Currently the parameter \code{thetakl} is estimated by MLE.
+#' @export 
+setMethod(f = "coef", 
+          signature = signature(object = "dcsbm_fit"),
+          definition = function(object){
+            sol=object
+            pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
+            thetakl=(sol@obs_stats$x_counts)/(t(t(sol@obs_stats$counts))%*%sol@obs_stats$counts)
+            list(pi=pi,thetakl=thetakl)
+          })
+
+
 reorder_dcsbm = function(obs_stats,or){
   obs_stats$counts = obs_stats$counts[or]
   obs_stats$din = obs_stats$din[or]
@@ -169,7 +190,7 @@ setMethod(f = "preprocess",
           signature = signature("dcsbm"), 
           definition = function(model, data){
             if(!(methods::is(data,"dgCMatrix") | methods::is(data,"matrix")| methods::is(data,"data.frame"))){
-              stop("An dcsbm model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.",call. = FALSE)
+              stop("n dcsbm model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.",call. = FALSE)
             }
             if(methods::is(data,"data.frame")){
               data=as.matrix(data)

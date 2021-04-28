@@ -47,7 +47,7 @@ setClass("misssbm",
 #' @title Stochastic Block Model with sampling scheme fit results class
 #' 
 #' @description An S4 class to represent a fit of a Stochastic Block Model, extend \code{\link{icl_fit-class}}.
-#' @slot model a \code{\link{sbm-class}} object to store the model fitted
+#' @slot model a \code{\link{misssbm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over rows and columns
@@ -68,7 +68,7 @@ setClass("misssbm_fit",slots = list(model="misssbm"),contains="icl_fit")
 #' 
 #' 
 #' @description An S4 class to represent a hierarchical fit of a stochastic block model, extend \code{\link{icl_path-class}}.
-#' @slot model a \code{\link{sbm-class}} object to store the model fitted
+#' @slot model a \code{\link{misssbm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
@@ -99,11 +99,11 @@ setClass("misssbm_fit",slots = list(model="misssbm"),contains="icl_fit")
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father  
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
 #' @export 
-setClass("misssbm_path",contains=c("icl_path","sbm_fit"))
+setClass("misssbm_path",contains=c("icl_path","misssbm_fit"))
 
-#' @title plot a \code{\link{sbm_fit-class}} object
+#' @title plot a \code{\link{misssbm_fit-class}} object
 #' 
-#' @param x a \code{\link{sbm_fit-class}}
+#' @param x a \code{\link{misssbm_fit-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
@@ -118,9 +118,9 @@ setMethod(f = "plot",
           });
 
 
-#' @title plot a \code{\link{sbm_path-class}} object
+#' @title plot a \code{\link{misssbm_path-class}} object
 #' 
-#' @param x an \code{\link{sbm_path-class}} object
+#' @param x an \code{\link{misssbm_path-class}} object
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
@@ -149,6 +149,32 @@ setMethod(f = "plot",
             nodelink={
               methods::callNextMethod()
             })   
+          })
+
+
+#' @title Extract parameters from an \code{\link{misssbm_fit-class}} object
+#' 
+#' @param object a \code{\link{misssbm_fit-class}}
+#' @return a list with the model parameters estimates (MAP), the fields are:
+#' \itemize{
+#' \item \code{'pi'}: cluster proportions 
+#' \item \code{'thetakl'}: between clusters connection probabilites (array of size K x K),
+#' \item \code{'epsilonkl'}: between clusters dyad observation probabilites (array of size K x K) for block-dyad sampling and double for dyad sampling,
+#' }
+#' @export 
+setMethod(f = "coef", 
+          signature = signature(object = "misssbm_fit"),
+          definition = function(object){
+            sol=object
+            pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
+            thetakl=sol@obs_stats$x_counts+sol@model@a0-1
+            thetakl = thetakl/(sol@obs_stats$x_counts_obs+sol@model@a0+sol@model@b0-2)
+            if(sol@model@sampling=="dyad"){
+              epsilonkl=(sum(sol@obs_stats$x_counts_obs)+sol@model@sampling_priors$a0obs-1)/(sum(sol@obs_stats$counts)^2+sol@model@sampling_priors$a0obs+sol@model@sampling_priors$b0obs-2)
+            }else{
+              epsilonkl=(sol@obs_stats$x_counts_obs+sol@model@sampling_priors$a0obs-1)/(t(t(sol@obs_stats$counts))%*%sol@obs_stats$counts+sol@model@sampling_priors$a0obs+sol@model@sampling_priors$b0obs-2)
+            }            
+            list(pi=pi,thetakl=thetakl,epislonkl=epsilonkl)
           })
 
 reorder_misssbm = function(obs_stats,or){
