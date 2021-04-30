@@ -16,9 +16,9 @@ NULL
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot tau Prior parameter (inverse variance) default 0.01 
-#' @slot N0 Prior parameter (pseudo count) should be > number of features
-#' @slot epsilon Prior parameter co-variance matrix prior
-#' @slot mu mean prior
+#' @slot N0 Prior parameter (pseudo count) should be > number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)
+#' @slot epsilon Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)  
+#' @slot mu Prior parameters for the means (vector of size D), (default to NaN, in this case mu will be estimated from the data and will be equal to the mean of X) 
 #' @examples
 #' new("gmm")
 #' new("gmm",alpha=1,tau=0.1,N0=15)
@@ -27,7 +27,7 @@ NULL
 #' @export
 setClass("gmm", representation = list(tau = "numeric",mu="numeric",epsilon="matrix",N0="numeric"),
          contains = "icl_model",
-         prototype(name="gmm",tau=0.01,N0=10,mu=1,epsilon=matrix(1,1,1),alpha=1))
+         prototype(name="gmm",tau=0.001,N0=NaN,mu=NaN,epsilon=as.matrix(NaN),alpha=1))
 
 
 #' @title Gaussian mixture model fit results class
@@ -158,6 +158,42 @@ setMethod(f = "preprocess",
             }else{
               stop(paste0("Unsupported data type: ", class(X) ," use a data.frame, a matrix, a sparse dgCMatrix."),call. = FALSE)
             }
+            if(length(model@alpha)>1){
+              stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@alpha)){
+              stop("Model prior misspecification, alpha is NA.",call. = FALSE)
+            }
+            if(model@alpha<=0){
+              stop("Model prior misspecification, alpha must be positive.",call. = FALSE)
+            }
+            if(length(model@tau)>1){
+              stop("Model prior misspecification, tau must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@tau)){
+              stop("Model prior misspecification, tau is NA.",call. = FALSE)
+            }
+            if(model@tau<=0){
+              stop("Model prior misspecification, tau must be positive.",call. = FALSE)
+            }
+            
+            if(length(model@N0)>1){
+              stop("Model prior misspecification, N0 must be of length 1.",call. = FALSE)
+            }
+            if(!is.na(model@N0) & model@N0<ncol(X)){
+              stop("Model prior misspecification, N0 must be > ncol(X).",call. = FALSE)
+            }
+            
+            if(prod(dim(model@epsilon))!=1 | !all(is.nan(model@epsilon))){
+              if(dim(model@epsilon)[1]!=ncol(X)|| dim(model@epsilon)[2]!=ncol(X)){
+                stop("Model prior misspecification, the dimensions of epsilon are not compatible with the data.",call. = FALSE)
+              }
+            }
+            if(!all(is.nan(model@mu)) && length(model@mu)!=ncol(X)){
+              stop("Model prior misspecification, mu length is incompatible with the data.",call. = FALSE)
+            }
+            
+            
             list(X=X,N=nrow(X))
           })
 

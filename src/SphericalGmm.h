@@ -11,7 +11,7 @@ using namespace Rcpp;
 class SphericalGmm : public IclModel
 {
 public:
-  SphericalGmm(const arma::mat & X,double alpha,double tau,double kappa,double beta, arma::rowvec mu,arma::vec& cl,bool verb=false);
+  SphericalGmm(const arma::mat & X,S4 model,arma::vec& cl,bool verb=false);
   void set_cl(arma::vec cli);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);

@@ -90,9 +90,9 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="greed-bayesian-greedy-clustering" class="section level1">
+<div id="greed--bayesian-greedy-clustering-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#greed-bayesian-greedy-clustering" class="anchor"></a>GREED : Bayesian greedy clustering <img src="reference/figures/greed.png" width="200" align="right">
+<a href="#greed--bayesian-greedy-clustering-" class="anchor"></a>GREED : Bayesian greedy clustering <img src="reference/figures/greed.png" width="200" align="right">
 </h1></div>
 <!-- badges: start -->
 
@@ -115,7 +115,7 @@
 <p>You can install the released version of greed from <a href="https://github.com/">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"comeetie/greed"</span><span class="op">)</span></code></pre></div>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"comeetie/greed"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
@@ -132,15 +132,15 @@
 <span class="co">#&gt; ICL clustering with a DCSBM model, 11 clusters and an icl of -28560.</span></code></pre></div>
 <p>Here Jazz is a square sparse matrix and a <code><a href="reference/dcsbm-class.html">?`dcsbm-class`</a></code> model will be used by default. Some plotting function enable the exploration of the clustering results:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/plot-1.png" width="60%"></p>
 <p>And the hierarchical structure between clusters:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/tree-1.png" width="60%"></p>
 <p>Eventually, one may explore some coarser clustering using the cut function:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">sol</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">sol</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/cut-1.png" width="60%"></p>
 <p>For large datasets, it is possible to use parallelism to speed-up the computation thanks to the <a href="https://github.com/HenrikBengtsson/future">future</a> package. You only need to specify the type of backend you want to use.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -161,7 +161,7 @@
 <span class="co">#&gt; ################# Generation 10: best solution with an ICL of -84124 and 19 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
 <span class="co">#&gt; ICL clustering with a DCSBM model, 18 clusters and an icl of -84089.</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/future-1.png" width="60%"></p>
 </div>
 </div>

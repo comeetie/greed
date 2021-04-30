@@ -10,15 +10,23 @@
 \item{object}{a \code{\link{dcsbm_fit-class}}}
 }
 \value{
-a list with the model parameters estimates (MAP), the fields are:
+a list with the model parameters estimates (MAP), the fields are the following for "directed" models :
 \itemize{
 \item \code{'pi'}: cluster proportions 
-\item \code{'thetakl'}: beetween clusters connections normalized intensities (matrix of size K x K), 
+\item \code{'thetakl'}: between cluster normalized connection intensities (matrix of size K x K), 
+\item \code{gammain}: node in-degree correction parameter
+\item \code{gammaout}: node out-degree correction parameter
+}
+And as follow for un-directed models : 
+#' \itemize{
+\item \code{'pi'}: cluster proportions 
+\item \code{'thetakl'}: between cluster normalized connection intensities (matrix of size K x K), 
+\item \code{gamma}: node degree correction parameter
 }
 }
 \description{
 Extract parameters from an \code{\link{dcsbm_fit-class}} object
 }
 \details{
-Currently the parameter \code{thetakl} is estimated by MLE.
+in case of undirected graph
 }

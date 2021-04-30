@@ -11,7 +11,7 @@ using namespace Rcpp;
 class Gmm : public IclModel
 {
 public:
-  Gmm(const arma::mat & X,double alpha,double tau,int N0,arma::mat epsilon, arma::rowvec mu,arma::vec& cl,bool verb=false);
+  Gmm(const arma::mat & X,S4 model,arma::vec& cl,bool verb=false);
   void set_cl(arma::vec cli);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);

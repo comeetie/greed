@@ -14,16 +14,18 @@ NULL
 #' \deqn{ \gamma_i^r\sim \mathcal{U}(S_k)}
 #' \deqn{ \gamma_i^c\sim \mathcal{U}(S_l)}
 #' \deqn{ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)}
-#' The individuals parameters \eqn{\gamma_i^r,\gamma_j^-c} allow to take into account the node degree heterogeneity. 
+#' The individuals parameters \eqn{\gamma_i^r,\gamma_j^c} allow to take into account the node degree heterogeneity. 
 #' These parameters have uniform priors over simplex \eqn{S_k}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
 #' @slot alpha Dirichlet parameters for the prior over clusters proportions (default to 1)
+#' @slot p Exponential prior parameter (default to Nan, in this case p will be estimated from data as the average intensities of X) 
 #' @examples 
 #' new("co_dcsbm")
+#' new("co_dcsbm", p = 0.1)
 #' @export
 setClass("co_dcsbm",
-         representation = list(),
+         representation = list(p="numeric"),
          contains = "icl_model",
-         prototype(name="co_dcsbm",alpha=1))
+         prototype(name="co_dcsbm",alpha=1,p=NaN))
 
 
 
@@ -189,21 +191,61 @@ setMethod(f = "plot",
             })   
           })
 
+
+#' @title Extract parameters from an \code{\link{co_dcsbm_fit-class}} object
+#' 
+#' @param object a \code{\link{co_dcsbm_fit-class}}
+#' @return a list with the model parameters estimates (MAP), the fields are:
+#' \itemize{
+#' \item \code{'pirows'}: row cluster proportions 
+#' \item \code{'picols'}: row cluster proportions 
+#' \item \code{'thetakl'}: between clusters connection probabilities (matrix of size Krow x Kcol),
+#' \item \code{'gammarows'}: rows degree correction parameters (size Nrows),
+#' \item \code{'gammacols'}: cols degree correction parameters (size Ncols),
+#' }
+#' @export 
+setMethod(f = "coef", 
+          signature = signature(object = "co_dcsbm_fit"),
+          definition = function(object){
+            sol=object
+            pirows=(sol@obs_stats$rows_counts+sol@model@alpha-1)/sum(sol@obs_stats$rows_counts+sol@model@alpha-1)
+            picols=(sol@obs_stats$cols_counts+sol@model@alpha-1)/sum(sol@obs_stats$cols_counts+sol@model@alpha-1)
+            gammarows = sol@obs_stats_cst$drow/sol@obs_stats$dr[sol@clrow]
+            gammacols = sol@obs_stats_cst$dcol/sol@obs_stats$dc[sol@clcol]
+            thetakl=(sol@obs_stats$co_x_counts)/(t(t(sol@obs_stats$rows_counts))%*%sol@obs_stats$cols_counts+1/sol@model@p)
+            list(pirows=pirows,picols=picols,thetakl=thetakl,gammarows=gammarows,gammacols=gammacols)
+          })
+
 setMethod(f = "preprocess", 
           signature = signature("co_dcsbm"), 
           definition = function(model,data){
             X=as.sparse(data)
             if(class(X)!="dgCMatrix"){
-              stop(paste0("Unsupported data type :", class(X) ,"for co_dcsbm model."))
+              stop(paste0("Unsupported data type :", class(X) ,"for co_dcsbm model."),call. = FALSE)
             }
             if(nrow(X)==ncol(X)){
-              stop("Square matrix as input, try dcsbm model instead.")
+              stop("Square matrix as input, try dcsbm model instead.",call. = FALSE)
             }
             ij=which(X>0,arr.ind = TRUE)
             if(!all(X[ij]==round(X[ij]))){
-              stop("Only integer matrix allowed as input, non integer values found.")
+              stop("Only integer matrix allowed as input, non integer values found.",call. = FALSE)
             }
-
+            if(length(model@alpha)>1){
+              stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@alpha)){
+              stop("Model prior misspecification, alpha is NA.",call. = FALSE)
+            }
+            if(model@alpha<=0){
+              stop("Model prior misspecification, alpha must be positive.",call. = FALSE)
+            }
+            if(length(model@p)>1){
+              stop("Model prior misspecification, p must be of length 1.",call. = FALSE)
+            }
+            if(!is.nan(model@p) && model@p<=0){
+              stop("Model prior misspecification, p must be positive.",call. = FALSE)
+            }
+            
             di=dim(X)
             N=sum(di)
             list(X=X,N=N,Nrows=di[1],Ncols=di[2])
@@ -228,10 +270,11 @@ setMethod(f = "postprocess",
             sol@clcol = as.numeric(factor(sol@cl[icol],levels=clust_cols))
             sol@Kcol = max(sol@clcol,na.rm=TRUE)
             sol@obs_stats$co_x_counts=sol@obs_stats$x_counts[clust_rows,clust_cols]
-            
-
-            
-            
+            sol@obs_stats$dr=sol@obs_stats$dr[clust_rows]
+            sol@obs_stats$dc=sol@obs_stats$dc[clust_cols]
+            sol@obs_stats=sol@obs_stats[names(sol@obs_stats)!="x_counts"]
+            sol@obs_stats$rows_counts = sol@obs_stats$counts[clust_rows]
+            sol@obs_stats$cols_counts = sol@obs_stats$counts[clust_cols]            
             if(!is.null(data)){
               
               tree=sol@ggtree

@@ -44,10 +44,10 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       } 
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       if(strcmp(model.slot("type"),"directed")==0){
-        M = new Sbm(xp,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt,verbose);
+        M = new Sbm(xp,model,clt,verbose);
       }
       if(strcmp(model.slot("type"),"undirected")==0){
-        M = new SbmUndirected(xp,model.slot("alpha"),model.slot("a0"),model.slot("b0"),clt,verbose);
+        M = new SbmUndirected(xp,model,clt,verbose);
       }
     }
     if(strcmp(model.slot("name"),"misssbm")==0){
@@ -57,24 +57,22 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       if((strcmp(model.slot("sampling"),"dyad")!=0) && (strcmp(model.slot("sampling"),"block-dyad")!=0)){
         stop("Unsuported sampling scheme only  'dyad' / 'block-dyad' are allowed");
       } 
-      
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       arma::sp_mat xpobs = as<arma::sp_mat>(data["Xobs"]);
-      List priors = model.slot("sampling_priors");
       if(strcmp(model.slot("sampling"),"dyad")==0){
         if(strcmp(model.slot("type"),"directed")==0){
-          M = new MarSbm(xp,xpobs,model.slot("alpha"),model.slot("a0"),model.slot("b0"),priors["a0obs"],priors["b0obs"],clt,verbose);
+          M = new MarSbm(xp,xpobs,model,clt,verbose);
         }
         if(strcmp(model.slot("type"),"undirected")==0){
-          M = new MarSbmUndirected(xp,xpobs,model.slot("alpha"),model.slot("a0"),model.slot("b0"),priors["a0obs"],priors["b0obs"],clt,verbose);
+          M = new MarSbmUndirected(xp,xpobs,model,clt,verbose);
         }
       }
       if(strcmp(model.slot("sampling"),"block-dyad")==0){
         if(strcmp(model.slot("type"),"directed")==0){
-          M = new NmarBdSbm(xp,xpobs,model.slot("alpha"),model.slot("a0"),model.slot("b0"),priors["a0obs"],priors["b0obs"],clt,verbose);
+          M = new NmarBdSbm(xp,xpobs,model,clt,verbose);
         }
         if(strcmp(model.slot("type"),"undirected")==0){
-          M = new NmarBdSbmUndirected(xp,xpobs,model.slot("alpha"),model.slot("a0"),model.slot("b0"),priors["a0obs"],priors["b0obs"],clt,verbose);
+          M = new NmarBdSbmUndirected(xp,xpobs,model,clt,verbose);
         }
       }
     }
@@ -84,10 +82,10 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       } 
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       if(strcmp(model.slot("type"),"directed")==0){
-        M = new DcSbm(xp,model.slot("alpha"),clt,verbose);
+        M = new DcSbm(xp,model,clt,verbose);
       }
       if(strcmp(model.slot("type"),"undirected")==0){
-        M = new DcSbmUndirected(xp,model.slot("alpha"),clt,verbose);
+        M = new DcSbmUndirected(xp,model,clt,verbose);
       }
     }
     if(strcmp(model.slot("name"),"multsbm")==0){
@@ -96,35 +94,35 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       } 
       arma::cube xp = as<arma::cube>(data["X"]);
       if(strcmp(model.slot("type"),"directed")==0){
-        M = new MultSbm(xp,model.slot("alpha"),model.slot("beta"),clt,verbose);
+        M = new MultSbm(xp,model,clt,verbose);
       }
       if(strcmp(model.slot("type"),"undirected")==0){
-        M = new MultSbmUndirected(xp,model.slot("alpha"),model.slot("beta"),clt,verbose);
+        M = new MultSbmUndirected(xp,model,clt,verbose);
       }
     }
     if(strcmp(model.slot("name"),"co_dcsbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       int Nr = static_cast<int>(data["Nrows"]);
       int Nc = static_cast<int>(data["Ncols"]);
-      M = new CoDcSbm(xp,Nr,Nc,model.slot("alpha"),clt,verbose);
+      M = new CoDcSbm(xp,Nr,Nc,model,clt,verbose);
     }
     if(strcmp(model.slot("name"),"mm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
-      M = new Mm(xp,model.slot("alpha"),model.slot("beta"),clt,verbose);
+      M = new Mm(xp,model,clt,verbose);
     }
     if(strcmp(model.slot("name"),"gmm")==0){
       arma::mat X = as<arma::mat>(data["X"]);
-      M = new Gmm(X,model.slot("alpha"),model.slot("tau"),model.slot("N0"),model.slot("epsilon"),model.slot("mu"),clt,verbose);
+      M = new Gmm(X,model,clt,verbose);
     }
     
     if(strcmp(model.slot("name"),"diaggmm")==0){
       arma::mat X = as<arma::mat>(data["X"]);
-      M = new SphericalGmm(X,model.slot("alpha"),model.slot("tau"),model.slot("kappa"),model.slot("beta"),model.slot("mu"),clt,verbose);
+      M = new SphericalGmm(X,model,clt,verbose);
     }
     if(strcmp(model.slot("name"),"mvmreg")==0 ){
       arma::mat X = as<arma::mat>(data["X"]);
       arma::mat Y = as<arma::mat>(data["Y"]);
-      M = new Mvmregcomp(X,Y,model.slot("alpha"),model.slot("beta"),model.slot("N0"),clt,verbose);
+      M = new Mvmregcomp(X,Y,model,clt,verbose);
     }
     
     
@@ -180,7 +178,9 @@ S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::vec workingset,arma:
   }
 
   List obs_stats = M->get_obs_stats();
-  sol.slot("model") = model;
+  List obs_stats_cst = M->get_obs_stats_cst();
+  sol.slot("obs_stats_cst") = obs_stats_cst;
+  sol.slot("model") = M->get_model();
   sol.slot("obs_stats") = obs_stats;
   sol.slot("cl") = M->get_cl()+1 ;
   sol.slot("icl") = M->icl(obs_stats);
@@ -197,8 +197,11 @@ S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,boo
   S4 sol = init_sol(model);
   arma::sp_mat move_mat = M->greedy_merge(merge_graph);
   List obs_stats = M->get_obs_stats();
+  
+  List obs_stats_cst = M->get_obs_stats_cst();
+  sol.slot("obs_stats_cst") = obs_stats_cst;
   double bicl = M->icl(obs_stats);
-  sol.slot("model") = model;
+  sol.slot("model") = M->get_model();
   sol.slot("obs_stats") = obs_stats;
   sol.slot("cl") = M->get_cl()+1 ;
   sol.slot("icl") = bicl;
@@ -223,8 +226,11 @@ S4 swap_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & move_mat, int nb
   M->greedy_swap(nb_max_pass,workingset,move_mat);
   
   List obs_stats = M->get_obs_stats();
+  
+  List obs_stats_cst = M->get_obs_stats_cst();
+  sol.slot("obs_stats_cst") = obs_stats_cst;
   double bicl = M->icl(obs_stats);
-  sol.slot("model") = model;
+  sol.slot("model") = M->get_model();
   sol.slot("obs_stats") = obs_stats;
   sol.slot("cl") = M->get_cl()+1 ;
   sol.slot("icl") = bicl;
@@ -266,6 +272,8 @@ S4 fit_greed_path(List data, S4 init_fit) {
   sol.slot("model")=model;
   List obs_stats = M->get_obs_stats();
   sol.slot("obs_stats") = obs_stats;
+  List obs_stats_cst = M->get_obs_stats_cst();
+  sol.slot("obs_stats_cst") = obs_stats_cst;
   sol.slot("cl") = M->get_cl()+1 ;
   sol.slot("icl") = M->icl(obs_stats);
   sol.slot("K") = M->get_K();

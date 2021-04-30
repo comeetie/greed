@@ -6,11 +6,14 @@ using namespace Rcpp;
 
 
 
-Mm::Mm(arma::sp_mat& xp,double alphai,double betai,arma::vec& clt,bool verb){
+Mm::Mm(arma::sp_mat& xp,S4 modeli,arma::vec& clt,bool verb){
+  
+  model = modeli;
+  
   // dirichlet prior parameter on proportion
-  alpha = alphai;
+  alpha = model.slot("alpha");
   // dirichlet prior parameter on proportion
-  beta = betai;
+  beta = model.slot("beta");
   // data
   // store transpose for fast colum acces
   xt = xp.t();

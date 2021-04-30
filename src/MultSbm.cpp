@@ -7,9 +7,10 @@ using namespace Rcpp;
 
 
 
-MultSbm::MultSbm(const arma::cube& xp,double alphai,double betai,arma::vec& clt,bool verb){
-  alpha = alphai;
-  beta = betai;
+MultSbm::MultSbm(const arma::cube& xp,S4 modeli,arma::vec& clt,bool verb){
+  model = modeli;
+  alpha = model.slot("alpha");
+  beta = model.slot("beta");
   x  = xp;
   N  = x.n_rows;
   M = x.n_slices;
@@ -38,7 +39,7 @@ double MultSbm::icl_emiss(const List & obs_stats){
       icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
     }
   }
-  return icl_emiss/2+cst;
+  return icl_emiss+cst;
 }
 
 double MultSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
@@ -57,7 +58,7 @@ double MultSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
     }
     
   }
-  return icl_emiss/2;
+  return icl_emiss;
 }
 
 
@@ -212,7 +213,6 @@ double MultSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & 
   }
   for(arma::uword  i=0;i<2;i++){
     for (arma::uword  j=0;j<2;j++){
-      
       
       a = kl(i);
       b = mkl(j);

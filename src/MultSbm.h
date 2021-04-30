@@ -10,7 +10,7 @@ using namespace Rcpp;
 class MultSbm : public IclModel
 {
 public:
-  MultSbm(const arma::cube& xp,double alpha,double beta,arma::vec& cl,bool verb=false);
+  MultSbm(const arma::cube& xp,S4 model,arma::vec& cl,bool verb=false);
   void set_cl(arma::vec clt);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);

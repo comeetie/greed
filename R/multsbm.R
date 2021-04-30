@@ -135,7 +135,7 @@ setMethod(f = "plot",
 #' @return a list with the model parameters estimates (MAP), the fields are:
 #' \itemize{
 #' \item \code{'pi'}: cluster proportions 
-#' \item \code{'thetakl'}: cluster profile probabilites (array of size K x K x D), 
+#' \item \code{'thetakl'}: cluster profile probabilities (array of size K x K x D), 
 #' }
 #' @export 
 setMethod(f = "coef", 
@@ -143,7 +143,17 @@ setMethod(f = "coef",
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
-            thetakl=sol@obs_stats$x_counts+sol@model@beta-1
+            if(sol@model@type=="undirected"){
+              x_counts=sol@obs_stats$x_counts
+              for (k in 1:dim(thetakl)[1]){
+                for (d in 1:dim(thetakl)[3]){
+                  x_counts[k,k,d]=x_counts[k,k,d]/2
+                }
+              }
+            }else{
+              x_counts=sol@obs_stats$x_counts
+            }
+            thetakl=x_counts+sol@model@beta-1
             norm=colSums(aperm(thetakl,c(3,1,2)),2)
             for (d in 1:dim(thetakl)[3]){
               thetakl[,,d]=thetakl[,,d]/norm
@@ -199,6 +209,29 @@ setMethod(f = "preprocess",
               }
               warning("An undirected multsbm model does not allow self loops, self loops were removed from the graph.",call. = FALSE)
             }
+            
+            if(length(model@alpha)>1){
+              stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@alpha)){
+              stop("Model prior misspecification, alpha is NA.",call. = FALSE)
+            }
+            if(model@alpha<=0){
+              stop("Model prior misspecification, alpha must be positive.",call. = FALSE)
+            }
+            if(length(model@beta)>1){
+              stop("Model prior misspecification, beta must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@beta)){
+              stop("Model prior misspecification, beta is NA.",call. = FALSE)
+            }
+            if(model@beta<=0){
+              stop("Model prior misspecification, beta must be positive.",call. = FALSE)
+            }
+            if(!(model@type %in% c("directed","undirected"))){
+              stop("Model prior misspecification, model type must directed or undirected.",call. = FALSE)
+            }
+            
             list(X=data,N=nrow(data))
           })
 

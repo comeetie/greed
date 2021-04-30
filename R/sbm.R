@@ -144,7 +144,7 @@ setMethod(f = "plot",
 #' @return a list with the model parameters estimates (MAP), the fields are:
 #' \itemize{
 #' \item \code{'pi'}: cluster proportions 
-#' \item \code{'thetakl'}: beetween clusters connections probabilities (matrix of size K x K)
+#' \item \code{'thetakl'}: between clusters connections probabilities (matrix of size K x K)
 #' }
 #' @export 
 setMethod(f = "coef", 
@@ -153,6 +153,9 @@ setMethod(f = "coef",
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
             thetakl=(sol@obs_stats$x_counts+sol@model@a0-1)/(t(t(sol@obs_stats$counts))%*%sol@obs_stats$counts+sol@model@a0+sol@model@b0-2)
+            if(sol@model@type=="undirected"){
+              diag(thethakl)=(diag(sol@obs_stats$x_counts)/2+sol@model@a0-1)/(sol@obs_stats$counts*(sol@obs_stats$counts-1)/2+sol@model@a0+sol@model@b0-2)
+            }
             list(pi=pi,thetakl=thetakl)
           })
 
@@ -197,6 +200,31 @@ setMethod(f = "preprocess",
             if(model@type=="undirected" & sum(diag(data))!=0){
               diag(data)=0
               warning("An undirected sbm model does not allow self loops, self loops were removed from the graph.",call. = FALSE)
+            }
+            if(length(model@alpha)>1){
+              stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@alpha)){
+              stop("Model prior misspecification, alpha is NA.",call. = FALSE)
+            }
+            if(model@alpha<=0){
+              stop("Model prior misspecification, alpha must be positive.",call. = FALSE)
+            }
+            if(length(model@a0)>1){
+              stop("Model prior misspecification, a0 must be of length 1.",call. = FALSE)
+            }
+            if(model@a0<=0){
+              stop("Model prior misspecification, a0 must be positive.",call. = FALSE)
+            }
+            if(length(model@b0)>1){
+              stop("Model prior misspecification, b0 must be of length 1.",call. = FALSE)
+            }
+            if(model@b0<=0){
+              stop("Model prior misspecification, b0 must be positive.",call. = FALSE)
+            }
+            
+            if(!(model@type %in% c("directed","undirected"))){
+              stop("Model prior misspecification, model type must directed or undirected.",call. = FALSE)
             }
             list(X=as.sparse(data),N=nrow(data))
           })

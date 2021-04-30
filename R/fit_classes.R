@@ -11,12 +11,13 @@ NULL
 #' @slot icl a numeric vector of length 1 which store the the icl value
 #' @slot cl a numeric vector of length N which store the clusters labels
 #' @slot obs_stats a list to store the observed statistics of the model needed to compute ICL.
+#' @slot obs_stats_cst a list to store the observed statistics of the model that do not depend on the clustering.
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist a data.frame to store training history (format depends on the used algorithm used).
 #' @slot name generative model name
 #' @seealso \code{\link{sbm_fit-class}}, \code{\link{dcsbm_fit-class}}, \code{\link{co_dcsbm_fit-class}}
 #' @export 
-setClass("icl_fit",slots = list(name="character",K="numeric",obs_stats="list",icl="numeric",cl="numeric",train_hist="data.frame",move_mat = "dgCMatrix"))
+setClass("icl_fit",slots = list(name="character",K="numeric",obs_stats="list",obs_stats_cst="list",icl="numeric",cl="numeric",train_hist="data.frame",move_mat = "dgCMatrix"))
 
 
 

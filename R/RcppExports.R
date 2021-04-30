@@ -117,32 +117,16 @@ gmm_marginal <- function(X, tau, N0i, epsilon, mu) {
     .Call('_greed_gmm_marginal', PACKAGE = 'greed', X, tau, N0i, epsilon, mu)
 }
 
-gmm_marginal_eb <- function(X, tau, N0i, epsilon, mu) {
-    .Call('_greed_gmm_marginal_eb', PACKAGE = 'greed', X, tau, N0i, epsilon, mu)
-}
-
 gmm_marginal_add1 <- function(current, X, tau, N0i, epsilon, mu) {
     .Call('_greed_gmm_marginal_add1', PACKAGE = 'greed', current, X, tau, N0i, epsilon, mu)
-}
-
-gmm_marginal_add1_eb <- function(current, X, tau, N0i, epsilon, mu) {
-    .Call('_greed_gmm_marginal_add1_eb', PACKAGE = 'greed', current, X, tau, N0i, epsilon, mu)
 }
 
 gmm_marginal_del1 <- function(current, X, tau, N0i, epsilon, mu) {
     .Call('_greed_gmm_marginal_del1', PACKAGE = 'greed', current, X, tau, N0i, epsilon, mu)
 }
 
-gmm_marginal_del1_eb <- function(current, X, tau, N0i, epsilon, mu) {
-    .Call('_greed_gmm_marginal_del1_eb', PACKAGE = 'greed', current, X, tau, N0i, epsilon, mu)
-}
-
 gmm_marginal_merge <- function(current1, current2, tau, N0i, epsilon, mu) {
     .Call('_greed_gmm_marginal_merge', PACKAGE = 'greed', current1, current2, tau, N0i, epsilon, mu)
-}
-
-gmm_marginal_merge_eb <- function(current1, current2, tau, N0i, epsilon, mu) {
-    .Call('_greed_gmm_marginal_merge_eb', PACKAGE = 'greed', current1, current2, tau, N0i, epsilon, mu)
 }
 
 possible_moves <- function(k, move_mat) {

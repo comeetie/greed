@@ -6,7 +6,14 @@
 \title{Multivariate mixture of regression model description class}
 \description{
 An S4 class to represent a multivariate mixture of regression model, extends \code{\link{icl_model-class}}.
-#' The model follow \href{https://tminka.github.io/papers/minka-linear.pdf}{minka-linear}.
+The model follows \href{https://tminka.github.io/papers/minka-linear.pdf}{minka-linear} .
+The model corresponds to the following generative model:
+\deqn{ \pi \sim Dirichlet(\alpha)}
+\deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
+\deqn{ V_k \sim \mathcal{W}(\epsilon^{-1},n_0)}
+\deqn{ A_k \sim \mathcal{MN}(0,(V_k)^{-1},\tau X^{t}X)}
+\deqn{ Y_{i.}|X_{i.}Z_{ik}=1 \sim \mathcal{N}(A_kx_{i.},V_{k}^{-1})}
+with \eqn{\mathcal{W}(\epsilon^{-1},n_0)} the Whishart distribution and \eqn{\mathcal{MN}} the matrix-normal distribution.
 }
 \section{Slots}{
 
@@ -15,12 +22,14 @@ An S4 class to represent a multivariate mixture of regression model, extends \co
 
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
 
-\item{\code{beta}}{Prior parameter (inverse variance) default 0.01}
+\item{\code{tau}}{Prior parameter (inverse variance) default 0.01}
 
-\item{\code{N0}}{Prior parameter (pseudo count) default to 10 ! should be > number of features}
+\item{\code{epsilon}}{Covariance matrix prior parameter (default to NaN, in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.)}
+
+\item{\code{N0}}{Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)}
 }}
 
 \examples{
 new("mvmreg")
-new("mvmreg",alpha=1,beta=0.1,N0=15)
+new("mvmreg",alpha=1,tau=0.1,N0=15)
 }

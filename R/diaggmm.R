@@ -15,10 +15,10 @@ NULL
 #' with \eqn{\mathcal{G}(\kappa,\beta)} the Gamma distribution with shape parameter \eqn{\kappa} and rate parameter \eqn{\beta}. 
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
-#' @slot tau Prior parameter (inverse variance) default 0.01 
-#' @slot kappa Prior parameter (gamma shape) default to 1
-#' @slot beta Prior parameter (gamma rate) default to 0.1
-#' @slot mu mean prior (vector of size D)
+#' @slot tau Prior parameter (inverse variance), (default 0.01) 
+#' @slot kappa Prior parameter (gamma shape), (default to 1)
+#' @slot beta Prior parameter (gamma rate), (default to NaN, in this case beta will be estimated from data as 0.1 time the mean of X columns variances) 
+#' @slot mu Prior for the means (vector of size D), (default to NaN, in this case mu will be estimated from data as the mean of X)
 #' @examples
 #' new("diaggmm")
 #' new("diaggmm",alpha=1,tau=0.1,beta=0.1)
@@ -27,7 +27,7 @@ NULL
 #' @export
 setClass("diaggmm", representation = list(tau = "numeric",kappa="numeric",beta="numeric",mu="numeric"),
          contains = "icl_model",
-         prototype(name="diaggmm",tau=0.01,kappa=1,beta=0.1,mu=1,alpha=1))
+         prototype(name="diaggmm",tau=0.01,kappa=1,beta=NaN,mu=NaN,alpha=1))
 
 
 #' @title Diagonal Gaussian mixture model fit results class
@@ -158,6 +158,44 @@ setMethod(f = "preprocess",
               X=as.matrix(data)  
             }else{
               stop(paste0("Unsupported data type: ", class(X) ," use a data.frame, a matrix, a sparse dgCMatrix."),call. = FALSE)
+            }
+            if(length(model@alpha)>1){
+              stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@alpha)){
+              stop("Model prior misspecification, alpha is NA.",call. = FALSE)
+            }
+            if(model@alpha<=0){
+              stop("Model prior misspecification, alpha must be positive.",call. = FALSE)
+            }
+            if(length(model@tau)>1){
+              stop("Model prior misspecification, tau must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@tau)){
+              stop("Model prior misspecification, tau is NA.",call. = FALSE)
+            }
+            if(model@tau<=0){
+              stop("Model prior misspecification, tau must be positive.",call. = FALSE)
+            }
+            
+            if(length(model@kappa)>1){
+              stop("Model prior misspecification, kappa must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@kappa)){
+              stop("Model prior misspecification, kappa is NA.",call. = FALSE)
+            }
+            if(model@kappa<=0){
+              stop("Model prior misspecification, kappa must be positive.",call. = FALSE)
+            }
+            
+            if(length(model@beta)>1){
+              stop("Model prior misspecification, beta must be of length 1.",call. = FALSE)
+            }
+            if(!is.nan(model@beta) && model@beta<=0){
+              stop("Model prior misspecification, beta must be positive.",call. = FALSE)
+            }
+            if(!all(is.nan(model@mu)) && length(model@mu)!=ncol(X)){
+              stop("Model prior misspecification, mu length is incompatible with the data.",call. = FALSE)
             }
             
             list(X=X,N=nrow(X))

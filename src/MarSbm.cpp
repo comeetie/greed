@@ -7,7 +7,7 @@
 using namespace Rcpp;
 
 
-MarSbm::MarSbm(arma::sp_mat& xp,arma::sp_mat& xpobs,double alphai,double a0i,double b0i,double a0obsi,double b0obsi,arma::vec& clt,bool verb) : MissSbm(xp,xpobs,alphai,a0i,b0i,a0obsi,b0obsi,clt,verb)
+MarSbm::MarSbm(arma::sp_mat& xp,arma::sp_mat& xpobs,S4 model,arma::vec& clt,bool verb) : MissSbm(xp,xpobs,model,clt,verb)
 {
   int nbobs = arma::accu(xpobs);
   int nbdyads = N*N;

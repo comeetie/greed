@@ -7,12 +7,14 @@ using namespace Rcpp;
 
 
 
-MissSbm::MissSbm(arma::sp_mat& xp,arma::sp_mat& xpobs,double alphai,double a0i,double b0i,double a0obsi,double b0obsi,arma::vec& clt,bool verb){
-  alpha = alphai;
-  a0 = a0i;
-  b0 = b0i;
-  a0obs = a0i;
-  b0obs = b0i;
+MissSbm::MissSbm(arma::sp_mat& xp,arma::sp_mat& xpobs,S4 modeli,arma::vec& clt,bool verb){
+  model = modeli;
+  alpha = model.slot("alpha");
+  a0 = model.slot("a0");
+  b0 = model.slot("b0");
+  List sampling_priors = as<List>(model.slot("sampling_priors"));
+  a0obs = sampling_priors["a0obs"];
+  b0obs = sampling_priors["b0obs"];
   x  = xp;
   xt = xp.t();
   xobs  = xpobs;

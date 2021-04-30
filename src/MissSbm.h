@@ -10,7 +10,7 @@ using namespace Rcpp;
 class MissSbm : public IclModel
 {
 public:
-  MissSbm(arma::sp_mat& xp,arma::sp_mat& xpobs,double alpha,double a0,double b0,double a0obs,double b0obs,arma::vec& cl,bool verb=false);
+  MissSbm(arma::sp_mat& xp,arma::sp_mat& xpobs,S4 model,arma::vec& cl,bool verb=false);
   void set_cl(arma::vec clt);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);

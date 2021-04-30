@@ -7,16 +7,23 @@ using namespace Rcpp;
 
 
 
-CoDcSbm::CoDcSbm(const arma::sp_mat& xp,int Nri, int Nci,double alphai,arma::vec& clt,bool verb){
-  alpha = alphai;
+CoDcSbm::CoDcSbm(const arma::sp_mat& xp,int Nri, int Nci,S4 modeli,arma::vec& clt,bool verb){
+  model=modeli;
+  
+  alpha = modeli.slot("alpha");
   x  = xp;
   N  = Nri+Nci;
   Nc=Nci;
   Nr=Nri;
   
   set_cl(clt);
+  if(Rcpp::traits::is_nan<REALSXP>(model.slot("p"))){
+    p = arma::accu(x_counts)/(Nr*Nc);
+    model.slot("p") = p;
+  }else{
+    p = model.slot("p");
+  }
   
-  p = arma::accu(x_counts)/(Nr*Nc);
 
   verbose=verb;
   // cst to add 
@@ -167,6 +174,12 @@ double CoDcSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
 
 List CoDcSbm::get_obs_stats(){
   return List::create(Named("counts", counts), Named("dr", dr),Named("dc", dc),Named("x_counts", x_counts));
+}
+
+List CoDcSbm::get_obs_stats_cst(){
+  arma::sp_mat din_node = sum(x).t();
+  arma::sp_mat dout_node = sum(x.t()).t();
+  return List::create(Named("dcol", din_node),Named("drow", dout_node));
 }
 
 arma::mat CoDcSbm::delta_swap(int i,arma::uvec iclust){

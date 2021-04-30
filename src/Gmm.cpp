@@ -7,24 +7,35 @@ using namespace Rcpp;
 
 
 
-Gmm::Gmm(const arma::mat & Xi,double alphai,double taui,int N0i, const arma::mat epsiloni, const arma::rowvec mui, arma::vec& cli,bool verb){
+Gmm::Gmm(const arma::mat & Xi,S4 modeli, arma::vec& cli,bool verb){
+  model= modeli;
   // dirichlet prior parameter on proportion
-  alpha = alphai;
+  alpha = model.slot("alpha");
 
   // data
   X  = Xi;
   // Number of individuals
   N  = X.n_rows;
 
-  tau = taui;
-  N0 = N0i;
-  epsilon = epsiloni;
-  mu = mui;
+  tau = model.slot("tau");
+  if(Rcpp::traits::is_nan<REALSXP>(model.slot("N0"))){
+    N0 = X.n_cols; 
+    model.slot("N0")=N0;
+  }else{
+    N0 = model.slot("N0");
+  }
+  mu = as<arma::rowvec>(model.slot("mu"));
+  if(mu.has_nan()){
+    mu = arma::mean(X,0);
+    model.slot("mu")=mu;
+  }
+  epsilon = as<arma::mat>(model.slot("epsilon"));
+  if(epsilon.has_nan()){
+    epsilon = 0.1*arma::diagmat(cov(X));
+    model.slot("epsilon") = epsilon;
+  }
+  
   set_cl(cli);
-  S = cov(X);
-  //normfact = -N/2*log(det(S));
-  List normref = as<List>(gmm_marginal(X,tau,N0,epsilon,mu));
-  normfact = normref["log_evidence"];
 
   // TODO : add a filed to store the icl const ?
   verbose=verb;

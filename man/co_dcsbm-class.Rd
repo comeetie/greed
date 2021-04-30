@@ -14,15 +14,18 @@ Such model can be used to cluster graph vertex, and model a bipartite graph adja
 \deqn{ \gamma_i^r\sim \mathcal{U}(S_k)}
 \deqn{ \gamma_i^c\sim \mathcal{U}(S_l)}
 \deqn{ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)}
-The individuals parameters \eqn{\gamma_i^r,\gamma_j^-c} allow to take into account the node degree heterogeneity. 
+The individuals parameters \eqn{\gamma_i^r,\gamma_j^c} allow to take into account the node degree heterogeneity. 
 These parameters have uniform priors over simplex \eqn{S_k}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
 }
 \section{Slots}{
 
 \describe{
 \item{\code{alpha}}{Dirichlet parameters for the prior over clusters proportions (default to 1)}
+
+\item{\code{p}}{Exponential prior parameter (default to Nan, in this case p will be estimated from data as the average intensities of X)}
 }}
 
 \examples{
 new("co_dcsbm")
+new("co_dcsbm", p = 0.1)
 }

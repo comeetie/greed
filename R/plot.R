@@ -53,8 +53,8 @@ groupspy = function(x,clust){
 
 
 plot_front = function(sol){
-  if(sol@K==1){
-    message("The fit contains only one cluster, an empty plot was produced.")
+  if(sol@K<3){
+    message("The fit contains only less than 3 clusters, an empty plot was produced.")
     return(ggplot2::ggplot())
   }
   icl = c(sol@icl,sapply(sol@path,function(v){v$icl1}))
@@ -75,8 +75,8 @@ plot_front = function(sol){
 }
 
 lapath = function(x){
-  if(x@K==1){
-    message("The fit contains only one cluster, an empty plot was produced.")
+  if(x@K<3){
+    message("The fit contains less than 3 clusters, an empty plot was produced.")
     return(ggplot2::ggplot())
   }
   gg = data.frame(k=sapply(x@path,function(p){p$K}),logalpha=sapply(x@path,function(p){p$logalpha}))
@@ -178,8 +178,8 @@ co_nodelink = function(sol){
 # dendogram visualisation
 
 dendo = function(x){
-  if(x@K==1){
-    message("The fit contains only one cluster, an empty plot was produced.")
+  if(x@K<3){
+    message("The fit contains less than 3 clusters, an empty plot was produced.")
     return(ggplot2::ggplot())
   }
   ggtree = x@ggtree

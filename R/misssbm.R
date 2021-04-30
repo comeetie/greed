@@ -167,12 +167,31 @@ setMethod(f = "coef",
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
-            thetakl=sol@obs_stats$x_counts+sol@model@a0-1
-            thetakl = thetakl/(sol@obs_stats$x_counts_obs+sol@model@a0+sol@model@b0-2)
-            if(sol@model@sampling=="dyad"){
-              epsilonkl=(sum(sol@obs_stats$x_counts_obs)+sol@model@sampling_priors$a0obs-1)/(sum(sol@obs_stats$counts)^2+sol@model@sampling_priors$a0obs+sol@model@sampling_priors$b0obs-2)
+            if(sol@mode@type=="undirected"){
+              x_counts=sol@obs_stats$x_counts
+              diag(x_counts)=diag(x_counts)/2
+              x_counts_obs=sol@obs_stats$x_counts_obs
+              diag(x_counts_obs)=diag(x_counts_obs)/2
             }else{
-              epsilonkl=(sol@obs_stats$x_counts_obs+sol@model@sampling_priors$a0obs-1)/(t(t(sol@obs_stats$counts))%*%sol@obs_stats$counts+sol@model@sampling_priors$a0obs+sol@model@sampling_priors$b0obs-2)
+              x_counts=sol@obs_stats$x_counts
+            }
+            thetakl=x_counts+sol@model@a0-1
+            thetakl = thetakl/(x_counts_obs+sol@model@a0+sol@model@b0-2)
+            if(sol@mode@type=="directed"){
+              if(sol@model@sampling=="dyad"){
+                epsilonkl=(sum(x_counts_obs)+sol@model@sampling_priors$a0obs-1)/(sum(sol@obs_stats$counts)^2+sol@model@sampling_priors$a0obs+sol@model@sampling_priors$b0obs-2)
+              }else{
+                epsilonkl=(x_counts_obs+sol@model@sampling_priors$a0obs-1)/(t(t(sol@obs_stats$counts))%*%sol@obs_stats$counts+sol@model@sampling_priors$a0obs+sol@model@sampling_priors$b0obs-2)
+              }
+            }else{
+              if(sol@model@sampling=="dyad"){
+                nbdyads = sum(sol@obs_stats$counts)*(sum(sol@obs_stats$counts)-1)/2
+                epsilonkl=(sum(x_counts_obs[lower.tri(x_counts_obs,1)])+sol@model@sampling_priors$a0obs-1)/(nbdyads+sol@model@sampling_priors$a0obs+sol@model@sampling_priors$b0obs-2)
+              }else{
+                nbdyads = t(t(sol@obs_stats$counts))%*%sol@obs_stats$counts
+                diag(nbdyads)=(diag(nbdyads)-sol@obs_stats$counts)/2
+                epsilonkl=(x_counts_obs+sol@model@sampling_priors$a0obs-1)/(nbdyads+sol@model@sampling_priors$a0obs+sol@model@sampling_priors$b0obs-2)
+              }
             }            
             list(pi=pi,thetakl=thetakl,epislonkl=epsilonkl)
           })
@@ -224,7 +243,51 @@ setMethod(f = "preprocess",
             if(model@type=="undirected" & sum(diag(data))!=0){
               warning("An undirected sbm model does not allow self loops, self loops were removed from the graph.",call. = FALSE)
             }
-
+            if(length(model@alpha)>1){
+              stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@alpha)){
+              stop("Model prior misspecification, alpha is NA.",call. = FALSE)
+            }
+            if(model@alpha<=0){
+              stop("Model prior misspecification, alpha must be positive.",call. = FALSE)
+            }
+            if(length(model@a0)>1){
+              stop("Model prior misspecification, a0 must be of length 1.",call. = FALSE)
+            }
+            if(model@a0<=0){
+              stop("Model prior misspecification, a0 must be positive.",call. = FALSE)
+            }
+            if(length(model@b0)>1){
+              stop("Model prior misspecification, b0 must be of length 1.",call. = FALSE)
+            }
+            if(model@b0<=0){
+              stop("Model prior misspecification, b0 must be positive.",call. = FALSE)
+            }
+            
+            if(!(model@sampling %in% c("dyad","block-dyad"))){
+              stop("Model prior misspecification, only dyad and block-dyad sampling are supported.",call. = FALSE)
+            }
+            spnames= sort(names(model@sampling_priors))
+            if(length(spnames)!=2 | spnames[1]!="a0obs" | spnames[2]!="b0obs" ){
+              stop("Model prior misspecification, sampling prior slot must be a list with a0obs and b0obs fields.",call. = FALSE)
+            }
+            if(length(model@sampling_priors$a0obs)>1){
+              stop("Model prior misspecification, sampling prior a0obs must be of length 1.",call. = FALSE)
+            }
+            if(model@sampling_priors$a0obs<=0){
+              stop("Model prior misspecification, sampling prior a0obs must be positive.",call. = FALSE)
+            }
+            if(length(model@sampling_priors$b0obs)>1){
+              stop("Model prior misspecification, sampling prior b0obs must be of length 1.",call. = FALSE)
+            }
+            if(model@sampling_priors$b0obs<=0){
+              stop("Model prior misspecification, sampling prior b0obs must be positive.",call. = FALSE)
+            }
+            
+            if(!(model@type %in% c("directed","undirected"))){
+              stop("Model prior misspecification, model type must directed or undirected.",call. = FALSE)
+            }
             list(X=as.sparse(X),Xobs=Xobs,N=nrow(data))
           })
 

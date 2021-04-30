@@ -18,6 +18,8 @@ An S4 abstract class to represent an icl fit of a clustering model.
 
 \item{\code{obs_stats}}{a list to store the observed statistics of the model needed to compute ICL.}
 
+\item{\code{obs_stats_cst}}{a list to store the observed statistics of the model that do not depend on the clustering.}
+
 \item{\code{move_mat}}{binary matrix which store move constraints}
 
 \item{\code{train_hist}}{a data.frame to store training history (format depends on the used algorithm used).}

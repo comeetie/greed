@@ -14,15 +14,16 @@ NULL
 #' \deqn{ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)}
 #' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)}
 #' The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity. 
-#' These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_i\in C_k\gamma_i^+=1}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
+#' These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i:z_{ik}=1}\gamma_i^+=1}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
 #' @slot name name of the model
-#' @slot alpha Dirichlet over cluster proportions prior parameter
+#' @slot alpha Dirichlet over cluster proportions prior parameter (default to 10)
+#' @slot p Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)
 #' @slot type define the type of networks (either "directed" or "undirected", default to "directed")
 #' @export 
 setClass("dcsbm",
-         representation = list(type="character"),
+         representation = list(type="character",p="numeric"),
          contains = "icl_model",
-         prototype(name="dcsbm",alpha=1,type="directed"))
+         prototype(name="dcsbm",alpha=1,p=NaN,type="directed"))
 
 
 
@@ -42,6 +43,11 @@ setClass("dcsbm",
 #' \item dout: numeric vector of size K which store the sums of out-degrees for each clusters 
 #' \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
 #' }
+#' @slot obs_stats_cst a list with the following elements:
+#' \itemize{
+#' \item din_node: node in-degree, a vector of size N
+#' \item dout_node: node in-degree vector of size N
+#' } 
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
 #' @export 
@@ -145,20 +151,41 @@ setMethod(f = "plot",
 #' @title Extract parameters from an \code{\link{dcsbm_fit-class}} object
 #' 
 #' @param object a \code{\link{dcsbm_fit-class}}
-#' @return a list with the model parameters estimates (MAP), the fields are:
+#' @return a list with the model parameters estimates (MAP), the fields are the following for "directed" models :
 #' \itemize{
 #' \item \code{'pi'}: cluster proportions 
-#' \item \code{'thetakl'}: beetween clusters connections normalized intensities (matrix of size K x K), 
+#' \item \code{'thetakl'}: between cluster normalized connection intensities (matrix of size K x K), 
+#' \item \code{gammain}: node in-degree correction parameter
+#' \item \code{gammaout}: node out-degree correction parameter
 #' }
-#' @details Currently the parameter \code{thetakl} is estimated by MLE.
+#' And as follow for un-directed models : 
+#' #' \itemize{
+#' \item \code{'pi'}: cluster proportions 
+#' \item \code{'thetakl'}: between cluster normalized connection intensities (matrix of size K x K), 
+#' \item \code{gamma}: node degree correction parameter
+#' }
+#' @details in case of undirected graph 
 #' @export 
 setMethod(f = "coef", 
           signature = signature(object = "dcsbm_fit"),
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
-            thetakl=(sol@obs_stats$x_counts)/(t(t(sol@obs_stats$counts))%*%sol@obs_stats$counts)
-            list(pi=pi,thetakl=thetakl)
+            if(sol@model@type=="directed"){
+              thetakl=(sol@obs_stats$x_counts)/(t(t(sol@obs_stats$counts))%*%sol@obs_stats$counts+1/sol@model@p)
+              gammain  = sol@obs_stats_cst$din_node/sol@obs_stats$din[sol@cl]
+              gammaout = sol@obs_stats_cst$dout_node/sol@obs_stats$dout[sol@cl]
+              params = list(pi=pi,thetakl=thetakl,gammain=gammain,gammaout=gammaout)
+            }else{
+              thetakl=(sol@obs_stats$x_counts)
+              diag(thetakl)=diag(thetakl)/2
+              norm = t(t(sol@obs_stats$counts))%*%sol@obs_stats$counts
+              diag(norm)= diag(norm)/2-sol@obs_stats$counts
+              thetakl = thetakl/(norm+1/sol@model@p)
+              gamma  = sol@obs_stats_cst$din_node/sol@obs_stats$din[sol@cl]
+              params = list(pi=pi,thetakl=thetakl,gamma=gamma)
+            }
+            params
           })
 
 
@@ -207,6 +234,24 @@ setMethod(f = "preprocess",
             if(model@type=="undirected" & sum(diag(data))!=0){
               diag(data)=0
               warning("An undirected dcsbm model does not allow self loops, self loops were removed from the graph.",call. = FALSE)
+            }
+            if(length(model@alpha)>1){
+              stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@alpha)){
+              stop("Model prior misspecification, alpha is NA.",call. = FALSE)
+            }
+            if(model@alpha<=0){
+              stop("Model prior misspecification, alpha must be positive.",call. = FALSE)
+            }
+            if(length(model@p)>1){
+              stop("Model prior misspecification, p must be of length 1.",call. = FALSE)
+            }
+            if(!is.nan(model@p) && model@p<=0){
+              stop("Model prior misspecification, p must be positive.",call. = FALSE)
+            }
+            if(!(model@type %in% c("directed","undirected"))){
+              stop("Model prior misspecification, model type must directed or undirected.",call. = FALSE)
             }
             list(X=as.sparse(data),N=nrow(data))
           })

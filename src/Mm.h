@@ -10,7 +10,7 @@ using namespace Rcpp;
 class Mm : public IclModel
 {
 public:
-  Mm(arma::sp_mat& xp,double alpha,double beta,arma::vec& cl,bool verb=false);
+  Mm(arma::sp_mat& xp,S4 model,arma::vec& cl,bool verb=false);
   void set_cl(arma::vec cl);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);

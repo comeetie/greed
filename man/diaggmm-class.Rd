@@ -21,13 +21,13 @@ with \eqn{\mathcal{G}(\kappa,\beta)} the Gamma distribution with shape parameter
 
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
 
-\item{\code{tau}}{Prior parameter (inverse variance) default 0.01}
+\item{\code{tau}}{Prior parameter (inverse variance), (default 0.01)}
 
-\item{\code{kappa}}{Prior parameter (gamma shape) default to 1}
+\item{\code{kappa}}{Prior parameter (gamma shape), (default to 1)}
 
-\item{\code{beta}}{Prior parameter (gamma rate) default to 0.1}
+\item{\code{beta}}{Prior parameter (gamma rate), (default to NaN, in this case beta will be estimated from data as 0.1 time the mean of X columns variances)}
 
-\item{\code{mu}}{mean prior (vector of size D)}
+\item{\code{mu}}{Prior for the means (vector of size D), (default to NaN, in this case mu will be estimated from data as the mean of X)}
 }}
 
 \examples{

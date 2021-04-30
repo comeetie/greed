@@ -211,9 +211,7 @@ cleanpath = function(pathsol){
   # check for possible better solution than init with alpha=1 along the path
   if(length(path)>0){
     icli = sapply(path,function(p){p$icl1})
-    print(icli)
     if(max(icli)>pathsol@icl){
-      print("cleaning")
       im = which.max(icli)
       K = path[[im]]$K
       pathsol@K = K

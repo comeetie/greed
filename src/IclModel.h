@@ -60,8 +60,10 @@ public:
   arma::mat get_probs();
   // accessors
   virtual List get_obs_stats(){return List::create();};
+  virtual List get_obs_stats_cst(){return List::create();};
   arma::vec get_cl(){return cl;};
   arma::vec get_counts(){return counts;};
+  S4 get_model(){return model;};
   int get_K(){return K;};
   virtual ~IclModel(){};
 protected:
@@ -80,6 +82,8 @@ protected:
   double icl_value;
   // verbose ?
   bool verbose;
+  // priors params
+  S4 model;
 };
 
 #endif

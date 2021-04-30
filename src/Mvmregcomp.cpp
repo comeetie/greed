@@ -7,9 +7,10 @@ using namespace Rcpp;
 
 
 
-Mvmregcomp::Mvmregcomp(const arma::mat & Xi,const arma::mat & Yi, double alphai,double betai, double N0i,arma::vec& cli,bool verb){
+Mvmregcomp::Mvmregcomp(const arma::mat & Xi,const arma::mat & Yi, S4 modeli,arma::vec& cli,bool verb){
   // dirichlet prior parameter on proportion
-  alpha = alphai;
+  model = modeli;
+  alpha = model.slot("alpha");
 
   // data
   X  = Xi;
@@ -19,19 +20,27 @@ Mvmregcomp::Mvmregcomp(const arma::mat & Xi,const arma::mat & Yi, double alphai,
 
 
   M  = inv_sympd(X.t()*X)*X.t()*Y;
-
-  Kp  =  betai*X.t()*X/N;
+  double beta = model.slot("tau");
+  Kp  =  beta*X.t()*X/N;
   
 
   arma::mat R  = Y-X*M;
-  arma::mat RR = R.t()*R;
+  arma::mat RR = cov(R);
+  S0 = as<arma::mat>(model.slot("epsilon"));
+  if(S0.has_nan()){
+    S0 = RR;
+    S0.zeros();
+    S0.diag() = 0.01*RR.diag();
+    model.slot("epsilon") = S0;
+  }
   
-
-  S0 = RR;
-  S0.zeros();
-  N0 = Y.n_cols;
-  S0.diag() = N0*N0i*RR.diag()/N;
-
+  if(Rcpp::traits::is_nan<REALSXP>(model.slot("N0"))){
+    N0 = Y.n_cols; 
+    model.slot("N0")=N0;
+  }else{
+    N0 = model.slot("N0");
+  }
+  
   set_cl(cli);
 
   // TODO : add a filed to store the icl const ?

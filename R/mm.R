@@ -189,5 +189,24 @@ setMethod(f = "preprocess",
             if(!all(round(data)==data) || min(data)<0){
               stop("A mm model expect an integer matrix with postive values.",call. = FALSE)
             }
+            if(length(model@alpha)>1){
+              stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@alpha)){
+              stop("Model prior misspecification, alpha is NA.",call. = FALSE)
+            }
+            if(model@alpha<=0){
+              stop("Model prior misspecification, alpha must be positive.",call. = FALSE)
+            }
+            
+            if(length(model@beta)>1){
+              stop("Model prior misspecification, beta must be of length 1.",call. = FALSE)
+            }
+            if(is.na(model@beta)){
+              stop("Model prior misspecification, beta is NA.",call. = FALSE)
+            }
+            if(model@beta<=0){
+              stop("Model prior misspecification, beta must be positive.",call. = FALSE)
+            }
             list(X=as.sparse(data),N=nrow(data))
           })

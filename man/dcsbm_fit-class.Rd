@@ -28,6 +28,12 @@ An S4 class to represent a fit of a degree corrected stochastic block model for 
 \item x_counts: matrix of size K*K with the number of links between each pair of clusters 
 }}
 
+\item{\code{obs_stats_cst}}{a list with the following elements:
+\itemize{
+\item din_node: node in-degree, a vector of size N
+\item dout_node: node in-degree vector of size N
+}}
+
 \item{\code{move_mat}}{binary matrix which store move constraints}
 
 \item{\code{train_hist}}{data.frame with training history information (details depends on the training procedure)}

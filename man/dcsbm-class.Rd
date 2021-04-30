@@ -13,14 +13,16 @@ Such model can be used to cluster graph vertex, and model a square adjacency mat
 \deqn{ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)}
 \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)}
 The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity. 
-These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_i\in C_k\gamma_i^+=1}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
+These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i:z_{ik}=1}\gamma_i^+=1}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
 }
 \section{Slots}{
 
 \describe{
 \item{\code{name}}{name of the model}
 
-\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter}
+\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 10)}
+
+\item{\code{p}}{Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)}
 
 \item{\code{type}}{define the type of networks (either "directed" or "undirected", default to "directed")}
 }}

@@ -7,10 +7,11 @@ using namespace Rcpp;
 
 
 
-Sbm::Sbm(arma::sp_mat& xp,double alphai,double a0i,double b0i,arma::vec& clt,bool verb){
-  alpha = alphai;
-  a0 = a0i;
-  b0 = b0i;
+Sbm::Sbm(arma::sp_mat& xp,S4 modeli,arma::vec& clt,bool verb){
+  model= modeli;
+  alpha = model.slot("alpha");
+  a0 = model.slot("a0");
+  b0 = model.slot("b0");
   x  = xp;
   xt = xp.t();
   N  = x.n_rows;

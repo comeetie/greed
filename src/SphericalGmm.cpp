@@ -7,22 +7,32 @@ using namespace Rcpp;
 
 
 
-SphericalGmm::SphericalGmm(const arma::mat & Xi,double alphai,double taui,double kappai,double betai, const arma::rowvec mui, arma::vec& cli,bool verb){
+SphericalGmm::SphericalGmm(const arma::mat & Xi,S4 modeli, arma::vec& cli,bool verb){
   // dirichlet prior parameter on proportion
-  alpha = alphai;
+  model= modeli;
+  alpha = model.slot("alpha");
 
   // data
   X  = Xi;
   // Number of individuals
   N  = X.n_rows;
 
-  tau = taui;
-  kappa = kappai;
-  beta= betai;
-  mu = mui;
+  tau = model.slot("tau");
+  kappa = model.slot("kappa");
+
+  
+  beta= model.slot("beta");
+  if(Rcpp::traits::is_nan<REALSXP>(beta)){
+    beta = 0.1*arma::mean(arma::var(X)); 
+    model.slot("beta")=beta;
+  }
+  
+  mu = as<arma::rowvec>(model.slot("mu"));
+  if(mu.has_nan()){
+    mu = arma::mean(X,0);
+    model.slot("mu")=mu;
+  }
   set_cl(cli);
-
-
 
   verbose=verb;
 }

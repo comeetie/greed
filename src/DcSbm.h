@@ -10,7 +10,7 @@ using namespace Rcpp;
 class DcSbm : public IclModel
 {
 public:
-  DcSbm(const arma::sp_mat& xp,double alpha,arma::vec& cl,bool verb=false);
+  DcSbm(const arma::sp_mat& xp,S4 model,arma::vec& cl,bool verb=false);
   void set_cl(arma::vec clt);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
@@ -20,6 +20,7 @@ public:
   double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats);
   void merge_update(int k, int l);
   List get_obs_stats();
+  List get_obs_stats_cst();
 protected:
   arma::sp_mat  x;
   arma::sp_mat  xt;

@@ -424,21 +424,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// gmm_marginal_eb
-List gmm_marginal_eb(const arma::mat X, double tau, int N0i, const arma::mat epsilon, const arma::rowvec mu);
-RcppExport SEXP _greed_gmm_marginal_eb(SEXP XSEXP, SEXP tauSEXP, SEXP N0iSEXP, SEXP epsilonSEXP, SEXP muSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
-    Rcpp::traits::input_parameter< double >::type tau(tauSEXP);
-    Rcpp::traits::input_parameter< int >::type N0i(N0iSEXP);
-    Rcpp::traits::input_parameter< const arma::mat >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< const arma::rowvec >::type mu(muSEXP);
-    rcpp_result_gen = Rcpp::wrap(gmm_marginal_eb(X, tau, N0i, epsilon, mu));
-    return rcpp_result_gen;
-END_RCPP
-}
 // gmm_marginal_add1
 List gmm_marginal_add1(List current, const arma::rowvec X, double tau, int N0i, const arma::mat epsilon, const arma::rowvec mu);
 RcppExport SEXP _greed_gmm_marginal_add1(SEXP currentSEXP, SEXP XSEXP, SEXP tauSEXP, SEXP N0iSEXP, SEXP epsilonSEXP, SEXP muSEXP) {
@@ -452,22 +437,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::mat >::type epsilon(epsilonSEXP);
     Rcpp::traits::input_parameter< const arma::rowvec >::type mu(muSEXP);
     rcpp_result_gen = Rcpp::wrap(gmm_marginal_add1(current, X, tau, N0i, epsilon, mu));
-    return rcpp_result_gen;
-END_RCPP
-}
-// gmm_marginal_add1_eb
-List gmm_marginal_add1_eb(List current, const arma::rowvec X, double tau, int N0i, const arma::mat epsilon, const arma::rowvec mu);
-RcppExport SEXP _greed_gmm_marginal_add1_eb(SEXP currentSEXP, SEXP XSEXP, SEXP tauSEXP, SEXP N0iSEXP, SEXP epsilonSEXP, SEXP muSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type current(currentSEXP);
-    Rcpp::traits::input_parameter< const arma::rowvec >::type X(XSEXP);
-    Rcpp::traits::input_parameter< double >::type tau(tauSEXP);
-    Rcpp::traits::input_parameter< int >::type N0i(N0iSEXP);
-    Rcpp::traits::input_parameter< const arma::mat >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< const arma::rowvec >::type mu(muSEXP);
-    rcpp_result_gen = Rcpp::wrap(gmm_marginal_add1_eb(current, X, tau, N0i, epsilon, mu));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -487,22 +456,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// gmm_marginal_del1_eb
-List gmm_marginal_del1_eb(List current, const arma::rowvec X, double tau, int N0i, const arma::mat epsilon, const arma::rowvec mu);
-RcppExport SEXP _greed_gmm_marginal_del1_eb(SEXP currentSEXP, SEXP XSEXP, SEXP tauSEXP, SEXP N0iSEXP, SEXP epsilonSEXP, SEXP muSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type current(currentSEXP);
-    Rcpp::traits::input_parameter< const arma::rowvec >::type X(XSEXP);
-    Rcpp::traits::input_parameter< double >::type tau(tauSEXP);
-    Rcpp::traits::input_parameter< int >::type N0i(N0iSEXP);
-    Rcpp::traits::input_parameter< const arma::mat >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< const arma::rowvec >::type mu(muSEXP);
-    rcpp_result_gen = Rcpp::wrap(gmm_marginal_del1_eb(current, X, tau, N0i, epsilon, mu));
-    return rcpp_result_gen;
-END_RCPP
-}
 // gmm_marginal_merge
 List gmm_marginal_merge(List current1, List current2, double tau, int N0i, const arma::mat epsilon, const arma::rowvec mu);
 RcppExport SEXP _greed_gmm_marginal_merge(SEXP current1SEXP, SEXP current2SEXP, SEXP tauSEXP, SEXP N0iSEXP, SEXP epsilonSEXP, SEXP muSEXP) {
@@ -516,22 +469,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::mat >::type epsilon(epsilonSEXP);
     Rcpp::traits::input_parameter< const arma::rowvec >::type mu(muSEXP);
     rcpp_result_gen = Rcpp::wrap(gmm_marginal_merge(current1, current2, tau, N0i, epsilon, mu));
-    return rcpp_result_gen;
-END_RCPP
-}
-// gmm_marginal_merge_eb
-List gmm_marginal_merge_eb(List current1, List current2, double tau, int N0i, const arma::mat epsilon, const arma::rowvec mu);
-RcppExport SEXP _greed_gmm_marginal_merge_eb(SEXP current1SEXP, SEXP current2SEXP, SEXP tauSEXP, SEXP N0iSEXP, SEXP epsilonSEXP, SEXP muSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type current1(current1SEXP);
-    Rcpp::traits::input_parameter< List >::type current2(current2SEXP);
-    Rcpp::traits::input_parameter< double >::type tau(tauSEXP);
-    Rcpp::traits::input_parameter< int >::type N0i(N0iSEXP);
-    Rcpp::traits::input_parameter< const arma::mat >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< const arma::rowvec >::type mu(muSEXP);
-    rcpp_result_gen = Rcpp::wrap(gmm_marginal_merge_eb(current1, current2, tau, N0i, epsilon, mu));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -578,13 +515,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_mvlm_post_del1_comp", (DL_FUNC) &_greed_mvlm_post_del1_comp, 7},
     {"_greed_mvlm_post_merge_comp", (DL_FUNC) &_greed_mvlm_post_merge_comp, 6},
     {"_greed_gmm_marginal", (DL_FUNC) &_greed_gmm_marginal, 5},
-    {"_greed_gmm_marginal_eb", (DL_FUNC) &_greed_gmm_marginal_eb, 5},
     {"_greed_gmm_marginal_add1", (DL_FUNC) &_greed_gmm_marginal_add1, 6},
-    {"_greed_gmm_marginal_add1_eb", (DL_FUNC) &_greed_gmm_marginal_add1_eb, 6},
     {"_greed_gmm_marginal_del1", (DL_FUNC) &_greed_gmm_marginal_del1, 6},
-    {"_greed_gmm_marginal_del1_eb", (DL_FUNC) &_greed_gmm_marginal_del1_eb, 6},
     {"_greed_gmm_marginal_merge", (DL_FUNC) &_greed_gmm_marginal_merge, 6},
-    {"_greed_gmm_marginal_merge_eb", (DL_FUNC) &_greed_gmm_marginal_merge_eb, 6},
     {"_greed_possible_moves", (DL_FUNC) &_greed_possible_moves, 2},
     {NULL, NULL, 0}
 };

@@ -13,7 +13,7 @@
 a list with the model parameters estimates (MAP), the fields are:
 \itemize{
 \item \code{'pi'}: cluster proportions 
-\item \code{'thetakl'}: beetween clusters connections probabilities (matrix of size K x K)
+\item \code{'thetakl'}: between clusters connections probabilities (matrix of size K x K)
 }
 }
 \description{

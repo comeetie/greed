@@ -7,13 +7,19 @@ using namespace Rcpp;
 
 
 
-DcSbm::DcSbm(const arma::sp_mat& xp,double alphai,arma::vec& clt,bool verb){
-  alpha = alphai;
+DcSbm::DcSbm(const arma::sp_mat& xp,S4 modeli,arma::vec& clt,bool verb){
+  model = modeli;
+  alpha = modeli.slot("alpha");
   x  = xp;
   xt = xp.t();
   N  = x.n_rows;
   set_cl(clt);
-  p= arma::accu(x_counts)/(N*N);
+  if(Rcpp::traits::is_nan<REALSXP>(model.slot("p"))){
+    p= arma::accu(x_counts)/(N*N);
+    model.slot("p") = p;
+  }else{
+    p = model.slot("p");
+  }
   verbose=verb;
   // cst to add 
   cst = 0;
@@ -76,10 +82,16 @@ double DcSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
 
 
 
-
 List DcSbm::get_obs_stats(){
   return List::create(Named("counts", counts), Named("din", din),Named("dout", dout),Named("x_counts", x_counts));
 }
+
+List DcSbm::get_obs_stats_cst(){
+  arma::sp_mat din_node = sum(x).t();
+  arma::sp_mat dout_node = sum(x.t()).t();
+  return List::create(Named("din_node", din_node),Named("dout_node", dout_node));
+}
+
 
 arma::mat DcSbm::delta_swap(int i,arma::uvec iclust){
   int self=x(i,i);

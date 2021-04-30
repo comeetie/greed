@@ -11,7 +11,7 @@ using namespace Rcpp;
 class Mvmregcomp : public IclModel
 {
 public:
-  Mvmregcomp(const arma::mat & X,const arma::mat & Y,double alpha,double beta, double N0,arma::vec& cl,bool verb=false);
+  Mvmregcomp(const arma::mat & X,const arma::mat & Y,S4 model,arma::vec& cl,bool verb=false);
   void set_cl(arma::vec clt);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
