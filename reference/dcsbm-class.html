@@ -48,7 +48,7 @@ $$ \theta_{kl} \sim Exponential(p)$$
 $$ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)$$
 $$ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)$$
 The individuals parameters \(\gamma_i^+,\gamma_i^-\) allow to take into account the node degree heterogeneity. 
-These parameters have uniform priors over the simplex \(S_k\) ie. \(\sum_i\in C_k\gamma_i^+=1\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):" />
+These parameters have uniform priors over the simplex \(S_k\) ie. \(\sum_{i:z_{ik}=1}\gamma_i^+=1\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):" />
 
 
 
@@ -154,7 +154,7 @@ $$ \theta_{kl} \sim Exponential(p)$$
 $$ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)$$
 $$ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)$$
 The individuals parameters \(\gamma_i^+,\gamma_i^-\) allow to take into account the node degree heterogeneity. 
-These parameters have uniform priors over the simplex \(S_k\) ie. \(\sum_i\in C_k\gamma_i^+=1\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):</p>
+These parameters have uniform priors over the simplex \(S_k\) ie. \(\sum_{i:z_{ik}=1}\gamma_i^+=1\). This class mainly store the prior parameters value \(\alpha\) of this generative model in the following slots (the prior parameter \(p\) is estimated from the data as the global average probability of connection between two nodes):</p>
     </div>
 
 
@@ -166,7 +166,9 @@ These parameters have uniform priors over the simplex \(S_k\) ie. \(\sum_i\in C_
 <dl>
 <dt><code>name</code></dt><dd><p>name of the model</p></dd>
 
-<dt><code>alpha</code></dt><dd><p>Dirichlet over cluster proportions prior parameter</p></dd>
+<dt><code>alpha</code></dt><dd><p>Dirichlet over cluster proportions prior parameter (default to 10)</p></dd>
+
+<dt><code>p</code></dt><dd><p>Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)</p></dd>
 
 <dt><code>type</code></dt><dd><p>define the type of networks (either "directed" or "undirected", default to "directed")</p></dd>
 

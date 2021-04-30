@@ -155,14 +155,21 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list with the model parameters estimates (MAP), the fields are:</p><ul>
+    <p>a list with the model parameters estimates (MAP), the fields are the following for "directed" models :</p><ul>
 <li><p><code>'pi'</code>: cluster proportions</p></li>
-<li><p><code>'thetakl'</code>: beetween clusters connections normalized intensities (matrix of size K x K),</p></li>
+<li><p><code>'thetakl'</code>: between cluster normalized connection intensities (matrix of size K x K),</p></li>
+<li><p><code>gammain</code>: node in-degree correction parameter</p></li>
+<li><p><code>gammaout</code>: node out-degree correction parameter</p></li>
+</ul><p>And as follow for un-directed models : 
+#'</p><ul>
+<li><p><code>'pi'</code>: cluster proportions</p></li>
+<li><p><code>'thetakl'</code>: between cluster normalized connection intensities (matrix of size K x K),</p></li>
+<li><p><code>gamma</code>: node degree correction parameter</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Currently the parameter <code>thetakl</code> is estimated by MLE.</p>
+    <p>in case of undirected graph</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

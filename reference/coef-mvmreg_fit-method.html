@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract parameters from an sbm_fit-class object — coef,sbm_fit-method • greed</title>
+<title>Extract mixture parameters from mvmreg_fit-class object — coef,mvmreg_fit-method • greed</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Extract parameters from an sbm_fit-class object — coef,sbm_fit-method" />
-<meta property="og:description" content="Extract parameters from an sbm_fit-class object" />
+<meta property="og:title" content="Extract mixture parameters from mvmreg_fit-class object — coef,mvmreg_fit-method" />
+<meta property="og:description" content="Extract mixture parameters from mvmreg_fit-class object" />
 
 
 
@@ -132,16 +132,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract parameters from an <code><a href='sbm_fit-class.html'>sbm_fit-class</a></code> object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/sbm.R'><code>R/sbm.R</code></a></small>
-    <div class="hidden name"><code>coef-sbm_fit-method.Rd</code></div>
+    <h1>Extract mixture parameters from <code><a href='mvmreg_fit-class.html'>mvmreg_fit-class</a></code> object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/mvmreg.R'><code>R/mvmreg.R</code></a></small>
+    <div class="hidden name"><code>coef-mvmreg_fit-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Extract parameters from an <code><a href='sbm_fit-class.html'>sbm_fit-class</a></code> object</p>
+    <p>Extract mixture parameters from <code><a href='mvmreg_fit-class.html'>mvmreg_fit-class</a></code> object</p>
     </div>
 
-    <pre class="usage"><span class='co'># S4 method for sbm_fit</span>
+    <pre class="usage"><span class='co'># S4 method for mvmreg_fit</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -149,15 +149,16 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>a <code><a href='sbm_fit-class.html'>sbm_fit-class</a></code></p></td>
+      <td><p>a <code><a href='mvmreg_fit-class.html'>mvmreg_fit-class</a></code></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list with the model parameters estimates (MAP), the fields are:</p><ul>
+    <p>a list with the mixture parameters estimates (MAP), the fields are:</p><ul>
 <li><p><code>'pi'</code>: cluster proportions</p></li>
-<li><p><code>'thetakl'</code>: between clusters connections probabilities (matrix of size K x K)</p></li>
+<li><p><code>'A'</code>: cluster regression matrix</p></li>
+<li><p><code>'Sigmak'</code>: cluster noise co-variance matrices</p></li>
 </ul>
 
 

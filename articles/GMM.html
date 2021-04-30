@@ -122,13 +122,13 @@
 <span class="va">X</span><span class="op">=</span><span class="va">diabetes</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>
 <span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model<span class="op">=</span><span class="fu">new</span><span class="op">(</span><span class="st">"gmm"</span>,mu<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">X</span>,<span class="fl">2</span>,<span class="va">mean</span><span class="op">)</span>,epsilon<span class="op">=</span><span class="fl">0.1</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,N0<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- GMM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -2428 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -2407 and 4 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -2397 and 4 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -2396 and 4 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -2396 and 4 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -2451 and 7 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -2419 and 4 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -2406 and 3 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -2406 and 3 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -2406 and 3 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a GMM model, 3 clusters and an icl of -2395.</span>
+<span class="co">#&gt; ICL clustering with a GMM model, 3 clusters and an icl of -2406.</span>
 <span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">sol</span>,<span class="va">X</span><span class="op">)</span>
 <span class="co">#&gt; Registered S3 method overwritten by 'GGally':</span>
 <span class="co">#&gt;   method from   </span>
@@ -137,7 +137,7 @@
 <span class="co">#&gt;           </span>
 <span class="co">#&gt;             1  2  3</span>
 <span class="co">#&gt;   Chemical 11 24  1</span>
-<span class="co">#&gt;   Normal   74  2  0</span>
+<span class="co">#&gt;   Normal   73  3  0</span>
 <span class="co">#&gt;   Overt     0  6 27</span></code></pre></div>
 <p><img src="GMM_files/figure-html/diabetes-gmm-1.png" width="100%"></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -210,10 +210,10 @@
 <span class="va">X</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">galaxies</span><span class="op">)</span>
 <span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model<span class="op">=</span><span class="fu">new</span><span class="op">(</span><span class="st">"gmm"</span>,mu<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">X</span>,<span class="fl">2</span>,<span class="va">mean</span><span class="op">)</span>,epsilon<span class="op">=</span><span class="fl">0.1</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,N0<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- GMM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -794 and 3 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -794 and 3 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -803 and 4 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -803 and 4 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a GMM model, 3 clusters and an icl of -794.</span>
+<span class="co">#&gt; ICL clustering with a GMM model, 3 clusters and an icl of -791.</span>
 <span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">sol</span>,<span class="va">X</span><span class="op">)</span></code></pre></div>
 <p><img src="GMM_files/figure-html/galaxies-gmm-1.png" width="100%"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">

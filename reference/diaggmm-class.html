@@ -166,13 +166,13 @@ with \(\mathcal{G}(\kappa,\beta)\) the Gamma distribution with shape parameter \
 
 <dt><code>alpha</code></dt><dd><p>Dirichlet over cluster proportions prior parameter (default to 1)</p></dd>
 
-<dt><code>tau</code></dt><dd><p>Prior parameter (inverse variance) default 0.01</p></dd>
+<dt><code>tau</code></dt><dd><p>Prior parameter (inverse variance), (default 0.01)</p></dd>
 
-<dt><code>kappa</code></dt><dd><p>Prior parameter (gamma shape) default to 1</p></dd>
+<dt><code>kappa</code></dt><dd><p>Prior parameter (gamma shape), (default to 1)</p></dd>
 
-<dt><code>beta</code></dt><dd><p>Prior parameter (gamma rate) default to 0.1</p></dd>
+<dt><code>beta</code></dt><dd><p>Prior parameter (gamma rate), (default to NaN, in this case beta will be estimated from data as 0.1 time the mean of X columns variances)</p></dd>
 
-<dt><code>mu</code></dt><dd><p>mean prior (vector of size D)</p></dd>
+<dt><code>mu</code></dt><dd><p>Prior for the means (vector of size D), (default to NaN, in this case mu will be estimated from data as the mean of X)</p></dd>
 
 </dl>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
@@ -189,10 +189,10 @@ with \(\mathcal{G}(\kappa,\beta)\) the Gamma distribution with shape parameter \
 #&gt; [1] 1
 #&gt; 
 #&gt; Slot "beta":
-#&gt; [1] 0.1
+#&gt; [1] NaN
 #&gt; 
 #&gt; Slot "mu":
-#&gt; [1] 1
+#&gt; [1] NaN
 #&gt; 
 #&gt; Slot "name":
 #&gt; [1] "diaggmm"
@@ -211,7 +211,7 @@ with \(\mathcal{G}(\kappa,\beta)\) the Gamma distribution with shape parameter \
 #&gt; [1] 0.1
 #&gt; 
 #&gt; Slot "mu":
-#&gt; [1] 1
+#&gt; [1] NaN
 #&gt; 
 #&gt; Slot "name":
 #&gt; [1] "diaggmm"
