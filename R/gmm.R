@@ -9,10 +9,10 @@ NULL
 #' The model corresponds to the following generative model:
 #' \deqn{ \pi \sim Dirichlet(\alpha)}
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
-#' \deqn{ V_k \sim \mathcal{W}(\epsilon^{-1},n_0)}
+#' \deqn{ V_k \sim \mathcal{W}(\varepsilon^{-1},n_0)}
 #' \deqn{ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})}
-#' \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})}
-#' with \eqn{\mathcal{W}(\epsilon^{-1},n_0)} the Whishart distribution. 
+#' \deqn{ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})}
+#' with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Whishart distribution. 
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot tau Prior parameter (inverse variance) default 0.01 

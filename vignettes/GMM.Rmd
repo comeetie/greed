@@ -13,61 +13,116 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-
+Loads packages and set a future plan for parallel processing if you want.
 ```{r setup}
 library(greed)
 library(mclust)
-library(dplyr)
 library(ggplot2)
 set.seed(2134)
 ```
 
+## Full covariance matrix
+Gaussian Mixture Models (GMMs) are treated in greed in a Bayesian fashion with typical conjugate priors.
+$$
+\begin{align}
+\pi&\sim Dirichlet(\alpha)\\
+Z_i&\sim \mathcal{M}(1,\pi)\\
+V_k&\sim \mathcal{W}(\varepsilon^{-1},n_0)\\
+\mu_k&\sim \mathcal{N}(\mu,(\tau V_k)^{-1})\\
+X_{i}|Z_{ik}=1 &\sim \mathcal{N}(\mu_k,V_{k}^{-1})\\
+\end{align}
+$$
+Contrary to other models, these priors are informative and may therefore have a sensible impact on the obtained results. By default, the priors parameters are set as follow:
 
-```{r diabetes-gmm, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+- $\alpha=1$
+- $\mu=\bar{X}$
+- $\tau=0.01$
+- $n_0=d$ 
+- $\varepsilon=0.1diag(var(X))$
+
+See ``?`gmm-class` `` for more details. These values were chosen to accommodate a variety of situation. Lets look at the results with the diabetes dataset:
+
+```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 data(diabetes)
 X=diabetes[,-1]
-sol = greed(X,model=new("gmm",mu=apply(X,2,mean),epsilon=0.1*diag(diag(cov(X))),N0=ncol(X)))
-gmmpairs(sol,X)
+sol = greed(X,model=new("gmm"))
 table(diabetes$cl,sol@cl)
 ```
 
 
-```{r diabetes-diaggmm, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
-data(diabetes)
-X=diabetes[,-1]
-sol = greed(X,model=new("diaggmm",mu=apply(X,2,mean),beta=0.1*mean(diag(cov((X))))))
+To get an overview of the clustering results, you may use the `gmmpairs` plot function:
+```{r diabetes-gmm-FIG, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 gmmpairs(sol,X)
-table(diabetes$cl,sol@cl)
 ```
 
 
-```{r diabetes-diaggmm-cut, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
-plot(sol,type='tree')
-solK3 = cut(sol,3)
+The obtained results are those expected and correspond to the known groups. If you want to experiments with other values for the prior parameters, the most important is $\varepsilon$, which control the covariance matrix Whishart prior. You may try smaller values for example. In this case, you may also decrease $\tau$ to keep a flat priors on clusters means. For the diabetes data such choices leads to an interesting solution where one cluster is then used to fit one outlier.
+
+```{r diabetes-gmm-0.01, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
+data(diabetes)
+X=diabetes[,-1]
+sol = greed(X,model=new("gmm",epsilon=0.01*diag(diag(cov(X))), tau =0.001))
+gmmpairs(sol,X)
+table(diabetes$cl,sol@cl)
+``` 
+
+
+## Diagonal covariance matrix
+
+You may also used diagonal covariance matrix. The ``?`diaggmm-class` `` allow to use such GMM type model. If you try such model on the previous diabetes dataset, greed this time found a 4 components GMM.
+
+```{r diabetes-diaggmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
+data(diabetes)
+X=diabetes[,-1]
+soldiag = greed(X,model=new("diaggmm"))
+gmmpairs(soldiag,X)
+table(diabetes$cl,soldiag@cl)
+```
+
+You may still look at coarser clustering and inspect the clustering dendogram:
+```{r diabetes-diaggmm-cut, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
+plot(soldiag,type='tree')
+solK3 = cut(soldiag,3)
+table(diabetes$cl,solK3@cl)
+```
+
+
+```{r diabetes-diaggmm-cut-pairs, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
 gmmpairs(solK3,X)
-table(diabetes$cl,sol@cl)
-coef(solK3)
 ```
 
-```{r galaxies-gmm, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
-data(galaxies, package = "MASS") 
-X=data.frame(x=galaxies)
-sol = greed(X,model=new("gmm",mu=apply(X,2,mean),epsilon=0.1*cov(X),N0=ncol(X)))
-gmmpairs(sol,X)
+The clusters corresponds to the known group and if we compare the ICL of the, between the full model:
+```{r icl-comp}
+sol@icl
+soldiag@icl
+```
+
+The full model seems preferable on this dataset. If you want to look at the mixture component parameters you may acces their Maximum a Posteriori estimate with the generic `coef` function.
+```{r diabetes-diaggmm-cut-params}
+params = coef(solK3)
+params$Sigmak[[2]]
 ```
 
 
+Such simpler diagonal model may be of interest in particular for high dimensional settings for two reasons. First, the number of parameters (even if they are integrated out in the clustering phase) is reduced and this can be interesting when $d$ is important, but also because the prior maybe defined such that it will be less informative. You may try with a subset of the fashion mnist data provided with the package which contains 784 dimensionals vectors (28x28 flattened images). In such settings, you may also want to switch the optimization algorithm to `` ?`seed-class` ``, this algorithm is less efficient than the hybrid algorithm used by default by greed. But, since it relied on a seeded initialization it is also a little bit less costly. In this case, you may increase the initial value for $K$ since, this algorithm is not able to find an clustering with a number of cluster bigger than the value of $K$ provided by the user. Still, it may simplify the clustering and return an optimal clustering with less clusters.    
 
-```{r fashion-diaggmm, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+```{r fashion-diaggmm}
 data("fashion")
-prior = new("diaggmm",mu=apply(fashion$X,2,mean),beta=0.1*mean(diag(cov((fashion$X)))))
-sol=greed(fashion$X,model=prior,alg=new("seed"),K=60)
+dim(fashion$X)
+sol=greed(fashion$X,model=new("diaggmm"),alg=new("seed"),K=60)
+```
+
+On this more complex dataset, we may look at the dendogram which is more interesting with the complex structure of these data.
+
+```{r fashion-tree, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
 plot(sol,type='tree')
 ```
 
-```{r fashion-means, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+Finally if we look at the clusters centers, they look coherent and thanks to the hierarchical ordering performed by greed are also well organized.
+
+```{r fashion-means, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
 im_list=lapply(1:sol@K,function(k){
-    tibble(i=rep(28:1,each=28),j=rep(1:28,28),v=t(sol@obs_stats$regs[[k]]$m),k=k)
+    data.frame(i=rep(28:1,each=28),j=rep(1:28,28),v=t(sol@obs_stats$regs[[k]]$m),k=k)
     })
 
 ims = do.call(rbind,im_list)

@@ -50,12 +50,20 @@ plotting functionality.
 
 ## Installation
 
-You can install the released version of greed from
+You can install the developpement version of greed from
 [GitHub](https://github.com/) with:
 
 ``` r
+#GitHub
 install.packages("devtools")
 devtools::install_github("comeetie/greed")
+```
+
+Or use the CRAN version
+
+``` r
+#CRAN
+install.packages("greed")
 ```
 
 ## Usage
@@ -71,10 +79,17 @@ library(greed)
 data(Jazz)
 sol=greed(Jazz)
 #> ------- undirected DCSBM model fitting ------
-#> ################# Generation  1: best solution with an ICL of -28607 and 15 clusters #################
-#> ################# Generation  2: best solution with an ICL of -28607 and 15 clusters #################
+#> ################# Generation  1: best solution with an ICL of -28617 and 15 clusters #################
+#> ################# Generation  2: best solution with an ICL of -28594 and 16 clusters #################
+#> ################# Generation  3: best solution with an ICL of -28581 and 13 clusters #################
+#> ################# Generation  4: best solution with an ICL of -28576 and 15 clusters #################
+#> ################# Generation  5: best solution with an ICL of -28576 and 13 clusters #################
+#> ################# Generation  6: best solution with an ICL of -28568 and 13 clusters #################
+#> ################# Generation  7: best solution with an ICL of -28561 and 13 clusters #################
+#> ################# Generation  8: best solution with an ICL of -28561 and 13 clusters #################
+#> ################# Generation  9: best solution with an ICL of -28561 and 13 clusters #################
 #> ------- Final clustering -------
-#> ICL clustering with a DCSBM model, 11 clusters and an icl of -28560.
+#> ICL clustering with a DCSBM model, 12 clusters and an icl of -28556.
 ```
 
 Here Jazz is a square sparse matrix and a `` ?`dcsbm-class` `` model
@@ -115,18 +130,14 @@ plan(multisession)
 data("Blogs")
 sol=greed(Blogs$X)
 #> ------- directed DCSBM model fitting ------
-#> ################# Generation  1: best solution with an ICL of -84434 and 17 clusters #################
-#> ################# Generation  2: best solution with an ICL of -84316 and 18 clusters #################
-#> ################# Generation  3: best solution with an ICL of -84214 and 17 clusters #################
-#> ################# Generation  4: best solution with an ICL of -84186 and 18 clusters #################
-#> ################# Generation  5: best solution with an ICL of -84154 and 18 clusters #################
-#> ################# Generation  6: best solution with an ICL of -84139 and 18 clusters #################
-#> ################# Generation  7: best solution with an ICL of -84139 and 18 clusters #################
-#> ################# Generation  8: best solution with an ICL of -84129 and 19 clusters #################
-#> ################# Generation  9: best solution with an ICL of -84124 and 19 clusters #################
-#> ################# Generation 10: best solution with an ICL of -84124 and 19 clusters #################
+#> ################# Generation  1: best solution with an ICL of -84548 and 16 clusters #################
+#> ################# Generation  2: best solution with an ICL of -84267 and 20 clusters #################
+#> ################# Generation  3: best solution with an ICL of -84260 and 20 clusters #################
+#> ################# Generation  4: best solution with an ICL of -84225 and 18 clusters #################
+#> ################# Generation  5: best solution with an ICL of -84212 and 18 clusters #################
+#> ################# Generation  6: best solution with an ICL of -84212 and 18 clusters #################
 #> ------- Final clustering -------
-#> ICL clustering with a DCSBM model, 18 clusters and an icl of -84089.
+#> ICL clustering with a DCSBM model, 17 clusters and an icl of -84177.
 plot(sol)
 ```
 
