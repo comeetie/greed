@@ -45,7 +45,7 @@ The model follows minka-linear .
 The model corresponds to the following generative model:
 $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
-$$ V_k \sim \mathcal{W}(\epsilon^{-1},n_0)$$
+$$ V_k \sim \mathcal{W}(\varepsilon^{-1},n_0)$$
 $$ A_k \sim \mathcal{MN}(0,(V_k)^{-1},\tau X^{t}X)$$
 $$ Y_{i.}|X_{i.}Z_{ik}=1 \sim \mathcal{N}(A_kx_{i.},V_{k}^{-1})$$
 with \(\mathcal{W}(\epsilon^{-1},n_0)\) the Whishart distribution and \(\mathcal{MN}\) the matrix-normal distribution." />
@@ -151,7 +151,7 @@ The model follows <a href='https://tminka.github.io/papers/minka-linear.pdf'>min
 The model corresponds to the following generative model:
 $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
-$$ V_k \sim \mathcal{W}(\epsilon^{-1},n_0)$$
+$$ V_k \sim \mathcal{W}(\varepsilon^{-1},n_0)$$
 $$ A_k \sim \mathcal{MN}(0,(V_k)^{-1},\tau X^{t}X)$$
 $$ Y_{i.}|X_{i.}Z_{ik}=1 \sim \mathcal{N}(A_kx_{i.},V_{k}^{-1})$$
 with \(\mathcal{W}(\epsilon^{-1},n_0)\) the Whishart distribution and \(\mathcal{MN}\) the matrix-normal distribution.</p>

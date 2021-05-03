@@ -101,7 +101,7 @@
 
     
     
-<p>Loads packages and set a future plan for parallel processing if you want.</p>
+<p>Loads packages.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/">greed</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mclust-org.github.io/mclust/">mclust</a></span><span class="op">)</span>
@@ -197,7 +197,7 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mu_k,V_{k}^{-1})\\
 <span class="co">#&gt;   Normal   73  3  0  0</span>
 <span class="co">#&gt;   Overt     0  7 13 13</span></code></pre></div>
 <p><img src="GMM_files/figure-html/diabetes-diaggmm-1.png" width="90%"></p>
-<p>You may still look at coarser clustering and inspect the clustering dendogram:</p>
+<p>You may still look at coarser clustering and inspect the clustering dendrogram:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">soldiag</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span>
 <span class="va">solK3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">soldiag</span>,<span class="fl">3</span><span class="op">)</span>
@@ -217,7 +217,7 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mu_k,V_{k}^{-1})\\
 <span class="co">#&gt; [1] -2430.727</span>
 <span class="va">soldiag</span><span class="op">@</span><span class="va">icl</span>
 <span class="co">#&gt; [1] -2465.102</span></code></pre></div>
-<p>The full model seems preferable on this dataset. If you want to look at the mixture component parameters you may acces their Maximum a Posteriori estimate with the generic <code>coef</code> function.</p>
+<p>The full model seems preferable on this dataset. If you want to look at the mixture component parameters you may access their Maximum a Posteriori estimate with the generic <code>coef</code> function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">solK3</span><span class="op">)</span>
 <span class="va">params</span><span class="op">$</span><span class="va">Sigmak</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>
@@ -234,7 +234,7 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mu_k,V_{k}^{-1})\\
 <span class="co">#&gt; ------- DIAGGMM model fitting ------</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
 <span class="co">#&gt; ICL clustering with a DIAGGMM model, 22 clusters and an icl of -3587798.</span></code></pre></div>
-<p>On this more complex dataset, we may look at the dendogram which is more interesting with the complex structure of these data.</p>
+<p>On this more complex dataset, we may look at the dendrogram which is more interesting with the complex structure of these data.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
 <p><img src="GMM_files/figure-html/fashion-tree-1.png" width="60%"></p>
