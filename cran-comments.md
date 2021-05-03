@@ -27,7 +27,7 @@ Duration: 6m 58.3s
 ### macOS-release
 
 ── R CMD check results ──────────────────────────────────────── greed 0.5.1 ────
-Duration: 7m 9.9s
+Duration: 8m 5.1s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
@@ -44,26 +44,26 @@ Duration: 13m 24.6s
 
 ### Ubuntu 20.04-release
 
+
 ── R CMD check results ──────────────────────────────────────── greed 0.5.1 ────
-Duration: 6m 23.5s
+Duration: 9m 33.5s
 
 ❯ checking installed package size ... NOTE
-    installed size is 43.5Mb
+    installed size is 48.1Mb
     sub-directories of 1Mb or more:
-      libs  42.5Mb
+      libs  45.8Mb
 
 0 errors ✔ | 0 warnings ✔ | 1 note ✖
 
 ### Ubuntu 20.04-devel
 
-
-── R CMD check results ──────────────────────────────────────── greed 0.5.1 ────
-Duration: 6m 58.3s
+ ── R CMD check results ──────────────────────────────────────── greed 0.5.1 ────
+Duration: 6m 59.9s
 
 ❯ checking installed package size ... NOTE
-    installed size is 43.5Mb
+    installed size is 48.1Mb
     sub-directories of 1Mb or more:
-      libs  42.5Mb
+      libs  45.8Mb
 
 0 errors ✔ | 0 warnings ✔ | 1 note ✖
 

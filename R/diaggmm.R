@@ -57,7 +57,7 @@ setClass("diaggmm_fit",slots = list(model="diaggmm"),contains="icl_fit")
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
-#' @slot cl a numeric vector with row and clolumns cluster indexes
+#' @slot cl a numeric vector with row and columns cluster indexes
 #' @slot obs_stats a list with the following elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters

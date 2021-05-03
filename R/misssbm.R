@@ -158,8 +158,8 @@ setMethod(f = "plot",
 #' @return a list with the model parameters estimates (MAP), the fields are:
 #' \itemize{
 #' \item \code{'pi'}: cluster proportions 
-#' \item \code{'thetakl'}: between clusters connection probabilites (array of size K x K),
-#' \item \code{'epsilonkl'}: between clusters dyad observation probabilites (array of size K x K) for block-dyad sampling and double for dyad sampling,
+#' \item \code{'thetakl'}: between clusters connection probabilities (array of size K x K),
+#' \item \code{'epsilonkl'}: between clusters dyad observation probabilities (array of size K x K) for block-dyad sampling and double for dyad sampling,
 #' }
 #' @export 
 setMethod(f = "coef", 

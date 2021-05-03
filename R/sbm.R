@@ -16,7 +16,7 @@ NULL
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot a0 Beta prior parameter over links (default to 1)
 #' @slot b0 Beta prior parameter over no-links (default to 1)
-#' @slot type define the type of networks (either "directed" or "undirected", default to "directed"), for undirected graphs the adjacency matrix is supposed to be symetric.
+#' @slot type define the type of networks (either "directed" or "undirected", default to "directed"), for undirected graphs the adjacency matrix is supposed to be symmetric.
 #' @seealso \code{\link{sbm_fit-class}},\code{\link{sbm_path-class}}
 #' @seealso \code{\link{greed}}
 #' @examples 
