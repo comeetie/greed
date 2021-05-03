@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-Loads packages and set a future plan for parallel processing if you want.
+Loads packages.
 ```{r setup}
 library(greed)
 library(mclust)
@@ -79,7 +79,7 @@ gmmpairs(soldiag,X)
 table(diabetes$cl,soldiag@cl)
 ```
 
-You may still look at coarser clustering and inspect the clustering dendogram:
+You may still look at coarser clustering and inspect the clustering dendrogram:
 ```{r diabetes-diaggmm-cut, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
 plot(soldiag,type='tree')
 solK3 = cut(soldiag,3)
@@ -97,7 +97,7 @@ sol@icl
 soldiag@icl
 ```
 
-The full model seems preferable on this dataset. If you want to look at the mixture component parameters you may acces their Maximum a Posteriori estimate with the generic `coef` function.
+The full model seems preferable on this dataset. If you want to look at the mixture component parameters you may access their Maximum a Posteriori estimate with the generic `coef` function.
 ```{r diabetes-diaggmm-cut-params}
 params = coef(solK3)
 params$Sigmak[[2]]
@@ -112,7 +112,7 @@ dim(fashion$X)
 sol=greed(fashion$X,model=new("diaggmm"),alg=new("seed"),K=60)
 ```
 
-On this more complex dataset, we may look at the dendogram which is more interesting with the complex structure of these data.
+On this more complex dataset, we may look at the dendrogram which is more interesting with the complex structure of these data.
 
 ```{r fashion-tree, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
 plot(sol,type='tree')

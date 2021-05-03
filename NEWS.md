@@ -6,4 +6,5 @@
 * Better input checking for mvmreg and gmm
 * Better input checking for greed_cond
 * Correction of compilation problems on solaris
+* Correction of pointer problem comming from shed_row/shed_col
 * Added a `NEWS.md` file to track changes to the package.

@@ -1,6 +1,6 @@
-Dear cran members.
+Dear cran members,
 
-I corrected the compilation problem that you found on solaris and checked against this distribution.
+I corrected the problem found with valgrind. The provided example did no raise a warning anymore. I also added a vignette and worked on input checking and priors specification. I have performed the same tests as previously with similar results (same notes; 1 on UTF8 on Solaris, and 1 on package size on Windows and Ubuntu).  
 
 ## Test environments
 
@@ -12,7 +12,7 @@ I corrected the compilation problem that you found on solaris and checked agains
 
 ## R CMD check results
 
-I had one note on installed package size that comes from my usage of RcppArmadillo.
+I still have one note on installed package size that comes from my usage of RcppArmadillo and one on UTF-8 usage on SOLARIS.
 
 ### solaris-release
 
