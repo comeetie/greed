@@ -112,12 +112,12 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the developpement version of greed from <a href="https://github.com/">GitHub</a> with:</p>
+<p>You can install the development version of greed from <a href="https://github.com/">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#GitHub</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"comeetie/greed"</span><span class="op">)</span></code></pre></div>
-<p>Or use the CRAN version</p>
+<p>Or use the CRAN version:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#CRAN</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"greed"</span><span class="op">)</span></code></pre></div>
@@ -131,17 +131,13 @@
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Jazz</span><span class="op">)</span>
 <span class="va">sol</span><span class="op">=</span><span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Jazz</span><span class="op">)</span>
 <span class="co">#&gt; ------- undirected DCSBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -28617 and 15 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -28594 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -28581 and 13 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -28576 and 15 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -28576 and 13 clusters #################</span>
-<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -28568 and 13 clusters #################</span>
-<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -28561 and 13 clusters #################</span>
-<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -28561 and 13 clusters #################</span>
-<span class="co">#&gt; ################# Generation  9: best solution with an ICL of -28561 and 13 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -28611 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -28601 and 15 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -28580 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -28578 and 15 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -28578 and 15 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 12 clusters and an icl of -28556.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 14 clusters and an icl of -28559.</span></code></pre></div>
 <p>Here Jazz is a square sparse matrix and a <code><a href="reference/dcsbm-class.html">?`dcsbm-class`</a></code> model will be used by default. Some plotting function enable the exploration of the clustering results:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
@@ -161,14 +157,16 @@
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"Blogs"</span><span class="op">)</span>
 <span class="va">sol</span><span class="op">=</span><span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Blogs</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>
 <span class="co">#&gt; ------- directed DCSBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -84548 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -84267 and 20 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -84260 and 20 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -84225 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -84212 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -84212 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -84417 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -84358 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -84199 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -84179 and 19 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -84160 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -84150 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -84143 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -84143 and 17 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 17 clusters and an icl of -84177.</span>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 16 clusters and an icl of -84101.</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/future-1.png" width="60%"></p>
 </div>
