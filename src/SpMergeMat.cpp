@@ -10,4 +10,4 @@ SpMergeMat::SpMergeMat(int bk, int bl, double bv, arma::sp_mat mat){
     l=bl;
     merge_mat=mat;
     v=bv;
-};
+}

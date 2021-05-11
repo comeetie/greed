@@ -1,3 +1,35 @@
+#' Ndrangheta mafia covert network dataset
+#'
+#' Network of co-attendance occurrence attendance of suspected members of the Ndrangheta criminal organization at summits (meetings whose purpose is to make important decisions and/or affiliations, but also to solve internal problems and to establish roles and powers) taking place between 2007 and 2009.
+ 
+#' @docType data
+#'
+#' @usage data(Ndrangheta)
+#'
+#' @format An object of class \code{list} with two fields; 
+#'  \describe{
+#'   \item{X}{network adjacency matrix as a \code{\link[matrix]{matrix}} of size 146x146}
+#'   \item{node_meta}{data frame of nodes meta information with features :}
+#'   \describe{
+#'   \item{Id}{id of the node, rownames of network adjacency matrix}
+#'   \item{Locale}{factor with the locali affiliation of the node , "OUT": Suspects not belonging to La Lombardia, "MISS": Information not available, other Locali Id.}
+#'   \item{Role}{factor with the type of hierarchical position of the node "MISS": Information not available,"boss": high hierachical position, "aff": affiliate}
+#'   
+#' }
+#'
+#' @keywords datasets
+#'
+#' @references{Extended Stochastic Block Models with Application to Criminal Networks, Sirio Legramanti and Tommaso Rigon and Daniele Durante and David B. Dunson, 2021, 
+#' (\href{https://arxiv.org/abs/2007.08569v2}{arXiv:2007.08569}).}
+#'
+#' @source \href{https://sites.google.com/site/ucinetsoftware/datasets/covert-networks/ndranghetamafia2}{ucinetsoftware/datasets/covert-networks}
+#'
+#' @examples
+#' data(Ndrangheta)
+"Ndrangheta"
+
+
+
 #' American College football network dataset
 #'
 #' Network of American football games between Division IA colleges during regular season Fall 2000. 

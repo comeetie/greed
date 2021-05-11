@@ -102,7 +102,7 @@ setMethod(f = "plot",
           signature = signature("sbm_fit","missing"),
           definition = function(x,type="blocks"){
             switch(type,blocks=graph_blocks(x),nodelink=nodelink(x))
-          });
+          })
 
 
 #' @title plot a \code{\link{sbm_path-class}} object
@@ -154,7 +154,7 @@ setMethod(f = "coef",
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
             thetakl=(sol@obs_stats$x_counts+sol@model@a0-1)/(t(t(sol@obs_stats$counts))%*%sol@obs_stats$counts+sol@model@a0+sol@model@b0-2)
             if(sol@model@type=="undirected"){
-              diag(thethakl)=(diag(sol@obs_stats$x_counts)/2+sol@model@a0-1)/(sol@obs_stats$counts*(sol@obs_stats$counts-1)/2+sol@model@a0+sol@model@b0-2)
+              diag(thetakl)=(diag(sol@obs_stats$x_counts)/2+sol@model@a0-1)/(sol@obs_stats$counts*(sol@obs_stats$counts-1)/2+sol@model@a0+sol@model@b0-2)
             }
             list(pi=pi,thetakl=thetakl)
           })

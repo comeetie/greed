@@ -24,7 +24,7 @@ H = function(cl){
 #' @export
 MI = function(cl1,cl2){
   pj=table(cl1,cl2)/length(cl1)
-  pi=as.matrix(table(cl1),15,1)%*%table(cl2)/length(cl1)^2
+  pi=as.matrix(table(cl1))%*%table(cl2)/length(cl1)^2
   sum(pj[pj!=0]*log(pj[pj!=0])-pj[pj!=0]*log(pi[pj!=0]))
 }
 

@@ -1,12 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# GREED : Bayesian greedy clustering <img src="man/figures/greed.png" width=200 align="right" />
+# GREED : Bayesian greedy clustering
 
 <!-- badges: start -->
 
 [![R build
 status](https://github.com/comeetie/greed/workflows/R-CMD-check/badge.svg)](https://github.com/comeetie/greed/actions)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/greed)](https://CRAN.R-project.org/package=greed)
 <!-- badges: end -->
 
 Greed enables model based clustering of networks, matrices of count data
@@ -17,21 +19,23 @@ proposed by this package can be found in Côme, Jouvin, Latouche, and
 Bouveyron (2021)
 [10.1007/s11634-021-00440-z](https://doi.org/10.1007/s11634-021-00440-z).
 
+<img src="man/figures/greed.png" width=200 align="right" />
+
 The following generative models are available currently :
 
-  - Stochastic Block Models (for **directed** and **un-directed**
-    graphs, see `` ?`sbm-class` ``; to deal with missing values see
+  - **Stochastic Block Models** (see `` ?`sbm-class` `` and
     `` ?`misssbm-class` ``),
-  - Degree Corrected Stochastic Block Models (for **directed** and
-    **un-directed** graphs, see `` ?`dcsbm-class` ``),
-  - Stochastic Block Models with Multinomial observations
-    (**experimental**, see `` ?`multsbm-class` ``),
-  - Degree Corrected Latent Block Models (see `` ?`co_dcsbm-class` ``),
-  - Mixture of Multinomials (see `` ?`mm-class` ``),
-  - Gaussian Mixture Model (**experimental**, see `` ?`gmm-class` `` and
+  - **Degree Corrected Stochastic Block Models** (see
+    `` ?`dcsbm-class` ``),
+  - **Multinomial Stochastic Block Models** (see
+    `` ?`multsbm-class` ``),
+  - **Degree Corrected Latent Block Models** (see
+    `` ?`co_dcsbm-class` ``),
+  - **Mixture of Multinomials** (see `` ?`mm-class` ``),
+  - **Gaussian Mixture Model** (see `` ?`gmm-class` `` and
     `` ?`diaggmm-class` ``),
-  - Multivariate Mixture of Gaussian Regression Model (**experimental**,
-    see `` ?`mvmreg-class` ``).
+  - **Multivariate Mixture of Gaussian Regression Model** (see
+    `` ?`mvmreg-class` ``).
 
 With the Integrated Classification Likelihood, the parameters of the
 models are integrated out. This allows a natural regularization for
@@ -79,13 +83,17 @@ library(greed)
 data(Jazz)
 sol=greed(Jazz)
 #> ------- undirected DCSBM model fitting ------
-#> ################# Generation  1: best solution with an ICL of -28611 and 16 clusters #################
-#> ################# Generation  2: best solution with an ICL of -28601 and 15 clusters #################
-#> ################# Generation  3: best solution with an ICL of -28580 and 16 clusters #################
-#> ################# Generation  4: best solution with an ICL of -28578 and 15 clusters #################
-#> ################# Generation  5: best solution with an ICL of -28578 and 15 clusters #################
+#> ################# Generation  1: best solution with an ICL of -28628 and 18 clusters #################
+#> ################# Generation  2: best solution with an ICL of -28617 and 17 clusters #################
+#> ################# Generation  3: best solution with an ICL of -28601 and 15 clusters #################
+#> ################# Generation  4: best solution with an ICL of -28584 and 16 clusters #################
+#> ################# Generation  5: best solution with an ICL of -28582 and 13 clusters #################
+#> ################# Generation  6: best solution with an ICL of -28579 and 17 clusters #################
+#> ################# Generation  7: best solution with an ICL of -28577 and 17 clusters #################
+#> ################# Generation  8: best solution with an ICL of -28577 and 17 clusters #################
+#> ################# Generation  9: best solution with an ICL of -28577 and 17 clusters #################
 #> ------- Final clustering -------
-#> ICL clustering with a DCSBM model, 14 clusters and an icl of -28559.
+#> ICL clustering with a DCSBM model, 16 clusters and an icl of -28561.
 ```
 
 Here Jazz is a square sparse matrix and a `` ?`dcsbm-class` `` model
@@ -126,16 +134,17 @@ plan(multisession)
 data("Blogs")
 sol=greed(Blogs$X)
 #> ------- directed DCSBM model fitting ------
-#> ################# Generation  1: best solution with an ICL of -84417 and 16 clusters #################
-#> ################# Generation  2: best solution with an ICL of -84358 and 17 clusters #################
-#> ################# Generation  3: best solution with an ICL of -84199 and 18 clusters #################
-#> ################# Generation  4: best solution with an ICL of -84179 and 19 clusters #################
-#> ################# Generation  5: best solution with an ICL of -84160 and 18 clusters #################
-#> ################# Generation  6: best solution with an ICL of -84150 and 17 clusters #################
-#> ################# Generation  7: best solution with an ICL of -84143 and 17 clusters #################
-#> ################# Generation  8: best solution with an ICL of -84143 and 17 clusters #################
+#> ################# Generation  1: best solution with an ICL of -84494 and 19 clusters #################
+#> ################# Generation  2: best solution with an ICL of -84348 and 18 clusters #################
+#> ################# Generation  3: best solution with an ICL of -84227 and 18 clusters #################
+#> ################# Generation  4: best solution with an ICL of -84220 and 18 clusters #################
+#> ################# Generation  5: best solution with an ICL of -84165 and 16 clusters #################
+#> ################# Generation  6: best solution with an ICL of -84141 and 18 clusters #################
+#> ################# Generation  7: best solution with an ICL of -84130 and 18 clusters #################
+#> ################# Generation  8: best solution with an ICL of -84125 and 17 clusters #################
+#> ################# Generation  9: best solution with an ICL of -84125 and 17 clusters #################
 #> ------- Final clustering -------
-#> ICL clustering with a DCSBM model, 16 clusters and an icl of -84101.
+#> ICL clustering with a DCSBM model, 16 clusters and an icl of -84099.
 plot(sol)
 ```
 

@@ -10,4 +10,4 @@ MergeMat::MergeMat(int bk, int bl, double bv, arma::mat mat){
     l=bl;
     merge_mat=mat;
     v=bv;
-};
+}

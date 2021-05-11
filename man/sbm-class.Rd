@@ -24,7 +24,7 @@ This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this 
 
 \item{\code{b0}}{Beta prior parameter over no-links (default to 1)}
 
-\item{\code{type}}{define the type of networks (either "directed" or "undirected", default to "directed"), for undirected graphs the adjacency matrix is supposed to be symetric.}
+\item{\code{type}}{define the type of networks (either "directed" or "undirected", default to "directed"), for undirected graphs the adjacency matrix is supposed to be symmetric.}
 }}
 
 \examples{

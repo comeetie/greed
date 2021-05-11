@@ -1,6 +1,6 @@
 Dear cran members,
 
-I corrected the problem found with valgrind. The provided example did no raise a warning anymore. I also added a vignette and worked on input checking and priors specification. I have performed the same tests as previously with similar results (same notes; 1 on UTF8 on Solaris, and 1 on package size on Windows and Ubuntu).  
+I corrected the problems found with valgrind. All the provided tests did not raise issues anymore with valgrind. I have performed the same tests as previously with similar results (same notes; 1 on UTF8 on Solaris, and 1 on package size on Windows and Ubuntu).  
 
 ## Test environments
 
