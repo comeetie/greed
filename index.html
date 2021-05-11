@@ -90,22 +90,29 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="greed--bayesian-greedy-clustering-" class="section level1">
+<div id="greed--bayesian-greedy-clustering" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#greed--bayesian-greedy-clustering-" class="anchor"></a>GREED : Bayesian greedy clustering <img src="reference/figures/greed.png" width="200" align="right">
-</h1></div>
+<a href="#greed--bayesian-greedy-clustering" class="anchor"></a>GREED : Bayesian greedy clustering</h1></div>
 <!-- badges: start -->
 
 <p>Greed enables model based clustering of networks, matrices of count data and much more with different types of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details of the algorithms and methods proposed by this package can be found in Côme, Jouvin, Latouche, and Bouveyron (2021) <a href="https://doi.org/10.1007/s11634-021-00440-z">10.1007/s11634-021-00440-z</a>.</p>
+<p><img src="reference/figures/greed.png" width="200" align="right"></p>
 <p>The following generative models are available currently :</p>
 <ul>
-<li>Stochastic Block Models (for <strong>directed</strong> and <strong>un-directed</strong> graphs, see <code><a href="reference/sbm-class.html">?`sbm-class`</a></code>; to deal with missing values see <code><a href="reference/misssbm-class.html">?`misssbm-class`</a></code>),</li>
-<li>Degree Corrected Stochastic Block Models (for <strong>directed</strong> and <strong>un-directed</strong> graphs, see <code><a href="reference/dcsbm-class.html">?`dcsbm-class`</a></code>),</li>
-<li>Stochastic Block Models with Multinomial observations (<strong>experimental</strong>, see <code><a href="reference/multsbm-class.html">?`multsbm-class`</a></code>),</li>
-<li>Degree Corrected Latent Block Models (see <code><a href="reference/co_dcsbm-class.html">?`co_dcsbm-class`</a></code>),</li>
-<li>Mixture of Multinomials (see <code><a href="reference/mm-class.html">?`mm-class`</a></code>),</li>
-<li>Gaussian Mixture Model (<strong>experimental</strong>, see <code><a href="reference/gmm-class.html">?`gmm-class`</a></code> and <code><a href="reference/diaggmm-class.html">?`diaggmm-class`</a></code>),</li>
-<li>Multivariate Mixture of Gaussian Regression Model (<strong>experimental</strong>, see <code><a href="reference/mvmreg-class.html">?`mvmreg-class`</a></code>).</li>
+<li>
+<strong>Stochastic Block Models</strong> (see <code><a href="reference/sbm-class.html">?`sbm-class`</a></code> and <code><a href="reference/misssbm-class.html">?`misssbm-class`</a></code>),</li>
+<li>
+<strong>Degree Corrected Stochastic Block Models</strong> (see <code><a href="reference/dcsbm-class.html">?`dcsbm-class`</a></code>),</li>
+<li>
+<strong>Multinomial Stochastic Block Models</strong> (see <code><a href="reference/multsbm-class.html">?`multsbm-class`</a></code>),</li>
+<li>
+<strong>Degree Corrected Latent Block Models</strong> (see <code><a href="reference/co_dcsbm-class.html">?`co_dcsbm-class`</a></code>),</li>
+<li>
+<strong>Mixture of Multinomials</strong> (see <code><a href="reference/mm-class.html">?`mm-class`</a></code>),</li>
+<li>
+<strong>Gaussian Mixture Model</strong> (see <code><a href="reference/gmm-class.html">?`gmm-class`</a></code> and <code><a href="reference/diaggmm-class.html">?`diaggmm-class`</a></code>),</li>
+<li>
+<strong>Multivariate Mixture of Gaussian Regression Model</strong> (see <code><a href="reference/mvmreg-class.html">?`mvmreg-class`</a></code>).</li>
 </ul>
 <p>With the Integrated Classification Likelihood, the parameters of the models are integrated out. This allows a natural regularization for complex models. Since the Integrated Classification Likelihood penalizes complex models it allows to automatically find a “natural” value for the number of clusters <span class="math inline"><em>K</em><sup>*</sup></span>, the user only needs to provide an initial guess as well as values for the prior parameters (sensible default values are used if no prior information is available). The optimization is performed by default thanks to a combination of a greedy local search and a genetic algorithm. Several optimization algorithms are available.</p>
 <p>Eventually, the whole path of solutions from <span class="math inline"><em>K</em><sup>*</sup></span> to 1 cluster is extracted. This enables a partial ordering of the clusters, and the evaluation of simpler clustering. The package also provides some plotting functionality.</p>
@@ -131,13 +138,17 @@
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Jazz</span><span class="op">)</span>
 <span class="va">sol</span><span class="op">=</span><span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Jazz</span><span class="op">)</span>
 <span class="co">#&gt; ------- undirected DCSBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -28611 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -28601 and 15 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -28580 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -28578 and 15 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -28578 and 15 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -28628 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -28617 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -28601 and 15 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -28584 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -28582 and 13 clusters #################</span>
+<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -28579 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -28577 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -28577 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  9: best solution with an ICL of -28577 and 17 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 14 clusters and an icl of -28559.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 16 clusters and an icl of -28561.</span></code></pre></div>
 <p>Here Jazz is a square sparse matrix and a <code><a href="reference/dcsbm-class.html">?`dcsbm-class`</a></code> model will be used by default. Some plotting function enable the exploration of the clustering results:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
@@ -157,16 +168,17 @@
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"Blogs"</span><span class="op">)</span>
 <span class="va">sol</span><span class="op">=</span><span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Blogs</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>
 <span class="co">#&gt; ------- directed DCSBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -84417 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -84358 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -84199 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -84179 and 19 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -84160 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -84150 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -84143 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -84143 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -84494 and 19 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -84348 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -84227 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -84220 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -84165 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -84141 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -84130 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -84125 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  9: best solution with an ICL of -84125 and 17 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 16 clusters and an icl of -84101.</span>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 16 clusters and an icl of -84099.</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/future-1.png" width="60%"></p>
 </div>
@@ -203,6 +215,7 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/comeetie/greed/actions"><img src="https://github.com/comeetie/greed/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://CRAN.R-project.org/package=greed"><img src="https://www.r-pkg.org/badges/version/greed" alt="CRAN status"></a></li>
 </ul>
 </div>
 </div>
