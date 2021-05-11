@@ -167,7 +167,7 @@ setMethod(f = "coef",
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
-            if(sol@mode@type=="undirected"){
+            if(sol@model@type=="undirected"){
               x_counts=sol@obs_stats$x_counts
               diag(x_counts)=diag(x_counts)/2
               x_counts_obs=sol@obs_stats$x_counts_obs
@@ -177,7 +177,7 @@ setMethod(f = "coef",
             }
             thetakl=x_counts+sol@model@a0-1
             thetakl = thetakl/(x_counts_obs+sol@model@a0+sol@model@b0-2)
-            if(sol@mode@type=="directed"){
+            if(sol@model@type=="directed"){
               if(sol@model@sampling=="dyad"){
                 epsilonkl=(sum(x_counts_obs)+sol@model@sampling_priors$a0obs-1)/(sum(sol@obs_stats$counts)^2+sol@model@sampling_priors$a0obs+sol@model@sampling_priors$b0obs-2)
               }else{
