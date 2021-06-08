@@ -2,7 +2,14 @@
 #include <RcppArmadillo.h>
 using namespace Rcpp;
 
-
+arma::mat table_count(arma::vec cl, arma::vec x, int K, int nbmod){
+  arma::mat x_counts(K,nbmod);
+  x_counts.fill(0);
+  for(int i=0;i<x.n_rows;i++){
+    x_counts(cl(i),x(i))=x_counts(cl(i),x(i))+1;
+  }
+  return x_counts;
+}
 
 arma::mat submatcross(int oldcl,int newcl,int K){
   arma::mat result(4*(K-1),2);

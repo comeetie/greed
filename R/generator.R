@@ -209,3 +209,38 @@ rmultsbm = function (N,pi,mu,lambda){
   }
   list(cl=cl, x = x, K=K,N=N,pi=pi,mu=mu)
 }
+
+
+#' Generate data from lca model 
+#'
+#' \code{rlca} returns a data.frame with factor sampled from an lca model
+#'
+#' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
+#'
+#' @param N The size of the graph to generate
+#' @param pi A numeric vector of length K with clusters proportions (will be normalized to sum up to 1). 
+#' @param theta A list of size V
+#' @return A list with fields:
+#' \itemize{
+#' \item x: the multi-graph adjacency matrix as an \code{array}
+#' \item K: number of generated clusters
+#' \item N: number of vertex
+#' \item cl: vector of clusters labels
+#' \item pi: clusters proportions
+#' \item theta: 
+#' }
+#' @examples
+#' lca.data = rlca(100,)
+#' @export
+rlca = function (N,pi,theta){
+  K  = length(pi)
+  cl = sample(1:K,N,replace=TRUE,prob = pi)
+  V=length(theta);
+  x = data.frame(matrix(NA,N,V))
+  for (v in 1:V){
+    for(k in 1:K){
+      x[cl==k,v]=sample(1:ncol(theta[v]),sum(cl==k),prob =theta[v][k,], replace = TRUE)
+    }
+  }
+  list(cl=cl, x = x, K=K,N=N,pi=pi,theta=theta)
+}

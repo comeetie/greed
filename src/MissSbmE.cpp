@@ -120,7 +120,7 @@ arma::mat MissSbmE::delta_swap(int i,int K, arma::vec cl,arma::uvec iclust){
 
 
 
-void MissSbmE::swap_update(const int i,const arma::vec cl, const int newcl){
+void MissSbmE::swap_update(const int i,const arma::vec cl,bool dead_cluster,  const int newcl){
   int self=x(i,i);
   int oldcl = cl(i); 
   int selfobs=xobs(i,i);

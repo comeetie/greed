@@ -122,9 +122,13 @@ arma::mat CombinedIclModel::delta_swap(int i,arma::uvec iclust){
 
 
 void CombinedIclModel::swap_update(int i,int newcl){
+  bool dead_cluster = false;
+  if(cl(i)==1){
+    dead_cluster=true;
+  }
   for(int m=0;m<IclModels.size();m++){
     IclModelEmission * Mp = IclModels[m];
-    Mp->swap_update(i,cl,newcl);
+    Mp->swap_update(i,cl,dead_cluster,newcl);
   }
   int oldcl = cl(i);
   arma::mat new_counts = update_count(counts,oldcl,newcl);

@@ -50,6 +50,7 @@ Collate:
     'mvmreg.R'
     'gmm.R'
     'greed.R'
+    'lca.R'
     'sbm.R'
     'misssbm.R'
     'mm.R'

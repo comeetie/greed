@@ -25,7 +25,7 @@ public:
     delta.fill(0);
     return delta;
   };
-  void swap_update(int i,const arma::vec cl,int newcl){};
+  void swap_update(int i,const arma::vec cl,bool dead_cluster, int newcl){};
   double delta_merge(int k, int l){return 0;};
   double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats){return 0;};
   void merge_update(int k, int l){};

@@ -5,6 +5,7 @@
 #include <RcppArmadillo.h>
 using namespace Rcpp;
 
+arma::mat table_count(arma::vec cl, arma::vec x, int K, int nbmod);
 arma::mat submatcross(int oldcl,int newcl,int K);
 arma::sp_mat sp_cross(arma::sp_mat colvec,arma::sp_mat rowvec,int self, int oldcl, int newcl, int K);
 

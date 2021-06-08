@@ -21,6 +21,7 @@
 #include "Mvmregcomp.h"
 #include "MissSbmE.h"
 #include "MarDyadSbmE.h"
+#include "LcaE.h"
 #include "CombinedIclModel.h"
 using namespace Rcpp;
 
@@ -40,7 +41,8 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
        (strcmp(model.slot("name"),"mm")!=0) &&
        (strcmp(model.slot("name"),"mvmreg")!=0) &&
        (strcmp(model.slot("name"),"diaggmm")!=0) &&
-       (strcmp(model.slot("name"),"gmm")!=0)){
+       (strcmp(model.slot("name"),"gmm")!=0) && 
+       (strcmp(model.slot("name"),"lca")!=0)){
        stop("Unsuported model");
     }
     if(strcmp(model.slot("name"),"sbm")==0){
@@ -182,6 +184,13 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       M = new Mvmregcomp(X,Y,model,clt,verbose);
     }
     
+    if(strcmp(model.slot("name"),"lca")==0 ){
+      arma::mat X = as<arma::mat>(data["X"]);
+      IclModelEmission * Lca = new LcaE(X,model,verbose);
+      std::vector<IclModelEmission*> IclModels;
+      IclModels.push_back(Lca);
+      M = new CombinedIclModel(IclModels,model,clt,verbose);
+    }
     
     return(M);
   }catch(std::exception &ex) {	
