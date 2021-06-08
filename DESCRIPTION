@@ -17,7 +17,7 @@ Maintainer: Etienne Côme <etienne.come@univ-eiffel.fr>
 Description: An ensemble of algorithms that enable the clustering of networks and data matrix such as counts matrix with different type of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood (which is equivalent to minimizing the description length). Several models are available such as: Stochastic Block Model, degree corrected Stochastic Block Model, Mixtures of Multinomial, Latent Block Model. The optimization is performed thanks to a combination of greedy local search and a genetic algorithm (see <arXiv:2002:11577> for more details).
 License: GPL
 Depends: R (>= 2.10)
-Imports: Rcpp (>= 1.0.0), Matrix, future, listenv, ggplot2, graphics, methods, stats,RSpectra,ggpubr,GGally,cba
+Imports: Rcpp (>= 1.0.0), Matrix, future, listenv, ggplot2, graphics, methods, stats,RSpectra,grid,gtable,gridExtra,cba
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: 
     testthat,

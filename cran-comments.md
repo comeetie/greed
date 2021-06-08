@@ -1,6 +1,6 @@
-Dear cran members,
+Dear cran members.
 
-I corrected the problems found with valgrind. All the provided tests did not raise issues anymore with valgrind. I have performed the same tests as previously with similar results (same notes; 1 on UTF8 on Solaris, and 1 on package size on Windows and Ubuntu).  
+I corrected the problem found with valgrind. The provided example did no raise a warning anymore. I also added a vignette and worked on input checking and priors specification. I have performed the same tests as previously with similar results (same notes 1 on UTF8 on Solaris, and 1 on package size on Windows and Ubuntu).  
 
 ## Test environments
 
@@ -12,7 +12,7 @@ I corrected the problems found with valgrind. All the provided tests did not rai
 
 ## R CMD check results
 
-I still have one note on installed package size that comes from my usage of RcppArmadillo and one on UTF-8 usage on SOLARIS.
+I still have one note on installed package size that comes from my usage of RcppArmadillo and on UTF-8 usage on SOLARIS.
 
 ### solaris-release
 
@@ -27,7 +27,7 @@ Duration: 6m 58.3s
 ### macOS-release
 
 ── R CMD check results ──────────────────────────────────────── greed 0.5.1 ────
-Duration: 8m 5.1s
+Duration: 7m 9.9s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
@@ -44,26 +44,26 @@ Duration: 13m 24.6s
 
 ### Ubuntu 20.04-release
 
-
 ── R CMD check results ──────────────────────────────────────── greed 0.5.1 ────
-Duration: 9m 33.5s
+Duration: 6m 23.5s
 
 ❯ checking installed package size ... NOTE
-    installed size is 48.1Mb
+    installed size is 43.5Mb
     sub-directories of 1Mb or more:
-      libs  45.8Mb
+      libs  42.5Mb
 
 0 errors ✔ | 0 warnings ✔ | 1 note ✖
 
 ### Ubuntu 20.04-devel
 
- ── R CMD check results ──────────────────────────────────────── greed 0.5.1 ────
-Duration: 6m 59.9s
+
+── R CMD check results ──────────────────────────────────────── greed 0.5.1 ────
+Duration: 6m 58.3s
 
 ❯ checking installed package size ... NOTE
-    installed size is 48.1Mb
+    installed size is 43.5Mb
     sub-directories of 1Mb or more:
-      libs  45.8Mb
+      libs  42.5Mb
 
 0 errors ✔ | 0 warnings ✔ | 1 note ✖
 

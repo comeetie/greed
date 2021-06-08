@@ -15,17 +15,20 @@ NULL
 #' with \eqn{R_{ij}=1} for observed entries and \eqn{R_{ij}=0} for missing ones. \eqn{R} may be supposed to be MAR:
 #' \deqn{ \epsilon \sim Beta(a_{0obs},b_{0obs})}
 #' \deqn{ R_{ij} \sim \mathcal{B}(\epsilon)}
-#' this correspond to the "dyad" sampling scheme. But the sampling scheme can also be NMAR:
+#' this correspond to the "dyad" sampling scheme. But the sampling scheme can also be NMAR with a dyad centered sampling scheme:
 #' \deqn{ \epsilon_{kl} \sim Beta(a_{0obs},b_{0obs})}
 #' \deqn{ R_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\epsilon_{kl})}
-#' this correspond to the "block-dyad" sampling scheme.
+#' this correspond to the "block-dyad" sampling scheme. Or with a node centered sampling scheme. In this case, \eqn{R_{ij}=1} if \eqn{R_{i}=1} or\eqn{R_{j}=1}, and the observed nodes are sampled with:
+#' \deqn{ \epsilon_{k} \sim Beta(a_{0obs},b_{0obs})}
+#' \deqn{ R_{i}|Z_{ik}=1 \sim \mathcal{B}(\epsilon_{kl})}
+#' this correspond to the "block-node" sampling scheme.
 #' This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0,a_{0obs},b_{0obs}} of this generative model in the following slots:
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot a0 Beta prior parameter over links (default to 1)
 #' @slot b0 Beta prior parameter over no-links (default to 1)
-#' @slot type define the type of networks (either "directed" or "undirected", default to "directed")
-#' @slot sampling define the sampling process (either "dyad" or "block-dyad" )
+#' @slot type define the type of networks (either "directed","undirected" or "guess", default to "guess")
+#' @slot sampling define the sampling process (either "dyad","block-dyad" or "block-node")
 #' @slot sampling_priors define the sampling process priors parameters (list with \code{a0obs} and \code{b0obs} fields.)
 #' @seealso \code{\link{misssbm_fit-class}},\code{\link{misssbm_path-class}}  
 #' @seealso \code{\link{greed}}
@@ -40,7 +43,7 @@ NULL
 setClass("misssbm",
          representation = list(sampling="character",sampling_priors="list"),
          contains = "sbm",
-         prototype(name="misssbm",a0=1,b0=1,alpha=1,type="directed",sampling="block-dyad",sampling_priors = list(a0obs=1,b0obs=1)))
+         prototype(name="misssbm",a0=1,b0=1,alpha=1,type="guess",sampling="block-dyad",sampling_priors = list(a0obs=1,b0obs=1)))
 
 
 
@@ -167,15 +170,13 @@ setMethod(f = "coef",
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
+            x_counts=sol@obs_stats$x_counts
+            x_counts_obs=sol@obs_stats$x_counts_obs
             if(sol@model@type=="undirected"){
-              x_counts=sol@obs_stats$x_counts
               diag(x_counts)=diag(x_counts)/2
-              x_counts_obs=sol@obs_stats$x_counts_obs
               diag(x_counts_obs)=diag(x_counts_obs)/2
-            }else{
-              x_counts=sol@obs_stats$x_counts
             }
-            thetakl=x_counts+sol@model@a0-1
+            thetakl = x_counts+sol@model@a0-1
             thetakl = thetakl/(x_counts_obs+sol@model@a0+sol@model@b0-2)
             if(sol@model@type=="directed"){
               if(sol@model@sampling=="dyad"){
@@ -240,7 +241,7 @@ setMethod(f = "preprocess",
               diag(Xobs)=0
               diag(X)=0
             }
-            if(model@type=="undirected" & sum(diag(data))!=0){
+            if(model@type=="undirected" & sum(diag(data),na.rm=TRUE)!=0){
               warning("An undirected sbm model does not allow self loops, self loops were removed from the graph.",call. = FALSE)
             }
             if(length(model@alpha)>1){
@@ -265,7 +266,7 @@ setMethod(f = "preprocess",
               stop("Model prior misspecification, b0 must be positive.",call. = FALSE)
             }
             
-            if(!(model@sampling %in% c("dyad","block-dyad"))){
+            if(!(model@sampling %in% c("dyad","block-dyad","block-node"))){
               stop("Model prior misspecification, only dyad and block-dyad sampling are supported.",call. = FALSE)
             }
             spnames= sort(names(model@sampling_priors))
@@ -285,8 +286,8 @@ setMethod(f = "preprocess",
               stop("Model prior misspecification, sampling prior b0obs must be positive.",call. = FALSE)
             }
             
-            if(!(model@type %in% c("directed","undirected"))){
-              stop("Model prior misspecification, model type must directed or undirected.",call. = FALSE)
+            if(!(model@type %in% c("directed","undirected","guess"))){
+              stop("Model prior misspecification, model type must directed, undirected or guess.",call. = FALSE)
             }
             list(X=as.sparse(X),Xobs=Xobs,N=nrow(data))
           })

@@ -8,6 +8,8 @@
 #include "MarSbmUndirected.h"
 #include "NmarBdSbm.h"
 #include "NmarBdSbmUndirected.h"
+#include "NmarBcSbm.h"
+#include "NmarBcSbmUndirected.h"
 #include "DcSbm.h"
 #include "DcSbmUndirected.h"
 #include "MultSbm.h"
@@ -17,6 +19,9 @@
 #include "Gmm.h"
 #include "SphericalGmm.h"
 #include "Mvmregcomp.h"
+#include "MissSbmE.h"
+#include "MarDyadSbmE.h"
+#include "CombinedIclModel.h"
 using namespace Rcpp;
 
 
@@ -39,10 +44,18 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
        stop("Unsuported model");
     }
     if(strcmp(model.slot("name"),"sbm")==0){
-      if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0)){
+      if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0) && (strcmp(model.slot("type"),"guess")!=0)){
         stop("Unsuported model type only directed / undirected are allowed");
       } 
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
+      if((strcmp(model.slot("type"),"guess")==0)){
+        if(arma::accu(abs(xp-xp.t()))==0){
+          model.slot("type")="undirected";
+        }else{
+          model.slot("type")="directed";
+        }
+      }
+
       if(strcmp(model.slot("type"),"directed")==0){
         M = new Sbm(xp,model,clt,verbose);
       }
@@ -51,23 +64,39 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       }
     }
     if(strcmp(model.slot("name"),"misssbm")==0){
-      if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0)){
+      if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0) && (strcmp(model.slot("type"),"guess")!=0)){
         stop("Unsuported model type only directed / undirected are allowed");
       } 
-      if((strcmp(model.slot("sampling"),"dyad")!=0) && (strcmp(model.slot("sampling"),"block-dyad")!=0)){
-        stop("Unsuported sampling scheme only  'dyad' / 'block-dyad' are allowed");
-      } 
+      
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       arma::sp_mat xpobs = as<arma::sp_mat>(data["Xobs"]);
+      if((strcmp(model.slot("type"),"guess")==0)){
+        if(arma::accu(abs(xp-xp.t()))==0 && arma::accu(abs(xpobs-xpobs.t()))==0){
+          model.slot("type")="undirected";
+        }else{
+          model.slot("type")="directed";
+        }
+      } 
+      if((strcmp(model.slot("sampling"),"dyad")!=0) && (strcmp(model.slot("sampling"),"block-dyad")!=0) && (strcmp(model.slot("sampling"),"block-node")!=0)){
+        stop("Unsuported sampling scheme only  'dyad' / 'block-dyad / 'block-node' are allowed");
+      } 
       if(strcmp(model.slot("sampling"),"dyad")==0){
         if(strcmp(model.slot("type"),"directed")==0){
-          M = new MarSbm(xp,xpobs,model,clt,verbose);
+          IclModelEmission * Mobs = new MissSbmE(xp,xpobs,model,verbose);
+          IclModelEmission * Msampling = new MarDyadSbmE(xpobs,model,verbose);
+          std::vector<IclModelEmission*> IclModels;
+          IclModels.push_back(Mobs);
+          IclModels.push_back(Msampling);
+          M = new CombinedIclModel(IclModels,model,clt,verbose);
+          //M = new MarSbm(xp,xpobs,model,clt,verbose);
+          
         }
         if(strcmp(model.slot("type"),"undirected")==0){
           M = new MarSbmUndirected(xp,xpobs,model,clt,verbose);
         }
       }
       if(strcmp(model.slot("sampling"),"block-dyad")==0){
+
         if(strcmp(model.slot("type"),"directed")==0){
           M = new NmarBdSbm(xp,xpobs,model,clt,verbose);
         }
@@ -75,12 +104,27 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
           M = new NmarBdSbmUndirected(xp,xpobs,model,clt,verbose);
         }
       }
+      if(strcmp(model.slot("sampling"),"block-node")==0){
+        if(strcmp(model.slot("type"),"directed")==0){
+          M = new NmarBcSbm(xp,xpobs,model,clt,verbose);
+        }
+        if(strcmp(model.slot("type"),"undirected")==0){
+          M = new NmarBcSbmUndirected(xp,xpobs,model,clt,verbose);
+        }
+      }
     }
     if(strcmp(model.slot("name"),"dcsbm")==0){
-      if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0)){
+      if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0) && (strcmp(model.slot("type"),"guess")!=0)){
         stop("Unsuported model type only directed / undirected are allowed");
       } 
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
+      if((strcmp(model.slot("type"),"guess")==0)){
+        if(arma::accu(abs(xp-xp.t()))==0){
+          model.slot("type")="undirected";
+        }else{
+          model.slot("type")="directed";
+        }
+      }
       if(strcmp(model.slot("type"),"directed")==0){
         M = new DcSbm(xp,model,clt,verbose);
       }
@@ -89,10 +133,23 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       }
     }
     if(strcmp(model.slot("name"),"multsbm")==0){
-      if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0)){
+      if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0) && (strcmp(model.slot("type"),"guess")!=0)){
         stop("Unsuported model type only directed / undirected are allowed");
       } 
       arma::cube xp = as<arma::cube>(data["X"]);
+      
+      if((strcmp(model.slot("type"),"guess")==0)){
+        int diff = 0;
+        for (arma::uword s=0;s<xp.n_slices;s++){
+          diff+=arma::accu(abs(xp.slice(s)-xp.slice(s).t()));
+        }
+        if(diff==0){
+          model.slot("type")="undirected";
+        }else{
+          model.slot("type")="directed";
+        }
+      }
+      
       if(strcmp(model.slot("type"),"directed")==0){
         M = new MultSbm(xp,model,clt,verbose);
       }
@@ -176,7 +233,6 @@ S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::vec workingset,arma:
   if(type=="merge" || type=="both"){
     M->greedy_merge();
   }
-
   List obs_stats = M->get_obs_stats();
   List obs_stats_cst = M->get_obs_stats_cst();
   sol.slot("obs_stats_cst") = obs_stats_cst;

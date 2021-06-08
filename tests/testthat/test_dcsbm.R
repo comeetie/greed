@@ -25,6 +25,10 @@ test_that("DCSBM hybrid", {
   sbm = rdcsbm(N,pi,mu,rep(15,N),rep(15,N))
   sol=greed(sbm$x)
   expect_equal(sol@K, K)
+  co=coef(sol)
+  expect_true(all(dim(co$thetakl)==c(5,5)))
+  expect_equal(sum(co$pi),1)
+  expect_equal(length(co$pi),5)
   solc = cut(sol,4)
   expect_true(is.ggplot(plot(solc,type='tree')))
   expect_true(is.ggplot(plot(solc,type='path')))
@@ -50,19 +54,46 @@ test_that("DCSBM seed", {
   expect_true(is.ggplot(plot(solc,type='nodelink')))
 })
 
-
-test_that("DCSBM multistart", {
-  N = 100
-  K = 3
+test_that("DCSBM hybrid undirected", {
+  N = 200
+  K = 5
   pi = rep(1/K,K)
   mu = diag(rep(1/5,K))+runif(K*K)*0.01
   sbm = rdcsbm(N,pi,mu,rep(15,N),rep(15,N))
-  sol=greed(sbm$x,alg=new("multistarts"))
+  x=tril(sbm$x)+t(tril(sbm$x))
+  diag(x)=0
+  sol=greed(x)
+  expect_equal(sol@K, K)
+  co=coef(sol)
+  expect_true(all(dim(co$thetakl)==c(5,5)))
+  expect_equal(sum(co$pi),1)
+  expect_equal(length(co$pi),5)
+  solc = cut(sol,4)
+  expect_true(is.ggplot(plot(solc,type='tree')))
+  expect_true(is.ggplot(plot(solc,type='path')))
+  expect_true(is.ggplot(plot(solc,type='front')))
+  expect_true(is.ggplot(plot(solc,type='blocks')))
+  expect_true(is.ggplot(plot(solc,type='nodelink')))
+})
+
+test_that("DCSBM seed undirected", {
+  N = 200
+  K = 5
+  pi = rep(1/K,K)
+  mu = diag(rep(1/5,K))+runif(K*K)*0.01
+  sbm = rdcsbm(N,pi,mu,rep(15,N),rep(15,N))
+  x=tril(sbm$x)+t(tril(sbm$x))
+  diag(x)=0
+  
+  sol=greed(x,alg=new("seed"))
   expect_gte(sol@K, K-2)
   expect_lte(sol@K, K+2)
-  expect_true(is.ggplot(plot(sol,type='tree')))
-  expect_true(is.ggplot(plot(sol,type='path')))
-  expect_true(is.ggplot(plot(sol,type='front')))
-  expect_true(is.ggplot(plot(sol,type='blocks')))
-  expect_true(is.ggplot(plot(sol,type='nodelink')))
+  solc = cut(sol,4)
+  expect_true(is.ggplot(plot(solc,type='tree')))
+  expect_true(is.ggplot(plot(solc,type='path')))
+  expect_true(is.ggplot(plot(solc,type='front')))
+  expect_true(is.ggplot(plot(solc,type='blocks')))
+  expect_true(is.ggplot(plot(solc,type='nodelink')))
 })
+
+

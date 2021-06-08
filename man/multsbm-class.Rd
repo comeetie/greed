@@ -21,7 +21,7 @@ With \eqn{L_{ij}=\sum_{m=1}^MX_{ijm}}. This class mainly store the prior paramet
 
 \item{\code{beta}}{Dirichlet prior parameter over Multinomial links}
 
-\item{\code{type}}{define the type of networks (either "directed" or "undirected", default to "directed")}
+\item{\code{type}}{define the type of networks (either "directed", "undirected" or "guess", default to "guess")}
 }}
 
 \seealso{

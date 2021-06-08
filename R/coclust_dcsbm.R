@@ -148,6 +148,7 @@ setMethod(f = "cut",
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between row and column clusters
+#' \item \code{'biplot'}: plot a block matrix with summarizing connections between row and column clusters aligned with row and clusters drendograms
 #' \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between row and column clusters
 #' }
 #' @return a \code{\link{ggplot2}} graphic
@@ -155,7 +156,7 @@ setMethod(f = "cut",
 setMethod(f = "plot", 
           signature = signature("co_dcsbm_fit","missing"),
           definition = function(x,type="blocks"){
-            switch(type,blocks=co_blocks(x),nodelink=co_nodelink(x))
+            switch(type,blocks=co_blocks(x),biplot=bi_plot(x),nodelink=co_nodelink(x))
           })
 
 #' @title plot a \code{\link{co_dcsbm_path-class}}
@@ -164,6 +165,7 @@ setMethod(f = "plot",
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between row and column clusters
+#' \item \code{'biplot'}: plot a block matrix with summarizing connections between row and column clusters aligned with row and clusters drendograms
 #' \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between row and column clusters
 #' \item \code{'front'}: plot the extracted front ICL, log(alpha)
 #' \item \code{'path'}: plot the evolution of ICL with respect to K

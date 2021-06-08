@@ -5,7 +5,16 @@
 \alias{Ndrangheta}
 \title{Ndrangheta mafia covert network dataset}
 \format{
-
+An object of class \code{list} with two fields; 
+ \describe{
+  \item{X}{network adjacency matrix as a \code{matrix} of size 146x146}
+  \item{node_meta}{data frame of nodes meta information with features :}
+  \describe{
+  \item{Id}{id of the node, rownames of network adjacency matrix}
+  \item{Locale}{factor with the locali affiliation of the node , "OUT": Suspects not belonging to La Lombardia, "MISS": Information not available, other Locali Id.}
+  \item{Role}{factor with the type of hierarchical position of the node "MISS": Information not available,"boss": high hierachical position, "aff": affiliate}
+ }
+}
 }
 \source{
 \href{https://sites.google.com/site/ucinetsoftware/datasets/covert-networks/ndranghetamafia2}{ucinetsoftware/datasets/covert-networks}

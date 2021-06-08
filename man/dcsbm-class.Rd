@@ -24,6 +24,6 @@ These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i
 
 \item{\code{p}}{Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)}
 
-\item{\code{type}}{define the type of networks (either "directed" or "undirected", default to "directed")}
+\item{\code{type}}{define the type of networks (either "directed", "undirected" or "guess", default to "guess")}
 }}
 

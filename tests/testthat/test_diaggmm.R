@@ -12,6 +12,13 @@ test_that("DIAGGMM hybrid", {
   mod = new("diaggmm",mu=apply(X,2,mean))
   sol=greed(X,model=mod)
   expect_equal(sol@K, 3)
+  
+  co=coef(sol)
+  expect_equal(nrow(do.call(rbind,co$muk)),3)
+  expect_equal(ncol(do.call(rbind,co$muk)),2)
+  expect_equal(sum(co$pi),1)
+  expect_equal(length(co$pi),3)
+  
   solc = cut(sol,2)
   expect_true(is.ggplot(plot(sol,type='tree')))
   expect_true(is.ggplot(plot(sol,type='path')))
@@ -31,14 +38,3 @@ test_that("GMM seed", {
 })
 
 
-test_that("GMM multistart", {
-  N=150
-  X = rbind(MASS::mvrnorm(N/3,c(-5,0),diag(2)),MASS::mvrnorm(N/3,c(0,5),diag(2)),MASS::mvrnorm(N/3,c(5,0),diag(2)))
-  mod = new("diaggmm",mu=apply(X,2,mean))
-  sol=greed(X,model=mod,alg=new("multistarts"))
-  expect_gte(sol@K, 1)
-  expect_lte(sol@K, 4)
-  expect_true(is.ggplot(plot(sol,type='tree')))
-  expect_true(is.ggplot(plot(sol,type='path')))
-  expect_true(is.ggplot(plot(sol,type='front')))
-})

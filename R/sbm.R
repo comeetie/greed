@@ -16,7 +16,7 @@ NULL
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot a0 Beta prior parameter over links (default to 1)
 #' @slot b0 Beta prior parameter over no-links (default to 1)
-#' @slot type define the type of networks (either "directed" or "undirected", default to "directed"), for undirected graphs the adjacency matrix is supposed to be symmetric.
+#' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess"), for undirected graphs the adjacency matrix is supposed to be symmetric.
 #' @seealso \code{\link{sbm_fit-class}},\code{\link{sbm_path-class}}
 #' @seealso \code{\link{greed}}
 #' @examples 
@@ -29,7 +29,7 @@ NULL
 setClass("sbm",
          representation = list(a0 = "numeric",b0="numeric",type="character"),
          contains = "icl_model",
-         prototype(name="sbm",a0=1,b0=1,alpha=1,type="directed"))
+         prototype(name="sbm",a0=1,b0=1,alpha=1,type="guess"))
 
 
 
@@ -223,8 +223,8 @@ setMethod(f = "preprocess",
               stop("Model prior misspecification, b0 must be positive.",call. = FALSE)
             }
             
-            if(!(model@type %in% c("directed","undirected"))){
-              stop("Model prior misspecification, model type must directed or undirected.",call. = FALSE)
+            if(!(model@type %in% c("directed","undirected","guess"))){
+              stop("Model prior misspecification, model type must directed, undirected or guess.",call. = FALSE)
             }
             list(X=as.sparse(data),N=nrow(data))
           })

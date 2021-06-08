@@ -18,12 +18,12 @@ NULL
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 10)
 #' @slot p Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)
-#' @slot type define the type of networks (either "directed" or "undirected", default to "directed")
+#' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
 #' @export 
 setClass("dcsbm",
          representation = list(type="character",p="numeric"),
          contains = "icl_model",
-         prototype(name="dcsbm",alpha=1,p=NaN,type="directed"))
+         prototype(name="dcsbm",alpha=1,p=NaN,type="guess"))
 
 
 
@@ -250,8 +250,8 @@ setMethod(f = "preprocess",
             if(!is.nan(model@p) && model@p<=0){
               stop("Model prior misspecification, p must be positive.",call. = FALSE)
             }
-            if(!(model@type %in% c("directed","undirected"))){
-              stop("Model prior misspecification, model type must directed or undirected.",call. = FALSE)
+            if(!(model@type %in% c("directed","undirected","guess"))){
+              stop("Model prior misspecification, model type must directed, undirected or guess.",call. = FALSE)
             }
             list(X=as.sparse(data),N=nrow(data))
           })

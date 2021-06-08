@@ -14,13 +14,13 @@ NULL
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter
 #' @slot beta Dirichlet prior parameter over Multinomial links
-#' @slot type define the type of networks (either "directed" or "undirected", default to "directed")
+#' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
 #' @seealso \code{\link{multsbm_fit-class}}, \code{\link{multsbm_path-class}}
 #' @export 
 setClass("multsbm",
          representation = list(beta = "numeric",type="character"),
          contains = "icl_model",
-         prototype(name="multsbm",alpha=1,beta=1,type="directed"))
+         prototype(name="multsbm",alpha=1,beta=1,type="guess"))
 
 
 
@@ -145,8 +145,8 @@ setMethod(f = "coef",
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
             if(sol@model@type=="undirected"){
               x_counts=sol@obs_stats$x_counts
-              for (k in 1:dim(thetakl)[1]){
-                for (d in 1:dim(thetakl)[3]){
+              for (k in 1:dim(x_counts)[1]){
+                for (d in 1:dim(x_counts)[3]){
                   x_counts[k,k,d]=x_counts[k,k,d]/2
                 }
               }
@@ -228,8 +228,8 @@ setMethod(f = "preprocess",
             if(model@beta<=0){
               stop("Model prior misspecification, beta must be positive.",call. = FALSE)
             }
-            if(!(model@type %in% c("directed","undirected"))){
-              stop("Model prior misspecification, model type must directed or undirected.",call. = FALSE)
+            if(!(model@type %in% c("directed","undirected","guess"))){
+              stop("Model prior misspecification, model type must directed, undirected or guess.",call. = FALSE)
             }
             
             list(X=data,N=nrow(data))

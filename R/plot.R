@@ -220,7 +220,7 @@ co_dendo = function(x){
     hc = x@ggtree$H[x@ggtree$K==x@K]
     colt=colt+ggplot2::geom_hline(ggplot2::aes(yintercept=hc),color='red',size=0.8,linetype="dashed",alpha=0.8)
   }
-  ggpubr::ggarrange(rowt,colt)
+  gridExtra::grid.arrange(rowt,colt,nrow=1)
 }
 
 
@@ -372,45 +372,96 @@ bi_plot = function(x){
   
   
   theme_mm = ggplot2::theme(axis.title.x=ggplot2::element_blank(),
-                             axis.text.x=ggplot2::element_blank(),
-                             axis.ticks.x=ggplot2::element_blank(),
                              axis.title.y=ggplot2::element_blank(),
-                             axis.text.y=ggplot2::element_blank(),
-                             axis.ticks.y=ggplot2::element_blank(),
-                            panel.border = ggplot2::element_blank())      
-  mat = ggplot2::ggplot(gg)+ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~count/(sizek*sizel),alpha=~count/(sizek*sizel)))+
-    ggplot2::scale_fill_distiller("E[X]",type="seq",direction = 1)+
-    ggplot2::scale_alpha("E[X]")+
-    ggplot2::scale_x_continuous("Col clusters",breaks=cccol,labels=ifelse(ylab>5,paste0(ylab,"%"),""),minor_breaks = NULL)+
-    ggplot2::scale_y_continuous("Row clusters",breaks=ccrow,labels =ifelse(xlab>5,paste0(xlab,"%"),""),minor_breaks = NULL)+
-    ggplot2::theme_bw()+theme_mm
+                            panel.border = ggplot2::element_blank(),
+                            panel.grid.minor = ggplot2::element_line(colour = "grey50"),
+                            panel.grid.major = ggplot2::element_blank(),
+                            axis.ticks = ggplot2::element_line(size = 0),
+                            panel.ontop = TRUE,
+                            panel.background = ggplot2::element_rect(fill = NA))
+  theme_nolabY = ggplot2::theme(axis.title.x=ggplot2::element_blank(),
+                               axis.title.y=ggplot2::element_blank(),
+                               panel.border = ggplot2::element_blank(),
+                               panel.grid.major = ggplot2::element_blank(),
+                               panel.grid.minor = ggplot2::element_blank(),
+                               axis.text.y = ggplot2::element_blank(),
+                               axis.ticks.y = ggplot2::element_blank())
+  theme_nolabX = ggplot2::theme(axis.title.x=ggplot2::element_blank(),
+                                axis.title.y=ggplot2::element_blank(),
+                                panel.border = ggplot2::element_blank(),
+                                panel.grid.major = ggplot2::element_blank(),
+                                panel.grid.minor = ggplot2::element_blank(),
+                                axis.text.x = ggplot2::element_blank(),
+                                axis.ticks.x = ggplot2::element_blank())
   
-  ggtree = x@ggtreerow
+  mat = ggplot2::ggplot(gg)+
+    ggplot2::geom_tile(ggplot2::aes_(y=~kc-sizek/2,x=~lc-sizel/2,height=~sizek,width=~sizel,fill=~count/(sizek*sizel),alpha=~count/(sizek*sizel)))+
+    ggplot2::scale_fill_distiller("E[X]",palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(direction="horizontal",title.position = "top",label.position = "bottom"),limits=c(0,max(gg$count/(gg$sizek*gg$sizel))))+
+    ggplot2::scale_alpha("E[X]",range=c(0,1),limits=c(0,max(gg$count/(gg$sizek*gg$sizel))),guide = ggplot2::guide_legend(direction="horizontal",title.position = "top",label.position = "bottom"))+
+    ggplot2::scale_x_continuous("Col clusters",breaks=cccol-x@obs_stats$cols_counts/2,minor_breaks = c(0,cccol),labels=ifelse(ylab>5,paste0(ylab,"%"),""),limits = c(-1,max(cccol)+1),position="top",expand = c(0,0))+
+    ggplot2::scale_y_continuous("Row clusters",breaks=ccrow-x@obs_stats$rows_counts/2,minor_breaks = c(0,ccrow),labels =ifelse(xlab>5,paste0(xlab,"%"),""),limits = c(-1,max(ccrow)+1),expand = c(0,0))+
+    ggplot2::theme_bw()+theme_mm
+  legend = gtable::gtable_filter(ggplot2::ggplotGrob(mat), 'guide-box')
+
+  
+  
+  
+  treerow = x@ggtreerow
+  if(x@K<max(x@ggtree$K)){
+    treerow = treerow[treerow$K<=x@K,] 
+  }
+  ggtree = update_tree_prop(treerow,x@obs_stats$rows_counts)
   rowt = ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(y=~xmin,x=~H,yend=~xmax,xend=~H))+
     ggplot2::geom_segment(data=ggtree[ggtree$Hend!=-1,],ggplot2::aes_(x=~H,y=~x,yend=~x,xend=~Hend))+
-    ggplot2::scale_y_continuous("",breaks=c())+
-    ggplot2::scale_x_reverse("",breaks=c())+
-    ggplot2::theme_bw()+theme_mm
-  if(x@K<max(x@ggtree$K)){
-    hc = x@ggtree$H[x@ggtree$K==x@K]
-    rowt=rowt+ggplot2::geom_hline(ggplot2::aes(yintercept=hc),color='red',size=0.8,linetype="dashed",alpha=0.8)
-  }
+    ggplot2::scale_x_reverse("",position="top")+
+    ggplot2::scale_y_continuous("Row clusters",breaks=ccrow-x@obs_stats$rows_counts/2,minor_breaks = ccrow,labels =ifelse(xlab>5,paste0(xlab,"%"),""),limits = c(0,max(ccrow)+1),expand=c(0,0))+
+    #ggplot2::scale_y_continuous("",breaks=c(),limits = c(0,max(ccrow)+1))+
+    ggplot2::theme_bw()+theme_nolabY
   
-  ggtree = x@ggtreecol
+  treecol = x@ggtreecol
+  if(x@K<max(x@ggtree$K)){
+    treecol = treecol[treecol$K<=x@K,] 
+  }
+  ggtree = update_tree_prop(treecol,x@obs_stats$cols_counts)
   colt = ggplot2::ggplot()+ggplot2::geom_segment(data=ggtree[ggtree$node %in% ggtree$tree,],ggplot2::aes_(x=~xmin,y=~H,xend=~xmax,yend=~H))+
     ggplot2::geom_segment(data=ggtree[ggtree$Hend!=-1,],ggplot2::aes_(x=~x,y=~H,xend=~x,yend=~Hend))+
-    ggplot2::scale_x_continuous("",breaks=c())+
-    ggplot2::ylab(expression(paste("-log(",alpha,")")))+
-    ggplot2::ggtitle(paste0(x@Kcol," column clusters"))+
-    ggplot2::theme_bw()
-  if(x@K<max(x@ggtree$K)){
-    hc = x@ggtree$H[x@ggtree$K==x@K]
-    colt=colt+ggplot2::geom_hline(ggplot2::aes(yintercept=hc),color='red',size=0.8,linetype="dashed",alpha=0.8)
-  }
-  ggpubr::ggarrange(rowt,mat,common.legend = TRUE,widths = c(1,2))
+    #ggplot2::scale_x_continuous("",breaks=c(),limits = c(0,max(cccol)+1))+
+    ggplot2::scale_x_continuous("Col clusters",breaks=cccol-x@obs_stats$cols_counts/2,minor_breaks = cccol,labels=ifelse(ylab>5,paste0(ylab,"%"),""),limits = c(0,max(cccol)+1),position="top",expand=c(0,0))+
+    ggplot2::scale_y_continuous("")+
+    ggplot2::theme_bw()+theme_nolabX
+  
+  growt <- ggplot2::ggplotGrob(rowt)
+  gcolt <- ggplot2::ggplotGrob(colt)
+  glegend = ggplot2::ggplotGrob(ggplot2::ggplot()+ggplot2::theme(panel.background = ggplot2::element_rect(fill="white"))+ggplot2::annotation_custom(legend))
+  gmat <- ggplot2::ggplotGrob(mat+ ggplot2::theme(legend.position='hidden'))
+  grob.mat = matrix(list(glegend,growt,gcolt,gmat),nrow=2)
+  gt = gtable::gtable_matrix("demo", grob.mat, ggplot2::unit(c(0.45, 1), "null"), ggplot2::unit(c(0.45, 1), "null"))
+  gt = gtable::gtable_add_grob(gt, legend, t = 1, l = 2)
+  
+  
+  gridExtra::grid.arrange(top=paste0("Co-clustering with : ",max(x@cl)," clusters."),gt)
+  
+
 }
 
-
+update_tree_prop = function(tree,counts){
+  cumcounts=cumsum(counts)
+  tree$x[tree$H==0]=cumcounts[length(counts):1]-counts[length(counts):1]/2
+  tree$size[tree$H==0]=counts[length(counts):1]
+  fathers = unique(tree$tree[tree$H==0])
+  while(any(fathers!=0)){
+  newf = c()
+  for(f in fathers){
+    tree$x[tree$node==f]=mean(tree$x[tree$tree==f])
+    tree$xmin[tree$node==f]=min(tree$x[tree$tree==f])
+    tree$xmax[tree$node==f]=max(tree$x[tree$tree==f])
+    tree$size[tree$node==f]=sum(tree$size[tree$tree==f])
+    newf = unique(c(newf,tree$tree[tree$node==f]))
+  }
+  fathers=newf
+  }
+  tree
+}
 
 graph_blocks_cube = function(x){
   K = length(x@obs_stats$counts)
@@ -502,7 +553,8 @@ gmmpairs = function(sol,X){
           ggplot2::geom_line(data=pdfmix,ggplot2::aes_(x=~x,y=~pdf))+
           ggplot2::geom_line(data=pdfs.df,ggplot2::aes_(x=~x,y=~pdf,color=~factor(cl),group=~cl))+
           ggplot2::geom_segment(data=X,ggplot2::aes_(x=as.name(vnames[i]),xend=as.name(vnames[i]),y=0,yend=max(pdfs.df$pdf)*0.05,col=factor(sol@cl)))+
-          ggplot2::scale_x_continuous(limits=limsi)
+          ggplot2::scale_x_continuous(limits=limsi)+ggplot2::theme_bw()+
+          ggplot2::theme(axis.title = ggplot2::element_blank(),panel.grid = ggplot2::element_blank())
       }else{
         elipses.df = do.call(rbind,lapply(1:sol@K,function(k){ 
           el.df = ellips(params$muk[[k]][c(i,j)],params$Sigmak[[k]][c(i,j),c(i,j)],nb_ech = nb_ech)
@@ -517,14 +569,31 @@ gmmpairs = function(sol,X){
           ggplot2::geom_point()+
           ggplot2::geom_path(data=elipses.df,ggplot2::aes_(x=~x,y=~y,color=~factor(cl),group=~cl),na.rm=TRUE)+
           ggplot2::scale_x_continuous(limits=limsi)+
-          ggplot2::scale_y_continuous(limits=limsj)
+          ggplot2::scale_y_continuous(limits=limsj)+ggplot2::theme_bw()+
+          ggplot2::theme(axis.title = ggplot2::element_blank())+
+          ggplot2::scale_colour_discrete("Clusters: ",guide = ggplot2::guide_legend(direction="horizontal"))
       }
-      plts.df[[ii]]= plt
+      plt+ggplot2::theme(plot.margin = ggplot2::unit(c(0.01,0.01,0.01,0.01),"null"))
+      if(j!=3){
+        plt = plt +ggplot2::theme(axis.text.x = ggplot2::element_blank(),axis.ticks.x=ggplot2::element_blank())
+      }
+      if(j==1){
+        plt = plt +ggplot2::ggtitle(vnames[i],)
+      }
+
+      plt = plt +ggplot2::theme(axis.text.y = ggplot2::element_blank(),axis.ticks.y=ggplot2::element_blank())
+    
+      plts.df[[ii]]= plt+ggplot2::theme(plot.margin = ggplot2::unit(c(0.01,0.01,0.01,0.01),"null"))
       ii=ii+1
     }
   }
-  pm <- GGally::ggmatrix(plts.df,3, 3,xAxisLabels = vnames,yAxisLabels = vnames,byrow = FALSE,legend = c(1,i))+ggplot2::theme_bw()
-  pm
+  
+  grob.mat = matrix(lapply(plts.df,function(x){ggplot2::ggplotGrob(x+ggplot2::theme(legend.position='hidden'))}),nrow=ncol(X))
+  gt = gtable::gtable_matrix("demo", grob.mat, ggplot2::unit(rep(1,ncol(X)), "null"), ggplot2::unit(rep(1,ncol(X)), "null"))
+  legend = gtable::gtable_filter(ggplot2::ggplotGrob(plts.df[[2]]), 'guide-box')
+  glegend = ggplot2::ggplotGrob(ggplot2::ggplot()+ggplot2::theme(panel.background = ggplot2::element_rect(fill="white"))+ggplot2::annotation_custom(legend))
+  gtl = gridExtra::grid.arrange(gt,glegend, nrow = 2, heights = c(10, 1))
+  gridExtra::grid.arrange(top=paste0(sol@model@name," clustering with ",max(sol@cl)," clusters.\n"),gtl)
   
 }
 

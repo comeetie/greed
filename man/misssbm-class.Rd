@@ -15,10 +15,13 @@ Missing value are supposed to be generated afterwards, the observation process c
 with \eqn{R_{ij}=1} for observed entries and \eqn{R_{ij}=0} for missing ones. \eqn{R} may be supposed to be MAR:
 \deqn{ \epsilon \sim Beta(a_{0obs},b_{0obs})}
 \deqn{ R_{ij} \sim \mathcal{B}(\epsilon)}
-this correspond to the "dyad" sampling scheme. But the sampling scheme can also be NMAR:
+this correspond to the "dyad" sampling scheme. But the sampling scheme can also be NMAR with a dyad centered sampling scheme:
 \deqn{ \epsilon_{kl} \sim Beta(a_{0obs},b_{0obs})}
 \deqn{ R_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\epsilon_{kl})}
-this correspond to the "block-dyad" sampling scheme.
+this correspond to the "block-dyad" sampling scheme. Or with a node centered sampling scheme. In this case, \eqn{R_{ij}=1} if \eqn{R_{i}=1} or\eqn{R_{j}=1}, and the observed nodes are sampled with:
+\deqn{ \epsilon_{k} \sim Beta(a_{0obs},b_{0obs})}
+\deqn{ R_{i}|Z_{ik}=1 \sim \mathcal{B}(\epsilon_{kl})}
+this correspond to the "block-node" sampling scheme.
 This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0,a_{0obs},b_{0obs}} of this generative model in the following slots:
 }
 \section{Slots}{
@@ -32,9 +35,9 @@ This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0,a_{0obs},
 
 \item{\code{b0}}{Beta prior parameter over no-links (default to 1)}
 
-\item{\code{type}}{define the type of networks (either "directed" or "undirected", default to "directed")}
+\item{\code{type}}{define the type of networks (either "directed","undirected" or "guess", default to "guess")}
 
-\item{\code{sampling}}{define the sampling process (either "dyad" or "block-dyad" )}
+\item{\code{sampling}}{define the sampling process (either "dyad","block-dyad" or "block-node")}
 
 \item{\code{sampling_priors}}{define the sampling process priors parameters (list with \code{a0obs} and \code{b0obs} fields.)}
 }}

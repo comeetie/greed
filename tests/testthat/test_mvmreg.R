@@ -13,6 +13,11 @@ test_that("MVMREG hybrid", {
   expect_true(is.ggplot(plot(sol,type='tree')))
   expect_true(is.ggplot(plot(sol,type='path')))
   expect_true(is.ggplot(plot(sol,type='front')))
+  co=coef(sol)
+  expect_true(all(sapply(co$muk,length)==3))
+  expect_true(all(sapply(co$Sigmak,nrow)==1))
+  expect_equal(sum(co$pi),1)
+  expect_equal(length(co$pi),3)
 })
 
 test_that("GMM seed", {
@@ -22,12 +27,3 @@ test_that("GMM seed", {
 })
 
 
-test_that("GMM multistart", {
-  regs=rmreg(500,rep(1/3,3),mu=cbind(c(5,1,-125),c(1,20,1),c(15,100,200)),sigma=1)
-  sol=greed_cond(regs$X,as.matrix(regs$y),alg=new("multistarts"))
-  expect_gte(sol@K, 1)
-  expect_lte(sol@K, 4)
-  expect_true(is.ggplot(plot(sol,type='tree')))
-  expect_true(is.ggplot(plot(sol,type='path')))
-  expect_true(is.ggplot(plot(sol,type='front')))
-})
