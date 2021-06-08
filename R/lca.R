@@ -137,8 +137,10 @@ setMethod(f = "coef",
           })
 
 reorder_lca = function(obs_stats,or){
-  obs_stats[[1]]$counts = obs_stats[[1]]$counts[or]
-  obs_stats[[1]]$x_counts = obs_stats[[1]]$x_counts[,or]
+  obs_stats[[2]]$counts = obs_stats[[2]]$counts[or]
+  for(v in 1:length(obs_stats[[2]]$x_counts)){
+    obs_stats[[2]]$x_counts[[v]] = obs_stats[[2]]$x_counts[[v]][or,]
+  }
   obs_stats
 }
 
@@ -170,7 +172,7 @@ setMethod(f = "preprocess",
             if(!methods::is(data,"data.frame")){
               stop("An lca model expect a data.frame with only factors.",call. = FALSE)
             }
-            if(!all(apply(data,2,is.factor))){
+            if(!all(sapply(data,is.factor))){
               stop("An lca model expect a data.frame with only factors.",call. = FALSE)
             }
             
@@ -193,5 +195,5 @@ setMethod(f = "preprocess",
             if(model@beta<=0){
               stop("Model prior misspecification, beta must be positive.",call. = FALSE)
             }
-            list(X=sapply(gg,unclass)-1,N=nrow(data))
+            list(X=sapply(data,unclass)-1,N=nrow(data))
           })

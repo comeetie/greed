@@ -242,13 +242,21 @@ S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::vec workingset,arma:
   if(type=="merge" || type=="both"){
     M->greedy_merge();
   }
+
   List obs_stats = M->get_obs_stats();
+
   List obs_stats_cst = M->get_obs_stats_cst();
+
   sol.slot("obs_stats_cst") = obs_stats_cst;
+
   sol.slot("model") = M->get_model();
+
   sol.slot("obs_stats") = obs_stats;
+
   sol.slot("cl") = M->get_cl()+1 ;
+
   sol.slot("icl") = M->icl(obs_stats);
+
   sol.slot("K") = M->get_K();
   delete M;
   return(sol);

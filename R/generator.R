@@ -230,7 +230,10 @@ rmultsbm = function (N,pi,mu,lambda){
 #' \item theta: 
 #' }
 #' @examples
-#' lca.data = rlca(100,)
+#' theta = list(matrix(c(0.1,0.9,0.9,0.1,0.5,0.5,0.3,0.7),ncol=2,byrow=TRUE),
+#' matrix(c(0.5,0.5,0.3,0.7,0.05,0.95,0.3,0.7),ncol=2,byrow=TRUE),
+#' matrix(c(0.5,0.5,0.9,0.1,0.5,0.5,0.1,0.9),ncol=2,byrow=TRUE))
+#' lca.data = rlca(100,rep(1/4,4),theta)
 #' @export
 rlca = function (N,pi,theta){
   K  = length(pi)
@@ -239,8 +242,9 @@ rlca = function (N,pi,theta){
   x = data.frame(matrix(NA,N,V))
   for (v in 1:V){
     for(k in 1:K){
-      x[cl==k,v]=sample(1:ncol(theta[v]),sum(cl==k),prob =theta[v][k,], replace = TRUE)
+      x[cl==k,v]=sample(1:ncol(theta[[v]]),sum(cl==k),prob =theta[[v]][k,], replace = TRUE)
     }
+    x[,v]=factor(x[,v],levels = 1:ncol(theta[[v]]))
   }
   list(cl=cl, x = x, K=K,N=N,pi=pi,theta=theta)
 }

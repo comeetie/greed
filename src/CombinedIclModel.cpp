@@ -123,7 +123,7 @@ arma::mat CombinedIclModel::delta_swap(int i,arma::uvec iclust){
 
 void CombinedIclModel::swap_update(int i,int newcl){
   bool dead_cluster = false;
-  if(cl(i)==1){
+  if(counts(cl(i))==1){
     dead_cluster=true;
   }
   for(int m=0;m<IclModels.size();m++){

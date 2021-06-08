@@ -10,7 +10,7 @@ using namespace Rcpp;
 class LcaE : public IclModelEmission
 {
 public:
-  LcaE(arma::mat& x,S4 model,bool verb=false);
+  LcaE(arma::mat x,S4 model,bool verb=false);
   void set_cl(arma::vec clt);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
@@ -20,11 +20,12 @@ public:
   double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats){return 0;};
   void merge_update(int k, int l);
   List get_obs_stats();
+  List get_obs_statsR();
 protected:
   arma::mat x;
   arma::vec nbmod;
   arma::vec counts;
-  std::vector<arma::mat> x_counts;
+  List x_counts;
   double beta;
   int K;
 };

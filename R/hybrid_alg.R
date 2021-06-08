@@ -95,9 +95,11 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
             #parallel::stopCluster(cl)
             # best solution
             res = solutions[[order(icls,decreasing = TRUE)[1]]]
+            
             # compute merge path
             path = fit_greed_path(data,res)
             
+            print(res@obs_stats[[2]]$x_counts)
             # clean the resuts (compute, merge tree,...)
             path = cleanpathopt(path)
             # store train history
