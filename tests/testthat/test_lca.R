@@ -16,6 +16,8 @@ test_that("LCA sim",{
   
   sol=greed(lca.data$x,model=new("lca"),alg=new("hybrid",pop_size=100),K=10)
   sol@icl
+  sol@obs_stats$counts
+  sol@obs_stats$x_counts
   table(sol@cl,lca.data$cl)
   model=new("lca",beta=5)
   data=greed:::preprocess(model,lca.data$x)
