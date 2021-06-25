@@ -22,6 +22,7 @@
 #include "MissSbmE.h"
 #include "MarDyadSbmE.h"
 #include "LcaE.h"
+#include "GmmE.h"
 #include "CombinedIclModel.h"
 using namespace Rcpp;
 
@@ -42,7 +43,8 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
        (strcmp(model.slot("name"),"mvmreg")!=0) &&
        (strcmp(model.slot("name"),"diaggmm")!=0) &&
        (strcmp(model.slot("name"),"gmm")!=0) && 
-       (strcmp(model.slot("name"),"lca")!=0)){
+       (strcmp(model.slot("name"),"lca")!=0) &&
+       (strcmp(model.slot("name"),"mmm")!=0)){
        stop("Unsuported model");
     }
     if(strcmp(model.slot("name"),"sbm")==0){
@@ -191,7 +193,18 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       IclModels.push_back(Lca);
       M = new CombinedIclModel(IclModels,model,clt,verbose);
     }
-    
+    if(strcmp(model.slot("name"),"mmm")==0 ){
+      
+      std::vector<IclModelEmission*> IclModels;
+      
+      arma::mat Xcat = as<arma::mat>(data["Xcat"]);
+      IclModelEmission * cLca = new LcaE(Xcat,model,verbose);
+      IclModels.push_back(cLca);
+      arma::mat Xnum = as<arma::mat>(data["Xnum"]);
+      IclModelEmission * cGmm = new GmmE(Xnum,model,verbose);
+      IclModels.push_back(cGmm);
+      M = new CombinedIclModel(IclModels,model,clt,verbose);
+    }
     return(M);
   }catch(std::exception &ex) {	
     forward_exception_to_r(ex);

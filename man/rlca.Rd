@@ -31,8 +31,8 @@ A list with fields:
 This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 }
 \examples{
-theta = list(matrix(c(0.1,0.9,0.9,0.1,0.5,0.5,0.3,0.7),byrow=TRUE),
-matrix(c(0.5,0.5,0.3,0.7,0.05,0.95,0.3,0.7),byrow=TRUE),
-matrix(c(0.5,0.5,0.9,0.1,0.5,0.5,0.1,0.9),byrow=TRUE))
+theta = list(matrix(c(0.1,0.9,0.9,0.1,0.5,0.5,0.3,0.7),ncol=2,byrow=TRUE),
+matrix(c(0.5,0.5,0.3,0.7,0.05,0.95,0.3,0.7),ncol=2,byrow=TRUE),
+matrix(c(0.5,0.5,0.9,0.1,0.5,0.5,0.1,0.9),ncol=2,byrow=TRUE))
 lca.data = rlca(100,rep(1/4,4),theta)
 }

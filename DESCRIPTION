@@ -54,6 +54,7 @@ Collate:
     'sbm.R'
     'misssbm.R'
     'mm.R'
+    'mmm.R'
     'multistart_alg.R'
     'multsbm.R'
     'plot.R'
