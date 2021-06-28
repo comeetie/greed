@@ -1,7 +1,7 @@
 #' @include models_classes.R fit_classes.R
 NULL
 
-#' @title Latent Class Analysis model description class
+#' @title Mixed Mixture model class
 #' 
 #' @description 
 #' An S4 class to represent a Multinomial model model, extends \code{\link{icl_model-class}}.

@@ -31,19 +31,12 @@ void LcaE::set_cl(arma::vec cl){
 
 
 double LcaE::icl_emiss(const List & obs_stats){
-  Rcout << "icl" << std::endl;
-  Rcout << nbmod << std::endl;
-  Rcout << beta << std::endl;
-  Rcout << K << std::endl;
-  Rcout << "icl --" << std::endl;
   arma::vec counts_cur = as<arma::vec>(obs_stats["counts"]);
   List x_counts_cur = as<List>(obs_stats["x_counts"]);
   double icl_emiss=0;
   
   for(int j=0;j<x.n_cols;j++){
     arma::mat temp_mat =  as<arma::mat>(x_counts_cur[j]);
-    Rcout << temp_mat << std::endl;
-    Rcout << "--" << std::endl;
     icl_emiss+=arma::accu(lgamma(temp_mat+beta));
     icl_emiss+= K*lgamma(beta*nbmod(j));
     icl_emiss-= K*nbmod(j)*lgamma(beta);

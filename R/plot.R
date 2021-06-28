@@ -538,9 +538,13 @@ gmmpairs = function(sol,X){
   plts.df = list()
   ii=1
   nb_ech = 500
+  X$greedcl = factor(sol@cl)
+  if(nrow(X)>1000){
+    X=X[sample(1:nrow(X),1000),]
+  }
   params = coef(sol)
-  for(i in 1: ncol(X)){
-    for (j in 1:ncol(X)){
+  for(i in 1:(ncol(X)-1)){
+    for (j in 1:(ncol(X)-1)){
       if(i==j){
         #plt = ggally_text(paste("Plot #", i, sep = ""))
         limsi=c(range(X[,vnames[i]])[1]-diff(range(X[,vnames[i]]))*0.1,range(X[,i])[2]+diff(range(X[,vnames[i]]))*0.1)
@@ -552,7 +556,7 @@ gmmpairs = function(sol,X){
         plt = ggplot2::ggplot()+
           ggplot2::geom_line(data=pdfmix,ggplot2::aes_(x=~x,y=~pdf))+
           ggplot2::geom_line(data=pdfs.df,ggplot2::aes_(x=~x,y=~pdf,color=~factor(cl),group=~cl))+
-          ggplot2::geom_segment(data=X,ggplot2::aes_(x=as.name(vnames[i]),xend=as.name(vnames[i]),y=0,yend=max(pdfs.df$pdf)*0.05,col=factor(sol@cl)))+
+          ggplot2::geom_segment(data=X,ggplot2::aes_(x=as.name(vnames[i]),xend=as.name(vnames[i]),y=0,yend=max(pdfs.df$pdf)*0.05,col=~greedcl))+
           ggplot2::scale_x_continuous(limits=limsi)+ggplot2::theme_bw()+
           ggplot2::theme(axis.title = ggplot2::element_blank(),panel.grid = ggplot2::element_blank())
       }else{
@@ -565,7 +569,7 @@ gmmpairs = function(sol,X){
         limsi=c(range(X[,vnames[i]])[1]-diff(range(X[,vnames[i]]))*0.1,range(X[,i])[2]+diff(range(X[,vnames[i]]))*0.1)
         limsj=c(range(X[,vnames[j]])[1]-diff(range(X[,vnames[j]]))*0.1,range(X[,j])[2]+diff(range(X[,vnames[j]]))*0.1)
         #elipses.df = elipses.df[elipses.df$x >= limsi[1] & elipses.df$x <= limsi[2] & elipses.df$y >= limsj[1] & elipses.df$y <= limsj[2], ]
-        plt = ggplot2::ggplot(X,ggplot2::aes_(as.name(vnames[i]),as.name(vnames[j]),color=factor(sol@cl)))+
+        plt = ggplot2::ggplot(X,ggplot2::aes_(as.name(vnames[i]),as.name(vnames[j]),color=~greedcl))+
           ggplot2::geom_point()+
           ggplot2::geom_path(data=elipses.df,ggplot2::aes_(x=~x,y=~y,color=~factor(cl),group=~cl),na.rm=TRUE)+
           ggplot2::scale_x_continuous(limits=limsi)+
@@ -574,7 +578,7 @@ gmmpairs = function(sol,X){
           ggplot2::scale_colour_discrete("Clusters: ",guide = ggplot2::guide_legend(direction="horizontal"))
       }
       plt+ggplot2::theme(plot.margin = ggplot2::unit(c(0.01,0.01,0.01,0.01),"null"))
-      if(j!=3){
+      if(j!=(ncol(X)-1)){
         plt = plt +ggplot2::theme(axis.text.x = ggplot2::element_blank(),axis.ticks.x=ggplot2::element_blank())
       }
       if(j==1){
@@ -588,8 +592,8 @@ gmmpairs = function(sol,X){
     }
   }
   
-  grob.mat = matrix(lapply(plts.df,function(x){ggplot2::ggplotGrob(x+ggplot2::theme(legend.position='hidden'))}),nrow=ncol(X))
-  gt = gtable::gtable_matrix("demo", grob.mat, ggplot2::unit(rep(1,ncol(X)), "null"), ggplot2::unit(rep(1,ncol(X)), "null"))
+  grob.mat = matrix(lapply(plts.df,function(x){ggplot2::ggplotGrob(x+ggplot2::theme(legend.position='hidden'))}),nrow=(ncol(X)-1))
+  gt = gtable::gtable_matrix("demo", grob.mat, ggplot2::unit(rep(1,ncol(X)-1), "null"), ggplot2::unit(rep(1,ncol(X)-1), "null"))
   legend = gtable::gtable_filter(ggplot2::ggplotGrob(plts.df[[2]]), 'guide-box')
   glegend = ggplot2::ggplotGrob(ggplot2::ggplot()+ggplot2::theme(panel.background = ggplot2::element_rect(fill="white"))+ggplot2::annotation_custom(legend))
   gtl = gridExtra::grid.arrange(gt,glegend, nrow = 2, heights = c(10, 1))
@@ -611,7 +615,47 @@ ellips <- function(mu = c(0,0), Sigma=diag(rep(1,2)), nb_ech = 100, l=stats::qch
   data.frame(x=Xf[,1]+mu[1],y=Xf[,2]+mu[2])
 }
 
+block_lca =function(sol){
+  params = coef(sol)
+  params$Thetak
+  theta.df = lapply(1:length(params$Thetak),function(v){
+    vname = names(params$Thetak)[v]
+    ccol = params$Thetak[[v]]
+    unfolded = lapply(1:ncol(ccol),function(x){
+      data.frame(cluster=rownames(ccol),prob=ccol[,x],level=colnames(ccol)[x],feature = vname,row.names = NULL)
+      })
+    do.call(rbind,unfolded)
+    })
+  plts = lapply(theta.df,\(x){ggplot(x)+geom_point(aes(x=cluster,y=level,fill=prob,size=prob))+scale_size_area(limits=c(0,1))})
+  grob.mat = matrix(lapply(plts,function(x){ggplot2::ggplotGrob(x+ggplot2::theme(legend.position='hidden'))}),ncol=length(plts))
+  gt = gtable::gtable_matrix("demo", grob.mat, ggplot2::unit(rep(1,length(plts)), "null"), ggplot2::unit(rep(1,1), "null"))
+  plot(gt)
+ }
 
 
+block_gmm_marginals = function(sol){
+ params=coef(sol)
+ liminf = lapply(1:length(params$muk),function(k){params$muk[[k]]-4.1*sqrt(diag(params$Sigmak[[k]]))})
+ liminf = apply(do.call(rbind,liminf),2,min)
+ limsup = lapply(1:length(params$muk),function(k){params$muk[[k]]+4.1*sqrt(diag(params$Sigmak[[k]]))})
+ limsup = apply(do.call(rbind,limsup),2,max)
+ nb_ech = 500
+ plts = list()
+ for (j in 1:length(liminf)){
+   x = seq(liminf[j],limsup[j],length.out = nb_ech)
+   pdfs    = lapply(1:sol@K,function(k){params$pi[k]*stats::dnorm(x,mean=params$muk[[k]][j],sd=sqrt(params$Sigmak[[k]][j,j]))})
+   pdfs.df = data.frame(pdf=do.call(c,pdfs),cl=rep(1:sol@K,each=nb_ech),x=rep(x,sol@K))
+   pdfmix  = data.frame(pdf=colSums(do.call(rbind,pdfs)),x=x)
+   plts[[j]] = ggplot2::ggplot()+
+     ggplot2::geom_line(data=pdfmix,ggplot2::aes_(x=~x,y=~pdf))+
+     ggplot2::geom_line(data=pdfs.df,ggplot2::aes_(x=~x,y=~pdf,color=~factor(cl),group=~cl))+
+     ggplot2::scale_x_continuous(limits=c(liminf[j],limsup[j]))+ggplot2::theme_bw()+
+     ggplot2::theme(axis.title = ggplot2::element_blank(),panel.grid = ggplot2::element_blank())
+ }
+ nbr = ceiling(sqrt(length(liminf)))
+ grob.mat = matrix(lapply(plts,function(x){ggplot2::ggplotGrob(x+ggplot2::theme(legend.position='hidden'))}),ncol=nbr)
+ gt = gtable::gtable_matrix("demo", grob.mat, ggplot2::unit(rep(1,nbr), "null"), ggplot2::unit(rep(1,nbr), "null"))
+ plot(gt)
+}
 
 

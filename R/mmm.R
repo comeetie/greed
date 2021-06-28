@@ -123,7 +123,7 @@ setMethod(f = "plot",
 
 #' @title Extract parameters from an \code{\link{mmm_fit-class}} object
 #' 
-#' @param object a \code{\link{mm_fit-class}}
+#' @param object a \code{\link{mmm_fit-class}}
 #' @return a list with the model parameters estimates (MAP), the fields are:
 #' \itemize{
 #' \item \code{'pi'}: cluster proportions 
@@ -133,14 +133,26 @@ setMethod(f = "plot",
 setMethod(f = "coef", 
           signature = signature(object = "mmm_fit"),
           definition = function(object){
-            list()
+            sol=object
+            pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
+            muk = lapply(sol@obs_stats$stats_num, function(r){(sol@model@tau*sol@model@mu+r$ng*r$m)/(sol@model@tau+r$ng)})
+            Sigmak = lapply(sol@obs_stats$stats_num, function(r){
+              mu = (sol@model@tau*sol@model@mu+r$ng*r$m)/(sol@model@tau+r$ng)
+              Sc= r$S+t(r$m)%*%r$m-t(mu)%*%mu
+              S = (Sc+sol@model@tau*t(mu-sol@model@mu)%*%(mu-sol@model@mu)+sol@model@epsilon)/(r$ng+sol@model@N0-length(mu))
+              S
+            })
+            Thetak = lapply(sol@obs_stats$stats_cat,function(mat){(mat+sol@model@beta-1)/rowSums(mat+sol@model@beta-1)})
+            list(pi=pi,muk=muk,Sigmak=Sigmak,Thetak=Thetak)
           })
 
-reorder_lca = function(obs_stats,or){
+reorder_mmm = function(obs_stats,or){
+  obs_stats$counts = obs_stats$counts[or]
   obs_stats[[2]]$counts = obs_stats[[2]]$counts[or]
   for(v in 1:length(obs_stats[[2]]$x_counts)){
     obs_stats[[2]]$x_counts[[v]] = obs_stats[[2]]$x_counts[[v]][or,]
   }
+  obs_stats[[3]]$regs = obs_stats[[3]]$regs[or]
   obs_stats
 }
 
@@ -148,14 +160,20 @@ reorder_lca = function(obs_stats,or){
 setMethod(f = "reorder", 
           signature = signature("mmm", "list","integer"), 
           definition = function(model, obs_stats,order){
-            reorder_lca(obs_stats,order)
+            reorder_mmm(obs_stats,order)
           })
 
 
 setMethod(f = "seed", 
           signature = signature("mmm","list","numeric"), 
           definition = function(model,data, K){
-            km=stats::kmeans(as.matrix(data$X),K)
+            Xcatbin = do.call(cbind,lapply(1:ncol(data$Xcat),function(fcol){
+              xt = matrix(0,nrow(data$Xcat),max(data$Xcat[,fcol])+1)
+              xt[cbind(1:nrow(data$Xcat),data$Xcat[,fcol])]=1
+              xt
+              }))
+            Xs = greed:::zscore(cbind(data$Xnum,Xcatbin))
+            km=stats::kmeans(as.matrix(Xs),K)
             km$cluster
           })
 
@@ -164,6 +182,71 @@ setMethod(f = "sample_cl",
           signature = signature("mmm","list","numeric"), 
           definition = function(model,data,K){
             sample(1:K,data$N,replace = TRUE)
+          })
+
+clean_obs_stats = function(path){
+  path@obs_stats = list(counts = path@obs_stats$counts,
+                        stats_cat = path@obs_stats[[2]]$x_counts,
+                        stats_num = path@obs_stats[[3]]$regs)
+  for(p in 1:length(path@path)){
+    path@path[[p]]$obs_stats=list(counts = path@path[[p]]$obs_stats$counts,
+                                  stats_cat = path@path[[p]]$obs_stats[[2]]$x_counts,
+                                  stats_num = path@path[[p]]$obs_stats[[3]]$regs)
+  }
+  path
+}
+
+name_obs_stats=function(path,X){
+  facts = which(sapply(1:ncol(X), function(col){is.factor(X[[col]])}))
+  nums = which(sapply(1:ncol(X), function(col){is.numeric(X[[col]])}))
+  num_names = colnames(X[,nums])
+  cat_names = colnames(X[,facts])
+  
+  for(k in 1:path@K){
+    path@obs_stats$stats_num[[k]]=path@obs_stats$stats_num[[k]][c("m","S","ng","log_evidence")]
+    colnames(path@obs_stats$stats_num[[k]]$m)=num_names
+    colnames(path@obs_stats$stats_num[[k]]$S)=num_names
+    rownames(path@obs_stats$stats_num[[k]]$S)=num_names
+  }
+  names(path@obs_stats$stats_num)=paste0("cluster",1:path@K)
+  
+
+  for(v in 1:length(path@obs_stats$stats_cat)){
+    path@obs_stats$stats_cat[[v]]=as.matrix(path@obs_stats$stats_cat[[v]])
+    colnames(path@obs_stats$stats_cat[[v]])=levels(X[[facts[v]]])
+    rownames(path@obs_stats$stats_cat[[v]])=paste0("cluster",1:path@K)
+  }
+  names(path@obs_stats$stats_cat)=cat_names
+  
+  for(p in 1:length(path@path)){
+    for(k in 1:path@path[[p]]$K){
+      path@path[[p]]$obs_stats$stats_num[[k]]=path@path[[p]]$obs_stats$stats_num[[k]][c("m","S","ng","log_evidence")]
+      colnames(path@path[[p]]$obs_stats$stats_num[[k]]$m)=num_names
+      colnames(path@path[[p]]$obs_stats$stats_num[[k]]$S)=num_names
+      rownames(path@path[[p]]$obs_stats$stats_num[[k]]$S)=num_names
+    }
+    names(path@path[[p]]$obs_stats$stats_num)=paste0("cluster",1:path@path[[p]]$K)
+    
+    for(v in 1:length(path@obs_stats$stats_cat)){
+      path@path[[p]]$obs_stats$stats_cat[[v]]=matrix(path@path[[p]]$obs_stats$stats_cat[[v]],nrow = path@path[[p]]$K)
+      colnames(path@path[[p]]$obs_stats$stats_cat[[v]])=levels(X[[facts[v]]])
+      rownames(path@path[[p]]$obs_stats$stats_cat[[v]])=paste0("cluster",1:path@path[[p]]$K)
+    }
+    names(path@path[[p]]$obs_stats$stats_cat)=cat_names
+  }
+  
+  path
+  
+}
+
+setMethod(f = "postprocess", 
+          signature = signature("mmm_path"), 
+          definition = function(path,data,X){
+            cat("postprocessing\n")
+            path = clean_obs_stats(path)
+            path = name_obs_stats(path,X)
+            
+            path
           })
 
 setMethod(f = "preprocess", 
@@ -192,12 +275,11 @@ setMethod(f = "preprocess",
             if(model@beta<=0){
               stop("Model prior misspecification, beta must be positive.",call. = FALSE)
             }
-            facts = sapply(1:ncol(data), function(col){is.factor(data[,col])})
-            nums = sapply(1:ncol(data), function(col){is.numeric(data[,col])})
+            facts = sapply(1:ncol(data), function(col){is.factor(data[[col]])})
+            nums = sapply(1:ncol(data), function(col){is.numeric(data[[col]])})
             
-            if(!all(facts | nums)){
+            if(!all(facts | nums) | sum(facts)==0 | sum(nums)==0){
               stop("An mmm model expect a data.frame whith factors and numeric columns.",call. = FALSE)
             }
-            print(list(Xcat=sapply(data[,facts],unclass)-1,Xnum =as.matrix(data[,nums]), N=nrow(data)))
             list(Xcat=sapply(data[,facts],unclass)-1,Xnum =as.matrix(data[,nums]), N=nrow(data))
           })

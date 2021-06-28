@@ -129,7 +129,7 @@ greed = function(X,K=20,model=find_model(X),alg=methods::new("hybrid"),verbose=F
   }
   cat(paste0("------- ",modelname, " model fitting ------\n"))
   sol = fit(model,alg,data,K,verbose)
-  sol = postprocess(sol,data)
+  sol = postprocess(sol,data,X)
   cat("------- Final clustering -------\n")
   print(sol)
   cat("\n")
@@ -208,7 +208,7 @@ greed_cond = function(X,Y,K=20,model=find_model_cond(X,Y),alg=methods::new("hybr
   }
   cat(paste0("------- ",modelname, " model fitting ------\n"))
   sol = fit(model,alg,data,K,verbose)
-  sol = postprocess(sol,data)
+  sol = postprocess(sol,data,X,Y)
   cat("------- Final clustering -------\n")
   print(sol)
   cat("\n")
@@ -266,7 +266,7 @@ setGeneric("postprocess", function(path, ...) standardGeneric("postprocess"))
 
 setMethod(f = "postprocess", 
           signature = signature("icl_path"), 
-          definition = function(path,data=NULL){
+          definition = function(path,data=NULL,X=NULL,Y=NULL){
             path    
 })
 

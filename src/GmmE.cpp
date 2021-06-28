@@ -30,7 +30,7 @@ GmmE::GmmE(const arma::mat & Xi,S4 modeli,bool verb){
   }
   epsilon = as<arma::mat>(model.slot("epsilon"));
   if(epsilon.has_nan()){
-    epsilon = 0.1*arma::diagmat(cov(X));
+    epsilon = 0.01*arma::diagmat(cov(X));
     model.slot("epsilon") = epsilon;
   }
   
