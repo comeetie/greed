@@ -167,12 +167,11 @@ setMethod(f = "reorder",
 setMethod(f = "seed", 
           signature = signature("mmm","list","numeric"), 
           definition = function(model,data, K){
-            Xcatbin = do.call(cbind,lapply(1:ncol(data$Xcat),function(fcol){
-              xt = matrix(0,nrow(data$Xcat),max(data$Xcat[,fcol])+1)
-              xt[cbind(1:nrow(data$Xcat),data$Xcat[,fcol])]=1
-              xt
-              }))
-            Xs = greed:::zscore(cbind(data$Xnum,Xcatbin))
+            Xcatfact = do.call(cbind,lapply(1:ncol(data$Xcat),function(fcol){
+              data.frame(factor(data$Xcat[,fcol]))
+            }))
+            Xcatnum = MASS::mca(Xcatfact)$rs
+            Xs = greed:::zscore(cbind(data$Xnum,Xcatnum))
             km=stats::kmeans(as.matrix(Xs),K)
             km$cluster
           })

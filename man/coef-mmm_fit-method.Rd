@@ -7,7 +7,7 @@
 \S4method{coef}{mmm_fit}(object)
 }
 \arguments{
-\item{object}{a \code{\link{mm_fit-class}}}
+\item{object}{a \code{\link{mmm_fit-class}}}
 }
 \value{
 a list with the model parameters estimates (MAP), the fields are:

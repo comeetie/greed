@@ -3,7 +3,7 @@
 \docType{class}
 \name{lca-class}
 \alias{lca-class}
-\title{Latent Class Analysis model description class}
+\title{Mixed Mixture model class}
 \description{
 An S4 class to represent a Multinomial model model, extends \code{\link{icl_model-class}}.
 Such model can be used to cluster a data matrix \eqn{X} with the following generative model :  
