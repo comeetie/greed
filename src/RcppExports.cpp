@@ -484,6 +484,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_partition
+arma::vec test_partition(arma::vec cl, int K);
+RcppExport SEXP _greed_test_partition(SEXP clSEXP, SEXP KSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type cl(clSEXP);
+    Rcpp::traits::input_parameter< int >::type K(KSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_partition(cl, K));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_greed_post_probs", (DL_FUNC) &_greed_post_probs, 3},
@@ -519,6 +531,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_gmm_marginal_del1", (DL_FUNC) &_greed_gmm_marginal_del1, 6},
     {"_greed_gmm_marginal_merge", (DL_FUNC) &_greed_gmm_marginal_merge, 6},
     {"_greed_possible_moves", (DL_FUNC) &_greed_possible_moves, 2},
+    {"_greed_test_partition", (DL_FUNC) &_greed_test_partition, 2},
     {NULL, NULL, 0}
 };
 

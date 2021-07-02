@@ -90,8 +90,10 @@ setClass("mmm_path",contains=c("icl_path","mmm_fit"))
 #' @export 
 setMethod(f = "plot", 
           signature = signature("mmm_fit","missing"),
-          definition = function(x,type='blocks'){
-            ggplot2::ggplot()      
+          definition = function(x,type='marginals'){
+            pl = block_mmm(x)
+            plot(pl)
+            pl
           });
 
 
@@ -108,7 +110,7 @@ setMethod(f = "plot",
 #' @export 
 setMethod(f = "plot", 
           signature = signature("mmm_path","missing"),
-          definition = function(x,type='blocks'){
+          definition = function(x,type='marginals'){
             switch(type,tree = {
               dendo(x)
             },
@@ -117,7 +119,7 @@ setMethod(f = "plot",
             },
             front = {
               plot_front(x)
-            })   
+            },methods::callNextMethod())   
           })
 
 

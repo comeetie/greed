@@ -4,7 +4,9 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 #include "MergeMat.h"
+#include "Partition.h"
 #include "IclModel.h"
+
 
 using namespace Rcpp;
 
@@ -19,6 +21,7 @@ public:
   void swap_update(int i, int newcl);
   double delta_merge(int k, int l);
   void merge_update(int k, int l);
+  arma::vec get_cl(){return clp.get_cl();}
   List get_obs_stats();
 private:
   arma::mat X;
@@ -29,6 +32,7 @@ private:
   int N0;
   arma::mat epsilon;
   arma::rowvec mu;
+  Partition clp;
 };
 
 #endif

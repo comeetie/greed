@@ -53,5 +53,7 @@ List gmm_marginal_spherical_del1(List current, const arma::rowvec X,double kappa
 List gmm_marginal_spherical_merge(List current1, List current2,double kappa,double tau,double beta, const arma::rowvec mu);
 
 arma::uvec possible_moves(int k,arma::sp_mat & move_mat);
+
+
 #endif
 

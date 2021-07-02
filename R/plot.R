@@ -627,16 +627,26 @@ block_lca =function(sol){
     do.call(rbind,unfolded)
     })
   plts = lapply(theta.df,function(x){
-    ggplot2::ggplot(x)+ggplot2::geom_point(ggplot2::aes_(x=~cluster,y=~level,fill=~prob,size=~prob,color=~factor(cluster)))+
+    ggplot2::ggplot(x)+ggplot2::geom_point(ggplot2::aes_(y=~cluster,x=~level,fill=~prob,size=~prob,color=~factor(cluster)))+
       ggplot2::scale_size_area(limits=c(0,1))+
-      ggplot2::scale_x_continuous(breaks=1:max(x$cluster))+
-      ggplot2::theme_bw()+ggplot2::labs(y="",x="Clusters",title=x$feature[1])
+      ggplot2::scale_y_continuous(limits=c(0.5,sol@K+0.5))+
+      ggplot2::theme_bw()+
+      ggplot2::theme(axis.title = ggplot2::element_blank(),panel.grid = ggplot2::element_blank())+
+      ggplot2::theme(axis.text.y = ggplot2::element_blank(),axis.ticks.y=ggplot2::element_blank())+
+      ggplot2::labs(title=x$feature[1])+
+      ggplot2::theme(legend.position='hidden')
     })
-  grob.mat = matrix(lapply(plts,function(x){ggplot2::ggplotGrob(x+ggplot2::theme(legend.position='hidden'))}),ncol=length(plts))
-  gt = gtable::gtable_matrix("demo", grob.mat, ggplot2::unit(rep(1,length(plts)), "null"), ggplot2::unit(rep(1,1), "null"))
-  legend = gtable::gtable_filter(ggplot2::ggplotGrob(plts[[2]]), 'guide-box')
-  glegend = ggplot2::ggplotGrob(ggplot2::ggplot()+ggplot2::theme(panel.background = ggplot2::element_rect(fill="white"))+ggplot2::annotation_custom(legend))
-  gridExtra::marrangeGrob(list(gt,glegend), nrow = 2,ncol =1, heights = c(10, 1))
+  list_grobs =lapply(plts, ggplot2::ggplotGrob)
+  nbc = ceiling(sqrt(length(list_grobs)))
+  nbr = ceiling(length(list_grobs)/nbc)
+  nbmiss = nbr*nbc-length(list_grobs)
+  if(nbmiss>0){
+    miss = lapply(1:nbmiss,function(i){ggplot2::ggplotGrob(ggplot2::ggplot()+ggplot2::theme(panel.background = ggplot2::element_blank()))})
+    list_grobs = c(list_grobs,miss)
+  }
+  grobs_matrix = matrix(list_grobs,ncol=nbc,nrow=nbr)
+  gt = gtable::gtable_matrix("blocks", grobs_matrix, ggplot2::unit(rep(1,nbc), "null"), ggplot2::unit(rep(1,nbr), "null"))
+  gridExtra::arrangeGrob(grobs=list(gt), nrow = 1,ncol =1, heights = c(10))
 }
 
 
@@ -657,17 +667,26 @@ block_gmm_marginals = function(sol){
    plts[[j]] = ggplot2::ggplot()+
      ggplot2::geom_line(data=pdfmix,ggplot2::aes_(x=~x,y=~pdf))+
      ggplot2::geom_line(data=pdfs.df,ggplot2::aes_(x=~x,y=~pdf,color=~factor(cl),group=~cl))+
-     ggplot2::scale_x_continuous(limits=c(liminf[j],limsup[j]))+ggplot2::theme_bw()+
+     ggplot2::scale_x_continuous(limits=c(liminf[j],limsup[j]))+
+     ggplot2::theme_bw()+
      ggplot2::theme(axis.title = ggplot2::element_blank(),panel.grid = ggplot2::element_blank())+
      ggplot2::theme(axis.text.y = ggplot2::element_blank(),axis.ticks.y=ggplot2::element_blank())+
      ggplot2::labs(title=colnames(params$muk[[1]])[j])+
-     ggplot2::scale_colour_discrete("Clusters: ",guide = ggplot2::guide_legend(direction="horizontal",nrow = 1,label.position = "top",label.vjust = -1.5,keyheight = 0.01))
+     ggplot2::scale_color_discrete("Clusters: ",guide = ggplot2::guide_legend(direction="horizontal",nrow = 1,label.position = "top",label.vjust = -7,keyheight = 1,title.position = "left",title.vjust = 0.2))
    }
- nbr = ceiling(sqrt(length(liminf)))
- nbmiss = nbr*nbr-length(plts)
- grob.mat = matrix(c(lapply(plts,function(x){ggplot2::ggplotGrob(x+ggplot2::theme(legend.position='hidden'))}),lapply(1:nbmiss,function(i){ggplot2::ggplotGrob(ggplot2::ggplot()+ggplot2::theme(panel.background = element_blank()))})),ncol=nbr)
- gt = gtable::gtable_matrix("demo", grob.mat, ggplot2::unit(rep(1,nbr), "null"), ggplot2::unit(rep(1,nbr), "null"))
- gridExtra::marrangeGrob(list(gt), nrow = 1, heights = c(10))
+ list_grobs =lapply(plts,function(x){ggplot2::ggplotGrob(x+ggplot2::theme(legend.position='hidden'))})
+ nbc = ceiling(sqrt(length(list_grobs)))
+ nbr = ceiling(length(list_grobs)/nbc)
+ nbmiss = nbr*nbc-length(list_grobs)
+ if(nbmiss>0){
+   miss = lapply(1:nbmiss,function(i){ggplot2::ggplotGrob(ggplot2::ggplot()+ggplot2::theme(panel.background = ggplot2::element_blank()))})
+   list_grobs = c(list_grobs,miss)
+ }
+ grobs_matrix = matrix(list_grobs,ncol=nbc,nrow=nbr,byrow = TRUE)
+ gt = gtable::gtable_matrix("blocks", grobs_matrix, ggplot2::unit(rep(1,nbc), "null"), ggplot2::unit(rep(1,nbr), "null"))
+ legend = gtable::gtable_filter(ggplot2::ggplotGrob(plts[[1]]), 'guide-box')
+ glegend = ggplot2::ggplotGrob(ggplot2::ggplot()+ggplot2::theme(panel.background = ggplot2::element_rect(fill="white"))+ggplot2::annotation_custom(legend))
+ gridExtra::arrangeGrob(grobs=list(gt,glegend), nrow = 2,ncol =1, heights = c(10, 1))
  
 }
 
@@ -690,26 +709,42 @@ block_gmm_marginals_violin = function(sol){
     plts[[j]] = ggplot2::ggplot(pdfs.df)+
       ggplot2::geom_ribbon(ggplot2::aes_(ymin=~cl-0.45*pdfu/(max(pdfu)),x=~x,ymax =~cl+0.45*pdfu/(max(pdfu)),group=~cl,fill=~factor(cl)),color="#000000",size=0.5)+
       ggplot2::geom_segment(data=mus,ggplot2::aes_(x=~mu,xend=~mu,y=~cl-0.45,yend=~cl+0.45))+
-      ggplot2::scale_x_continuous(limits=c(liminf[j],limsup[j]))+ggplot2::theme_bw()+
+      ggplot2::scale_x_continuous(limits=c(liminf[j],limsup[j]))+
+      ggplot2::theme_bw()+
       ggplot2::theme(axis.title = ggplot2::element_blank(),panel.grid = ggplot2::element_blank())+
-      ggplot2::theme(axis.text.x = ggplot2::element_blank(),axis.ticks.x=ggplot2::element_blank())+
+      ggplot2::theme(axis.text.y = ggplot2::element_blank(),axis.ticks.y=ggplot2::element_blank())+
       ggplot2::labs(title=colnames(params$muk[[1]])[j])+
-      ggplot2::scale_fill_discrete("Clusters: ",guide = ggplot2::guide_legend(direction="horizontal",nrow = 1,label.position = "top",label.vjust = -1.5,keyheight = 0.01))+
-      ggplot2::coord_flip()
+      ggplot2::scale_fill_discrete("Clusters: ",guide = ggplot2::guide_legend(direction="horizontal",nrow = 1,label.position = "top",label.vjust = -7,keyheight = 1,title.position = "left",title.vjust = 0.2))
   }
-  nbr = ceiling(sqrt(length(liminf)))
-  nbmiss = nbr*nbr-length(plts)
-  grob.mat = matrix(c(lapply(plts,function(x){ggplot2::ggplotGrob(x+ggplot2::theme(legend.position='hidden'))}),lapply(1:nbmiss,function(i){ggplot2::ggplotGrob(ggplot2::ggplot()+ggplot2::theme(panel.background = ggplot2::element_blank()))})),ncol=nbr)
-  gt = gtable::gtable_matrix("demo", grob.mat, ggplot2::unit(rep(1,nbr), "null"), ggplot2::unit(rep(1,nbr), "null"))
-  legend = gtable::gtable_filter(ggplot2::ggplotGrob(plts[[2]]), 'guide-box')
+  list_grobs =lapply(plts,function(x){ggplot2::ggplotGrob(x+ggplot2::theme(legend.position='hidden'))})
+  nbc = ceiling(sqrt(length(list_grobs)))
+  nbr = ceiling(length(list_grobs)/nbc)
+  nbmiss = nbr*nbc-length(list_grobs)
+  if(nbmiss>0){
+    miss = lapply(1:nbmiss,function(i){ggplot2::ggplotGrob(ggplot2::ggplot()+ggplot2::theme(panel.background = ggplot2::element_blank()))})
+    list_grobs = c(list_grobs,miss)
+  }
+  grobs_matrix = matrix(list_grobs,ncol=nbc,nrow=nbr)
+  gt = gtable::gtable_matrix("blocks", grobs_matrix, ggplot2::unit(rep(1,nbc), "null"), ggplot2::unit(rep(1,nbr), "null"))
+  legend = gtable::gtable_filter(ggplot2::ggplotGrob(plts[[1]]), 'guide-box')
   glegend = ggplot2::ggplotGrob(ggplot2::ggplot()+ggplot2::theme(panel.background = ggplot2::element_rect(fill="white"))+ggplot2::annotation_custom(legend))
-  gridExtra::marrangeGrob(list(gt,glegend), nrow = 2,ncol =1, heights = c(10, 1))
+  gridExtra::arrangeGrob(grobs=list(gt,glegend), nrow = 2,ncol =1, heights = c(10, 1))
   
 }
 
 block_mmm = function(sol){
   gt_cat  = block_lca(sol)
   gt_cont = block_gmm_marginals_violin(sol)
-  gridExtra::marrangeGrob(list(gt_cat[[1]]$grobs[[1]],gt_cont[[1]]$grobs[[1]],gt_cont[[1]]$grobs[[2]]), nrow = 3, ncol= 1,heights = c(2, 5,1))
-
+  list_grobs = c(gt_cat$grobs[[1]]$grobs[1:length(sol@obs_stats$stats_cat)],gt_cont$grobs[[1]]$grobs[1:ncol(sol@obs_stats$stats_num$cluster1$m)])
+  nbc = ceiling(sqrt(length(list_grobs)))
+  nbr = ceiling(length(list_grobs)/nbc)
+  nbmiss = nbr*nbc-length(list_grobs)
+  if(nbmiss>0){
+    miss = lapply(1:nbmiss,function(i){ggplot2::ggplotGrob(ggplot2::ggplot()+ggplot2::theme(panel.background = ggplot2::element_blank()))})
+    list_grobs = c(list_grobs,miss)
+  }
+  grobs_matrix = matrix(list_grobs,ncol=nbc,nrow=nbr,byrow = TRUE)
+  gt = gtable::gtable_matrix("blocks", grobs_matrix, ggplot2::unit(rep(1,nbc), "null"), ggplot2::unit(rep(1,nbr), "null"))
+  glegend = gt_cont$grobs[[2]]
+  gridExtra::arrangeGrob(grobs=list(gt,glegend), nrow = 2,ncol =1, heights = c(10, 1))
 }

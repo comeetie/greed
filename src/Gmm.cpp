@@ -3,6 +3,7 @@
 #include "MergeMat.h"
 #include "IclModel.h"
 #include "Gmm.h"
+#include "Partition.h"
 using namespace Rcpp;
 
 
@@ -45,9 +46,11 @@ void Gmm::set_cl(arma::vec cli){
   // construct oberved stats 
   cl = cli;
   K = arma::max(cl)+1;
+  clp = Partition(cl,K);
   for(int k=0;k<K;k++){
     regs.push_back(gmm_marginal(X.rows(arma::find(cl==k)),tau,N0,epsilon,mu));
   }
+
   // counts : number of row in each cluster
   counts = count(cl,K);
 }
@@ -94,8 +97,7 @@ double Gmm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
 arma::mat Gmm::delta_swap(int i,arma::uvec iclust){
   
   // old cluster
-  int oldcl = cl(i);
-  
+  int oldcl = clp.get(i);
   // extract current row 
   arma::rowvec xc = X.row(i);
 
@@ -108,21 +110,18 @@ arma::mat Gmm::delta_swap(int i,arma::uvec iclust){
   
   int k = 0;
   // for each possible move
+  // construct new stats
+  //List new_regs = clone(regs);
+  List new_regs = List(K);
   for(arma::uword j = 0; j < iclust.n_elem; ++j) {
     k=iclust(j);
     if(k!=oldcl){
-      // construct new stats
-      List new_regs = clone(regs);
+
       // switch row x from cluster oldcl to k
       
       
-      List regk = new_regs[k];
-      
-      new_regs[k]=gmm_marginal_add1(regk,xc,tau,N0,epsilon,mu);
-      
-      List regold = new_regs[oldcl];
-      
-      new_regs[oldcl]=gmm_marginal_del1(regold,xc,tau,N0,epsilon,mu);
+      new_regs[k]=gmm_marginal_add1(regs[k],xc,tau,N0,epsilon,mu);
+      new_regs[oldcl]=gmm_marginal_del1(regs[oldcl],xc,tau,N0,epsilon,mu);
       // update cluster counts
       
  
@@ -142,35 +141,31 @@ arma::mat Gmm::delta_swap(int i,arma::uvec iclust){
 void Gmm::swap_update(int i,int newcl){
   // a swap is done !
   // old cluster
-  int oldcl = cl(i);
+  int oldcl = clp.get(i);
   // current row
-  
-
   arma::rowvec xc = X.row(i);
   // update regs
-  List new_regs = clone(regs);
+  //List new_regs = clone(regs);
   // switch row x from cluster oldcl to k
-  new_regs[newcl]=gmm_marginal_add1(new_regs[newcl],xc,tau,N0,epsilon,mu);
-  new_regs[oldcl]=gmm_marginal_del1(new_regs[oldcl],xc,tau,N0,epsilon,mu);
+  regs[newcl]=gmm_marginal_add1(regs[newcl],xc,tau,N0,epsilon,mu);
+  regs[oldcl]=gmm_marginal_del1(regs[oldcl],xc,tau,N0,epsilon,mu);
   // update counts
-  arma::mat new_counts = update_count(counts,oldcl,newcl);
+  counts = update_count(counts,oldcl,newcl);
   // update cl
   cl(i)=newcl;
+  clp.swap(i,newcl);
   // if a cluster is dead
-  if(new_counts(oldcl)==0){
+  if(counts(oldcl)==0){
     // remove from counts
-    counts = new_counts.elem(arma::find(arma::linspace(0,K-1,K)!=oldcl));
+    counts = counts.elem(arma::find(arma::linspace(0,K-1,K)!=oldcl));
     // remove from regs
-    IntegerVector idx = seq_len(regs.length()) - 1;
-    regs= new_regs[idx!=oldcl];
+    //IntegerVector idx = seq_len(regs.length()) - 1;
+    regs.erase(oldcl);
     // update cl to take into account de dead cluster
     cl.elem(arma::find(cl>oldcl))=cl.elem(arma::find(cl>oldcl))-1;
+    clp.erase(oldcl);
     // upate K
     --K;
-  }else{
-    // just update
-    counts=new_counts;
-    regs=new_regs;
   }
   
 
@@ -181,7 +176,7 @@ double Gmm::delta_merge(int k, int l){
   
   List old_stats = List::create(Named("counts", counts), Named("regs", regs));
   // for each possible merge
-  List new_regs = clone(regs);
+  List new_regs = List(K);
   arma::mat new_counts = counts;
   // counts after merge
   new_counts(l) = new_counts(k)+new_counts(l);
@@ -203,14 +198,15 @@ void Gmm::merge_update(int k,int l){
   // update cl
   cl(arma::find(cl==k))=arma::ones(counts(k),1)*l;
   cl.elem(arma::find(cl>k))=cl.elem(arma::find(cl>k))-1;
+  clp.merge(k,l);
   // update counts
   counts(l) = counts(k)+counts(l);
   counts    = counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
   // update x_counts
-  regs = clone(regs);
+  //regs = clone(regs);
   regs[l] = gmm_marginal_merge(regs[k],regs[l],tau,N0,epsilon,mu);
-  IntegerVector idx = seq_len(regs.length()) - 1;
-  regs = regs[idx!=k];
+  //IntegerVector idx = seq_len(regs.length()) - 1;
+  regs.erase(k);
   // update K
   --K;
 }

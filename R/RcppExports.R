@@ -133,3 +133,7 @@ possible_moves <- function(k, move_mat) {
     .Call('_greed_possible_moves', PACKAGE = 'greed', k, move_mat)
 }
 
+test_partition <- function(cl, K) {
+    .Call('_greed_test_partition', PACKAGE = 'greed', cl, K)
+}
+
