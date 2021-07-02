@@ -104,21 +104,18 @@ arma::mat SphericalGmm::delta_swap(int i,arma::uvec iclust){
   
   int k = 0;
   // for each possible move
+  List new_regs = List(K);
   for(arma::uword j = 0; j < iclust.n_elem; ++j) {
     k=iclust(j);
     if(k!=oldcl){
       // construct new stats
-      List new_regs = clone(regs);
       // switch row x from cluster oldcl to k
       
       
-      List regk = new_regs[k];
+      new_regs[k]=gmm_marginal_spherical_add1(regs[k],xc,kappa,tau,beta,mu);
       
-      new_regs[k]=gmm_marginal_spherical_add1(regk,xc,kappa,tau,beta,mu);
       
-      List regold = new_regs[oldcl];
-      
-      new_regs[oldcl]=gmm_marginal_spherical_del1(regold,xc,kappa,tau,beta,mu);
+      new_regs[oldcl]=gmm_marginal_spherical_del1(regs[oldcl],xc,kappa,tau,beta,mu);
       // update cluster counts
       
  
@@ -144,29 +141,25 @@ void SphericalGmm::swap_update(int i,int newcl){
 
   arma::rowvec xc = X.row(i);
   // update regs
-  List new_regs = clone(regs);
   // switch row x from cluster oldcl to k
-  new_regs[newcl]=gmm_marginal_spherical_add1(new_regs[newcl],xc,kappa,tau,beta,mu);
-  new_regs[oldcl]=gmm_marginal_spherical_del1(new_regs[oldcl],xc,kappa,tau,beta,mu);
+  regs[newcl]=gmm_marginal_spherical_add1(regs[newcl],xc,kappa,tau,beta,mu);
+  regs[oldcl]=gmm_marginal_spherical_del1(regs[oldcl],xc,kappa,tau,beta,mu);
   // update counts
-  arma::mat new_counts = update_count(counts,oldcl,newcl);
+  counts = update_count(counts,oldcl,newcl);
   // update cl
   cl(i)=newcl;
   // if a cluster is dead
-  if(new_counts(oldcl)==0){
+  if(counts(oldcl)==0){
     // remove from counts
-    counts = new_counts.elem(arma::find(arma::linspace(0,K-1,K)!=oldcl));
+    counts = counts.elem(arma::find(arma::linspace(0,K-1,K)!=oldcl));
     // remove from regs
-    IntegerVector idx = seq_len(regs.length()) - 1;
-    regs= new_regs[idx!=oldcl];
+    //IntegerVector idx = seq_len(regs.length()) - 1;
+    //regs= new_regs[idx!=oldcl];
+    regs.erase(oldcl);
     // update cl to take into account de dead cluster
     cl.elem(arma::find(cl>oldcl))=cl.elem(arma::find(cl>oldcl))-1;
     // upate K
     --K;
-  }else{
-    // just update
-    counts=new_counts;
-    regs=new_regs;
   }
   
 
@@ -177,7 +170,8 @@ double SphericalGmm::delta_merge(int k, int l){
   
   List old_stats = List::create(Named("counts", counts), Named("regs", regs));
   // for each possible merge
-  List new_regs = clone(regs);
+  //List new_regs = clone(regs);
+  List new_regs = List(K);
   arma::mat new_counts = counts;
   // counts after merge
   new_counts(l) = new_counts(k)+new_counts(l);
@@ -203,7 +197,7 @@ void SphericalGmm::merge_update(int k,int l){
   counts(l) = counts(k)+counts(l);
   counts    = counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
   // update x_counts
-  regs = clone(regs);
+  //regs = clone(regs);
   regs[l] = gmm_marginal_spherical_merge(regs[k],regs[l],kappa,tau,beta,mu);
   IntegerVector idx = seq_len(regs.length()) - 1;
   regs = regs[idx!=k];
