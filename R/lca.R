@@ -4,7 +4,7 @@ NULL
 #' @title Mixed Mixture model class
 #' 
 #' @description 
-#' An S4 class to represent a Multinomial model model, extends \code{\link{icl_model-class}}.
+#' An S4 class to represent a Latent Class Analysis model, extends \code{\link{icl_model-class}}.
 #' Such model can be used to cluster a data matrix \eqn{X} with the following generative model :  
 #' \deqn{ \pi \sim Dirichlet(\alpha)}
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
@@ -25,7 +25,7 @@ setClass("lca",
 #' @title Latent Class  Analysis fit results class
 #' 
 #' @description
-#'  An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{icl_fit-class}}.
+#'  An S4 class to represent a fit of a Latent Class Analysis model for categorical data clustering, extend \code{\link{icl_fit-class}}.
 #' @slot model a \code{\link{lca-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
@@ -42,11 +42,11 @@ setClass("lca",
 setClass("lca_fit",slots = list(model="lca"),contains="icl_fit")
 
 
-#' @title LAtent Class Analysis hierarchical fit results class
+#' @title Latent Class Analysis hierarchical fit results class
 #' 
 #' 
-#' @description An S4 class to represent a fit of a stochastic block model, extend \code{\link{icl_path-class}}.
-#' @slot model a \code{\link{mm-class}} object to store the model fitted
+#' @description An S4 class to represent a fit of a Latent Class Analysis model, extend \code{\link{icl_path-class}}.
+#' @slot model a \code{\link{lca-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
@@ -133,6 +133,8 @@ setMethod(f = "plot",
 setMethod(f = "coef", 
           signature = signature(object = "lca_fit"),
           definition = function(object){
+            sol = object
+            
             list()
           })
 
@@ -141,9 +143,30 @@ reorder_lca = function(obs_stats,or){
   for(v in 1:length(obs_stats[[2]]$x_counts)){
     obs_stats[[2]]$x_counts[[v]] = obs_stats[[2]]$x_counts[[v]][or,]
   }
+  obs_stats$counts = obs_stats$counts[or] 
   obs_stats
 }
 
+setMethod(f = "postprocess", 
+          signature = signature("lca_path"), 
+          definition = function(path,data=NULL,X=NULL,Y=NULL){
+            path = clean_obs_stats_lca(path)
+            path
+          }
+          )
+
+clean_obs_stats_lca = function(path) {
+  # clean path@obs_stats to have clearer and non-redundant slots
+  path@obs_stats = list(counts = path@obs_stats$counts,
+                        x_counts = path@obs_stats[[2]]$x_counts)
+  
+  # Do the same thing for all submodels in the hierarchy path@path
+  for(k in seq_along(path@path)) {
+    path@path[[k]]$obs_stats = list(counts = path@path[[k]]$obs_stats$counts,
+                                    x_counts = path@path[[k]]$obs_stats[[2]]$x_counts)
+  }
+  path
+}
 
 setMethod(f = "reorder", 
           signature = signature("lca", "list","integer"), 
@@ -196,4 +219,13 @@ setMethod(f = "preprocess",
               stop("Model prior misspecification, beta must be positive.",call. = FALSE)
             }
             list(X=sapply(data,unclass)-1,N=nrow(data))
+          })
+
+# For now, seed is kmeans on raw table for categorical
+# May be improved
+setMethod(f = "seed", 
+          signature = signature("lca","list","numeric"), 
+          definition = function(model,data, K){
+            km=stats::kmeans(as.matrix(data$X),K)
+            km$cluster
           })

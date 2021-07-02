@@ -498,13 +498,14 @@ List IclModel::greedy_merge_path(){
     // store current solution
 
     path.push_back(List::create(Named("obs_stats") = this->get_obs_stats(), 
-                                Named("cl") = cl+1, 
                                 Named("K") = K,
                                 Named("icl1")=icl,
                                 Named("logalpha")=icl-iclold,
                                 Named("k")=k+1,
                                 Named("l")=l+1,
+                                // useless? : 
                                 Named("merge_mat") = arma::trimatl(merge_mat.getMergeMat())));
+                                
     // update merge matrix
     merge_mat = this->delta_merge(merge_mat.getMergeMat(),merge_mat.getK(),merge_mat.getL(),old_stats);
   }
