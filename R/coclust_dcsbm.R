@@ -126,7 +126,16 @@ setMethod(f = "cut",
               x@K = K
               x@logalpha=x@path[[i]]$logalpha
               x@icl = x@path[[i]]$icl
-              x@cl = as.vector(x@path[[i]]$cl)
+              # Old version: x@cl = as.vector(x@path[[i]]$cl) 
+              # Compute cl with the history of fusions (k,l) at each stage
+              for(p in 1:i) {
+                # Get fusion (k,l)
+                k = x@path[[p]]$k
+                l = x@path[[p]]$l
+                x@cl[x@cl == k] = l
+                # rescale @cl to be 1...K
+                x@cl = as.integer(factor(x@cl))
+              }
               for(st in names(x@path[[i]]$obs_stats)){
                 x@obs_stats[st] = x@path[[i]]$obs_stats[st]
               }
@@ -255,7 +264,7 @@ setMethod(f = "preprocess",
 
 setMethod(f = "postprocess", 
           signature = signature("co_dcsbm_path"), 
-          definition = function(path,data=NULL){
+          definition = function(path,data=NULL,X=NULL,Y=NULL){
             sol = path
             if(!is.null(data)){
               sol@Nrow = data$Nrows
