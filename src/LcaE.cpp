@@ -79,10 +79,10 @@ List LcaE::get_obs_stats(){
 }
 
 
-arma::mat LcaE::delta_swap(int i,int K, arma::vec cl,arma::uvec iclust){
+arma::mat LcaE::delta_swap(int i,int K, Partition clp,arma::uvec iclust){
   
 
-  int oldcl = cl(i);
+  int oldcl = clp.get(i);
  
   arma::vec delta(K);
   delta.fill(-std::numeric_limits<double>::infinity());
@@ -116,11 +116,11 @@ arma::mat LcaE::delta_swap(int i,int K, arma::vec cl,arma::uvec iclust){
 
 
 
-void LcaE::swap_update(const int i,const arma::vec cl,bool dead_cluster, const int newcl){
+void LcaE::swap_update(const int i,Partition clp,bool dead_cluster, const int newcl){
   
 
   
-  int oldcl = cl(i); 
+  int oldcl = clp.get(i); 
 
   for(int v=0;v<x.n_cols;v++){
 

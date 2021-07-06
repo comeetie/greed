@@ -174,6 +174,11 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
     if(strcmp(model.slot("name"),"gmm")==0){
       arma::mat X = as<arma::mat>(data["X"]);
       M = new Gmm(X,model,clt,verbose);
+      //arma::mat X = as<arma::mat>(data["X"]);
+      //IclModelEmission * gmm = new GmmE(X,model,verbose);
+      //std::vector<IclModelEmission*> IclModels;
+      //IclModels.push_back(gmm);
+      //M = new CombinedIclModel(IclModels,model,clt,verbose);
     }
     
     if(strcmp(model.slot("name"),"diaggmm")==0){
@@ -250,6 +255,7 @@ S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::vec workingset,arma:
     stop("Unsuported algorithm");
   }
   if(type=="swap" || type=="both"){
+    //dynamic_cast<CombinedIclModel*>(M)->greedy_swap(nb_max_pass,workingset,iclust-1);
     M->greedy_swap(nb_max_pass,workingset,iclust-1);
   }
   if(type=="merge" || type=="both"){

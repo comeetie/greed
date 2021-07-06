@@ -4,6 +4,7 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <Rcpp.h>
 #include <RcppArmadillo.h>
+#include "Partition.h"
 using namespace Rcpp;
 
 
@@ -18,9 +19,9 @@ public:
   // virtual methods to be implemented by models to compute log(p(X|Z)) optimized for deltas
   virtual double icl_emiss(const List & obs_stats,int oldcl,int newcl){return 0;};
   // compute the delta for each possible swap of a node
-  virtual arma::mat delta_swap(const int i,int K, const arma::vec cl, arma::uvec iclust){return NULL;};
+  virtual arma::mat delta_swap(const int i,int K,Partition clp, arma::uvec iclust){return NULL;};
   // update the stats when a node is swapped
-  virtual void swap_update(const int i,const arma::vec cl,bool dead_cluster,const int newcl){};
+  virtual void swap_update(const int i,Partition clp,bool dead_cluster,const int newcl){};
   // virtual methods to be implemented by models to compute merge deltas
   virtual double delta_merge(int k, int l){return 0;};
   // update the stats when two clusters are merged

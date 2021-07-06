@@ -106,7 +106,6 @@ cleanpathopt = function(pathsol){
       pathsol@K = K
       pathsol@obs_stats = path[[im]]$obs_stats
       pathsol@icl = path[[im]]$icl1
-      pathsol@cl = as.vector(path[[im]]$cl)
       if((im+1)<=length(path)){
         path=path[(im+1):length(path)]  
         pathsol@path=path
@@ -160,7 +159,6 @@ cleanpathopt = function(pathsol){
         perm[perm>path[[m]]$k]=perm[perm>path[[m]]$k]-1
         # update the stats accordingly
         path[[m]]$obs_stats = reorder(pathsol@model,path[[m]]$obs_stats,as.integer(perm))
-        path[[m]]$cl=order(perm)[path[[m]]$cl]
         path[[m]]$merge_mat=tril(path[[m]]$merge_mat[oldperm,oldperm]+t(path[[m]]$merge_mat[oldperm,oldperm]))
         # and the index of the merged cluster
         nkl=sort(which(oldperm==path[[m]]$k|oldperm==path[[m]]$l))
@@ -217,7 +215,6 @@ cleanpath = function(pathsol){
       pathsol@K = K
       pathsol@obs_stats = path[[im]]$obs_stats
       pathsol@icl = path[[im]]$icl1
-      pathsol@cl = as.vector(path[[im]]$cl)
       
       path=path[(im+1):length(path)]  
       
@@ -261,7 +258,7 @@ cleanpath = function(pathsol){
         
         # reorder the cluster accordingly
         path[[lev]]$obs_stats = reorder(pathsol@model,path[[lev]]$obs_stats,ord)
-        path[[lev]]$cl  = order(ord)[path[[lev]]$cl]
+        
         
         # store in the tree the merge of k and l
         k=path[[lev]]$k

@@ -4,6 +4,7 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 #include "MergeMat.h"
+#include "Partition.h"
 #include "IclModel.h"
 #include "IclModelEmission.h"
 
@@ -57,6 +58,7 @@ public:
   virtual ~CombinedIclModel(){};
 private:
   std::vector<IclModelEmission*> IclModels;
+  Partition clp;
 };
 
 #endif

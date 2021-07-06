@@ -14,8 +14,8 @@ public:
   void set_cl(arma::vec clt);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
-  arma::mat delta_swap(int i, int K,const arma::vec cl,arma::uvec iclust);
-  void swap_update(int i,const arma::vec cl,bool dead_cluster, int newcl);
+  arma::mat delta_swap(int i, int K,Partition clp,arma::uvec iclust);
+  void swap_update(int i,Partition clp,bool dead_cluster, int newcl);
   double delta_merge(int k, int l);
   double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats);
   void merge_update(int k, int l);

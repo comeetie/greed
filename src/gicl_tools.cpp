@@ -1,5 +1,7 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
+#include "Partition.h"
+
 using namespace Rcpp;
 
 arma::mat table_count(arma::vec cl, arma::vec x, int K, int nbmod){
@@ -188,6 +190,15 @@ arma::sp_mat gsum_col(arma::vec cl,const arma::sp_mat& x,int i, int K) {
   arma::sp_mat result(K,1);
   for (arma::sp_mat::const_iterator i = ccol.begin(); i != ccol.end(); ++i) {
     result(cl(i.row()),0) += *i;
+  }
+  return result;
+}
+
+arma::sp_mat gsum_partition(Partition clp,const arma::sp_mat& x,int i, int K) {
+  arma::sp_mat ccol = x.col(i);
+  arma::sp_mat result(K,1);
+  for (arma::sp_mat::const_iterator i = ccol.begin(); i != ccol.end(); ++i) {
+    result(clp.get(i.row()),0) += *i;
   }
   return result;
 }

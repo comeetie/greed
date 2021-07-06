@@ -62,24 +62,24 @@ double MissSbmE::icl_emiss(const List & obs_stats,int oldcl,int newcl){
 List MissSbmE::get_obs_stats(){
   return List::create(Named("counts", counts),Named("x_counts", x_counts),Named("x_counts_obs", x_counts_obs));
 }
-arma::mat MissSbmE::delta_swap(int i,int K, arma::vec cl,arma::uvec iclust){
+arma::mat MissSbmE::delta_swap(int i,int K,Partition clp,arma::uvec iclust){
   
   int self=x(i,i);
   int selfobs=xobs(i,i);
-  int oldcl = cl(i);
+  int oldcl = clp.get(i);
   
 
   
-  arma::sp_mat col_sum = gsum_col(cl,x,i,K);
+  arma::sp_mat col_sum = gsum_partition(clp,x,i,K);
   col_sum(oldcl)=col_sum(oldcl)-self;
   
-  arma::sp_mat col_sum_obs = gsum_col(cl,xobs,i,K);
+  arma::sp_mat col_sum_obs = gsum_partition(clp,xobs,i,K);
   col_sum_obs(oldcl)=col_sum_obs(oldcl)-selfobs;
   
-  arma::sp_mat row_sum = gsum_col(cl,xt,i,K);
+  arma::sp_mat row_sum = gsum_partition(clp,xt,i,K);
   row_sum(oldcl)=row_sum(oldcl)-self;
   
-  arma::sp_mat row_sum_obs = gsum_col(cl,xtobs,i,K);
+  arma::sp_mat row_sum_obs = gsum_partition(clp,xtobs,i,K);
   row_sum_obs(oldcl)=row_sum_obs(oldcl)-selfobs;
   
   
@@ -120,20 +120,20 @@ arma::mat MissSbmE::delta_swap(int i,int K, arma::vec cl,arma::uvec iclust){
 
 
 
-void MissSbmE::swap_update(const int i,const arma::vec cl,bool dead_cluster,  const int newcl){
+void MissSbmE::swap_update(const int i,Partition clp,bool dead_cluster,  const int newcl){
   int self=x(i,i);
-  int oldcl = cl(i); 
+  int oldcl = clp.get(i);
   int selfobs=xobs(i,i);
-  arma::sp_mat col_sum = gsum_col(cl,x,i,K);
+  arma::sp_mat col_sum = gsum_partition(clp,x,i,K);
   col_sum(oldcl)=col_sum(oldcl)-self;
   
-  arma::sp_mat col_sum_obs = gsum_col(cl,xobs,i,K);
+  arma::sp_mat col_sum_obs = gsum_partition(clp,xobs,i,K);
   col_sum_obs(oldcl)=col_sum_obs(oldcl)-selfobs;
   
-  arma::sp_mat row_sum = gsum_col(cl,xt,i,K);
+  arma::sp_mat row_sum = gsum_partition(clp,xt,i,K);
   row_sum(oldcl)=row_sum(oldcl)-self;
   
-  arma::sp_mat row_sum_obs = gsum_col(cl,xtobs,i,K);
+  arma::sp_mat row_sum_obs = gsum_partition(clp,xtobs,i,K);
   row_sum_obs(oldcl)=row_sum_obs(oldcl)-selfobs;
   
   arma::mat new_ec = x_counts;

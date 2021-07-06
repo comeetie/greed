@@ -7,4 +7,4 @@ X = fifa %>% dplyr::select(short_name,nationality,preferred_foot,team_position,a
   filter(!is.na(pace),!is.na(team_position)) %>% mutate(preferred_foot=factor(preferred_foot),team_position=factor(team_position)) 
 
 library(greed)
-sol=greed(X[,-c(1:4)],model=new("mmm"))
+sol=greed(X[1:3000,-c(1:2)],model=new("mmm"))
