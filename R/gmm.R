@@ -61,20 +61,19 @@ setClass("gmm_fit",slots = list(model="gmm"),contains="icl_fit")
 #' @slot obs_stats a list with the following elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters
-#' \item regs: list of size $K$ with statistics for each clusters
+#' \item gmm: list of size $K$ with statistics for each clusters
 #' }
 #' @slot path a list of size K-1 with each part of the path described by:
 #' \itemize{
 #' \item icl1: icl value reach with this solution for alpha=1 
 #' \item logalpha: log(alpha) value were this solution is better than its parent
 #' \item K: number of clusters
-#' \item cl: vector of cluster indexes
 #' \item k,l: index of the cluster that were merged at this step
 #' \item merge_mat: lower triangular matrix of delta icl values 
 #' \item obs_stats: a list with the following elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters
-#' \item regs: list of size $K$ with statistics for each clusters
+#' \item gmm: list of size $K$ with statistics for each clusters
 #' } 
 #' }
 #' @slot logalpha value of log(alpha)
@@ -84,6 +83,31 @@ setClass("gmm_fit",slots = list(model="gmm"),contains="icl_fit")
 #' @export 
 setClass("gmm_path",contains=c("icl_path","gmm_fit"))
 
+#' @title plot a \code{\link{gmm_fit-class}} object
+#' 
+#' 
+#' @param x a \code{\link{gmm_fit-class}}
+#' @param type a string which specify plot type:
+#' \itemize{
+#' \item \code{'marginals'}: plot the marginal densities 
+#' \item \code{'violins'}: make a violin plot for each clusters and features 
+#' }
+#' @return a \code{\link{ggplot2}} graphic
+#' @export 
+setMethod(f = "plot", 
+          signature = signature("gmm_fit","missing"),
+          definition = function(x,type="marginals"){
+            switch(type,marginals={
+                  gg=block_gmm_marginals(x);
+                  plot(gg);
+                  gg},
+                violins={
+                  gg=block_gmm_marginals_violin(x)
+                  plot(gg)
+                  gg
+                  }
+                )
+          })
 
 
 #' @title plot a \code{\link{gmm_path-class}} object
@@ -100,7 +124,7 @@ setClass("gmm_path",contains=c("icl_path","gmm_fit"))
 #' @export 
 setMethod(f = "plot", 
           signature = signature("gmm_path","missing"),
-          definition = function(x,type='tree'){
+          definition = function(x,type='marginals'){
             switch(type,tree = {
               dendo(x)
             },
@@ -109,7 +133,14 @@ setMethod(f = "plot",
             },
             front = {
               plot_front(x)
-            })
+            },
+            marginals ={
+              methods::callNextMethod()
+            },
+            violins={
+              methods::callNextMethod()
+            }
+            )
           })
 
 #' @title Extract mixture parameters from \code{\link{gmm_fit-class}} object
@@ -127,8 +158,8 @@ setMethod(f = "coef",
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
-            muk = lapply(sol@obs_stats$regs, function(r){(sol@model@tau*sol@model@mu+r$ng*r$m)/(sol@model@tau+r$ng)})
-            Sigmak = lapply(sol@obs_stats$regs, function(r){
+            muk = lapply(sol@obs_stats$gmm, function(r){(sol@model@tau*sol@model@mu+r$ng*r$m)/(sol@model@tau+r$ng)})
+            Sigmak = lapply(sol@obs_stats$gmm, function(r){
               mu = (sol@model@tau*sol@model@mu+r$ng*r$m)/(sol@model@tau+r$ng)
               Sc= r$S+t(r$m)%*%r$m-t(mu)%*%mu
               S = (Sc+sol@model@tau*t(mu-sol@model@mu)%*%(mu-sol@model@mu)+sol@model@epsilon)/(r$ng+sol@model@N0-length(mu))
@@ -199,7 +230,7 @@ setMethod(f = "preprocess",
 
 reorder_gmm = function(obs_stats,or){
   obs_stats$counts = obs_stats$counts[or]
-  obs_stats$regs = obs_stats$regs[or]
+  obs_stats$gmm = obs_stats$gmm[or]
   obs_stats
 }
 
@@ -210,3 +241,32 @@ setMethod(f = "reorder",
             reorder_gmm(obs_stats,order)
           })
 
+
+name_obs_stats_gmm=function(path,X){
+  num_names = colnames(data.frame(X))
+  for(k in 1:path@K){
+    path@obs_stats$gmm[[k]]=path@obs_stats$gmm[[k]][c("m","S","ng","log_evidence")]
+    colnames(path@obs_stats$gmm[[k]]$m)=num_names
+    colnames(path@obs_stats$gmm[[k]]$S)=num_names
+    rownames(path@obs_stats$gmm[[k]]$S)=num_names
+  }
+  names(path@obs_stats$gmm)=paste0("cluster",1:path@K)
+  for(p in 1:length(path@path)){
+    for(k in 1:path@path[[p]]$K){
+      path@path[[p]]$obs_stats$gmm[[k]]=path@path[[p]]$obs_stats$gmm[[k]][c("m","S","ng","log_evidence")]
+      colnames(path@path[[p]]$obs_stats$gmm[[k]]$m)=num_names
+      colnames(path@path[[p]]$obs_stats$gmm[[k]]$S)=num_names
+      rownames(path@path[[p]]$obs_stats$gmm[[k]]$S)=num_names
+    }
+    names(path@path[[p]]$obs_stats$gmm)=paste0("cluster",1:path@path[[p]]$K)
+  }
+  path
+}
+
+setMethod(f = "postprocess", 
+          signature = signature("gmm_path"), 
+          definition = function(path,data,X){
+            cat("postprocessing\n")
+            path = name_obs_stats_gmm(path,X)
+            path
+          })

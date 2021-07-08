@@ -87,6 +87,9 @@ extract_front_height=function(sol){
 
 # clean the merge path 
 cleanpathopt = function(pathsol){
+  
+  pathsol@cl=as.numeric(pathsol@cl)
+  
   if(length(pathsol@path)>0){
     if(is.infinite(pathsol@path[[length(pathsol@path)]]$icl1)){
       pathsol@path[[length(pathsol@path)]]$icl1=pathsol@path[[length(pathsol@path)-1]]$icl1
@@ -106,9 +109,17 @@ cleanpathopt = function(pathsol){
       pathsol@K = K
       pathsol@obs_stats = path[[im]]$obs_stats
       pathsol@icl = path[[im]]$icl1
+      for(p in 1:im) {
+        # Get fusion (k,l)
+        k = pathsol@path[[p]]$k
+        l = pathsol@path[[p]]$l
+        pathsol@cl[pathsol@cl == k] = l
+        # rescale @cl to be 1...K
+        pathsol@cl[pathsol@cl>k] = pathsol@cl[pathsol@cl>k]-1
+      }
       if((im+1)<=length(path)){
-        path=path[(im+1):length(path)]  
-        pathsol@path=path
+        path = path[(im+1):length(path)]
+        pathsol@path= path
       }else{
         pathsol@path=list()
       }

@@ -21,6 +21,7 @@ private:
   std::vector<int *> cl_pointers;
   std::vector<int *> cl_addr;
   std::vector<int> cl_labels;
+  arma::vec cl;
   int K;
   int N;
 };

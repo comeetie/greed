@@ -98,7 +98,7 @@ setMethod(f = "cut",
                 l = x@path[[p]]$l
                 x@cl[x@cl == k] = l
                 # rescale @cl to be 1...K
-                x@cl = as.integer(factor(x@cl))
+                x@cl[x@cl>k] = x@cl[x@cl>k]-1
               }
               x@K = K
               x@logalpha=x@path[[i]]$logalpha

@@ -3,14 +3,14 @@
 \docType{class}
 \name{lca_path-class}
 \alias{lca_path-class}
-\title{LAtent Class Analysis hierarchical fit results class}
+\title{Latent Class Analysis hierarchical fit results class}
 \description{
-An S4 class to represent a fit of a stochastic block model, extend \code{\link{icl_path-class}}.
+An S4 class to represent a fit of a Latent Class Analysis model, extend \code{\link{icl_path-class}}.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{model}}{a \code{\link{mm-class}} object to store the model fitted}
+\item{\code{model}}{a \code{\link{lca-class}} object to store the model fitted}
 
 \item{\code{name}}{generative model name}
 

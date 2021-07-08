@@ -4,7 +4,7 @@
 \alias{plot,mmm_fit,missing-method}
 \title{plot a \code{\link{mmm_fit-class}} object}
 \usage{
-\S4method{plot}{mmm_fit,missing}(x, type = "blocks")
+\S4method{plot}{mmm_fit,missing}(x, type = "marginals")
 }
 \arguments{
 \item{x}{a \code{\link{mmm_fit-class}}}

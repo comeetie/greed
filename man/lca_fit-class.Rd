@@ -5,7 +5,7 @@
 \alias{lca_fit-class}
 \title{Latent Class  Analysis fit results class}
 \description{
-An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{icl_fit-class}}.
+An S4 class to represent a fit of a Latent Class Analysis model for categorical data clustering, extend \code{\link{icl_fit-class}}.
 }
 \section{Slots}{
 

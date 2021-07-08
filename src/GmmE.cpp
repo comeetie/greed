@@ -44,20 +44,17 @@ void GmmE::set_cl(arma::vec cl){
   for(int k=0;k<K;k++){
     regs.push_back(gmm_marginal(X.rows(arma::find(cl==k)),tau,N0,epsilon,mu));
   }
-  // counts : number of row in each cluster
-  counts = count(cl,K);
 }
 
 
 
 List GmmE::get_obs_stats(){
   // return observed stats
-  return List::create(Named("counts", counts), Named("regs", regs));
+  return clone(regs);
 }
 
-double GmmE::icl_emiss(const List & obs_stats){
+double GmmE::icl_emiss(const List & regs){
   // compute log(p(X|Z))
-  List regs =as<List>(obs_stats["regs"]);
   int K = regs.size();
   double icl_emiss = 0;
   for (int k = 0;k<K;++k){
@@ -68,28 +65,21 @@ double GmmE::icl_emiss(const List & obs_stats){
   return icl_emiss;
 }
 
-double GmmE::icl_emiss(const List & obs_stats,int oldcl,int newcl){
+double GmmE::icl_emiss(const List & regs,int oldcl,int newcl,bool dead_cluster){
   // compute log(p(X|Z)) but only for the 2 classes which haved changed (oldcl,newcl)
-  List regs =as<List>(obs_stats["regs"]);
-  int K = regs.size();
-  arma::vec counts = as<arma::vec>(obs_stats["counts"]);
-  double icl_emiss = 0;
-  for (int k = 0;k<K;++k){
-    // only for the 2 classes which haved changed (oldcl,newcl) and not empty
-    if((k==oldcl || k ==newcl) && counts(k)>0){
-      // compute log(p(X|Z))
-      List rk = regs[k];
-      double cle = rk["log_evidence"];
-      icl_emiss += cle;
-    }
+  List reg_newcl = regs[newcl];
+  double icl_emiss = reg_newcl["log_evidence"];
+  if(!dead_cluster){
+    List reg_oldcl = regs[oldcl];
+    icl_emiss += as<double>(reg_oldcl["log_evidence"]);
   }
   return icl_emiss;
 }
 
 
-arma::mat GmmE::delta_swap(int i,int K,Partition clp, arma::uvec iclust){
+arma::mat GmmE::delta_swap(int i,arma::vec &  cl,bool almost_dead_cluster,arma::uvec iclust,int K){
   
-  int oldcl = clp.get(i);
+  int oldcl = cl(i);
   // extract current row 
   arma::rowvec xc = X.row(i);
 
@@ -98,7 +88,6 @@ arma::mat GmmE::delta_swap(int i,int K,Partition clp, arma::uvec iclust){
   delta.fill(-std::numeric_limits<double>::infinity());
   delta(oldcl)=0;
   // old stats
-  List old_stats = List::create(Named("counts", counts), Named("regs", regs));
   List new_regs = List(K);
   int k = 0;
   // for each possible move
@@ -107,12 +96,10 @@ arma::mat GmmE::delta_swap(int i,int K,Partition clp, arma::uvec iclust){
     if(k!=oldcl){
       // construct new stats
       new_regs[k]=gmm_marginal_add1(regs[k],xc,tau,N0,epsilon,mu);
-      new_regs[oldcl]=gmm_marginal_del1(regs[oldcl],xc,tau,N0,epsilon,mu);
-      // update cluster counts
-      arma::vec new_counts = update_count(counts,oldcl,k);
-      // new stats and delta
-      List new_stats = List::create(Named("counts", new_counts), Named("regs", new_regs));
-      delta(k)=icl_emiss(new_stats,oldcl,k)-icl_emiss(old_stats,oldcl,k);
+      if(!almost_dead_cluster){
+        new_regs[oldcl]=gmm_marginal_del1(regs[oldcl],xc,tau,N0,epsilon,mu);
+      }
+      delta(k)=icl_emiss(new_regs,oldcl,k,almost_dead_cluster)-icl_emiss(regs,oldcl,k,false);
     }
   }
 
@@ -120,22 +107,17 @@ arma::mat GmmE::delta_swap(int i,int K,Partition clp, arma::uvec iclust){
 }
 
 
-void GmmE::swap_update(int i,Partition clp,bool dead_cluster,const int newcl){
+void GmmE::swap_update(int i,arma::vec & cl,bool dead_cluster,const int newcl){
   // a swap is done !
-  int oldcl = clp.get(i);
+  int oldcl = cl(i);
   // current row
   arma::rowvec xc = X.row(i);
   // update regs
   // switch row x from cluster oldcl to k
   regs[newcl]=gmm_marginal_add1(regs[newcl],xc,tau,N0,epsilon,mu);
-  regs[oldcl]=gmm_marginal_del1(regs[oldcl],xc,tau,N0,epsilon,mu);
-  // update counts
-  counts = update_count(counts,oldcl,newcl);
-
-  // if a cluster is dead
-  if(counts(oldcl)==0){
-    // remove from counts
-    counts.shed_row(oldcl);
+  if(!dead_cluster){
+    regs[oldcl]=gmm_marginal_del1(regs[oldcl],xc,tau,N0,epsilon,mu);
+  }else{
     // remove from regs
     regs.erase(oldcl);
     // upate K
@@ -148,20 +130,11 @@ void GmmE::swap_update(int i,Partition clp,bool dead_cluster,const int newcl){
 
 double GmmE::delta_merge(int k, int l){
   
-  List old_stats = List::create(Named("counts", counts), Named("regs", regs));
   // for each possible merge
   List new_regs = List(K);
-  arma::mat new_counts = counts;
-  // counts after merge
-  new_counts(l) = new_counts(k)+new_counts(l);
-  new_counts(k) = 0;
-  // x_counts after merge on l
-  // row/col k will not be taken into account since counts(k)==0
   new_regs[l] = gmm_marginal_merge(regs[k],regs[l],tau,N0,epsilon,mu);
-  
-  List new_stats = List::create(Named("counts", new_counts), Named("regs", new_regs));
   // delta
-  double delta=icl_emiss(new_stats,k,l)-icl_emiss(old_stats,k,l);
+  double delta=icl_emiss(new_regs,k,l,true)-icl_emiss(regs,k,l,false);
   return delta;
 }
 
@@ -169,11 +142,7 @@ double GmmE::delta_merge(int k, int l){
 
 // Merge update between k and l
 void GmmE::merge_update(int k,int l){
-
-  // update counts
-  counts(l) = counts(k)+counts(l);
-  counts.shed_row(k);
-  // update x_counts
+  // update regs
   regs[l] = gmm_marginal_merge(regs[k],regs[l],tau,N0,epsilon,mu);
   regs.erase(k);
   // update K

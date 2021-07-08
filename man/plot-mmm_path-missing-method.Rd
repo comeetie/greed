@@ -4,7 +4,7 @@
 \alias{plot,mmm_path,missing-method}
 \title{plot a \code{\link{mmm_path-class}} object}
 \usage{
-\S4method{plot}{mmm_path,missing}(x, type = "blocks")
+\S4method{plot}{mmm_path,missing}(x, type = "marginals")
 }
 \arguments{
 \item{x}{an \code{\link{mmm_path-class}} object}

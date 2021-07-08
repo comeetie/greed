@@ -287,10 +287,7 @@ void CombinedIclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::sp_
       if (workingset(cnode)==1){
         // compute delta swap
         arma::uvec iclust = possible_moves(clp.get(cnode),moves_mat);
-        Rcout << "0" << std::endl;
         arma::vec delta = this->delta_swap(cnode,iclust);
-        Rcout << "3" << std::endl;
-        Rcout << delta << std::endl;
         //Rcout << delta << std::endl;
         // best swap
         int ncl = delta.index_max();
@@ -328,7 +325,7 @@ void CombinedIclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::sp_
   }
   if(verbose){
     Rcout << "##################################"<< std::endl;
-    //plaRcout << "Swap convergence in " << nbpass << " epochs with " << nbmove << " moves, icl :" << icl_value << "K :" << K << ", working set size :" << arma::accu(workingset)  << std::endl;
+    //Rcout << "Swap convergence in " << nbpass << " epochs with " << nbmove << " moves, icl :" << icl_value << "K :" << K << ", working set size :" << arma::accu(workingset)  << std::endl;
     Rcout << "swap convergence, with an ICL of "<< icl_value << " and " << K << " clusters." << std::endl;
     Rcout << "##################################"<< std::endl; 
   } 

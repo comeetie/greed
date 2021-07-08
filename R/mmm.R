@@ -200,9 +200,9 @@ clean_obs_stats = function(path){
 name_obs_stats=function(path,X){
   facts = which(sapply(1:ncol(X), function(col){is.factor(X[[col]])}))
   nums = which(sapply(1:ncol(X), function(col){is.numeric(X[[col]])}))
-  num_names = colnames(X[,nums])
-  cat_names = colnames(X[,facts])
   
+  
+  num_names = colnames(data.frame(X[,nums]))
   for(k in 1:path@K){
     path@obs_stats$stats_num[[k]]=path@obs_stats$stats_num[[k]][c("m","S","ng","log_evidence")]
     colnames(path@obs_stats$stats_num[[k]]$m)=num_names
@@ -211,7 +211,7 @@ name_obs_stats=function(path,X){
   }
   names(path@obs_stats$stats_num)=paste0("cluster",1:path@K)
   
-
+  cat_names = colnames(data.frame(X[,facts]))
   for(v in 1:length(path@obs_stats$stats_cat)){
     path@obs_stats$stats_cat[[v]]=as.matrix(path@obs_stats$stats_cat[[v]])
     colnames(path@obs_stats$stats_cat[[v]])=levels(X[[facts[v]]])
