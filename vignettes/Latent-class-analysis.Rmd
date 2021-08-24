@@ -29,7 +29,7 @@ data("Youngpeoplesurvey")
 
 
 ```{r,cache=TRUE}
-nc  = 73
+nc  = 19
 
 selected = Youngpeoplesurvey %>% 
   select(all_of(1:nc)) %>%
@@ -37,13 +37,14 @@ selected = Youngpeoplesurvey %>%
   mutate(sel = if_else(string <= 10,TRUE,FALSE) ) %>% pull(sel)
 
 Xnum = Youngpeoplesurvey %>% 
-  select(1:nc) %>%
+  select(all_of(1:nc)) %>%
   filter(all_of(selected) )
 X = Xnum %>% 
   mutate_all(\(x){factor(x,levels=1:5)}) %>% 
   droplevels()
 
 ```
+
 ```{r survey-lca-cust,cache=TRUE, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
 set.seed(31)
 library(future)
@@ -56,7 +57,8 @@ plot(sol,type='tree')
 
 ```{r, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
 table(sol@cl)
-solf=cut(sol,8)
+ncut = 3
+solf=cut(sol, ncut)
 ```
 
 ```{r posplot, fig.show='hold',fig.width=8,fig.height=12,out.width="100%"}
@@ -93,11 +95,22 @@ cluster_profile = function(clid){
     ggtitle(paste("Cluster",clid),subtitle = paste(round(params$pi[clid]*100),"% of the respondents")))
 }
 
-plts_list = lapply(1:8,\(cli){cluster_profile(cli)})
+plts_list = lapply(1:ncut,\(cli){cluster_profile(cli)})
 
 
-grid::grid.draw(gridExtra::arrangeGrob(grobs=plts_list, nrow = 4,ncol =2))
+grid::grid.draw(gridExtra::arrangeGrob(grobs=plts_list, nrow = ncut,ncol = 1))
 
+```
+
+
+```{r, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
+res.mca <- FactoMineR::MCA(X, graph = FALSE)
+factoextra::fviz_mca_ind(res.mca,
+             label = "none", # masquer le texte des individus
+             habillage = solf@cl, # colorer par groupes
+             # palette = c ("#00AFBB", "#E7B800"),
+             addEllipses = TRUE, ellipse.type = "confidence",
+             ggtheme = theme_minimal ())
 ```
 
 

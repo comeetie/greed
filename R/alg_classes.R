@@ -124,7 +124,7 @@ setMethod(f = "cut",
 #' 
 #' @param X data to cluster either a matrix,an array or a \code{\link{dgCMatrix-class}}
 #' @param K initial number of cluster
-#' @param model a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}},\code{\link{gmm-class}}, \code{\link{diaggmm-class}} or \code{\link{mvmreg-class}}
+#' @param model a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}}, \code{\link{lca-class}}, \code{\link{gmm-class}}, \code{\link{diaggmm-class}} or \code{\link{mvmreg-class}}
 #' @param alg an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
 #' @param verbose Boolean for verbose mode 
 #' @return an \code{\link{icl_path-class}} object
@@ -155,7 +155,7 @@ find_model = function(X){
       stop(paste0("Multinomial SBM expect a cube with as many rows as columns:",dimensions,collapse = " x "))
     }
     if(length(dimensions)!=3){
-      stop(paste0("Multinomial SBM expect a cube found an array od dimensions:",dimensions,collapse = " x "))
+      stop(paste0("Multinomial SBM expect a cube found an array odd dimensions:",dimensions,collapse = " x "))
     }
     issym = all(sapply(1:dim(X)[3],function(d){ isSymmetric(X[,,d])}))
     if(issym){
@@ -167,9 +167,9 @@ find_model = function(X){
   }else{
     if(methods::is(X,"data.frame") & !all(apply(X,2,is.numeric))){
       if(all(sapply(X,is.factor)) | all(sapply(X,is.character))){
-        return(new("lca"))
+        return(methods::new("lca"))
       }else{
-        return(new("mmm"))
+        return(methods::new("mmm"))
       }
     }
     if(methods::is(X,"data.frame") & all(apply(X,2,is.numeric))){
