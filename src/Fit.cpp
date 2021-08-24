@@ -1,40 +1,49 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadilloExtensions/sample.h>
-#include "IclModel.h"
+
+
+// #include "MarSbm.h"
+// #include "MarSbmUndirected.h"
+// #include "NmarBdSbm.h"
+// #include "NmarBdSbmUndirected.h"
+// #include "NmarBcSbm.h"
+// #include "NmarBcSbmUndirected.h"
+// #include "MarDyadSbmE.h"
+// #include "MissSbmE.h"
+
+
+
+
+
+
+
 #include "MergeMat.h"
-#include "Sbm.h"
-#include "SbmUndirected.h"
-#include "MarSbm.h"
-#include "MarSbmUndirected.h"
-#include "NmarBdSbm.h"
-#include "NmarBdSbmUndirected.h"
-#include "NmarBcSbm.h"
-#include "NmarBcSbmUndirected.h"
-#include "DcSbm.h"
-#include "DcSbmUndirected.h"
-#include "MultSbm.h"
-#include "MultSbmUndirected.h"
-#include "CoDcSbm.h"
-#include "Mm.h"
-#include "Gmm.h"
-#include "SphericalGmm.h"
-#include "Mvmregcomp.h"
-#include "MissSbmE.h"
-#include "MarDyadSbmE.h"
-#include "LcaE.h"
-#include "GmmE.h"
+#include "gicl_tools.h"
+#include "IclModel.h"
+#include "IclModelEmission.h"
 #include "CombinedIclModel.h"
 #include "SimpleIclModel.h"
-#include "IclModelEmission.h"
-#include "IclModelEmission2.h"
+#include "Gmm.h"
+#include "DiagGmm.h"
+#include "Lca.h"
+#include "DcSbm.h"
+#include "DcSbmUndirected.h"
+#include "Sbm.h"
+#include "SbmUndirected.h"
+#include "MultSbm.h"
+#include "MultSbmUndirected.h"
+#include "Mm.h"
+#include "Mregs.h"
+#include "CoDcSbm.h"
+
 using namespace Rcpp;
 
 
-IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
+IclModel * init(S4 model,List data, arma::uvec clr, bool verbose) {
   
   IclModel * M;
-  int N = clt.n_elem;
-  clt = clt-arma::ones(N);
+  int N = clr.n_elem;
+  arma::uvec clt = to_zero_based(clr);
   S4 sol;
   try{
     if((strcmp(model.slot("name"),"sbm")!=0) && 
@@ -64,10 +73,12 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       }
 
       if(strcmp(model.slot("type"),"directed")==0){
-        M = new Sbm(xp,model,clt,verbose);
+        IclModelEmission * sbm = new Sbm(xp,model,verbose);
+        M = new SimpleIclModel(sbm,model,clt,verbose);
       }
       if(strcmp(model.slot("type"),"undirected")==0){
-        M = new SbmUndirected(xp,model,clt,verbose);
+        IclModelEmission * sbm = new SbmUndirected(xp,model,verbose);
+        M = new SimpleIclModel(sbm,model,clt,verbose);
       }
     }
     if(strcmp(model.slot("name"),"misssbm")==0){
@@ -89,34 +100,34 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       } 
       if(strcmp(model.slot("sampling"),"dyad")==0){
         if(strcmp(model.slot("type"),"directed")==0){
-          IclModelEmission * Mobs = new MissSbmE(xp,xpobs,model,verbose);
-          IclModelEmission * Msampling = new MarDyadSbmE(xpobs,model,verbose);
-          std::vector<IclModelEmission*> IclModels;
-          IclModels.push_back(Mobs);
-          IclModels.push_back(Msampling);
-          M = new CombinedIclModel(IclModels,model,clt,verbose);
+  //        IclModelEmission * Mobs = new MissSbmE(xp,xpobs,model,verbose);
+  //        IclModelEmission * Msampling = new MarDyadSbmE(xpobs,model,verbose);
+  //        std::vector<IclModelEmission*> IclModels;
+  //        IclModels.push_back(Mobs);
+  //        IclModels.push_back(Msampling);
+  //        M = new CombinedIclModel(IclModels,model,clt,verbose);
           //M = new MarSbm(xp,xpobs,model,clt,verbose);
           
         }
         if(strcmp(model.slot("type"),"undirected")==0){
-          M = new MarSbmUndirected(xp,xpobs,model,clt,verbose);
+    //      M = new MarSbmUndirected(xp,xpobs,model,clt,verbose);
         }
       }
       if(strcmp(model.slot("sampling"),"block-dyad")==0){
 
         if(strcmp(model.slot("type"),"directed")==0){
-          M = new NmarBdSbm(xp,xpobs,model,clt,verbose);
+      //    M = new NmarBdSbm(xp,xpobs,model,clt,verbose);
         }
         if(strcmp(model.slot("type"),"undirected")==0){
-          M = new NmarBdSbmUndirected(xp,xpobs,model,clt,verbose);
+      //    M = new NmarBdSbmUndirected(xp,xpobs,model,clt,verbose);
         }
       }
       if(strcmp(model.slot("sampling"),"block-node")==0){
         if(strcmp(model.slot("type"),"directed")==0){
-          M = new NmarBcSbm(xp,xpobs,model,clt,verbose);
+        //  M = new NmarBcSbm(xp,xpobs,model,clt,verbose);
         }
         if(strcmp(model.slot("type"),"undirected")==0){
-          M = new NmarBcSbmUndirected(xp,xpobs,model,clt,verbose);
+      //    M = new NmarBcSbmUndirected(xp,xpobs,model,clt,verbose);
         }
       }
     }
@@ -133,10 +144,12 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
         }
       }
       if(strcmp(model.slot("type"),"directed")==0){
-        M = new DcSbm(xp,model,clt,verbose);
+        IclModelEmission * dcsbm = new DcSbm(xp,model,verbose);
+        M = new SimpleIclModel(dcsbm,model,clt,verbose);
       }
       if(strcmp(model.slot("type"),"undirected")==0){
-        M = new DcSbmUndirected(xp,model,clt,verbose);
+        IclModelEmission * dcsbm = new DcSbmUndirected(xp,model,verbose);
+        M = new SimpleIclModel(dcsbm,model,clt,verbose);
       }
     }
     if(strcmp(model.slot("name"),"multsbm")==0){
@@ -158,61 +171,61 @@ IclModel * init(S4 model,List data, arma::vec clt, bool verbose) {
       }
       
       if(strcmp(model.slot("type"),"directed")==0){
-        M = new MultSbm(xp,model,clt,verbose);
+        IclModelEmission * mult = new MultSbm(xp,model,verbose);
+        M = new SimpleIclModel(mult,model,clt,verbose);
       }
       if(strcmp(model.slot("type"),"undirected")==0){
-        M = new MultSbmUndirected(xp,model,clt,verbose);
+        IclModelEmission * mult = new MultSbmUndirected(xp,model,verbose);
+        M = new SimpleIclModel(mult,model,clt,verbose);
       }
     }
     if(strcmp(model.slot("name"),"co_dcsbm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       int Nr = static_cast<int>(data["Nrows"]);
       int Nc = static_cast<int>(data["Ncols"]);
-      M = new CoDcSbm(xp,Nr,Nc,model,clt,verbose);
+      IclModelEmission * codcsbm = new CoDcSbm(xp,Nr,Nc,model,verbose);
+      M = new SimpleIclModel(codcsbm,model,clt,verbose);
     }
     if(strcmp(model.slot("name"),"mm")==0){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
-      M = new Mm(xp,model,clt,verbose);
+      IclModelEmission * mm = new Mm(xp,model,verbose);
+      M = new SimpleIclModel(mm,model,clt,verbose);
     }
     if(strcmp(model.slot("name"),"gmm")==0){
-      //arma::mat X = as<arma::mat>(data["X"]);
-      //M = new Gmm(X,model,clt,verbose);
       arma::mat X = as<arma::mat>(data["X"]);
-      IclModelEmission2 * gmm = new GmmE(X,model,verbose);
-      //std::vector<IclModelEmission*> IclModels;
-      //IclModels.push_back(gmm);
+      IclModelEmission * gmm = new Gmm(X,model,verbose);
       M = new SimpleIclModel(gmm,model,clt,verbose);
     }
     
     if(strcmp(model.slot("name"),"diaggmm")==0){
       arma::mat X = as<arma::mat>(data["X"]);
-      M = new SphericalGmm(X,model,clt,verbose);
+      IclModelEmission * dgmm = new DiagGmm(X,model,verbose);
+      M = new SimpleIclModel(dgmm,model,clt,verbose);
     }
     if(strcmp(model.slot("name"),"mvmreg")==0 ){
       arma::mat X = as<arma::mat>(data["X"]);
       arma::mat Y = as<arma::mat>(data["Y"]);
-      M = new Mvmregcomp(X,Y,model,clt,verbose);
+      IclModelEmission * mregs = new Mregs(X,Y,model,verbose);
+      M = new SimpleIclModel(mregs,model,clt,verbose);
     }
     
     if(strcmp(model.slot("name"),"lca")==0 ){
-      arma::mat X = as<arma::mat>(data["X"]);
-      IclModelEmission * Lca = new LcaE(X,model,verbose);
-      std::vector<IclModelEmission*> IclModels;
-      IclModels.push_back(Lca);
-      M = new CombinedIclModel(IclModels,model,clt,verbose);
+      arma::umat X = as<arma::umat>(data["X"]);
+      IclModelEmission * lca = new Lca(X,model,verbose);
+      M = new SimpleIclModel(lca,model,clt,verbose);
     }
     if(strcmp(model.slot("name"),"mmm")==0 ){
       
-      std::vector<IclModelEmission*> IclModels;
-      
-      arma::mat Xcat = as<arma::mat>(data["Xcat"]);
-      IclModelEmission * cLca = new LcaE(Xcat,model,verbose);
-      IclModels.push_back(cLca);
-      arma::mat Xnum = as<arma::mat>(data["Xnum"]);
-      //IclModelEmission * cGmm = new GmmE(Xnum,model,verbose);
-      //IclModels.push_back(cGmm);
-      M = new CombinedIclModel(IclModels,model,clt,verbose);
+    std::vector<IclModelEmission*> icl_models;
+    arma::umat Xcat = as<arma::umat>(data["Xcat"]);
+    IclModelEmission * lca = new Lca(Xcat,model,verbose);
+    icl_models.push_back(lca);
+    arma::mat Xnum = as<arma::mat>(data["Xnum"]);
+    IclModelEmission * gmm = new Gmm(Xnum,model,verbose);
+    icl_models.push_back(gmm);
+    M = new CombinedIclModel(icl_models,model,clt,verbose);
     }
+
     return(M);
   }catch(std::exception &ex) {	
     forward_exception_to_r(ex);
@@ -233,7 +246,7 @@ S4 init_sol(S4 model,String type="fit") {
 // @param data list with clustering data (fields depend on model type)
 // @param clt cluster labels in 1,..,K //' @export
 // [[Rcpp::export]]
-arma::mat post_probs(S4 model,List data,  arma::vec& clt) {
+arma::mat post_probs(S4 model,List data,  arma::uvec& clt) {
   IclModel * M = init(model,data,clt,false);
   arma::mat probs = M->get_probs();
   delete M;
@@ -251,7 +264,7 @@ arma::mat post_probs(S4 model,List data,  arma::vec& clt) {
 // @param verbose boolean for verbose mode default to false
 // @return a model_fit object  //' @export
 // [[Rcpp::export]]
-S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::vec workingset,arma::uvec iclust, std::string type="both", int nb_max_pass = 50,bool verbose=false) {
+S4 fit_greed_cstr(S4 model,List data,  arma::uvec& clt,arma::vec workingset,arma::uvec iclust, std::string type="both", int nb_max_pass = 50,bool verbose=false) {
   IclModel * M = init(model,data,clt,verbose);
   S4 sol = init_sol(model);
   if(type!="merge" && type!="swap" && type!="both" && type!="none"){
@@ -259,26 +272,21 @@ S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::vec workingset,arma:
   }
   if(type=="swap" || type=="both"){
     //dynamic_cast<SimpleIclModel*>(M)->greedy_swap(nb_max_pass,workingset,iclust-1);
+
     M->greedy_swap(nb_max_pass,workingset,iclust-1);
+
   }
   if(type=="merge" || type=="both"){
     M->greedy_merge();
   }
 
   List obs_stats = M->get_obs_stats();
-
   List obs_stats_cst = M->get_obs_stats_cst();
-
   sol.slot("obs_stats_cst") = obs_stats_cst;
-
   sol.slot("model") = M->get_model();
-
   sol.slot("obs_stats") = obs_stats;
-
   sol.slot("cl") = M->get_cl()+1 ;
-
   sol.slot("icl") = M->icl(obs_stats);
-
   sol.slot("K") = M->get_K();
   delete M;
   return(sol);
@@ -287,12 +295,11 @@ S4 fit_greed_cstr(S4 model,List data,  arma::vec& clt,arma::vec workingset,arma:
 
 
 // [[Rcpp::export]]
-S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,bool verbose=false) {
+S4 merge_cstr(S4 model,List data,  arma::uvec& clt,arma::sp_mat & merge_graph,bool verbose=false) {
   IclModel * M = init(model,data,clt,verbose);
   S4 sol = init_sol(model);
   arma::sp_mat move_mat = M->greedy_merge(merge_graph);
   List obs_stats = M->get_obs_stats();
-  
   List obs_stats_cst = M->get_obs_stats_cst();
   sol.slot("obs_stats_cst") = obs_stats_cst;
   double bicl = M->icl(obs_stats);
@@ -311,7 +318,7 @@ S4 merge_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & merge_graph,boo
 
 
 // [[Rcpp::export]]
-S4 swap_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & move_mat, int nb_max_pass = 50, bool verbose=false) {
+S4 swap_cstr(S4 model,List data,  arma::uvec& clt,arma::sp_mat & move_mat, int nb_max_pass = 50, bool verbose=false) {
   
   
   IclModel * M = init(model,data,clt,verbose);
@@ -319,9 +326,7 @@ S4 swap_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & move_mat, int nb
   int N = clt.n_elem;
   arma::vec workingset = arma::ones(N);
   M->greedy_swap(nb_max_pass,workingset,move_mat);
-  
   List obs_stats = M->get_obs_stats();
-  
   List obs_stats_cst = M->get_obs_stats_cst();
   sol.slot("obs_stats_cst") = obs_stats_cst;
   double bicl = M->icl(obs_stats);
@@ -330,7 +335,6 @@ S4 swap_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & move_mat, int nb
   sol.slot("cl") = M->get_cl()+1 ;
   sol.slot("icl") = bicl;
   sol.slot("K") = M->get_K();
-  
   delete M;
   return(sol);
 }
@@ -345,7 +349,7 @@ S4 swap_cstr(S4 model,List data,  arma::vec& clt,arma::sp_mat & move_mat, int nb
 // @param verbose boolean for verbose mode default to false
 // @return a model_fit object  //' @export
 // [[Rcpp::export]]
-S4 fit_greed(S4 model,List data,  arma::vec& clt,std::string type="both", int nb_max_pass = 50,bool verbose=false) {
+S4 fit_greed(S4 model,List data,  arma::uvec& clt,std::string type="both", int nb_max_pass = 50,bool verbose=false) {
   int N = clt.n_elem;
   arma::vec workingset = arma::ones(N);
   int Ki = arma::max(clt);
@@ -361,7 +365,7 @@ S4 fit_greed(S4 model,List data,  arma::vec& clt,std::string type="both", int nb
 // [[Rcpp::export]]
 S4 fit_greed_path(List data, S4 init_fit) {
   S4 model = init_fit.slot("model");
-  arma::vec clt = init_fit.slot("cl");
+  arma::uvec clt = init_fit.slot("cl");
   IclModel * M = init(model,data,clt,false);
   S4 sol = init_sol(model,"path");
   sol.slot("model")=model;
@@ -385,7 +389,7 @@ S4 fit_greed_path(List data, S4 init_fit) {
 // [[Rcpp::export]]
 arma::mat merge_mat(List data, S4 init_fit) {
   S4 model = init_fit.slot("model");
-  arma::vec clt = init_fit.slot("cl");
+  arma::uvec clt = init_fit.slot("cl");
   IclModel * M = init(model,data,clt,false);
   MergeMat merge_mat = M->delta_merge();
   arma::mat mm = merge_mat.getMergeMat();
@@ -394,10 +398,3 @@ arma::mat merge_mat(List data, S4 init_fit) {
 }
 
 
-
-bool test_swap(List data, S4 model,arma::vec& clt) {
-  //IclModel * M = init(model,data,clt,false);
-  //List obs_stats = M->get_obs_stats();
-  //double icl_init =  M->icl(obs_stats);
-  return(true);
-}

@@ -84,7 +84,31 @@ setClass("diaggmm_fit",slots = list(model="diaggmm"),contains="icl_fit")
 #' @export 
 setClass("diaggmm_path",contains=c("icl_path","diaggmm_fit"))
 
-
+#' @title plot a \code{\link{diaggmm_fit-class}} object
+#' 
+#' 
+#' @param x a \code{\link{diaggmm_fit-class}}
+#' @param type a string which specify plot type:
+#' \itemize{
+#' \item \code{'marginals'}: plot the marginal densities 
+#' \item \code{'violins'}: make a violin plot for each clusters and features 
+#' }
+#' @return a \code{\link{ggplot2}} graphic
+#' @export 
+setMethod(f = "plot", 
+          signature = signature("diaggmm_fit","missing"),
+          definition = function(x,type="marginals"){
+            switch(type,marginals={
+              gg=block_gmm_marginals(x);
+              plot(gg);
+              gg},
+              violins={
+                gg=block_gmm_marginals_violin(x)
+                plot(gg)
+                gg
+              }
+            )
+          })
 
 #' @title plot a \code{\link{diaggmm_path-class}} object
 #' 
@@ -92,6 +116,8 @@ setClass("diaggmm_path",contains=c("icl_path","diaggmm_fit"))
 #' @param x a \code{\link{diaggmm_path-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
+#' \item \code{'marginals'}: plot the marginal densities 
+#' \item \code{'violins'}: make a violin plot for each clusters and features 
 #' \item \code{'front'}: plot the extracted front ICL, log(alpha)
 #' \item \code{'path'}: plot the evolution of ICL with respect to K
 #' \item \code{'tree'}: plot the associated dendrogram
@@ -100,7 +126,7 @@ setClass("diaggmm_path",contains=c("icl_path","diaggmm_fit"))
 #' @export 
 setMethod(f = "plot", 
           signature = signature("diaggmm_path","missing"),
-          definition = function(x,type='tree'){
+          definition = function(x,type='marginals'){
             switch(type,tree = {
               dendo(x)
             },
@@ -109,8 +135,15 @@ setMethod(f = "plot",
             },
             front = {
               plot_front(x)
-            })
-          })
+            },
+            marginals ={
+              methods::callNextMethod()
+            },
+            violins={
+              methods::callNextMethod()
+            }
+            )
+        })
 
 #' @title Extract mixture parameters from \code{\link{diaggmm_fit-class}} object
 #' 
@@ -127,8 +160,8 @@ setMethod(f = "coef",
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
-            muk = lapply(sol@obs_stats$regs, function(r){(sol@model@tau*sol@model@mu+r$ng*r$m)/(sol@model@tau+r$ng)})
-            Sigmak = lapply(sol@obs_stats$regs, function(r){
+            muk = lapply(sol@obs_stats$diaggmm, function(r){(sol@model@tau*sol@model@mu+r$ng*r$m)/(sol@model@tau+r$ng)})
+            Sigmak = lapply(sol@obs_stats$diaggmm, function(r){
               betan = sol@model@beta +0.5*r$S+(sol@model@tau*r$ng*(r$m-sol@model@mu)^2)/(2*sol@model@tau+r$ng)
               alphan = sol@model@kappa+r$ng/2
               dd=as.vector(betan/(alphan-1))
@@ -203,7 +236,7 @@ setMethod(f = "preprocess",
 
 reorder_gmm = function(obs_stats,or){
   obs_stats$counts = obs_stats$counts[or]
-  obs_stats$regs = obs_stats$regs[or]
+  obs_stats$diaggmm = obs_stats$diaggmm[or]
   obs_stats
 }
 
@@ -214,3 +247,29 @@ setMethod(f = "reorder",
             reorder_gmm(obs_stats,order)
           })
 
+name_obs_stats_diaggmm=function(path,X){
+  num_names = colnames(data.frame(X))
+  for(k in 1:path@K){
+    path@obs_stats$diaggmm[[k]]=path@obs_stats$diaggmm[[k]][c("m","S","ng","log_evidence")]
+    colnames(path@obs_stats$diaggmm[[k]]$m)=num_names
+    colnames(path@obs_stats$diaggmm[[k]]$S)=num_names
+  }
+  names(path@obs_stats$diaggmm)=paste0("cluster",1:path@K)
+  for(p in 1:length(path@path)){
+    for(k in 1:path@path[[p]]$K){
+      path@path[[p]]$obs_stats$diaggmm[[k]]=path@path[[p]]$obs_stats$diaggmm[[k]][c("m","S","ng","log_evidence")]
+      colnames(path@path[[p]]$obs_stats$diaggmm[[k]]$m)=num_names
+      colnames(path@path[[p]]$obs_stats$diaggmm[[k]]$S)=num_names
+    }
+    names(path@path[[p]]$obs_stats$diaggmm)=paste0("cluster",1:path@path[[p]]$K)
+  }
+  path
+}
+
+setMethod(f = "postprocess", 
+          signature = signature("diaggmm_path"), 
+          definition = function(path,data,X){
+            cat("postprocessing\n")
+            path = name_obs_stats_diaggmm(path,X)
+            path
+          })

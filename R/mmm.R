@@ -137,14 +137,14 @@ setMethod(f = "coef",
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
-            muk = lapply(sol@obs_stats$stats_num, function(r){(sol@model@tau*sol@model@mu+r$ng*r$m)/(sol@model@tau+r$ng)})
-            Sigmak = lapply(sol@obs_stats$stats_num, function(r){
+            muk = lapply(sol@obs_stats$gmm, function(r){(sol@model@tau*sol@model@mu+r$ng*r$m)/(sol@model@tau+r$ng)})
+            Sigmak = lapply(sol@obs_stats$gmm, function(r){
               mu = (sol@model@tau*sol@model@mu+r$ng*r$m)/(sol@model@tau+r$ng)
               Sc= r$S+t(r$m)%*%r$m-t(mu)%*%mu
               S = (Sc+sol@model@tau*t(mu-sol@model@mu)%*%(mu-sol@model@mu)+sol@model@epsilon)/(r$ng+sol@model@N0-length(mu))
               S
             })
-            Thetak = lapply(sol@obs_stats$stats_cat,function(mat){(mat+sol@model@beta-1)/rowSums(mat+sol@model@beta-1)})
+            Thetak = lapply(sol@obs_stats$lca,function(mat){(mat+sol@model@beta-1)/rowSums(mat+sol@model@beta-1)})
             list(pi=pi,muk=muk,Sigmak=Sigmak,Thetak=Thetak)
           })
 
@@ -187,12 +187,12 @@ setMethod(f = "sample_cl",
 
 clean_obs_stats = function(path){
   path@obs_stats = list(counts = path@obs_stats$counts,
-                        stats_cat = path@obs_stats[[2]]$x_counts,
-                        stats_num = path@obs_stats[[3]]$regs)
+                        lca = path@obs_stats[[2]]$x_counts,
+                        gmm = path@obs_stats[[3]])
   for(p in 1:length(path@path)){
     path@path[[p]]$obs_stats=list(counts = path@path[[p]]$obs_stats$counts,
-                                  stats_cat = path@path[[p]]$obs_stats[[2]]$x_counts,
-                                  stats_num = path@path[[p]]$obs_stats[[3]]$regs)
+                                  lca = path@path[[p]]$obs_stats[[2]]$x_counts,
+                                  gmm = path@path[[p]]$obs_stats[[3]])
   }
   path
 }
@@ -204,36 +204,36 @@ name_obs_stats=function(path,X){
   
   num_names = colnames(data.frame(X[,nums]))
   for(k in 1:path@K){
-    path@obs_stats$stats_num[[k]]=path@obs_stats$stats_num[[k]][c("m","S","ng","log_evidence")]
-    colnames(path@obs_stats$stats_num[[k]]$m)=num_names
-    colnames(path@obs_stats$stats_num[[k]]$S)=num_names
-    rownames(path@obs_stats$stats_num[[k]]$S)=num_names
+    path@obs_stats$gmm[[k]]=path@obs_stats$gmm[[k]][c("m","S","ng","log_evidence")]
+    colnames(path@obs_stats$gmm[[k]]$m)=num_names
+    colnames(path@obs_stats$gmm[[k]]$S)=num_names
+    rownames(path@obs_stats$gmm[[k]]$S)=num_names
   }
-  names(path@obs_stats$stats_num)=paste0("cluster",1:path@K)
+  names(path@obs_stats$gmm)=paste0("cluster",1:path@K)
   
   cat_names = colnames(data.frame(X[,facts]))
-  for(v in 1:length(path@obs_stats$stats_cat)){
-    path@obs_stats$stats_cat[[v]]=as.matrix(path@obs_stats$stats_cat[[v]])
-    colnames(path@obs_stats$stats_cat[[v]])=levels(X[[facts[v]]])
-    rownames(path@obs_stats$stats_cat[[v]])=paste0("cluster",1:path@K)
+  for(v in 1:length(path@obs_stats$lca)){
+    path@obs_stats$lca[[v]]=as.matrix(path@obs_stats$lca[[v]])
+    colnames(path@obs_stats$lca[[v]])=levels(X[[facts[v]]])
+    rownames(path@obs_stats$lca[[v]])=paste0("cluster",1:path@K)
   }
-  names(path@obs_stats$stats_cat)=cat_names
+  names(path@obs_stats$lca)=cat_names
   
   for(p in 1:length(path@path)){
     for(k in 1:path@path[[p]]$K){
-      path@path[[p]]$obs_stats$stats_num[[k]]=path@path[[p]]$obs_stats$stats_num[[k]][c("m","S","ng","log_evidence")]
-      colnames(path@path[[p]]$obs_stats$stats_num[[k]]$m)=num_names
-      colnames(path@path[[p]]$obs_stats$stats_num[[k]]$S)=num_names
-      rownames(path@path[[p]]$obs_stats$stats_num[[k]]$S)=num_names
+      path@path[[p]]$obs_stats$gmm[[k]]=path@path[[p]]$obs_stats$gmm[[k]][c("m","S","ng","log_evidence")]
+      colnames(path@path[[p]]$obs_stats$gmm[[k]]$m)=num_names
+      colnames(path@path[[p]]$obs_stats$gmm[[k]]$S)=num_names
+      rownames(path@path[[p]]$obs_stats$gmm[[k]]$S)=num_names
     }
-    names(path@path[[p]]$obs_stats$stats_num)=paste0("cluster",1:path@path[[p]]$K)
+    names(path@path[[p]]$obs_stats$gmm)=paste0("cluster",1:path@path[[p]]$K)
     
-    for(v in 1:length(path@obs_stats$stats_cat)){
-      path@path[[p]]$obs_stats$stats_cat[[v]]=matrix(path@path[[p]]$obs_stats$stats_cat[[v]],nrow = path@path[[p]]$K)
-      colnames(path@path[[p]]$obs_stats$stats_cat[[v]])=levels(X[[facts[v]]])
-      rownames(path@path[[p]]$obs_stats$stats_cat[[v]])=paste0("cluster",1:path@path[[p]]$K)
+    for(v in 1:length(path@obs_stats$lca)){
+      path@path[[p]]$obs_stats$lca[[v]]=matrix(path@path[[p]]$obs_stats$lca[[v]],nrow = path@path[[p]]$K)
+      colnames(path@path[[p]]$obs_stats$lca[[v]])=levels(X[[facts[v]]])
+      rownames(path@path[[p]]$obs_stats$lca[[v]])=paste0("cluster",1:path@path[[p]]$K)
     }
-    names(path@path[[p]]$obs_stats$stats_cat)=cat_names
+    names(path@path[[p]]$obs_stats$lca)=cat_names
   }
   
   path

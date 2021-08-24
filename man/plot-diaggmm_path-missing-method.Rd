@@ -4,13 +4,15 @@
 \alias{plot,diaggmm_path,missing-method}
 \title{plot a \code{\link{diaggmm_path-class}} object}
 \usage{
-\S4method{plot}{diaggmm_path,missing}(x, type = "tree")
+\S4method{plot}{diaggmm_path,missing}(x, type = "marginals")
 }
 \arguments{
 \item{x}{a \code{\link{diaggmm_path-class}}}
 
 \item{type}{a string which specify plot type:
 \itemize{
+\item \code{'marginals'}: plot the marginal densities 
+\item \code{'violins'}: make a violin plot for each clusters and features 
 \item \code{'front'}: plot the extracted front ICL, log(alpha)
 \item \code{'path'}: plot the evolution of ICL with respect to K
 \item \code{'tree'}: plot the associated dendrogram

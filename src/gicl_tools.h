@@ -3,23 +3,32 @@
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
-#include "Partition.h"
 using namespace Rcpp;
 
-arma::mat table_count(arma::vec cl, arma::vec x, int K, int nbmod);
-arma::mat submatcross(int oldcl,int newcl,int K);
+
+arma::vec count(const arma::uvec & cl,int K);
+arma::vec update_count(const arma::vec  & counts,int oldcl, int newcl);
+arma::uvec to_zero_based(const arma::uvec & cl);
+arma::umat table_count(arma::uvec cl, arma::uvec x, int K, int nbmod);
+arma::mat gsum_mat(arma::uvec cl,const arma::sp_mat& x, int K);
+arma::umat submatcross(int oldcl,int newcl,int K);
+arma::sp_mat gsum_col(arma::uvec cl,const arma::sp_mat& x, int i, int K);
+arma::cube gsum_cube(arma::uvec cl,const arma::cube& x, int K);
+arma::sp_mat gsum_mm(arma::uvec cl,const arma::sp_mat& x, int K);
+arma::mat gsum_bimat(arma::uvec clr,arma::uvec clc, const arma::sp_mat& x,int K);
+
+
 arma::sp_mat sp_cross(arma::sp_mat colvec,arma::sp_mat rowvec,int self, int oldcl, int newcl, int K);
 
-arma::vec count(arma::vec cl,int K);
 
-arma::cube gsum_cube(arma::vec cl,const arma::cube& x, int K);
-arma::mat gsum_mat(arma::vec cl,const arma::sp_mat& x, int K);
-arma::mat gsum_bimat(arma::vec clr,arma::vec clc, const arma::sp_mat& x,int K);
+
+
+
+
 arma::sp_mat gsum_mat_sp(arma::vec cl,const arma::sp_mat& x, int K);
-arma::sp_mat gsum_mm(arma::vec cl,const arma::sp_mat& x, int K);
-arma::sp_mat gsum_col(arma::vec cl,const arma::sp_mat& x, int i, int K);
-arma::sp_mat gsum_partition(Partition clp,const arma::sp_mat& x, int i, int K);
-arma::mat update_count(arma::vec counts,int oldcl, int newcl);
+
+
+
 
 arma::sp_mat delcol(const arma::sp_mat & a, int ci);
 void delrowcol(arma::sp_mat & a, int ci);

@@ -265,6 +265,19 @@ setMethod(f = "preprocess",
 setMethod(f = "postprocess", 
           signature = signature("co_dcsbm_path"), 
           definition = function(path,data=NULL,X=NULL,Y=NULL){
+            if(!is.null(path@obs_stats$co_dcsbm)){
+              path@obs_stats = list(counts = path@obs_stats$counts,
+                                    x_counts = path@obs_stats$co_dcsbm$x_counts,
+                                    dr = path@obs_stats$co_dcsbm$dr,
+                                    dc = path@obs_stats$co_dcsbm$dc)
+              for (p in 1:length(path@path)){
+                path@path[[p]]$obs_stats = list(counts = path@path[[p]]$obs_stats$counts,
+                                                x_counts = path@path[[p]]$obs_stats$co_dcsbm$x_counts,
+                                                dr = path@path[[p]]$obs_stats$co_dcsbm$dr,
+                                                dc = path@path[[p]]$obs_stats$co_dcsbm$dc)
+              }
+            }
+            
             sol = path
             if(!is.null(data)){
               sol@Nrow = data$Nrows

@@ -26,18 +26,18 @@ double DcSbmUndirected::icl_emiss(const List & obs_stats){
     cmat(lonely(i),lonely(i))=0;
   }
   icl_emiss=icl_emiss + arma::accu(arma::trimatl(cmat));
-  return icl_emiss+cst;
+  return icl_emiss;
 }
 
-double DcSbmUndirected::icl_emiss(const List & obs_stats,int oldcl,int newcl){
+double DcSbmUndirected::icl_emiss(const List & obs_stats,int oldcl,int newcl, bool dead){
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
   arma::vec din =as<arma::vec>(obs_stats["din"]);
   arma::vec dout =as<arma::vec>(obs_stats["dout"]);
   arma::mat edges_counts =as<arma::mat>(obs_stats["x_counts"]);
-  arma::mat si = submatcross(oldcl,newcl,counts.n_rows);
+  arma::umat si = submatcross(oldcl,newcl,counts.n_rows);
   double icl_emiss = lgamma(counts(newcl))-lgamma(counts(newcl)+din(newcl))+din(newcl)*log(counts(newcl));
   icl_emiss += lgamma(counts(newcl))-lgamma(counts(newcl)+dout(newcl))+dout(newcl)*log(counts(newcl));
-  if(counts(oldcl)!=0){
+  if(!dead){
     icl_emiss += lgamma(counts(oldcl))-lgamma(counts(oldcl)+dout(oldcl))+dout(oldcl)*log(counts(oldcl));
     icl_emiss += lgamma(counts(oldcl))-lgamma(counts(oldcl)+din(oldcl))+din(oldcl)*log(counts(oldcl));
   }
@@ -58,11 +58,11 @@ double DcSbmUndirected::icl_emiss(const List & obs_stats,int oldcl,int newcl){
         // lets go
         icl_emiss += lgamma(edges_counts(k,l)/2+1)-(edges_counts(k,l)/2+1)*log(p*cc+1);
       }
-
+      
     }
     
   }
-  return icl_emiss+cst;
+  return icl_emiss;
 }
 
 

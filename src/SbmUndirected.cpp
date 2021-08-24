@@ -1,8 +1,5 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include "gicl_tools.h"
-#include "MergeMat.h"
-#include "IclModel.h"
-#include "Sbm.h"
 #include "SbmUndirected.h"
 using namespace Rcpp;
 
@@ -25,10 +22,10 @@ double SbmUndirected::icl_emiss(const List & obs_stats){
   return icl_emiss;
 }
 
-double SbmUndirected::icl_emiss(const List & obs_stats,int oldcl,int newcl){
+double SbmUndirected::icl_emiss(const List & obs_stats,int oldcl,int newcl,bool dead_cluster){
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
   arma::mat edges_counts =as<arma::mat>(obs_stats["x_counts"]);
-  arma::mat si = submatcross(oldcl,newcl,counts.n_rows);
+  arma::umat si = submatcross(oldcl,newcl,counts.n_rows);
   double icl_emiss = 0;
   int k = 0;
   int l = 0;

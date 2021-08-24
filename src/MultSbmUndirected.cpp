@@ -1,38 +1,29 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include "gicl_tools.h"
-#include "MergeMat.h"
-#include "IclModel.h"
 #include "MultSbmUndirected.h"
 using namespace Rcpp;
 
 
 
 double MultSbmUndirected::icl_emiss(const List & obs_stats){
-  arma::vec counts =as<arma::vec>(obs_stats["counts"]);
+
   arma::cube edges_counts =as<arma::cube>(obs_stats["x_counts"]);
   // lets go
   double icl_emiss = 0;
   for (int k=0;k<K;++k){
     for (int l=0;l<=k;++l){
-      if(k==l){
-        if(counts(k)>1){
+      if(k==l && arma::accu(edges_counts.tube(k,l))!=0){
           arma::vec klcounts = edges_counts.tube(k,l)/2;
           icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
-        }
-      }else{
-        arma::vec klcounts = edges_counts.tube(k,l);
-        icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
       }
-      
     }
   }
   return icl_emiss+cst;
 }
 
-double MultSbmUndirected::icl_emiss(const List & obs_stats,int oldcl,int newcl){
-  arma::vec counts =as<arma::vec>(obs_stats["counts"]);
+double MultSbmUndirected::icl_emiss(const List & obs_stats,int oldcl,int newcl, bool dead){
   arma::cube edges_counts =as<arma::cube>(obs_stats["x_counts"]);
-  arma::mat si = submatcross(oldcl,newcl,counts.n_rows);
+  arma::umat si = submatcross(oldcl,newcl,K);
   double icl_emiss = 0;
   int k = 0;
   int l = 0;
@@ -40,12 +31,13 @@ double MultSbmUndirected::icl_emiss(const List & obs_stats,int oldcl,int newcl){
   for (arma::uword i = 0;i<si.n_rows;++i){
     k=si(i,0);
     l=si(i,1);
-    if(counts(k)*counts(l)!=0){
+    bool toskip = dead && (k==oldcl || l==oldcl);
+    if(!toskip){
       if(k<l){
         arma::vec klcounts = edges_counts.tube(k,l);
         icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
       }
-      if((k==l) && (counts(k)>1)){
+      if((k==l) && (arma::accu(edges_counts.tube(k,l))>0)){
         arma::vec klcounts = edges_counts.tube(k,l)/2;
         icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
       }
@@ -68,10 +60,8 @@ double MultSbmUndirected::delta_merge_correction(int k,int l,int obk,int obl,con
   double icl_cor = 0;
   int cc, cc_old;
   double oxc,xc;
-  arma::vec old_counts =as<arma::vec>(old_stats["counts"]);
   arma::cube old_x_counts =as<arma::cube>(old_stats["x_counts"]);
   arma::vec klcounts;
-  cc = counts(k)*counts(l);
   arma::uvec kl;
   kl << k << l << arma::endr;
   arma::uvec mkl;

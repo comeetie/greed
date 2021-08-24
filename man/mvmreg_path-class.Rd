@@ -23,7 +23,7 @@ An S4 class to represent a hierarchical fit of a multivariate mixture of regress
 \item{\code{obs_stats}}{a list with the following elements:
 \itemize{
 \item counts: numeric vector of size K with number of elements in each clusters
-\item regs: list of size $K$ with statistics for each clusters
+\item mvmregs: list of size $K$ with statistics for each clusters
 }}
 
 \item{\code{path}}{a list of size K-1 with each part of the path described by:
@@ -31,13 +31,12 @@ An S4 class to represent a hierarchical fit of a multivariate mixture of regress
 \item icl1: icl value reach with this solution for alpha=1 
 \item logalpha: log(alpha) value were this solution is better than its parent
 \item K: number of clusters
-\item cl: vector of cluster indexes
 \item k,l: index of the cluster that were merged at this step
 \item merge_mat: lower triangular matrix of delta icl values 
 \item obs_stats: a list with the following elements:
 \itemize{
 \item counts: numeric vector of size K with number of elements in each clusters
-\item regs: list of size $K$ with statistics for each clusters
+\item mvregs: list of size $K$ with statistics for each clusters
 }
 }}
 

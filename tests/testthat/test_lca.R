@@ -14,7 +14,7 @@ test_that("LCA sim",{
   lca.data = rlca(N,rep(1/4,4),theta)
   
   
-  sol=greed(lca.data$x,model=new("lca"),alg=new("hybrid",pop_size=100),K=10)
+  sol=greed(lca.data$x,model=new("lca"),K=10)
   sol@icl
   sol@obs_stats$counts
   sol@obs_stats$x_counts

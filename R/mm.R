@@ -210,3 +210,17 @@ setMethod(f = "preprocess",
             }
             list(X=as.sparse(data),N=nrow(data))
           })
+
+
+setMethod(f = "postprocess", 
+          signature = signature("mm_path"), 
+          definition = function(path,data,X,Y=NULL){
+            path@obs_stats = list(counts = path@obs_stats$counts,
+                                  x_counts = path@obs_stats$mm$x_counts)
+            for (p in 1:length(path@path)){
+              path@path[[p]]$obs_stats = list(counts = path@path[[p]]$obs_stats$counts,
+                                              x_counts = path@path[[p]]$obs_stats$mm$x_counts)
+            }
+            path
+          }
+)

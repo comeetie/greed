@@ -53,24 +53,8 @@ delrowcol <- function(a, ci) {
     invisible(.Call('_greed_delrowcol', PACKAGE = 'greed', a, ci))
 }
 
-gsum_cube <- function(cl, x, K) {
-    .Call('_greed_gsum_cube', PACKAGE = 'greed', cl, x, K)
-}
-
-gsum_mat <- function(cl, x, K) {
-    .Call('_greed_gsum_mat', PACKAGE = 'greed', cl, x, K)
-}
-
-gsum_bimat <- function(clr, clc, x, K) {
-    .Call('_greed_gsum_bimat', PACKAGE = 'greed', clr, clc, x, K)
-}
-
 gsum_mat_sp <- function(cl, x, K) {
     .Call('_greed_gsum_mat_sp', PACKAGE = 'greed', cl, x, K)
-}
-
-gsum_mm <- function(cl, x, K) {
-    .Call('_greed_gsum_mm', PACKAGE = 'greed', cl, x, K)
 }
 
 lm_post <- function(X, y, regu, a0, b0) {

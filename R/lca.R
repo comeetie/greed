@@ -133,10 +133,11 @@ setMethod(f = "plot",
 setMethod(f = "coef", 
           signature = signature(object = "lca_fit"),
           definition = function(object){
-            sol = object
-            
-            list()
-          })
+            sol=object
+            pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
+            Thetak = lapply(sol@obs_stats$lca,function(mat){(mat+sol@model@beta-1)/rowSums(mat+sol@model@beta-1)})
+            list(pi=pi,Thetak=Thetak)
+})
 
 reorder_lca = function(obs_stats,or){
   obs_stats[[2]]$counts = obs_stats[[2]]$counts[or]
@@ -149,8 +150,9 @@ reorder_lca = function(obs_stats,or){
 
 setMethod(f = "postprocess", 
           signature = signature("lca_path"), 
-          definition = function(path,data=NULL,X=NULL,Y=NULL){
+          definition = function(path,data,X,Y=NULL){
             path = clean_obs_stats_lca(path)
+            path = name_obs_stats_lca(path,X)
             path
           }
           )
@@ -158,15 +160,37 @@ setMethod(f = "postprocess",
 clean_obs_stats_lca = function(path) {
   # clean path@obs_stats to have clearer and non-redundant slots
   path@obs_stats = list(counts = path@obs_stats$counts,
-                        x_counts = path@obs_stats[[2]]$x_counts)
+                        lca = path@obs_stats[[2]]$x_counts)
   
   # Do the same thing for all submodels in the hierarchy path@path
   for(k in seq_along(path@path)) {
     path@path[[k]]$obs_stats = list(counts = path@path[[k]]$obs_stats$counts,
-                                    x_counts = path@path[[k]]$obs_stats[[2]]$x_counts)
+                                    lca = path@path[[k]]$obs_stats[[2]]$x_counts)
   }
   path
 }
+
+
+name_obs_stats_lca=function(path,X){
+  cat_names = colnames(data.frame(X))
+  for(v in 1:length(path@obs_stats$lca)){
+    path@obs_stats$lca[[v]]=as.matrix(path@obs_stats$lca[[v]])
+    colnames(path@obs_stats$lca[[v]])=levels(X[[v]])
+    rownames(path@obs_stats$lca[[v]])=paste0("cluster",1:path@K)
+  }
+  names(path@obs_stats$lca)=cat_names
+  
+  for(p in 1:length(path@path)){
+    for(v in 1:length(path@obs_stats$lca)){
+      path@path[[p]]$obs_stats$lca[[v]]=matrix(path@path[[p]]$obs_stats$lca[[v]],nrow = path@path[[p]]$K)
+      colnames(path@path[[p]]$obs_stats$lca[[v]])=levels(X[[v]])
+      rownames(path@path[[p]]$obs_stats$lca[[v]])=paste0("cluster",1:path@path[[p]]$K)
+    }
+    names(path@path[[p]]$obs_stats$lca)=cat_names
+  }
+  path
+}
+
 
 setMethod(f = "reorder", 
           signature = signature("lca", "list","integer"), 

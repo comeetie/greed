@@ -2,26 +2,24 @@
 #define GMM
 
 // [[Rcpp::depends(RcppArmadillo)]]
+#include <Rcpp.h>
 #include <RcppArmadillo.h>
-#include "MergeMat.h"
-#include "Partition.h"
-#include "IclModel.h"
-
-
+#include "IclModelEmission.h"
 using namespace Rcpp;
 
-class Gmm : public IclModel
+
+
+class Gmm : public IclModelEmission
 {
 public:
-  Gmm(const arma::mat & X,S4 model,arma::vec& cl,bool verb=false);
-  void set_cl(arma::vec cli);
+  Gmm(const arma::mat & X,S4 model,bool verb=false);
+  void set_cl(arma::uvec clt);
   double icl_emiss(const List & obs_stats);
-  double icl_emiss(const List & obs_stats,int oldcl,int newcl);
-  arma::mat delta_swap(int i,arma::uvec iclust);
-  void swap_update(int i, int newcl);
+  double icl_emiss(const List & obs_stats,int oldcl,int newcl,bool dead_cluster);
+  arma::vec delta_swap(const int i,arma::uvec & cl, bool almost_dead_cluster, arma::uvec iclust, int K);
+  void swap_update(const int i,arma::uvec &  cl,bool dead_cluster,const int newcl);
   double delta_merge(int k, int l);
-  void merge_update(int k, int l);
-  arma::vec get_cl(){return clp.get_cl();}
+  void merge_update(const int k,const int l);
   List get_obs_stats();
 private:
   arma::mat X;
@@ -32,7 +30,8 @@ private:
   int N0;
   arma::mat epsilon;
   arma::rowvec mu;
-  Partition clp;
+  int N;
+  int K;
 };
 
 #endif

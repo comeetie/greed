@@ -10,12 +10,11 @@ using namespace Rcpp;
 
 class SbmUndirected : public Sbm
 {
-using Sbm::Sbm;
+  using Sbm::Sbm;
 public:
   double icl_emiss(const List & obs_stats);
-  double icl_emiss(const List & obs_stats,int oldcl,int newcl);
+  double icl_emiss(const List & obs_stats,int oldcl,int newcl,bool dead_cluster);
   double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats);
 };
 
 #endif
-

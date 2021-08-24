@@ -41,7 +41,7 @@ setClass("mvmreg",
 #' @slot obs_stats a list with the following elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters
-#' \item regs: list of size $K$ with statistics for each clusters
+#' \item mvmregs: list of size $K$ with statistics for each clusters
 #' }
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
@@ -61,20 +61,19 @@ setClass("mvmreg_fit",slots = list(model="mvmreg"),contains="icl_fit")
 #' @slot obs_stats a list with the following elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters
-#' \item regs: list of size $K$ with statistics for each clusters
+#' \item mvmregs: list of size $K$ with statistics for each clusters
 #' }
 #' @slot path a list of size K-1 with each part of the path described by:
 #' \itemize{
 #' \item icl1: icl value reach with this solution for alpha=1 
 #' \item logalpha: log(alpha) value were this solution is better than its parent
 #' \item K: number of clusters
-#' \item cl: vector of cluster indexes
 #' \item k,l: index of the cluster that were merged at this step
 #' \item merge_mat: lower triangular matrix of delta icl values 
 #' \item obs_stats: a list with the following elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters
-#' \item regs: list of size $K$ with statistics for each clusters
+#' \item mvregs: list of size $K$ with statistics for each clusters
 #' }
 #' }
 #' @slot logalpha value of log(alpha)
@@ -127,8 +126,8 @@ setMethod(f = "coef",
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
-            muk = lapply(sol@obs_stats$regs, function(r){1/(1+sol@model@tau)*r$mu})
-            Sigmak = lapply(sol@obs_stats$regs, function(r){
+            muk = lapply(sol@obs_stats$mvmreg, function(r){1/(1+sol@model@tau)*r$mu})
+            Sigmak = lapply(sol@obs_stats$mvmreg, function(r){
               S = (r$Syx+sol@model@epsilon)/(r$n+sol@model@N0)
             })
             list(pi=pi,muk=muk,Sigmak=Sigmak)
@@ -136,7 +135,7 @@ setMethod(f = "coef",
 
 reorder_mvmreg = function(obs_stats,or){
   obs_stats$counts = obs_stats$counts[or]
-  obs_stats$regs = obs_stats$regs[or]
+  obs_stats$mvmreg = obs_stats$mvmreg[or]
   obs_stats
 }
 

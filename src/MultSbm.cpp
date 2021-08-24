@@ -1,36 +1,28 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include "gicl_tools.h"
-#include "MergeMat.h"
-#include "IclModel.h"
 #include "MultSbm.h"
 using namespace Rcpp;
 
-
-
-MultSbm::MultSbm(const arma::cube& xp,S4 modeli,arma::vec& clt,bool verb){
+MultSbm::MultSbm(const arma::cube  & xp,S4 modeli,bool verb){
   model = modeli;
-  alpha = model.slot("alpha");
   beta = model.slot("beta");
   x  = xp;
   N  = x.n_rows;
   M = x.n_slices;
-  set_cl(clt);
   verbose=verb;
   // cst to add if needed 
   cst = 0;
 }
 
-void MultSbm::set_cl(arma::vec clt){
-  cl = clt;
-  K = arma::max(cl)+1;
-  x_counts = gsum_cube(cl,x,K);
-  counts = count(cl,K);
+
+
+void MultSbm::set_cl(arma::uvec clt){
+  K = arma::max(clt)+1;
+  x_counts = gsum_cube(clt,x,K);
 }
 
 double MultSbm::icl_emiss(const List & obs_stats){
-  arma::vec counts =as<arma::vec>(obs_stats["counts"]);
   arma::cube edges_counts =as<arma::cube>(obs_stats["x_counts"]);
-  arma::mat matcount = counts*counts.t();
   // lets go
   double icl_emiss = 0;
   for (int k=0;k<K;++k){
@@ -42,40 +34,45 @@ double MultSbm::icl_emiss(const List & obs_stats){
   return icl_emiss+cst;
 }
 
-double MultSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl){
-  arma::vec counts =as<arma::vec>(obs_stats["counts"]);
+double MultSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl, bool dead_cluster){
   arma::cube edges_counts =as<arma::cube>(obs_stats["x_counts"]);
-  arma::mat si = submatcross(oldcl,newcl,counts.n_rows);
+  arma::umat si = submatcross(oldcl,newcl,K);
   double icl_emiss = 0;
   int k = 0;
   int l = 0;
   for (arma::uword i = 0;i<si.n_rows;++i){
     k=si(i,0);
     l=si(i,1);
-    if(counts(k)*counts(l)!=0){
+    if(!dead_cluster){
       arma::vec klcounts = edges_counts.tube(k,l);
       icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
+    }else{
+      if(k!=oldcl & l!=oldcl){
+        arma::vec klcounts = edges_counts.tube(k,l);
+        icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
+      }
     }
     
   }
   return icl_emiss;
+  
 }
-
-
 
 
 
 List MultSbm::get_obs_stats(){
-  return List::create(Named("counts", counts), Named("x_counts", x_counts));
+  return List::create(Named("x_counts", x_counts));
 }
 
-arma::mat MultSbm::delta_swap(int i,arma::uvec iclust){
+
+
+arma::vec MultSbm::delta_swap(int i,arma::uvec & cl, bool almost_dead_cluster, arma::uvec iclust, int K){
   arma::vec self=x.tube(i,i);
   int oldcl = cl(i);
   arma::vec delta(K);
   delta.fill(-std::numeric_limits<double>::infinity());
   delta(oldcl)=0;
-  List old_stats = List::create(Named("counts", counts), Named("x_counts", x_counts));
+  List old_stats = List::create( Named("x_counts", x_counts));
   arma::mat cur_row(M,K);
   cur_row.fill(0);
   arma::mat cur_col(M,K);
@@ -96,7 +93,7 @@ arma::mat MultSbm::delta_swap(int i,arma::uvec iclust){
     k=iclust(j);
     if(k!=oldcl){
       arma::cube new_ec = x_counts;
-      arma::vec new_counts = update_count(counts,oldcl,k);
+
       // todo
       
       for (arma::uword  m=0;m<M;++m){
@@ -113,16 +110,16 @@ arma::mat MultSbm::delta_swap(int i,arma::uvec iclust){
         } 
       }
       
-      List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec));
-      delta(k)=icl(new_stats,oldcl,k)-icl(old_stats,oldcl,k);
+      List new_stats = List::create(Named("x_counts", new_ec));
+      delta(k)=icl_emiss(new_stats,oldcl,k,almost_dead_cluster)-icl_emiss(old_stats,oldcl,k,false);
     }
     
   }
-  return delta;
+  return delta;  
 }
 
 
-void MultSbm::swap_update(const int i,const int newcl){
+void MultSbm::swap_update(const int i,arma::uvec &  cl,bool dead_cluster,const int newcl){
   arma::vec self=x.tube(i,i);
   int oldcl = cl(i);
   arma::mat cur_row(M,K);
@@ -137,7 +134,7 @@ void MultSbm::swap_update(const int i,const int newcl){
       cur_col.col(cl(j))=cur_col.col(cl(j))+curc;
     }
   }
-  counts = update_count(counts,oldcl,newcl);
+
   
   for (arma::uword m=0;m<M;m++){
     x_counts(oldcl,oldcl,m)=x_counts(oldcl,oldcl,m)-self(m);
@@ -151,26 +148,22 @@ void MultSbm::swap_update(const int i,const int newcl){
       x_counts(l,newcl,m)=x_counts(l,newcl,m)+cur_col(m,l);
     } 
   }
+  
 
-  cl(i)=newcl;
-  if(counts(oldcl)==0){
-    counts = counts.elem(arma::find(arma::linspace(0,K-1,K)!=oldcl));
+  if(dead_cluster){
     x_counts.shed_row(oldcl);
     x_counts.shed_col(oldcl);
-    cl.elem(arma::find(cl>oldcl))=cl.elem(arma::find(cl>oldcl))-1;
     --K;
   }
+  
 }
 
 
 double MultSbm::delta_merge(int k, int l){
   
-  List old_stats = List::create(Named("counts", counts), Named("x_counts", x_counts));
+  List old_stats = List::create(Named("x_counts", x_counts));
   
   arma::cube new_ec = x_counts;
-  arma::mat new_counts = counts;
-  new_counts(l)=new_counts(k)+new_counts(l);
-  new_counts(k)=0;
   
   new_ec.tube(l,l)=new_ec.tube(l,l)+new_ec.tube(k,k);
   new_ec.tube(k,k)=new_ec.tube(k,k)-new_ec.tube(k,k);
@@ -183,10 +176,10 @@ double MultSbm::delta_merge(int k, int l){
     } 
   }
   
-  List new_stats = List::create(Named("counts", new_counts), Named("x_counts", new_ec));
-  double delta=icl(new_stats,k,l)-icl(old_stats,k,l);
-  
+  List new_stats = List::create( Named("x_counts", new_ec));
+  double delta=icl_emiss(new_stats,k,l,true)-icl_emiss(old_stats,k,l,false);
   return delta;
+  
 }
 
 
@@ -198,10 +191,9 @@ double MultSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & 
   double icl_cor = 0;
   int cc, cc_old;
   double oxc,xc;
-  arma::vec old_counts =as<arma::vec>(old_stats["counts"]);
   arma::cube old_x_counts =as<arma::cube>(old_stats["x_counts"]);
   arma::vec klcounts;
-  cc = counts(k)*counts(l);
+
   arma::uvec kl;
   kl << k << l << arma::endr;
   arma::uvec mkl;
@@ -269,27 +261,25 @@ double MultSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & 
 }
 
 
-void MultSbm::merge_update(int k, int l){
-  arma::cube new_ec = x_counts;
-  arma::mat new_counts = counts;
-  cl(arma::find(cl==k))=arma::ones(counts(k),1)*l;
-  new_counts(l)=new_counts(k)+new_counts(l);
-  new_counts(k)=0;
-  new_ec.tube(l,l)=new_ec.tube(l,l)+new_ec.tube(k,k);
-  new_ec.tube(k,k)=new_ec.tube(k,k)-new_ec.tube(k,k);
+
+void MultSbm::merge_update(int k,int l){
+  x_counts.tube(l,l)=x_counts.tube(l,l)+x_counts.tube(k,k);
+  x_counts.tube(k,k)=x_counts.tube(k,k)-x_counts.tube(k,k);
   for (arma::uword  h=0; h<K;++h){
     for (arma::uword  m=0;m<M;m++){
-      new_ec(l,h,m)=new_ec(l,h,m)+new_ec(k,h,m);
-      new_ec(k,h,m)=new_ec(k,h,m)-new_ec(k,h,m);
-      new_ec(h,l,m)=new_ec(h,l,m)+new_ec(h,k,m);
-      new_ec(h,k,m)=new_ec(h,k,m)-new_ec(h,k,m);
+      x_counts(l,h,m)=x_counts(l,h,m)+x_counts(k,h,m);
+      x_counts(k,h,m)=x_counts(k,h,m)-x_counts(k,h,m);
+      x_counts(h,l,m)=x_counts(h,l,m)+x_counts(h,k,m);
+      x_counts(h,k,m)=x_counts(h,k,m)-x_counts(h,k,m);
     } 
   }
   
-  counts = new_counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
-  x_counts = new_ec;
+
   x_counts.shed_row(k);
   x_counts.shed_col(k);
-  cl.elem(arma::find(cl>k))=cl.elem(arma::find(cl>k))-1;
+
   --K;
 }
+
+
+

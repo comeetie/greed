@@ -4,7 +4,7 @@
 \alias{plot,gmm_path,missing-method}
 \title{plot a \code{\link{gmm_path-class}} object}
 \usage{
-\S4method{plot}{gmm_path,missing}(x, type = "tree")
+\S4method{plot}{gmm_path,missing}(x, type = "marginals")
 }
 \arguments{
 \item{x}{a \code{\link{gmm_path-class}}}

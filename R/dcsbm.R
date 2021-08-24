@@ -256,5 +256,20 @@ setMethod(f = "preprocess",
             list(X=as.sparse(data),N=nrow(data))
           })
 
-
+setMethod(f = "postprocess", 
+          signature = signature("dcsbm_path"), 
+          definition = function(path,data,X,Y=NULL){
+              path@obs_stats = list(counts = path@obs_stats$counts,
+                                din = path@obs_stats$dcsbm$din,
+                                dout = path@obs_stats$dcsbm$dout,
+                                x_counts = path@obs_stats$dcsbm$x_counts)
+              for (p in 1:length(path@path)){
+                path@path[[p]]$obs_stats = list(counts = path@path[[p]]$obs_stats$counts,
+                                      din = path@path[[p]]$obs_stats$dcsbm$din,
+                                      dout = path@path[[p]]$obs_stats$dcsbm$dout,
+                                      x_counts = path@path[[p]]$obs_stats$dcsbm$x_counts)
+              }
+              path
+          }
+)
 

@@ -235,3 +235,20 @@ setMethod(f = "preprocess",
             list(X=data,N=nrow(data))
           })
 
+
+setMethod(f = "postprocess", 
+          signature = signature("multsbm_path"), 
+          definition = function(path,data,X,Y=NULL){
+            path@obs_stats = list(counts = path@obs_stats$counts,
+                                  din = path@obs_stats$multsbm$din,
+                                  dout = path@obs_stats$multsbm$dout,
+                                  x_counts = path@obs_stats$multsbm$x_counts)
+            for (p in 1:length(path@path)){
+              path@path[[p]]$obs_stats = list(counts = path@path[[p]]$obs_stats$counts,
+                                              din = path@path[[p]]$obs_stats$multsbm$din,
+                                              dout = path@path[[p]]$obs_stats$multsbm$dout,
+                                              x_counts = path@path[[p]]$obs_stats$multsbm$x_counts)
+            }
+            path
+          }
+)

@@ -40,28 +40,10 @@ double IclModel::icl(const List & obs_stats,int oldcl,int newcl){
   return icl;
 }
 
-// main function to compute ICL from observed stats optimized version for computing delta which only invlove change in 2 clusters ans sparse vector
-double IclModel::icl(const List & obs_stats,const List & up_stats,int oldcl,int newcl){
-  // compute the first part p(Z) from clusters counts
-  arma::vec counts =as<arma::vec>(obs_stats["counts"]);
-  int K = counts.n_elem;
-  double icl_prop = 0;
-  if(counts(oldcl)!=0){
-    // both clusters are healthy
-    icl_prop = lgamma(K*alpha)+lgamma(alpha+counts(oldcl))+lgamma(alpha+counts(newcl))-K*lgamma(alpha)-lgamma(K*alpha+N);
-  }else{
-    // cluster oldclass is dead, count(oldcl)==0 chnage of dimension
-    icl_prop = lgamma((K-1)*alpha)+lgamma(alpha+counts(newcl,0))-(K-1)*lgamma(alpha)-lgamma((K-1)*alpha+N);
-  }
-  // complete with log(p(X|X)) from derived class
-  double icl_e = this->icl_emiss(obs_stats,up_stats,oldcl,newcl);
-  double icl = icl_prop+icl_e;
-  return icl;
-}
-
 
 // main function for greedy swaping
 void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust){
+
   // number of pass over data
   int nbpass = 0;
   // number of move during the current pass
@@ -71,9 +53,12 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
   // boolean to test if a move occurs
   bool hasMoved = true;
   // while their are moves
+
   while (hasMoved && nbpass < nbpassmax && K>1 && iclust.n_elem>1){
+    
+
     // suffle the index 
-    arma::vec pass= as<arma::vec>(sample(N,N))-1;
+    arma::uvec pass= as<arma::uvec>(sample(N,N))-1;
     // reinit move counter
     hasMoved=false;
     nbmove=0;
@@ -81,11 +66,12 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
     for (int i=0;i<N ;++i){
       // current node
       cnode=pass(i);
-      //Rcout << cnode << "K:" << K << std::endl;
+
       if (workingset(cnode)==1){
         // compute delta swap
+
         arma::vec delta = this->delta_swap(cnode,iclust);
-        //Rcout << delta << std::endl;
+
         // best swap
         int ncl = delta.index_max();
         if(ncl!=cl(cnode)){
@@ -146,7 +132,7 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::sp_mat & mo
   // while their are moves
   while (hasMoved && nbpass < nbpassmax && K>1){
     // suffle the index 
-    arma::vec pass= as<arma::vec>(sample(N,N))-1;
+    arma::uvec pass= as<arma::uvec>(sample(N,N))-1;
     // reinit move counter
     hasMoved=false;
     nbmove=0;
@@ -355,7 +341,7 @@ arma::sp_mat IclModel::greedy_merge(const arma::sp_mat & merge_graph){
   double cicl = this->icl(this->get_obs_stats());
   double bicl= cicl;
   arma::sp_mat best_merge_mat = delta;
-  arma::vec bcl = cl;
+  arma::uvec bcl = cl;
   // while their are merge to explore
   while(delta.n_nonzero>0 && K>1){
     

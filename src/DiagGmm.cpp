@@ -2,58 +2,51 @@
 #include "gicl_tools.h"
 #include "MergeMat.h"
 #include "IclModelEmission.h"
-#include "GmmE.h"
+#include "DiagGmm.h"
 using namespace Rcpp;
 
 
 
-GmmE::GmmE(const arma::mat & Xi,S4 modeli,bool verb){
+DiagGmm::DiagGmm(const arma::mat & Xi,S4 modeli,bool verb){
   model= modeli;
-  // dirichlet prior parameter on proportion
-
+  
   // data
   X  = Xi;
-  // Number of individuals
-  N  = X.n_rows;
-
+  
   tau = model.slot("tau");
-  if(Rcpp::traits::is_nan<REALSXP>(model.slot("N0"))){
-    N0 = X.n_cols; 
-    model.slot("N0")=N0;
-  }else{
-    N0 = model.slot("N0");
+  kappa = model.slot("kappa");
+  
+  
+  beta= model.slot("beta");
+  if(Rcpp::traits::is_nan<REALSXP>(beta)){
+    beta = 0.1*arma::mean(arma::var(X)); 
+    model.slot("beta")=beta;
   }
+  
   mu = as<arma::rowvec>(model.slot("mu"));
   if(mu.has_nan()){
     mu = arma::mean(X,0);
     model.slot("mu")=mu;
   }
-  epsilon = as<arma::mat>(model.slot("epsilon"));
-  if(epsilon.has_nan()){
-    epsilon = 0.01*arma::diagmat(cov(X));
-    model.slot("epsilon") = epsilon;
-  }
-  
-  // TODO : add a filed to store the icl const ?
   verbose=verb;
 }
 
-void GmmE::set_cl(arma::vec cl){
+void DiagGmm::set_cl(arma::uvec cl){
   // construct oberved stats 
   K = arma::max(cl)+1;
   for(int k=0;k<K;k++){
-    regs.push_back(gmm_marginal(X.rows(arma::find(cl==k)),tau,N0,epsilon,mu));
+    regs.push_back(gmm_marginal_spherical(X.rows(arma::find(cl==k)),kappa,tau,beta,mu));
   }
 }
 
 
 
-List GmmE::get_obs_stats(){
+List DiagGmm::get_obs_stats(){
   // return observed stats
   return clone(regs);
 }
 
-double GmmE::icl_emiss(const List & regs){
+double DiagGmm::icl_emiss(const List & regs){
   // compute log(p(X|Z))
   int K = regs.size();
   double icl_emiss = 0;
@@ -65,7 +58,7 @@ double GmmE::icl_emiss(const List & regs){
   return icl_emiss;
 }
 
-double GmmE::icl_emiss(const List & regs,int oldcl,int newcl,bool dead_cluster){
+double DiagGmm::icl_emiss(const List & regs,int oldcl,int newcl,bool dead_cluster){
   // compute log(p(X|Z)) but only for the 2 classes which haved changed (oldcl,newcl)
   List reg_newcl = regs[newcl];
   double icl_emiss = reg_newcl["log_evidence"];
@@ -77,7 +70,7 @@ double GmmE::icl_emiss(const List & regs,int oldcl,int newcl,bool dead_cluster){
 }
 
 
-arma::mat GmmE::delta_swap(int i,arma::vec &  cl,bool almost_dead_cluster,arma::uvec iclust,int K){
+arma::vec DiagGmm::delta_swap(const int i,arma::uvec &  cl,bool almost_dead_cluster,arma::uvec iclust,int K){
   
   int oldcl = cl(i);
   // extract current row 
@@ -95,9 +88,9 @@ arma::mat GmmE::delta_swap(int i,arma::vec &  cl,bool almost_dead_cluster,arma::
     k=iclust(j);
     if(k!=oldcl){
       // construct new stats
-      new_regs[k]=gmm_marginal_add1(regs[k],xc,tau,N0,epsilon,mu);
+      new_regs[k]=gmm_marginal_spherical_add1(regs[k],xc,kappa,tau,beta,mu);
       if(!almost_dead_cluster){
-        new_regs[oldcl]=gmm_marginal_del1(regs[oldcl],xc,tau,N0,epsilon,mu);
+        new_regs[oldcl]=gmm_marginal_spherical_del1(regs[oldcl],xc,kappa,tau,beta,mu);
       }
       delta(k)=icl_emiss(new_regs,oldcl,k,almost_dead_cluster)-icl_emiss(regs,oldcl,k,false);
     }
@@ -107,16 +100,16 @@ arma::mat GmmE::delta_swap(int i,arma::vec &  cl,bool almost_dead_cluster,arma::
 }
 
 
-void GmmE::swap_update(int i,arma::vec & cl,bool dead_cluster,const int newcl){
+void DiagGmm::swap_update(const int i,arma::uvec & cl,bool dead_cluster,const int newcl){
   // a swap is done !
   int oldcl = cl(i);
   // current row
   arma::rowvec xc = X.row(i);
   // update regs
   // switch row x from cluster oldcl to k
-  regs[newcl]=gmm_marginal_add1(regs[newcl],xc,tau,N0,epsilon,mu);
+  regs[newcl]=gmm_marginal_spherical_add1(regs[newcl],xc,kappa,tau,beta,mu);
   if(!dead_cluster){
-    regs[oldcl]=gmm_marginal_del1(regs[oldcl],xc,tau,N0,epsilon,mu);
+    regs[oldcl]=gmm_marginal_spherical_del1(regs[oldcl],xc,kappa,tau,beta,mu);
   }else{
     // remove from regs
     regs.erase(oldcl);
@@ -128,11 +121,11 @@ void GmmE::swap_update(int i,arma::vec & cl,bool dead_cluster,const int newcl){
 }
 
 
-double GmmE::delta_merge(int k, int l){
+double DiagGmm::delta_merge(int k, int l){
   
   // for each possible merge
   List new_regs = List(K);
-  new_regs[l] = gmm_marginal_merge(regs[k],regs[l],tau,N0,epsilon,mu);
+  new_regs[l] = gmm_marginal_spherical_merge(regs[k],regs[l],kappa,tau,beta,mu);
   // delta
   double delta=icl_emiss(new_regs,k,l,true)-icl_emiss(regs,k,l,false);
   return delta;
@@ -141,9 +134,9 @@ double GmmE::delta_merge(int k, int l){
 
 
 // Merge update between k and l
-void GmmE::merge_update(int k,int l){
+void DiagGmm::merge_update(int k,int l){
   // update regs
-  regs[l] = gmm_marginal_merge(regs[k],regs[l],tau,N0,epsilon,mu);
+  regs[l] = gmm_marginal_spherical_merge(regs[k],regs[l],kappa,tau,beta,mu);
   regs.erase(k);
   // update K
   --K;

@@ -14,21 +14,17 @@ using namespace Rcpp;
 class IclModel
 {
 public:
-  virtual void set_cl(arma::vec clt){};
+  virtual void set_cl(arma::uvec clt){};
   // compute icl
   double icl(const List & obs_stats);
   // compute icl optimized for deltas
   double icl(const List & obs_stats,int oldcl,int newcl);
-  // compute icl optimized for deltas and sparse updates
-  double icl(const List & obs_stats,const List & up_stats,int oldcl,int newcl);
   // virtual methods to be implemented by models to compute log(p(X|Z))
   virtual double icl_emiss(const List & obs_stats){return 0;};
   // virtual methods to be implemented by models to compute log(p(X|Z)) optimized for deltas
   virtual double icl_emiss(const List & obs_stats,int oldcl,int newcl){return 0;};
-  // virtual methods to be implemented by models to compute log(p(X|Z)) optimized for deltas and sparse updates
-  virtual double icl_emiss(const List & obs_stats,const List & up_stats,int oldcl,int newcl){return 0;};
   // compute the delta for each possible swap of a node
-  virtual arma::mat delta_swap(const int i,arma::uvec iclust){return NULL;};
+  virtual arma::vec delta_swap(const int i,arma::uvec iclust){return NULL;};
   // update the stats when a node is swaped
   virtual void swap_update(const int i,const int newcl){};
   // main method for greedy swaping
@@ -46,7 +42,6 @@ public:
   // update version
   MergeMat delta_merge(arma::mat delta, int obk, int obl,const List & old_stats);
   // method  to compute merge matrix deltas with constraints on possible merge
-  SpMergeMat nasty_delta_merge(const arma::sp_mat & merge_graph);
   SpMergeMat delta_merge(const arma::sp_mat & merge_graph);
   // method  to compute merge matrix deltas with constraints on possible merge (update version)
   SpMergeMat delta_merge(arma::sp_mat & merge_graph, int obk, int obl,const List & old_stats);
@@ -61,7 +56,7 @@ public:
   // accessors
   virtual List get_obs_stats(){return List::create();};
   virtual List get_obs_stats_cst(){return List::create();};
-  arma::vec get_cl(){return cl;};
+  arma::uvec get_cl(){return cl;};
   arma::vec get_counts(){return counts;};
   S4 get_model(){return model;};
   int get_K(){return K;};
@@ -74,7 +69,7 @@ protected:
   // problem dim
   int N;
   // vector of cluster labels
-  arma::vec cl;
+  arma::uvec cl;
   // stats
   // vector of cluster counts
   arma::vec counts;

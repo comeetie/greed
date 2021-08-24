@@ -2,23 +2,24 @@
 #define MULTSBM
 
 // [[Rcpp::depends(RcppArmadillo)]]
-#include <RcppArmadillo.h>
-#include "MergeMat.h"
-#include "IclModel.h"
+#include <Rcpp.h>
+#include "IclModelEmission.h"
 using namespace Rcpp;
 
-class MultSbm : public IclModel
+
+
+class MultSbm : public IclModelEmission
 {
 public:
-  MultSbm(const arma::cube& xp,S4 model,arma::vec& cl,bool verb=false);
-  void set_cl(arma::vec clt);
+  MultSbm(const arma::cube & xp,S4 model,bool verb=false);
+  void set_cl(arma::uvec clt);
   double icl_emiss(const List & obs_stats);
-  double icl_emiss(const List & obs_stats,int oldcl,int newcl);
-  arma::mat delta_swap(int i,arma::uvec iclust);
-  void swap_update(int i, int newcl);
+  double icl_emiss(const List & obs_stats,int oldcl,int newcl,bool dead_cluster);
+  arma::vec delta_swap(const int i,arma::uvec & cl, bool almost_dead_cluster, arma::uvec iclust, int K);
+  void swap_update(const int i,arma::uvec &  cl,bool dead_cluster,const int newcl);
   double delta_merge(int k, int l);
   double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats);
-  void merge_update(int k, int l);
+  void merge_update(const int k,const int l);
   List get_obs_stats();
 protected:
   int M;
@@ -26,7 +27,10 @@ protected:
   // matrix of observed counts for each clusters
   arma::cube x;
   arma::cube x_counts;
-  double cst; 
+  int K;
+  int N;
+  double cst;
 };
 
 #endif
+

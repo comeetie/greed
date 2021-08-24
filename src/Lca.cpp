@@ -1,60 +1,66 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include "gicl_tools.h"
 #include "MergeMat.h"
-#include "IclModel.h"
-#include "LcaE.h"
+#include "IclModelEmission.h"
+#include "Lca.h"
 using namespace Rcpp;
 
 
 
-LcaE::LcaE(arma::mat xi,S4 modeli,bool verb){
+Lca::Lca(const arma::umat & Xi,S4 modeli,bool verb){
   model = modeli;
   beta = model.slot("beta");
-  x  = xi;
+  X  = Xi;
   verbose=verb;
-
 }
 
-void LcaE::set_cl(arma::vec cl){
-
+void Lca::set_cl(arma::uvec cl){
+  // construct oberved stats 
   K = arma::max(cl)+1;
-  int nbvar = x.n_cols;
+  int nbvar = X.n_cols;
   counts = count(cl,K);
   nbmod = arma::zeros(nbvar);
   for(int i=0;i<nbvar;i++){
-    nbmod(i)=arma::max(x.col(i))+1;
-    arma::mat ct =table_count(cl,x.col(i),K,nbmod(i));
+    nbmod(i)=arma::max(X.col(i))+1;
+    arma::umat ct =table_count(cl,X.col(i),K,nbmod(i));
     x_counts.push_back(ct);
   }
-
 }
 
 
-double LcaE::icl_emiss(const List & obs_stats){
+
+List Lca::get_obs_stats(){
+  // return observed stats
+  return List::create(Named("x_counts", clone(x_counts)),Named("counts", counts));
+}
+
+double Lca::icl_emiss(const List & obs_stats){
   arma::vec counts_cur = as<arma::vec>(obs_stats["counts"]);
   List x_counts_cur = as<List>(obs_stats["x_counts"]);
   double icl_emiss=0;
   
-  for(int j=0;j<x.n_cols;j++){
+  for(int j=0;j<X.n_cols;j++){
     arma::mat temp_mat =  as<arma::mat>(x_counts_cur[j]);
     icl_emiss+=arma::accu(lgamma(temp_mat+beta));
     icl_emiss+= K*lgamma(beta*nbmod(j));
     icl_emiss-= K*nbmod(j)*lgamma(beta);
     icl_emiss-= arma::accu(lgamma(counts_cur+beta*nbmod(j)));
   }
-  
   return icl_emiss;
 }
 
-double LcaE::icl_emiss(const List & obs_stats,int oldcl,int newcl){
+
+
+double Lca::icl_emiss(const List & obs_stats,int oldcl,int newcl,bool dead_cluster){
+  // compute log(p(X|Z)) but only for the 2 classes which haved changed (oldcl,newcl)
   arma::vec counts_cur = as<arma::vec>(obs_stats["counts"]);
   List x_counts_cur = as<List>(obs_stats["x_counts"]);
   double icl_emiss=0;
   int Kc =K;
-  if(counts_cur(oldcl)==0){
+  if(dead_cluster){
     Kc--;
   }
-  for(int j=0;j<x.n_cols;j++){
+  for(int j=0;j<X.n_cols;j++){
     arma::mat temp_mat =  as<arma::mat>(x_counts_cur[j]);
     icl_emiss+=arma::accu(lgamma(temp_mat.row(newcl)+beta));
     if(counts_cur(oldcl)!=0){
@@ -69,21 +75,14 @@ double LcaE::icl_emiss(const List & obs_stats,int oldcl,int newcl){
     }
     
   }
-  
   return icl_emiss;
 }
 
 
-List LcaE::get_obs_stats(){
-  return List::create(Named("x_counts", clone(x_counts)),Named("counts", counts));
-}
-
-
-arma::mat LcaE::delta_swap(int i,int K, Partition clp,arma::uvec iclust){
+arma::vec Lca::delta_swap(const int i,arma::uvec &  cl,bool almost_dead_cluster,arma::uvec iclust,int K){
   
-
-  int oldcl = clp.get(i);
- 
+  int oldcl = cl(i);
+  
   arma::vec delta(K);
   delta.fill(-std::numeric_limits<double>::infinity());
   delta(oldcl)=0;
@@ -98,35 +97,31 @@ arma::mat LcaE::delta_swap(int i,int K, Partition clp,arma::uvec iclust){
     if(k!=oldcl){
       List new_x_counts;
       arma::vec new_counts = update_count(counts,oldcl,k);
-      for(int v=0;v<x.n_cols;v++){
-
-        arma::mat temp_mat =  as<arma::mat>(x_counts[v]);
-        temp_mat(oldcl,x(i,v))=temp_mat(oldcl,x(i,v))-1;
-        temp_mat(k,x(i,v))=temp_mat(k,x(i,v))+1;
+      for(int v=0;v<X.n_cols;v++){
+        
+        arma::umat temp_mat =  as<arma::umat>(x_counts[v]);
+        temp_mat(oldcl,X(i,v))=temp_mat(oldcl,X(i,v))-1;
+        temp_mat(k,X(i,v))=temp_mat(k,X(i,v))+1;
         new_x_counts.push_back(temp_mat);
       }
-
+      
       List new_stats = List::create(Named("x_counts", new_x_counts),Named("counts", new_counts));
-      delta(k)=icl_emiss(new_stats,oldcl,k)-icl_emiss(old_stats,oldcl,k);
-
+      delta(k)=icl_emiss(new_stats,oldcl,k,almost_dead_cluster)-icl_emiss(old_stats,oldcl,k,false);
     }
   }
   return delta;
 }
 
 
+void Lca::swap_update(const int i,arma::uvec & cl,bool dead_cluster,const int newcl){
 
-void LcaE::swap_update(const int i,Partition clp,bool dead_cluster, const int newcl){
+  int oldcl = cl(i); 
   
-
-  
-  int oldcl = clp.get(i); 
-
-  for(int v=0;v<x.n_cols;v++){
-
-    arma::mat temp_mat =  as<arma::mat>(x_counts[v]);
-    temp_mat(oldcl,x(i,v))=temp_mat(oldcl,x(i,v))-1;
-    temp_mat(newcl,x(i,v))=temp_mat(newcl,x(i,v))+1;
+  for(int v=0;v<X.n_cols;v++){
+    
+    arma::umat temp_mat =  as<arma::umat>(x_counts[v]);
+    temp_mat(oldcl,X(i,v))=temp_mat(oldcl,X(i,v))-1;
+    temp_mat(newcl,X(i,v))=temp_mat(newcl,X(i,v))+1;
     
     if(dead_cluster){
       temp_mat.shed_row(oldcl);
@@ -139,20 +134,18 @@ void LcaE::swap_update(const int i,Partition clp,bool dead_cluster, const int ne
     counts = counts.elem(arma::find(arma::linspace(0,K-1,K)!=oldcl));
     K--;
   }
-  
-  
 
 }
 
 
-double LcaE::delta_merge(int k, int l){
+double Lca::delta_merge(int k, int l){
   
   // k,l -> l and k is removed
   
   List old_stats = List::create(Named("x_counts", x_counts),Named("counts", counts));
   List new_x_counts;
-  for(int v=0;v<x.n_cols;v++){
-    arma::mat temp_mat =  as<arma::mat>(x_counts[v]);
+  for(int v=0;v<X.n_cols;v++){
+    arma::umat temp_mat =  as<arma::umat>(x_counts[v]);
     temp_mat.row(l) =temp_mat.row(l)+temp_mat.row(k);
     temp_mat.row(k)-=temp_mat.row(k);
     new_x_counts.push_back(temp_mat);
@@ -162,16 +155,17 @@ double LcaE::delta_merge(int k, int l){
   new_counts(k)=0;
   List new_stats = List::create(Named("x_counts", new_x_counts),Named("counts", new_counts));
   
-  double delta = icl_emiss(new_stats,k,l)-icl_emiss(old_stats,k,l);
-
+  double delta = icl_emiss(new_stats,k,l,true)-icl_emiss(old_stats,k,l,false);
+  
   return delta;
 }
 
 
-void LcaE::merge_update(int k,int l){
-  
-  for(int v=0;v<x.n_cols;v++){
-    arma::mat temp_mat =  as<arma::mat>(x_counts[v]);
+
+// Merge update between k and l
+void Lca::merge_update(int k,int l){
+  for(int v=0;v<X.n_cols;v++){
+    arma::umat temp_mat =  as<arma::umat>(x_counts[v]);
     temp_mat.row(l)=temp_mat.row(l)+temp_mat.row(k);
     temp_mat.shed_row(k);
     x_counts[v] = temp_mat;
@@ -180,4 +174,3 @@ void LcaE::merge_update(int k,int l){
   counts = counts.elem(arma::find(arma::linspace(0,K-1,K)!=k));
   --K;
 }
-

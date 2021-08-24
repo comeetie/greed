@@ -23,7 +23,7 @@ An S4 class to represent a fit of a multivariate mixture of regression model, ex
 \item{\code{obs_stats}}{a list with the following elements:
 \itemize{
 \item counts: numeric vector of size K with number of elements in each clusters
-\item regs: list of size $K$ with statistics for each clusters
+\item mvmregs: list of size $K$ with statistics for each clusters
 }}
 
 \item{\code{move_mat}}{binary matrix which store move constraints}

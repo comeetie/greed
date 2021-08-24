@@ -1,5 +1,5 @@
-#ifndef DCSBM
-#define DCSBM
+#ifndef MREGS
+#define MREGS
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <Rcpp.h>
@@ -8,33 +8,28 @@ using namespace Rcpp;
 
 
 
-class DcSbm : public IclModelEmission
+class Mregs : public IclModelEmission
 {
 public:
-  DcSbm(const arma::sp_mat & xp,S4 model,bool verb=false);
+  Mregs(const arma::mat & X,const arma::mat & Y,S4 model,bool verb=false);
   void set_cl(arma::uvec clt);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl,bool dead_cluster);
   arma::vec delta_swap(const int i,arma::uvec & cl, bool almost_dead_cluster, arma::uvec iclust, int K);
   void swap_update(const int i,arma::uvec &  cl,bool dead_cluster,const int newcl);
   double delta_merge(int k, int l);
-  double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats);
   void merge_update(const int k,const int l);
   List get_obs_stats();
-  List get_obs_stats_cst();
-    
 protected:
-  arma::sp_mat  x;
-  arma::sp_mat  xt;
-  // matrix of observed counts for each clusters
-  arma::mat x_counts;
-  double cst; 
-  arma::vec din;
-  arma::vec dout;
-  arma::vec counts;
-  int K;
+  arma::mat X;
+  arma::mat Y;
+  List regs;
+  arma::mat M;
+  arma::mat Kp;
+  arma::mat S0;
+  double N0;
   int N;
-  double p;
+  int K;
 };
 
 #endif

@@ -90,7 +90,7 @@ cleanpathopt = function(pathsol){
   
   pathsol@cl=as.numeric(pathsol@cl)
   
-  if(length(pathsol@path)>0){
+  if(length(pathsol@path)>1){
     if(is.infinite(pathsol@path[[length(pathsol@path)]]$icl1)){
       pathsol@path[[length(pathsol@path)]]$icl1=pathsol@path[[length(pathsol@path)-1]]$icl1
       pathsol@path[[length(pathsol@path)]]$logalpha=pathsol@path[[length(pathsol@path)-1]]$logalpha

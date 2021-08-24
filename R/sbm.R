@@ -229,4 +229,19 @@ setMethod(f = "preprocess",
             list(X=as.sparse(data),N=nrow(data))
           })
 
-
+setMethod(f = "postprocess", 
+          signature = signature("sbm_path"), 
+          definition = function(path,data,X,Y=NULL){
+            path@obs_stats = list(counts = path@obs_stats$counts,
+                                  din = path@obs_stats$sbm$din,
+                                  dout = path@obs_stats$sbm$dout,
+                                  x_counts = path@obs_stats$sbm$x_counts)
+            for (p in 1:length(path@path)){
+              path@path[[p]]$obs_stats = list(counts = path@path[[p]]$obs_stats$counts,
+                                              din = path@path[[p]]$obs_stats$sbm$din,
+                                              dout = path@path[[p]]$obs_stats$sbm$dout,
+                                              x_counts = path@path[[p]]$obs_stats$sbm$x_counts)
+            }
+            path
+          }
+)

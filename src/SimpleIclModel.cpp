@@ -2,12 +2,12 @@
 #include "gicl_tools.h"
 #include "IclModel.h"
 #include "SimpleIclModel.h"
-#include "IclModelEmission2.h"
+#include "IclModelEmission.h"
 using namespace Rcpp;
 
 
 
-SimpleIclModel::SimpleIclModel(IclModelEmission2 * emission_modeli,S4 modeli, arma::vec cli, bool verb){
+SimpleIclModel::SimpleIclModel(IclModelEmission * emission_modeli,S4 modeli, arma::uvec cli, bool verb){
 
   model=modeli;
   alpha = model.slot("alpha");
@@ -16,7 +16,7 @@ SimpleIclModel::SimpleIclModel(IclModelEmission2 * emission_modeli,S4 modeli, ar
   verbose=verb;
 }
 
-void SimpleIclModel::set_cl(arma::vec cli){
+void SimpleIclModel::set_cl(arma::uvec cli){
   N = cli.n_elem; 
   K = arma::max(cli)+1;
   cl=cli;
@@ -77,7 +77,7 @@ double SimpleIclModel::icl_prop(arma::vec counts,int oldcl,int newcl){
   return icl_prop;
 }
 
-arma::mat SimpleIclModel::delta_prop_swap(int i,arma::uvec iclust){
+arma::vec SimpleIclModel::delta_prop_swap(int i,arma::uvec iclust){
   int oldcl = cl(i);
   arma::vec delta(K);
   delta.fill(-std::numeric_limits<double>::infinity());
@@ -94,7 +94,7 @@ arma::mat SimpleIclModel::delta_prop_swap(int i,arma::uvec iclust){
   return delta;
 }
 
-arma::mat SimpleIclModel::delta_swap(int i,arma::uvec iclust){
+arma::vec SimpleIclModel::delta_swap(int i,arma::uvec iclust){
   arma::vec delta(K);
   delta = delta_prop_swap(i,iclust);
   bool dead_cluster=false;
@@ -107,11 +107,11 @@ arma::mat SimpleIclModel::delta_swap(int i,arma::uvec iclust){
 
 
 void SimpleIclModel::swap_update(int i,int newcl){
-  bool dead_cluster = false;
+  bool almost_dead_cluster = false;
   if(counts(cl(i))==1){
-    dead_cluster=true;
+    almost_dead_cluster=true;
   }
-  emission_model->swap_update(i,cl,dead_cluster,newcl);
+  emission_model->swap_update(i,cl,almost_dead_cluster,newcl);
 
   int oldcl = cl(i);
   counts = update_count(counts,oldcl,newcl);
@@ -126,7 +126,7 @@ void SimpleIclModel::swap_update(int i,int newcl){
 
 double SimpleIclModel::delta_merge(int k,int l){
   double delta = emission_model->delta_merge(k,l);
-  arma::mat new_counts = counts;
+  arma::vec new_counts = counts;
   new_counts(l)=new_counts(k)+new_counts(l);
   new_counts(k)=0;
   delta += icl_prop(new_counts,k,l)-icl_prop(counts,k,l);
