@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // post_probs
 arma::mat post_probs(S4 model, List data, arma::uvec& clt);
 RcppExport SEXP _greed_post_probs(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP) {
@@ -105,6 +110,36 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type data(dataSEXP);
     Rcpp::traits::input_parameter< S4 >::type init_fit(init_fitSEXP);
     rcpp_result_gen = Rcpp::wrap(merge_mat(data, init_fit));
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_swap
+double test_swap(S4 model, List data, arma::uvec& cl, int i, int newcl);
+RcppExport SEXP _greed_test_swap(SEXP modelSEXP, SEXP dataSEXP, SEXP clSEXP, SEXP iSEXP, SEXP newclSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
+    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< arma::uvec& >::type cl(clSEXP);
+    Rcpp::traits::input_parameter< int >::type i(iSEXP);
+    Rcpp::traits::input_parameter< int >::type newcl(newclSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_swap(model, data, cl, i, newcl));
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_merge
+double test_merge(S4 model, List data, arma::uvec& cl, int k, int l);
+RcppExport SEXP _greed_test_merge(SEXP modelSEXP, SEXP dataSEXP, SEXP clSEXP, SEXP kSEXP, SEXP lSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< S4 >::type model(modelSEXP);
+    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< arma::uvec& >::type cl(clSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type l(lSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_merge(model, data, cl, k, l));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -440,6 +475,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_fit_greed", (DL_FUNC) &_greed_fit_greed, 6},
     {"_greed_fit_greed_path", (DL_FUNC) &_greed_fit_greed_path, 2},
     {"_greed_merge_mat", (DL_FUNC) &_greed_merge_mat, 2},
+    {"_greed_test_swap", (DL_FUNC) &_greed_test_swap, 5},
+    {"_greed_test_merge", (DL_FUNC) &_greed_test_merge, 5},
     {"_greed_sp_cross", (DL_FUNC) &_greed_sp_cross, 6},
     {"_greed_add_sppat", (DL_FUNC) &_greed_add_sppat, 2},
     {"_greed_add_spmatpat", (DL_FUNC) &_greed_add_spmatpat, 2},

@@ -29,6 +29,14 @@ merge_mat <- function(data, init_fit) {
     .Call('_greed_merge_mat', PACKAGE = 'greed', data, init_fit)
 }
 
+test_swap <- function(model, data, cl, i, newcl) {
+    .Call('_greed_test_swap', PACKAGE = 'greed', model, data, cl, i, newcl)
+}
+
+test_merge <- function(model, data, cl, k, l) {
+    .Call('_greed_test_merge', PACKAGE = 'greed', model, data, cl, k, l)
+}
+
 sp_cross <- function(colvec, rowvec, self, oldcl, newcl, K) {
     .Call('_greed_sp_cross', PACKAGE = 'greed', colvec, rowvec, self, oldcl, newcl, K)
 }

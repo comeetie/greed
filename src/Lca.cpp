@@ -66,7 +66,6 @@ double Lca::icl_emiss(const List & obs_stats,int oldcl,int newcl,bool dead_clust
     if(counts_cur(oldcl)!=0){
       icl_emiss+=arma::accu(lgamma(temp_mat.row(oldcl)+beta));
     }
-    icl_emiss+=arma::accu(lgamma(temp_mat+beta));
     icl_emiss+= Kc*lgamma(beta*nbmod(j));
     icl_emiss-= Kc*nbmod(j)*lgamma(beta);
     icl_emiss-= lgamma(counts_cur(newcl)+beta*nbmod(j));

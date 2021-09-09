@@ -396,5 +396,58 @@ arma::mat merge_mat(List data, S4 init_fit) {
   delete M;
   return(mm);
 }
+// test_swap
+// @param model icl_model
+// @param data list with clustering data depends on model type
+// @param cl initital clustering
+// @return a DeltaICL(cl,cl_swap)-DeltaICLOpt(cl_swap)
+// [[Rcpp::export]]
+double test_swap(S4 model,List data,arma::uvec& cl,int i, int newcl){
+  int Ki = arma::max(cl);
+  IclModel * M = init(model,data,cl,FALSE);
+  double icli = M->icl(M->get_obs_stats());
+  Rcout << icli << std::endl;
+  arma::uvec iclust = arma::find(arma::ones(Ki));
+  arma::vec delta_swap = M->delta_swap(i-1,iclust);
+  Rcout << delta_swap << std::endl;
+  arma::uvec & cl_swap = cl;
+  cl_swap(i-1)=newcl;
+  IclModel * Mswap = init(model,data,cl,FALSE);
+  double icls = Mswap->icl(Mswap->get_obs_stats());
+  Rcout << icls << std::endl;
+  double delta = icls-icli;
+  return delta-delta_swap[newcl-1];
+}
 
+// test_merge
+// @param model icl_model
+// @param data list with clustering data depends on model type
+// @param cl initital clustering
+// @return a DeltaICL(cl,cl_swap)-DeltaICLOpt(cl_swap)
+// [[Rcpp::export]]
+double test_merge(S4 model,List data,arma::uvec& cl,int k, int l){
+  if(k<l){
+    int temp = k;
+    k=l;
+    l=temp;
+  }
+  IclModel * M = init(model,data,cl,FALSE);
+  Rcout << M->icl(M->get_obs_stats()) << std::endl;
+  arma::uvec & clm = cl;
+  clm(arma::find(clm==k)).fill(l);
+  clm.elem(arma::find(clm>k))=cl.elem(arma::find(clm>k))-1;
+  k=k-1;
+  l=l-1;
+  Rcout << "11" << std::endl;
+  double dmerge = M->delta_merge(k,l);
+  Rcout << dmerge << std::endl;
+  Rcout << "22" << std::endl;
+
+  IclModel * Mmerge = init(model,data,clm,FALSE);
+  
+  double delta = Mmerge->icl(Mmerge->get_obs_stats())-M->icl(M->get_obs_stats());
+  Rcout << Mmerge->icl(Mmerge->get_obs_stats()) << std::endl;
+  Rcout << "33" << std::endl;
+  return dmerge-delta;
+}
 

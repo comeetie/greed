@@ -31,7 +31,7 @@ Suggests:
     spelling
 Encoding: UTF-8
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Collate: 
     'RcppExports.R'
     'misc.R'
