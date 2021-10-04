@@ -214,7 +214,7 @@ name_obs_stats=function(path,X){
   cat_names = colnames(data.frame(X[,facts]))
   for(v in 1:length(path@obs_stats$lca)){
     path@obs_stats$lca[[v]]=as.matrix(path@obs_stats$lca[[v]])
-    colnames(path@obs_stats$lca[[v]])=levels(X[[facts[v]]])
+    colnames(path@obs_stats$lca[[v]])=levels(droplevels(X[[facts[v]]]))
     rownames(path@obs_stats$lca[[v]])=paste0("cluster",1:path@K)
   }
   names(path@obs_stats$lca)=cat_names
@@ -230,7 +230,7 @@ name_obs_stats=function(path,X){
     
     for(v in 1:length(path@obs_stats$lca)){
       path@path[[p]]$obs_stats$lca[[v]]=matrix(path@path[[p]]$obs_stats$lca[[v]],nrow = path@path[[p]]$K)
-      colnames(path@path[[p]]$obs_stats$lca[[v]])=levels(X[[facts[v]]])
+      colnames(path@path[[p]]$obs_stats$lca[[v]])=levels(droplevels(X[[facts[v]]]))
       rownames(path@path[[p]]$obs_stats$lca[[v]])=paste0("cluster",1:path@path[[p]]$K)
     }
     names(path@path[[p]]$obs_stats$lca)=cat_names
@@ -282,5 +282,5 @@ setMethod(f = "preprocess",
             if(!all(facts | nums) | sum(facts)==0 | sum(nums)==0){
               stop("An mmm model expect a data.frame whith factors and numeric columns.",call. = FALSE)
             }
-            list(Xcat=sapply(data[,facts],unclass)-1,Xnum =as.matrix(data[,nums]), N=nrow(data))
+            list(Xcat=sapply(data[,facts],function(fa){unclass(droplevels(fa))})-1,Xnum =as.matrix(data[,nums]), N=nrow(data))
           })
