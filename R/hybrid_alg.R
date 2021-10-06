@@ -8,6 +8,10 @@ NULL
 #' @name %globals%
 NULL
 
+#' @importFrom future %seed%
+#' @name %seed%
+NULL
+
 #' @include models_classes.R fit_classes.R cleanpath.R
 #' @import Matrix
 NULL
@@ -31,7 +35,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
               cli=as.numeric(factor(cli))
               Ko=max(cli)
               moves = as.sparse(matrix(1,Ko,Ko))
-              solutions[[i]] %<-% fiswap(cli,moves)  %globals% c("model","data","cli","verbose","fiswap","moves")
+              solutions[[i]] %<-% fiswap(cli,moves)  %globals% c("model","data","cli","verbose","fiswap","moves") %seed% TRUE
             }
             solutions = as.list(solutions)
             icls  = sapply(solutions,function(s){s@icl})
@@ -67,7 +71,7 @@ hybrid = function(model,alg,data,K, verbose=FALSE){
                 i2 = sample(ip[-i1],1,prob=ip[-i1])
                 s1 = solutions[[i1]]
                 s2 = solutions[[i2]]
-                new_solutions[[i]] %<-% full_cross_over(s1,s2,fimerge,fiswap,pmut,Kmax)  %globals% c("s1","s2","fimerge","fiswap","pmut","full_cross_over","Kmax")
+                new_solutions[[i]] %<-% full_cross_over(s1,s2,fimerge,fiswap,pmut,Kmax)  %globals% c("s1","s2","fimerge","fiswap","pmut","full_cross_over","Kmax")  %seed% TRUE
               }
               solutions = c(bres,as.list(new_solutions))
               icls = sapply(solutions,function(s){s@icl})

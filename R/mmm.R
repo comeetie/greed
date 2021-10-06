@@ -154,7 +154,7 @@ reorder_mmm = function(obs_stats,or){
   for(v in 1:length(obs_stats[[2]]$x_counts)){
     obs_stats[[2]]$x_counts[[v]] = obs_stats[[2]]$x_counts[[v]][or,]
   }
-  obs_stats[[3]]$regs = obs_stats[[3]]$regs[or]
+  obs_stats[[3]] = obs_stats[[3]][or]
   obs_stats
 }
 

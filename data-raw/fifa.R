@@ -35,10 +35,12 @@ y=xml_find_all(team_pos, "//svg:circle") %>% xml_attr("cy") %>% as.numeric(),
 x=xml_find_all(team_pos, "//svg:circle") %>% xml_attr("cx")%>% as.numeric()) %>% mutate(x=x-5.7452493,y=100-(y-18.658329))
 
 
+params=coef(sol)
+
 pos_clust = data.frame(do.call(rbind,lapply(1:sol@K,\(k){
   sapply(params$Thetak[2:length(params$Thetak)],\(x){1-x[k,1]})
 })))
-pos_clust$cluster=factor(1:13)
+pos_clust$cluster=factor(1:8)
 
 pos_clust_long = pos_clust %>% pivot_longer(cols = -16,names_to = "position",values_to = "p") %>% 
   mutate(position=tolower(position)) %>% 
@@ -52,7 +54,8 @@ ggplot(pos_clust_long %>% filter(cluster==13))+geom_point(aes(x=x,y=y,size=p))+c
 pos_clust_mean = pos_clust_long %>% group_by(cluster) %>% summarise(x=weighted.mean(x,p),y=weighted.mean(y,p))
 
 img <- png::readPNG("/home/come/Bureau/foot_field.png")
-ggplot(pos_clust_mean)+background_image(img)+geom_text(aes(x=x,y=y,label=cluster))+
+library(ggpubr)
+ggplot(pos_clust_mean)+background_image(img)+geom_text(aes(x=x,y=y,label=cluster),size=5,col="red")+
   coord_fixed(ratio=1)+
   scale_x_continuous(limits=c(0,203.2),expand = c(0,1))+
   scale_y_continuous(limits=c(0,101.6),expand = c(0,1))+theme_void()
@@ -65,9 +68,9 @@ ggplot(team_pos_xy)+background_image(img)+geom_text(aes(x=x,y=y,label=team_posit
 
 
 clust_means = data.frame(do.call(rbind,params$muk))
-clust_means$cluster=factor(1:13)
+clust_means$cluster=factor(1:8)
 
-clust_means_long = clust_means[,5:11] %>% pivot_longer(cols = -7,names_to = "feat",values_to = "score") 
+clust_means_long = clust_means[,4:10] %>% pivot_longer(cols = -7,names_to = "feat",values_to = "score") 
 
 ggplot(clust_means_long) + geom_line(aes(x=feat,y=score,group=cluster,color=cluster))+coord_polar()
 
