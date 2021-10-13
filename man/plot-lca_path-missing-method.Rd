@@ -4,7 +4,7 @@
 \alias{plot,lca_path,missing-method}
 \title{plot a \code{\link{lca_path-class}} object}
 \usage{
-\S4method{plot}{lca_path,missing}(x, type = "blocks")
+\S4method{plot}{lca_path,missing}(x, type = "marginals")
 }
 \arguments{
 \item{x}{an \code{\link{lca_path-class}} object}

@@ -90,8 +90,10 @@ setClass("lca_path",contains=c("icl_path","lca_fit"))
 #' @export 
 setMethod(f = "plot", 
           signature = signature("lca_fit","missing"),
-          definition = function(x,type='blocks'){
-            ggplot2::ggplot()      
+          definition = function(x,type='marginals'){
+            pl=greed:::block_lca(sol)
+            gpl = grid::grid.draw(pl)
+            invisible(pl)
           });
 
 
@@ -108,8 +110,8 @@ setMethod(f = "plot",
 #' @export 
 setMethod(f = "plot", 
           signature = signature("lca_path","missing"),
-          definition = function(x,type='blocks'){
-            switch(type,tree = {
+          definition = function(x,type='marginals'){
+            invisible(switch(type,tree = {
               dendo(x)
             },
             path ={
@@ -117,7 +119,8 @@ setMethod(f = "plot",
             },
             front = {
               plot_front(x)
-            })   
+            },methods::callNextMethod()))
+            
           })
 
 

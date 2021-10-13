@@ -4,7 +4,7 @@
 \alias{plot,lca_fit,missing-method}
 \title{plot a \code{\link{lca_fit-class}} object}
 \usage{
-\S4method{plot}{lca_fit,missing}(x, type = "blocks")
+\S4method{plot}{lca_fit,missing}(x, type = "marginals")
 }
 \arguments{
 \item{x}{a \code{\link{lca_fit-class}}}

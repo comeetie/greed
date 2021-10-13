@@ -92,8 +92,8 @@ setMethod(f = "plot",
           signature = signature("mmm_fit","missing"),
           definition = function(x,type='marginals'){
             pl = block_mmm(x)
-            plot(pl)
-            pl
+            gpl = grid::grid.draw(pl)
+            invisible(pl)
           });
 
 
@@ -111,7 +111,7 @@ setMethod(f = "plot",
 setMethod(f = "plot", 
           signature = signature("mmm_path","missing"),
           definition = function(x,type='marginals'){
-            switch(type,tree = {
+            invisible(switch(type,tree = {
               dendo(x)
             },
             path ={
@@ -119,7 +119,7 @@ setMethod(f = "plot",
             },
             front = {
               plot_front(x)
-            },methods::callNextMethod())   
+            },methods::callNextMethod()))   
           })
 
 

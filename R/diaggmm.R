@@ -100,13 +100,14 @@ setMethod(f = "plot",
           definition = function(x,type="marginals"){
             switch(type,marginals={
               gg=block_gmm_marginals(x);
-              plot(gg);
-              gg},
-              violins={
-                gg=block_gmm_marginals_violin(x)
-                plot(gg)
-                gg
-              }
+              gpl = grid::grid.draw(gg)
+              invisible(gg)
+            },
+            violins={
+              gg=block_gmm_marginals_violin(x)
+              gpl = grid::grid.draw(gg)
+              invisible(gg)
+            }
             )
           })
 
@@ -127,7 +128,7 @@ setMethod(f = "plot",
 setMethod(f = "plot", 
           signature = signature("diaggmm_path","missing"),
           definition = function(x,type='marginals'){
-            switch(type,tree = {
+            invisible(switch(type,tree = {
               dendo(x)
             },
             path ={
@@ -142,7 +143,7 @@ setMethod(f = "plot",
             violins={
               methods::callNextMethod()
             }
-            )
+            ))
         })
 
 #' @title Extract mixture parameters from \code{\link{diaggmm_fit-class}} object

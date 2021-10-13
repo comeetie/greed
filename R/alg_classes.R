@@ -165,7 +165,14 @@ find_model = function(X){
     }
     
   }else{
-    if(methods::is(X,"data.frame")){
+    if(methods::is(X,"data.frame") & !all(apply(X,2,is.numeric))){
+      if(all(sapply(X,is.factor)) | all(sapply(X,is.character))){
+        return(new("lca"))
+      }else{
+        return(new("mmm"))
+      }
+    }
+    if(methods::is(X,"data.frame") & all(apply(X,2,is.numeric))){
       X=as.matrix(X)
     }
     if(methods::is(X,"dgCMatrix") | methods::is(X,"matrix")){
