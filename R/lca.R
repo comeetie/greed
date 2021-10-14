@@ -91,7 +91,8 @@ setClass("lca_path",contains=c("icl_path","lca_fit"))
 setMethod(f = "plot", 
           signature = signature("lca_fit","missing"),
           definition = function(x,type='marginals'){
-            pl=greed:::block_lca(sol)
+            pl=greed:::block_lca(x)
+            grid::grid.newpage()
             gpl = grid::grid.draw(pl)
             invisible(pl)
           });
@@ -111,7 +112,7 @@ setMethod(f = "plot",
 setMethod(f = "plot", 
           signature = signature("lca_path","missing"),
           definition = function(x,type='marginals'){
-            invisible(switch(type,tree = {
+            switch(type,tree = {
               dendo(x)
             },
             path ={
@@ -119,7 +120,7 @@ setMethod(f = "plot",
             },
             front = {
               plot_front(x)
-            },methods::callNextMethod()))
+            },invisible(methods::callNextMethod()))
             
           })
 

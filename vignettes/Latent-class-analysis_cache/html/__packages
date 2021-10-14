@@ -1,0 +1,9 @@
+base
+readr
+dplyr
+stringr
+careless
+ggplot2
+ggrepel
+greed
+future
