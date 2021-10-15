@@ -5,12 +5,12 @@
 \alias{mmm-class}
 \title{Mixed mixture model description class}
 \description{
-An S4 class to represent a Multinomial model model, extends \code{\link{icl_model-class}}.
-Such model can be used to cluster a data matrix \eqn{X} with the following generative model :  
-\deqn{ \pi \sim Dirichlet(\alpha)}
-\deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
-\deqn{ \theta_{kv} \sim Dirichlet(\beta)}
-....
+An S4 class to represent a Mixed mixture model, extends
+  \code{\link{icl_model-class}}. Such model can be used to cluster a data
+  matrix \eqn{X} which can be divided into separate blocks, each of the
+  blocks following its own suitable generative model available among the list
+  \code{\link{icl_model-class}}. For now, only mixture of GMM (numerical) and
+  LCA (factors) is implemented.
 }
 \section{Slots}{
 

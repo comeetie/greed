@@ -20,5 +20,5 @@ An S4 class to represent an abstract generative model
 }}
 
 \seealso{
-\code{\link{sbm-class}}, \code{\link{dcsbm-class}},\code{\link{co_dcsbm-class}},
+\code{\link{lca-class}}, \code{\link{gmm-class}}, \code{\link{sbm-class}}, \code{\link{dcsbm-class}},\code{\link{co_dcsbm-class}},
 }

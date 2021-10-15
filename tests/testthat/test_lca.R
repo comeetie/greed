@@ -66,3 +66,25 @@ expect_lte(greed:::test_swap(model,data,cl,i,newcl), 10^-6)
 expect_lte(greed:::test_merge(model,data,cl,1,4), 10^-6)
 })
 
+
+testthat::test_that("[LCA preprocess] Character input",{
+  X = data.frame(x=c('a','b', 'a'), 
+                 y= c('ctrl', 'tab', 'ctrl'), 
+                 z = c('left', 'right', 'None'))
+  model = new("lca")
+  data=greed:::preprocess(model, X)
+  expect_equal(apply(data$X, 2, function(col) dplyr::n_distinct(col)),sapply(X, function(col) dplyr::n_distinct(col)))
+})
+
+
+testthat::test_that("[LCA preprocess] Drop missing factors",{
+  N=4
+  theta = list(matrix(c(0.1,0.9,0.9,0.1,0.8,0.2,0.05,0.95),ncol=2,byrow=TRUE),
+               matrix(c(0.95,0.05,0.3,0.7,0.05,0.95,0.05,0.95),ncol=2,byrow=TRUE),
+               matrix(c(0.95,0.04,0.01,0.9,0.09,0.01,0.01,0.01,0.98,0.9,0.05,0.05),ncol=3,byrow=TRUE),
+               matrix(c(0.7,0,0,0.7,0.7,0,0,0.7),ncol=2,byrow=TRUE))
+  lca.data = rlca(N,rep(1/4,4),theta)
+  model = new("lca")
+  data=greed:::preprocess(model, lca.data$x)
+  expect_equal(apply(data$X, 2, function(col) dplyr::n_distinct(col)), apply(data$X, 2, function(col) max(col) + 1))
+})
