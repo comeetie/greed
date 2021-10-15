@@ -223,10 +223,9 @@ setMethod(f = "preprocess",
             if(!methods::is(data,"data.frame")){
               stop("An lca model expect a data.frame with only factors.",call. = FALSE)
             }
-            if(!all(sapply(data,is.factor))){
-              stop("An lca model expect a data.frame with only factors.",call. = FALSE)
+            if(!all(sapply(data,is.factor)) & !all(sapply(data, is.character))){
+              stop("An lca model expect a data.frame with only factors or characters.",call. = FALSE)
             }
-            
             if(length(model@alpha)>1){
               stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
             }
@@ -246,6 +245,12 @@ setMethod(f = "preprocess",
             if(model@beta<=0){
               stop("Model prior misspecification, beta must be positive.",call. = FALSE)
             }
+            
+            if(all(sapply(data, is.character))) {
+              # Convert characters to factors
+              data = data.frame(lapply(data, factor))
+            }
+            data = data %>% droplevels()
             list(X=sapply(data,unclass)-1,N=nrow(data))
           })
 
