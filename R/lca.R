@@ -250,7 +250,7 @@ setMethod(f = "preprocess",
               # Convert characters to factors
               data = data.frame(lapply(data, factor))
             }
-            data = data %>% droplevels()
+            data = droplevels(data)
             list(X=sapply(data,unclass)-1,N=nrow(data))
           })
 
