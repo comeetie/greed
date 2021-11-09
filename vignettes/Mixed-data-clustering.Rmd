@@ -2,7 +2,7 @@
 title: "Mixed Data CLustering"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{GMM}
+  %\VignetteIndexEntry{MixedData}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
