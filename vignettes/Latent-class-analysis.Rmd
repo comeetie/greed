@@ -2,7 +2,7 @@
 title: "Latent Class Analysis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Latent Class Analysis}
+  %\VignetteIndexEntry{Latent class analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
 Loads packages.
 ```{r setup,message=FALSE}
 library(readr)
@@ -38,12 +39,16 @@ selected = Youngpeoplesurvey %>%
 
 Xnum = Youngpeoplesurvey %>% 
   select(1:nc) %>%
-  filter(all_of(selected) )
+  filter(all_of(selected))
+
 X = Xnum %>% 
   mutate_all(\(x){factor(x,levels=1:5)}) %>% 
   droplevels()
 
 ```
+
+
+
 ```{r survey-lca-cust,cache=TRUE, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
 set.seed(31)
 library(future)
