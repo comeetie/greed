@@ -18,7 +18,7 @@ greed(
 
 \item{K}{initial number of cluster}
 
-\item{model}{a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}},\code{\link{gmm-class}}, \code{\link{diaggmm-class}} or \code{\link{mvmreg-class}}}
+\item{model}{a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}}, \code{\link{lca-class}}, \code{\link{gmm-class}}, \code{\link{diaggmm-class}} or \code{\link{mvmreg-class}}}
 
 \item{alg}{an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}}
 
@@ -37,6 +37,6 @@ Optimization is performed thanks to a combination of greedy local search and
 a genetic algorithm. The main entry point is the \code{\link{greed}} function
 to perform the clustering, which is documented below. The package also
 provides sampling functions for all the implemented DLVMs: Mixture of
-Multinomials (\code{\link{rmm}}), Stochastic Block Model (\code{\link{rsbm}},
+Multinomials (\code{\link{rmm}}), Latent Class Analysis (\code{\link{rlca}}), Stochastic Block Model (\code{\link{rsbm}},
 \code{\link{rdcsbm}}) and Latent Block Model (\code{\link{rlbm}}).
 }

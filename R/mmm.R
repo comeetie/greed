@@ -173,7 +173,7 @@ setMethod(f = "seed",
               data.frame(factor(data$Xcat[,fcol]))
             }))
             Xcatnum = MASS::mca(Xcatfact)$rs
-            Xs = greed:::zscore(cbind(data$Xnum,Xcatnum))
+            Xs = zscore(cbind(data$Xnum,Xcatnum))
             km=stats::kmeans(as.matrix(Xs),K)
             km$cluster
           })

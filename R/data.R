@@ -72,6 +72,8 @@
 #' @docType data
 #'
 #' @usage data(fashion)
+#' 
+#' @keywords datasets
 #'
 #' @format An object of class \code{list} with two fields; 
 #'  \describe{
@@ -88,7 +90,6 @@
 #'   9 = Ankle boot)}
 #' }
 #'
-#' @keywords datasets
 #'
 #' @references Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms. Han Xiao, Kashif Rasul, Roland Vollgraf (2017)  
 #' (\href{https://arxiv.org/abs/1708.07747}{arXiv:1708.07747}).
@@ -219,8 +220,7 @@
 
 #' French Parliament votes dataset
 #' 
-#' 
-#'  
+#' @keywords datasets  
 #' 
 #' @docType data
 #'
@@ -236,4 +236,102 @@
 #' data(Xvlegislature)
 "Xvlegislature"
 
+
+
+
+#'Mushroom data
+#'
+#'Categorical data from UCI Machine Learning Repository describing 8124
+#'mushrooms with 22 phenotype variables. Each mushroom is classified as "edible"
+#'or "poisonous" and the goal is to recover the mushroom class from its
+#'phenotype.
+#'
+#'
+#' @docType data
+#'
+#' @keywords datasets
+#' 
+#' @usage data(mushroom)
+#'
+#' @format An R data.frame with a variable edibility used as label and 22
+#'  categorical variables with no names. More detail on the UCI webpage
+#'  describing the data.
+#'  
+#' @source \url{https://archive.ics.uci.edu/ml/datasets/Mushroom}
+#' @examples
+#' data(mushroom)
+"mushroom"
+
+
+#' Young People survey data
+#'
+#' Young people survey data from Miroslav Sabo and avalaible on the Kaggle
+#' platform. This is an authentic example of questionnaire data where Slovakian
+#' young people (15-30 years old) were asked musical preferences according to
+#' different genres (rock, hip-hop, classical, etc.).
+#'
+#' @docType data
+#'
+#' @usage data(Youngpeoplesurvey)
+#'
+#' @format An R data.frame with columns containing each of the 150 original
+#'   variables of the study.
+#'
+#'
+#' @keywords datasets
+#'
+#' @source \url{https://www.kaggle.com/miroslavsabo/young-people-survey}
+#'
+#' @examples
+#' data(Youngpeoplesurvey)
+"Youngpeoplesurvey"
+
+
+
+
+#' Fifa data
+#'
+#' Data from the FIFA videogame with various statistics on all player ranging
+#' from position, cost in the game, capacity in offense/defense, speed, etc.
+#'
+#' @docType data
+#'
+#' @usage data(Fifa)
+#'
+#' @format An R data.frame with columns containing each of the descriptive
+#'   statistics of a player.
+#'
+#'
+#' @keywords datasets
+#'
+#' @source \url{https://}
+#'
+#' @examples
+#' data(Fifa)
+"Fifa"
+
+
+#' Fifa_positions data
+#'
+#' A subset of the \code{\link{Fifa}} dataset with 36 players containing their
+#' position and x and y coordinate on a 2D image of a football field. Mainly
+#' useful for plotting.
+#'
+#' @docType data
+#'
+#' @usage data(Fifa)
+#'
+#' @format An object of class \code{list} with two fields; \describe{
+#'   \item{bg_img}{a matrix containing raw pixel representation of an image of a football
+#'   field (usefull for plotting payers).} 
+#'   \item{positions}{An R data.frame with 36 rows and 3 columns describing position, x and y axis on the field respectively.} 
+#'   }
+#'
+#' @keywords datasets
+#'
+#' @source \url{https://}
+#'
+#' @examples
+#' data(Fifa_positions)
+"Fifa_positions"
 

@@ -23,22 +23,25 @@ setClass("lca",
          prototype(name="lca",beta=1,alpha=1))
 
 #' @title Latent Class  Analysis fit results class
-#' 
-#' @description
-#'  An S4 class to represent a fit of a Latent Class Analysis model for categorical data clustering, extend \code{\link{icl_fit-class}}.
+#'
+#' @description An S4 class to represent a fit of a Latent Class Analysis model
+#'   for categorical data clustering, extend \code{\link{icl_fit-class}}. The
+#'   original data must be an n x p matrix where p is the number of variables
+#'   and each variable is encoded as a factor (integer-valued).
+#'
 #' @slot model a \code{\link{lca-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
-#' @slot cl a numeric vector with row and columns cluster indexes
-#' @slot obs_stats a list with the following elements:
-#' \itemize{
-#' \item counts: numeric vector of size K with number of elements in each clusters
-#' \item x_counts: matrix of size K*D with the number of occurrences of each modality for each clusters
-#' }
+#' @slot cl a numeric vector with cluster indexes
+#' @slot obs_stats a list with the following elements: \itemize{ \item counts:
+#'   numeric vector of size K with number of elements in each clusters \item
+#'   x_counts: matrix of size K*D with the number of occurrences of each
+#'   modality for each clusters }
 #' @slot move_mat binary matrix which store move constraints
-#' @slot train_hist data.frame with training history information (details depends on the training procedure)
-#' @export 
+#' @slot train_hist data.frame with training history information (details
+#'   depends on the training procedure)
+#' @export
 setClass("lca_fit",slots = list(model="lca"),contains="icl_fit")
 
 
@@ -221,7 +224,7 @@ setMethod(f = "preprocess",
           signature = signature("lca"), 
           definition = function(model, data){
             if(!methods::is(data,"data.frame")){
-              stop("An lca model expect a data.frame with only factors.",call. = FALSE)
+              stop("An lca model expect a data.frame.",call. = FALSE)
             }
             if(!all(sapply(data,is.factor)) & !all(sapply(data, is.character))){
               stop("An lca model expect a data.frame with only factors or characters.",call. = FALSE)

@@ -97,7 +97,7 @@ sol@icl
 soldiag@icl
 ```
 
-The full model seems preferable on this dataset. If you want to look at the mixture component parameters you may access their Maximum a Posteriori estimate with the generic `coef` function.
+The full model seems preferable on this dataset. If you want to look at the mixture component parameters you may access their Maximum a posteriori estimate with the generic `coef` function.
 ```{r diabetes-diaggmm-cut-params}
 params = coef(solK3)
 params$Sigmak[[2]]
