@@ -31,7 +31,7 @@ List SimpleIclModel::get_obs_stats(){
   obs_stats.push_back(emission_model->get_obs_stats());
   CharacterVector compn = CharacterVector(2);
   compn[0]="counts";
-  compn[1]=as<std::string>(model.slot("name"));
+  compn[1]=as<std::string>(model.attr("class"));
   obs_stats.names() = compn;
   //return observed stats
   return obs_stats;

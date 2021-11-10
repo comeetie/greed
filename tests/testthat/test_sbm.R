@@ -25,7 +25,7 @@ test_that("SBM hybrid", {
   pi = rep(1/K,K)
   mu = diag(rep(1/5,K))+runif(K*K)*0.01
   sbm = rsbm(N,pi,mu)
-  sol=greed(sbm$x,model=new('sbm'))
+  sol=greed(sbm$x,model=Sbm())
   co=coef(sol)
   expect_true(all(dim(co$thetakl)==c(3,3)))
   expect_equal(sum(co$pi),1)
@@ -45,7 +45,7 @@ test_that("SBM seed", {
   pi = rep(1/K,K)
   mu = diag(rep(1/5,K))+runif(K*K)*0.01
   sbm = rsbm(N,pi,mu)
-  sol=greed(sbm$x,model=new('sbm'),alg=new("seed"))
+  sol=greed(sbm$x,model=Sbm(),alg=Seed())
   co=coef(sol)
   expect_true(all(dim(co$thetakl)==c(3,3)))
   expect_equal(sum(co$pi),1)
@@ -67,7 +67,7 @@ test_that("SBM multitstart", {
   pi = rep(1/K,K)
   mu = diag(rep(1/5,K))+runif(K*K)*0.01
   sbm = rsbm(N,pi,mu)
-  sol=greed(sbm$x,model=new('sbm'),alg=new("multistarts"))
+  sol=greed(sbm$x,model=Sbm(),alg=Multistarts())
   co=coef(sol)
   expect_true(all(dim(co$thetakl)==c(3,3)))
   expect_equal(sum(co$pi),1)
@@ -88,7 +88,7 @@ test_that("SBM genetic", {
   pi = rep(1/K,K)
   mu = diag(rep(1/5,K))+runif(K*K)*0.01
   sbm = rsbm(N,pi,mu)
-  sol=greed(sbm$x,model=new('sbm'),alg=new("genetic"))
+  sol=greed(sbm$x,model=Sbm(),alg=Genetic())
   co=coef(sol)
   expect_true(all(dim(co$thetakl)==c(3,3)))
   expect_equal(sum(co$pi),1)
@@ -112,7 +112,7 @@ test_that("SBM hybrid unidrected", {
   sbm = rsbm(N,pi,mu)
   x=tril(sbm$x)+t(tril(sbm$x))
   diag(x)=0
-  sol=greed(x,model=new('sbm',type="undirected"))
+  sol=greed(x,model=Sbm(type="undirected"))
   co=coef(sol)
   expect_true(all(dim(co$thetakl)==c(3,3)))
   expect_equal(sum(co$pi),1)
@@ -134,7 +134,7 @@ test_that("SBM seed undirected", {
   sbm = rsbm(N,pi,mu)
   x=tril(sbm$x)+t(tril(sbm$x))
   diag(x)=0
-  sol=greed(x,model=new('sbm',type="undirected"),alg=new("seed"))
+  sol=greed(x,model=Sbm(type="undirected"),alg=Seed())
   co=coef(sol)
   expect_true(all(dim(co$thetakl)==c(3,3)))
   expect_equal(sum(co$pi),1)

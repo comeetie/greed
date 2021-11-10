@@ -46,20 +46,12 @@ IclModel * init(S4 model,List data, arma::uvec clr, bool verbose) {
   arma::uvec clt = to_zero_based(clr);
   S4 sol;
   try{
-    if((strcmp(model.slot("name"),"sbm")!=0) && 
-       (strcmp(model.slot("name"),"misssbm")!=0) && 
-       (strcmp(model.slot("name"),"dcsbm")!=0) &&
-       (strcmp(model.slot("name"),"multsbm")!=0) &&
-       (strcmp(model.slot("name"),"co_dcsbm")!=0) && 
-       (strcmp(model.slot("name"),"mm")!=0) &&
-       (strcmp(model.slot("name"),"mvmreg")!=0) &&
-       (strcmp(model.slot("name"),"diaggmm")!=0) &&
-       (strcmp(model.slot("name"),"gmm")!=0) && 
-       (strcmp(model.slot("name"),"lca")!=0) &&
-       (strcmp(model.slot("name"),"mmm")!=0)){
+    if(!model.is("DlvmPrior")){
        stop("Unsuported model");
     }
-    if(strcmp(model.slot("name"),"sbm")==0){
+    
+    // SBM
+    if(model.is("Sbm")){
       if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0) && (strcmp(model.slot("type"),"guess")!=0)){
         stop("Unsuported model type only directed / undirected are allowed");
       } 
@@ -81,57 +73,10 @@ IclModel * init(S4 model,List data, arma::uvec clr, bool verbose) {
         M = new SimpleIclModel(sbm,model,clt,verbose);
       }
     }
-    if(strcmp(model.slot("name"),"misssbm")==0){
-      if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0) && (strcmp(model.slot("type"),"guess")!=0)){
-        stop("Unsuported model type only directed / undirected are allowed");
-      } 
-      
-      arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
-      arma::sp_mat xpobs = as<arma::sp_mat>(data["Xobs"]);
-      if((strcmp(model.slot("type"),"guess")==0)){
-        if(arma::accu(abs(xp-xp.t()))==0 && arma::accu(abs(xpobs-xpobs.t()))==0){
-          model.slot("type")="undirected";
-        }else{
-          model.slot("type")="directed";
-        }
-      } 
-      if((strcmp(model.slot("sampling"),"dyad")!=0) && (strcmp(model.slot("sampling"),"block-dyad")!=0) && (strcmp(model.slot("sampling"),"block-node")!=0)){
-        stop("Unsuported sampling scheme only  'dyad' / 'block-dyad / 'block-node' are allowed");
-      } 
-      if(strcmp(model.slot("sampling"),"dyad")==0){
-        if(strcmp(model.slot("type"),"directed")==0){
-  //        IclModelEmission * Mobs = new MissSbmE(xp,xpobs,model,verbose);
-  //        IclModelEmission * Msampling = new MarDyadSbmE(xpobs,model,verbose);
-  //        std::vector<IclModelEmission*> IclModels;
-  //        IclModels.push_back(Mobs);
-  //        IclModels.push_back(Msampling);
-  //        M = new CombinedIclModel(IclModels,model,clt,verbose);
-          //M = new MarSbm(xp,xpobs,model,clt,verbose);
-          
-        }
-        if(strcmp(model.slot("type"),"undirected")==0){
-    //      M = new MarSbmUndirected(xp,xpobs,model,clt,verbose);
-        }
-      }
-      if(strcmp(model.slot("sampling"),"block-dyad")==0){
-
-        if(strcmp(model.slot("type"),"directed")==0){
-      //    M = new NmarBdSbm(xp,xpobs,model,clt,verbose);
-        }
-        if(strcmp(model.slot("type"),"undirected")==0){
-      //    M = new NmarBdSbmUndirected(xp,xpobs,model,clt,verbose);
-        }
-      }
-      if(strcmp(model.slot("sampling"),"block-node")==0){
-        if(strcmp(model.slot("type"),"directed")==0){
-        //  M = new NmarBcSbm(xp,xpobs,model,clt,verbose);
-        }
-        if(strcmp(model.slot("type"),"undirected")==0){
-      //    M = new NmarBcSbmUndirected(xp,xpobs,model,clt,verbose);
-        }
-      }
-    }
-    if(strcmp(model.slot("name"),"dcsbm")==0){
+  
+  
+    // DcSbm
+    if(model.is("DcSbm")){
       if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0) && (strcmp(model.slot("type"),"guess")!=0)){
         stop("Unsuported model type only directed / undirected are allowed");
       } 
@@ -152,7 +97,11 @@ IclModel * init(S4 model,List data, arma::uvec clr, bool verbose) {
         M = new SimpleIclModel(dcsbm,model,clt,verbose);
       }
     }
-    if(strcmp(model.slot("name"),"multsbm")==0){
+    
+    
+    
+    // MultSbm
+    if(model.is("MultSbm")){
       if((strcmp(model.slot("type"),"directed")!=0) && (strcmp(model.slot("type"),"undirected")!=0) && (strcmp(model.slot("type"),"guess")!=0)){
         stop("Unsuported model type only directed / undirected are allowed");
       } 
@@ -179,52 +128,61 @@ IclModel * init(S4 model,List data, arma::uvec clr, bool verbose) {
         M = new SimpleIclModel(mult,model,clt,verbose);
       }
     }
-    if(strcmp(model.slot("name"),"co_dcsbm")==0){
+    
+    // DcLbm
+    if(model.is("DcLbm")){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       int Nr = static_cast<int>(data["Nrows"]);
       int Nc = static_cast<int>(data["Ncols"]);
       IclModelEmission * codcsbm = new CoDcSbm(xp,Nr,Nc,model,verbose);
       M = new SimpleIclModel(codcsbm,model,clt,verbose);
     }
-    if(strcmp(model.slot("name"),"mm")==0){
+    
+    // MoM
+    if(model.is("MoM")){
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       IclModelEmission * mm = new Mm(xp,model,verbose);
       M = new SimpleIclModel(mm,model,clt,verbose);
     }
-    if(strcmp(model.slot("name"),"gmm")==0){
+    
+    // Gmm
+    if(model.is("Gmm")){
       arma::mat X = as<arma::mat>(data["X"]);
       IclModelEmission * gmm = new Gmm(X,model,verbose);
       M = new SimpleIclModel(gmm,model,clt,verbose);
     }
     
-    if(strcmp(model.slot("name"),"diaggmm")==0){
+    // DiagGmm
+    if(model.is("DiagGmm")){
       arma::mat X = as<arma::mat>(data["X"]);
       IclModelEmission * dgmm = new DiagGmm(X,model,verbose);
       M = new SimpleIclModel(dgmm,model,clt,verbose);
     }
-    if(strcmp(model.slot("name"),"mvmreg")==0 ){
+    
+    // MoR
+    if(model.is("MoR")){
       arma::mat X = as<arma::mat>(data["X"]);
       arma::mat Y = as<arma::mat>(data["Y"]);
       IclModelEmission * mregs = new Mregs(X,Y,model,verbose);
       M = new SimpleIclModel(mregs,model,clt,verbose);
     }
     
-    if(strcmp(model.slot("name"),"lca")==0 ){
+    // Lca
+    if(model.is("Lca")){
       arma::umat X = as<arma::umat>(data["X"]);
       IclModelEmission * lca = new Lca(X,model,verbose);
       M = new SimpleIclModel(lca,model,clt,verbose);
     }
-    if(strcmp(model.slot("name"),"mmm")==0 ){
-      
-    std::vector<IclModelEmission*> icl_models;
-    arma::umat Xcat = as<arma::umat>(data["Xcat"]);
-    IclModelEmission * lca = new Lca(Xcat,model,verbose);
-    icl_models.push_back(lca);
-    arma::mat Xnum = as<arma::mat>(data["Xnum"]);
-    IclModelEmission * gmm = new Gmm(Xnum,model,verbose);
-    icl_models.push_back(gmm);
-    M = new CombinedIclModel(icl_models,model,clt,verbose);
-    }
+    // if(strcmp(model.slot("name"),"mmm")==0 ){
+    //   std::vector<IclModelEmission*> icl_models;
+    //   arma::umat Xcat = as<arma::umat>(data["Xcat"]);
+    //   IclModelEmission * lca = new Lca(Xcat,model,verbose);
+    //   icl_models.push_back(lca);
+    //   arma::mat Xnum = as<arma::mat>(data["Xnum"]);
+    //   IclModelEmission * gmm = new Gmm(Xnum,model,verbose);
+    //   icl_models.push_back(gmm);
+    //   M = new CombinedIclModel(icl_models,model,clt,verbose);
+    // }
 
     return(M);
   }catch(std::exception &ex) {	
@@ -233,12 +191,10 @@ IclModel * init(S4 model,List data, arma::uvec clr, bool verbose) {
   return NULL;
 }
 
-S4 init_sol(S4 model,String type="fit") {
-  String mname = model.slot("name");
-  mname+="_";
+S4 init_sol(S4 model,String type="Fit") {
+  String mname = model.attr("class");
   mname+=type;
   S4 sol(mname);
-  sol.slot("name")=mname;
   return(sol);
 }
 // post_probs
@@ -367,7 +323,7 @@ S4 fit_greed_path(List data, S4 init_fit) {
   S4 model = init_fit.slot("model");
   arma::uvec clt = init_fit.slot("cl");
   IclModel * M = init(model,data,clt,false);
-  S4 sol = init_sol(model,"path");
+  S4 sol = init_sol(model,"Path");
   sol.slot("model")=model;
   List obs_stats = M->get_obs_stats();
   sol.slot("obs_stats") = obs_stats;

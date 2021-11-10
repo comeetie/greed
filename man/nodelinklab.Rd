@@ -7,7 +7,7 @@
 nodelinklab(sol, labels, s = 0)
 }
 \arguments{
-\item{sol}{\code{\link{mm_path-class}} object to be plot}
+\item{sol}{\code{\link{MoMPath-class}} object to be plot}
 
 \item{labels}{a vector of cluster labels}
 

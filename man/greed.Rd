@@ -5,27 +5,21 @@
 \alias{greed}
 \title{Model based hierarchical clustering}
 \usage{
-greed(
-  X,
-  K = 20,
-  model = find_model(X),
-  alg = methods::new("hybrid"),
-  verbose = FALSE
-)
+greed(X, K = 20, model = find_model(X), alg = Hybrid(), verbose = FALSE)
 }
 \arguments{
-\item{X}{data to cluster either a matrix,an array or a \code{\link{dgCMatrix-class}}}
+\item{X}{data to cluster either a data.frame, a matrix, an array or a \code{\link{dgCMatrix-class}}}
 
 \item{K}{initial number of cluster}
 
 \item{model}{a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}}, \code{\link{lca-class}}, \code{\link{gmm-class}}, \code{\link{diaggmm-class}} or \code{\link{mvmreg-class}}}
 
-\item{alg}{an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}}
-
 \item{verbose}{Boolean for verbose mode}
+
+\item{Alg}{an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}}
 }
 \value{
-an \code{\link{icl_path-class}} object
+an \code{\link{IclPath-class}} object
 }
 \description{
 

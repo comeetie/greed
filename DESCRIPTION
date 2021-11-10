@@ -2,7 +2,7 @@ Package: greed
 Type: Package
 Title: Clustering and Model Selection with the Integrated Classification Likelihood
 Version: 0.5.1
-Date: 2021-05-03
+Date: 2021-11-10
 Authors@R: 
     c(person(given = "Etienne",
              family = "Côme",
@@ -24,7 +24,6 @@ Suggests:
     mclust,
     knitr,
     rmarkdown,
-    igraph,
     dplyr,
     tibble,
     tidyr,
@@ -50,12 +49,11 @@ Collate:
     'alg_multistart.R'
     'data.R'
     'greed.R'
-    'model_dcsbm.R'
     'model_dclbm.R'
+    'model_dcsbm.R'
     'model_diaggmm.R'
     'model_gmm.R'
     'model_lca.R'
-    'model_mmm.R'
     'model_mom.R'
     'model_mor.R'
     'model_multsbm.R'

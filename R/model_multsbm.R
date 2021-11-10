@@ -2,10 +2,10 @@
 NULL
 
 
-#' @title Multinomial Stochastic Block Model class
-#' 
-#' @description 
-#' An S4 class to represent a Multinomial Stochastic Block Model, extends \code{\link{icl_model-class}}. Such model can be used to cluster multilayer-graph vertex, and model a square adjacency cube \eqn{X} of size NxNxM with the following generative model :  
+#' @title Multinomial Stochastic Block Model Prior class
+#'
+#' @description
+#' An S4 class to represent a Multinomial Stochastic Block Model. Such model can be used to cluster multilayer-graph vertex, and model a square adjacency cube \eqn{X} of size NxNxM with the following generative model :
 #' \deqn{ \pi \sim Dirichlet(\alpha)}
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 #' \deqn{ \theta_{kl} \sim Dirichlet(\beta)}
@@ -15,19 +15,43 @@ NULL
 #' @slot alpha Dirichlet over cluster proportions prior parameter
 #' @slot beta Dirichlet prior parameter over Multinomial links
 #' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
-#' @seealso \code{\link{multsbm_fit-class}}, \code{\link{multsbm_path-class}}
-#' @export 
-setClass("multsbm",
-         representation = list(beta = "numeric",type="character"),
-         contains = "icl_model",
-         prototype(name="multsbm",alpha=1,beta=1,type="guess"))
+#' @seealso \code{\link{MultSbmFit-class}}, \code{\link{MultSbmPath-class}}
+#' @family DlvmModels
+#' @export
+setClass("MultSbmPrior",
+  representation = list(beta = "numeric", type = "character"),
+  prototype(beta = 1, type = "guess")
+)
 
+
+#' @describeIn MultSbmPrior-class MultSbmPrior class constructor
+#' @examples
+#' MultSbmPrior()
+#' MultSbmPrior(type = "undirected")
+#' @export
+MultSbmPrior <- function(beta = 1, type = "guess") {
+  methods::new("MultSbmPrior", beta = beta, type = type)
+}
+
+#' @describeIn MultSbmPrior-class MultSbm class constructor
+setClass("MultSbm",
+  contains = c("DlvmPrior", "MultSbmPrior")
+)
+
+#' @describeIn MultSbmPrior-class MultSbm class constructor
+#' @examples
+#' MultSbm()
+#' MultSbm(type = "undirected")
+#' @export
+MultSbm <- function(alpha = 1, beta = 1, type = "guess") {
+  methods::new("MultSbm", alpha = alpha, beta = beta, type = type)
+}
 
 
 #' @title Multinomial Stochastic Block Model fit results class
-#' 
-#' @description An S4 class to represent a fit of a Multinomial Stochastic Block Model, extend \code{\link{icl_fit-class}}.
-#' @slot model a \code{\link{multsbm-class}} object to store the model fitted
+#'
+#' @description An S4 class to represent a fit of a Multinomial Stochastic Block Model, extend \code{\link{IclFit-class}}.
+#' @slot model a \code{\link{MultSbm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
@@ -35,19 +59,19 @@ setClass("multsbm",
 #' @slot obs_stats a list with the following elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters
-#' \item x_counts: cube of size KxKxM with the number of links between each pair of clusters 
+#' \item x_counts: cube of size KxKxM with the number of links between each pair of clusters
 #' }
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
-#' @export 
-setClass("multsbm_fit",slots = list(model="multsbm"),contains="icl_fit")
+#' @export
+setClass("MultSbmFit", slots = list(model = "MultSbm"), contains = "IclFit")
 
 
 #' @title Multinomial Stochastic Block Model hierachical fit results class
-#' 
-#' 
-#' @description An S4 class to represent a hierarchical fit of a Multinomial Stochastic Block Model, extend \code{\link{icl_path-class}}.
-#' @slot model a \code{\link{multsbm-class}} object to store the model fitted
+#'
+#'
+#' @description An S4 class to represent a hierarchical fit of a Multinomial Stochastic Block Model, extend \code{\link{IclPath-class}}.
+#' @slot model a \code{\link{MultSbm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
@@ -55,50 +79,53 @@ setClass("multsbm_fit",slots = list(model="multsbm"),contains="icl_fit")
 #' @slot obs_stats a list with the following elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters
-#' \item x_counts: matrix of size KxKxM with the number of links between each pair of clusters 
+#' \item x_counts: matrix of size KxKxM with the number of links between each pair of clusters
 #' }
 #' @slot path a list of size K-1 with each part of the path described by:
 #' \itemize{
-#' \item icl1: icl value reach with this solution for alpha=1 
+#' \item icl1: icl value reach with this solution for alpha=1
 #' \item logalpha: log(alpha) value were this solution is better than its parent
 #' \item K: number of clusters
 #' \item cl: vector of cluster indexes
 #' \item k,l: index of the cluster that were merged at this step
-#' \item merge_mat: lower triangular matrix of delta icl values 
+#' \item merge_mat: lower triangular matrix of delta icl values
 #' \item obs_stats: a list with the elements:
 #' \itemize{
 #' \item counts: numeric vector of size K with number of elements in each clusters
-#' \item x_counts: matrix of size KxKxM with the number of links between each pair of clusters 
+#' \item x_counts: matrix of size KxKxM with the number of links between each pair of clusters
 #' }
 #' }
 #' @slot logalpha value of log(alpha)
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
-#' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father  
+#' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
-#' @export 
-setClass("multsbm_path",contains=c("icl_path","multsbm_fit"))
+#' @export
+setClass("MultSbmPath", contains = c("IclPath", "MultSbmFit"))
 
-#' @title plot a \code{\link{multsbm_fit-class}} object
-#' 
-#' 
-#' @param x a \code{\link{multsbm_fit-class}}
+#' @title plot a \code{\link{MultSbmFit-class}} object
+#'
+#'
+#' @param x a \code{\link{MultSbmFit-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
 #' \item \code{'nodelink'}: plot a nodelink diagram of the graph summarizing connections between clusters
 #' }
 #' @return a \code{\link{ggplot2}} graphic
-#' @export 
-setMethod(f = "plot", 
-          signature = signature("multsbm_fit","missing"),
-          definition = function(x,type="blocks"){
-            switch(type,blocks=graph_blocks_cube(x),nodelink=nodelink_cube(x))
-          });
-
-
-#' @title plot a \code{\link{sbm_path-class}} object
-#' 
-#' @param x an \code{\link{sbm_path-class}} object
+#' @export
+setMethod(
+  f = "plot",
+  signature = signature("MultSbmFit", "missing"),
+  definition = function(x, type = "blocks") {
+    switch(type,
+      blocks = graph_blocks_cube(x),
+      nodelink = nodelink_cube(x)
+    )
+  }
+)
+#' @title plot a \code{\link{MultSbmPath-class}} object
+#'
+#' @param x an \code{\link{MultSbmPath-class}} object
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
@@ -108,147 +135,164 @@ setMethod(f = "plot",
 #' \item \code{'tree'}: plot the associated dendrogram
 #' }
 #' @return a \code{\link{ggplot2}} graphic
-#' @export 
-setMethod(f = "plot", 
-          signature = signature("multsbm_path","missing"),
-          definition = function(x,type='blocks'){
-            switch(type,tree = {
-              dendo(x)
-            },
-            path ={
-              lapath(x)
-            },
-            front = {
-              plot_front(x)
-            },
-            blocks ={
-              methods::callNextMethod()
-            },
-            nodelink={
-              methods::callNextMethod()
-            })   
-          })
+#' @export
+setMethod(
+  f = "plot",
+  signature = signature("MultSbmPath", "missing"),
+  definition = function(x, type = "blocks") {
+    switch(type,
+      tree = {
+        dendo(x)
+      },
+      path = {
+        lapath(x)
+      },
+      front = {
+        plot_front(x)
+      },
+      blocks = {
+        methods::callNextMethod()
+      },
+      nodelink = {
+        methods::callNextMethod()
+      }
+    )
+  }
+)
 
-#' @title Extract parameters from an \code{\link{multsbm_fit-class}} object
-#' 
-#' @param object a \code{\link{multsbm_fit-class}}
+#' @title Extract parameters from an \code{\link{MultSbmFit-class}} object
+#'
+#' @param object a \code{\link{MultSbmFit-class}}
 #' @return a list with the model parameters estimates (MAP), the fields are:
 #' \itemize{
-#' \item \code{'pi'}: cluster proportions 
-#' \item \code{'thetakl'}: cluster profile probabilities (array of size K x K x D), 
+#' \item \code{'pi'}: cluster proportions
+#' \item \code{'thetakl'}: cluster profile probabilities (array of size K x K x D),
 #' }
-#' @export 
-setMethod(f = "coef", 
-          signature = signature(object = "multsbm_fit"),
-          definition = function(object){
-            sol=object
-            pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
-            if(sol@model@type=="undirected"){
-              x_counts=sol@obs_stats$x_counts
-              for (k in 1:dim(x_counts)[1]){
-                for (d in 1:dim(x_counts)[3]){
-                  x_counts[k,k,d]=x_counts[k,k,d]/2
-                }
-              }
-            }else{
-              x_counts=sol@obs_stats$x_counts
-            }
-            thetakl=x_counts+sol@model@beta-1
-            norm=colSums(aperm(thetakl,c(3,1,2)),2)
-            for (d in 1:dim(thetakl)[3]){
-              thetakl[,,d]=thetakl[,,d]/norm
-            }
-            list(pi=pi,thetakl=thetakl)
-          })
+#' @export
+setMethod(
+  f = "coef",
+  signature = signature(object = "MultSbmFit"),
+  definition = function(object) {
+    sol <- object
+    pi <- (sol@obs_stats$counts + sol@model@alpha - 1) / sum(sol@obs_stats$counts + sol@model@alpha - 1)
+    if (sol@model@type == "undirected") {
+      x_counts <- sol@obs_stats$x_counts
+      for (k in 1:dim(x_counts)[1]) {
+        for (d in 1:dim(x_counts)[3]) {
+          x_counts[k, k, d] <- x_counts[k, k, d] / 2
+        }
+      }
+    } else {
+      x_counts <- sol@obs_stats$x_counts
+    }
+    thetakl <- x_counts + sol@model@beta - 1
+    norm <- colSums(aperm(thetakl, c(3, 1, 2)), 2)
+    for (d in 1:dim(thetakl)[3]) {
+      thetakl[, , d] <- thetakl[, , d] / norm
+    }
+    list(pi = pi, thetakl = thetakl)
+  }
+)
 
-reorder_multsbm = function(obs_stats,or){
-  obs_stats$counts = obs_stats$counts[or]
-  obs_stats$x_counts = obs_stats$x_counts[or,or,]
+reorder_multsbm <- function(obs_stats, or) {
+  obs_stats$counts <- obs_stats$counts[or]
+  obs_stats$x_counts <- obs_stats$x_counts[or, or, ]
   obs_stats
 }
 
 
-setMethod(f = "reorder", 
-          signature = signature("multsbm", "list","integer"), 
-          definition = function(model, obs_stats,order){
-            reorder_multsbm(obs_stats,order)
-          })
+setMethod(
+  f = "reorder",
+  signature = signature("MultSbm", "list", "integer"),
+  definition = function(model, obs_stats, order) {
+    reorder_multsbm(obs_stats, order)
+  }
+)
 
-setMethod(f = "seed", 
-          signature = signature("multsbm","list","numeric"), 
-          definition = function(model,data, K){
-            # pas terrible a réflechir deplier a droite sur les slices ?
-            km=stats::kmeans(data$X[,,1],K)
-            km$cluster
-          })
-
-
-setMethod(f = "preprocess", 
-          signature = signature("multsbm"), 
-          definition = function(model, data){
-            if(!methods::is(data,"array") ){
-              stop("A multsbm model expect an array with 3 dimensions.",call. = FALSE)
-            }
-            if(length(dim(data))!=3){
-              stop("A multsbm model expect an array with 3 dimensions.",call. = FALSE)
-            }
-            if(dim(data)[1]!=dim(data)[2]){
-              stop("A multsbm model expect an array of 3 dimensions with as many rows as columns.",call. = FALSE)
-            }
-            if(!all(round(data)==data) || min(data)<0){
-              stop("A multsbm model expect an array of 3 dimensions with as many rows as columns filled with postive integers.",call. = FALSE)
-            }
-            issym = all(sapply(1:dim(data)[3],function(d){ isSymmetric(data[,,d])}))
-            if(model@type=="undirected" & !issym){
-              stop("An undirected multsbm expect a symmetric array.",call. = FALSE)
-            }
-            selfloops = sapply(1:dim(data)[3],function(d){ sum(diag(data[,,d]))})
-            if(model@type=="undirected" & !all(selfloops==0)) {
-              for (d in 1:dim(data)[3]){
-                diag(data[,,d])=0
-              }
-              warning("An undirected multsbm model does not allow self loops, self loops were removed from the graph.",call. = FALSE)
-            }
-            
-            if(length(model@alpha)>1){
-              stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
-            }
-            if(is.na(model@alpha)){
-              stop("Model prior misspecification, alpha is NA.",call. = FALSE)
-            }
-            if(model@alpha<=0){
-              stop("Model prior misspecification, alpha must be positive.",call. = FALSE)
-            }
-            if(length(model@beta)>1){
-              stop("Model prior misspecification, beta must be of length 1.",call. = FALSE)
-            }
-            if(is.na(model@beta)){
-              stop("Model prior misspecification, beta is NA.",call. = FALSE)
-            }
-            if(model@beta<=0){
-              stop("Model prior misspecification, beta must be positive.",call. = FALSE)
-            }
-            if(!(model@type %in% c("directed","undirected","guess"))){
-              stop("Model prior misspecification, model type must directed, undirected or guess.",call. = FALSE)
-            }
-            
-            list(X=data,N=nrow(data))
-          })
+setMethod(
+  f = "seed",
+  signature = signature("MultSbm", "list", "numeric"),
+  definition = function(model, data, K) {
+    # pas terrible a réflechir deplier a droite sur les slices ?
+    km <- stats::kmeans(data$X[, , 1], K)
+    km$cluster
+  }
+)
 
 
-setMethod(f = "postprocess", 
-          signature = signature("multsbm_path"), 
-          definition = function(path,data,X,Y=NULL){
-            path@obs_stats = list(counts = path@obs_stats$counts,
-                                  din = path@obs_stats$multsbm$din,
-                                  dout = path@obs_stats$multsbm$dout,
-                                  x_counts = path@obs_stats$multsbm$x_counts)
-            for (p in 1:length(path@path)){
-              path@path[[p]]$obs_stats = list(counts = path@path[[p]]$obs_stats$counts,
-                                              din = path@path[[p]]$obs_stats$multsbm$din,
-                                              dout = path@path[[p]]$obs_stats$multsbm$dout,
-                                              x_counts = path@path[[p]]$obs_stats$multsbm$x_counts)
-            }
-            path
-          }
+setMethod(
+  f = "preprocess",
+  signature = signature("MultSbm"),
+  definition = function(model, data) {
+    if (!methods::is(data, "array")) {
+      stop("A multsbm model expect an array with 3 dimensions.", call. = FALSE)
+    }
+    if (length(dim(data)) != 3) {
+      stop("A multsbm model expect an array with 3 dimensions.", call. = FALSE)
+    }
+    if (dim(data)[1] != dim(data)[2]) {
+      stop("A multsbm model expect an array of 3 dimensions with as many rows as columns.", call. = FALSE)
+    }
+    if (!all(round(data) == data) || min(data) < 0) {
+      stop("A multsbm model expect an array of 3 dimensions with as many rows as columns filled with postive integers.", call. = FALSE)
+    }
+    issym <- all(sapply(1:dim(data)[3], function(d) {
+      isSymmetric(data[, , d])
+    }))
+    if (model@type == "undirected" & !issym) {
+      stop("An undirected multsbm expect a symmetric array.", call. = FALSE)
+    }
+    selfloops <- sapply(1:dim(data)[3], function(d) {
+      sum(diag(data[, , d]))
+    })
+    if (model@type == "undirected" & !all(selfloops == 0)) {
+      for (d in 1:dim(data)[3]) {
+        diag(data[, , d]) <- 0
+      }
+      warning("An undirected multsbm model does not allow self loops, self loops were removed from the graph.", call. = FALSE)
+    }
+
+    if (length(model@alpha) > 1) {
+      stop("Model prior misspecification, alpha must be of length 1.", call. = FALSE)
+    }
+    if (is.na(model@alpha)) {
+      stop("Model prior misspecification, alpha is NA.", call. = FALSE)
+    }
+    if (model@alpha <= 0) {
+      stop("Model prior misspecification, alpha must be positive.", call. = FALSE)
+    }
+    if (length(model@beta) > 1) {
+      stop("Model prior misspecification, beta must be of length 1.", call. = FALSE)
+    }
+    if (is.na(model@beta)) {
+      stop("Model prior misspecification, beta is NA.", call. = FALSE)
+    }
+    if (model@beta <= 0) {
+      stop("Model prior misspecification, beta must be positive.", call. = FALSE)
+    }
+    if (!(model@type %in% c("directed", "undirected", "guess"))) {
+      stop("Model prior misspecification, model type must directed, undirected or guess.", call. = FALSE)
+    }
+
+    list(X = data, N = nrow(data))
+  }
+)
+
+
+setMethod(
+  f = "postprocess",
+  signature = signature("MultSbmPath"),
+  definition = function(path, data, X, Y = NULL) {
+    path@obs_stats <- list(
+      counts = path@obs_stats$counts,
+      x_counts = path@obs_stats$MultSbm$x_counts
+    )
+    for (p in 1:length(path@path)) {
+      path@path[[p]]$obs_stats <- list(
+        counts = path@path[[p]]$obs_stats$counts,
+        x_counts = path@path[[p]]$obs_stats$MultSbm$x_counts
+      )
+    }
+    path
+  }
 )

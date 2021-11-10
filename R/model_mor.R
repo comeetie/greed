@@ -2,10 +2,10 @@
 NULL
 
 
-#' @title Multivariate mixture of regression model description class
+#' @title Multivariate mixture of regression Prior model description class
 #' 
 #' @description 
-#' An S4 class to represent a multivariate mixture of regression model, extends \code{\link{icl_model-class}}.
+#' An S4 class to represent a multivariate mixture of regression model.
 #' The model follows [minka-linear](https://tminka.github.io/papers/minka-linear.pdf) .
 #' The model corresponds to the following generative model:
 #' \deqn{ \pi \sim Dirichlet(\alpha)}
@@ -19,21 +19,40 @@ NULL
 #' @slot tau Prior parameter (inverse variance) default 0.01 
 #' @slot epsilon Covariance matrix prior parameter (default to NaN, in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.) 
 #' @slot N0 Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)
-#' @examples
-#' new("mvmreg")
-#' new("mvmreg",alpha=1,tau=0.1,N0=15)
+#' @family DlvmModels
 #' @md
 #' @export
-setClass("mvmreg",
+setClass("MoRPrior",
          representation = list(tau = "numeric",N0="numeric",epsilon ="matrix"),
-         contains = "icl_model",
-         prototype(name="mvmreg",tau=0.01,N0=NaN,epsilon=as.matrix(NaN),alpha=1))
+         prototype(tau=0.01,N0=NaN,epsilon=as.matrix(NaN)))
 
+#' @describeIn MoRPrior-class MoRPrior class constructor
+#' @examples
+#' MoRPrior()
+#' MoRPrior(N0=100)
+#' @export
+MoRPrior <- function(tau=0.01,N0=NaN,epsilon=as.matrix(NaN)) {
+  methods::new("MoRPrior", tau=tau,N0=N0,epsilon=epsilon)
+}
+
+#' @describeIn MoRPrior-class MoR class constructor
+setClass("MoR",
+         contains = c("DlvmPrior", "MoRPrior")
+)
+
+#' @describeIn MoRPrior-class MoR class constructor
+#' @examples
+#' MoR()
+#' MoR(N0=100)
+#' @export
+MoR <- function(tau=0.01,N0=NaN,epsilon=as.matrix(NaN)) {
+  methods::new("MoR", alpha = alpha,tau=tau,N0=N0,epsilon=epsilon)
+}
 
 #' @title Clustering with a multivariate mixture of regression model fit results class
 #' 
-#' @description An S4 class to represent a fit of a multivariate mixture of regression model, extend \code{\link{icl_fit-class}}.
-#' @slot model a \code{\link{mvmreg-class}} object to store the model fitted
+#' @description An S4 class to represent a fit of a multivariate mixture of regression model, extend \code{\link{IclFit-class}}.
+#' @slot model a \code{\link{MoR-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
@@ -46,14 +65,14 @@ setClass("mvmreg",
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
 #' @export 
-setClass("mvmreg_fit",slots = list(model="mvmreg"),contains="icl_fit")
+setClass("MoRFit",slots = list(model="MoR"),contains="IclFit")
 
 
 #' @title Multivariate mixture of regression model hierarchical fit results class
 #' 
 #' 
-#' @description An S4 class to represent a hierarchical fit of a multivariate mixture of regression model, extend \code{\link{icl_path-class}}.
-#' @slot model a \code{\link{mvmreg-class}} object to store the model fitted
+#' @description An S4 class to represent a hierarchical fit of a multivariate mixture of regression model, extend \code{\link{IclPath-class}}.
+#' @slot model a \code{\link{MoR-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
@@ -81,14 +100,14 @@ setClass("mvmreg_fit",slots = list(model="mvmreg"),contains="icl_fit")
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father  
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
 #' @export 
-setClass("mvmreg_path",contains=c("icl_path","mvmreg_fit"))
+setClass("MoRPath",contains=c("IclPath","MoRFit"))
 
 
 
-#' @title plot a \code{\link{mvmreg_path-class}} object
+#' @title plot a \code{\link{MoRPath-class}} object
 #' 
 #' 
-#' @param x a \code{\link{mvmreg_path-class}}
+#' @param x a \code{\link{MoRPpath-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'front'}: plot the extracted front ICL, log(alpha)
@@ -98,7 +117,7 @@ setClass("mvmreg_path",contains=c("icl_path","mvmreg_fit"))
 #' @return a \code{\link{ggplot2}} graphic
 #' @export 
 setMethod(f = "plot", 
-          signature = signature("mvmreg_path","missing"),
+          signature = signature("MoRPath","missing"),
           definition = function(x,type='tree'){
             switch(type,tree = {
               dendo(x)
@@ -111,9 +130,9 @@ setMethod(f = "plot",
             })
           })
 
-#' @title Extract mixture parameters from \code{\link{mvmreg_fit-class}} object
+#' @title Extract mixture parameters from \code{\link{MoRFit-class}} object
 #' 
-#' @param object a \code{\link{mvmreg_fit-class}}
+#' @param object a \code{\link{MoRFit-class}}
 #' @return a list with the mixture parameters estimates (MAP), the fields are:
 #' \itemize{
 #' \item \code{'pi'}: cluster proportions 
@@ -122,7 +141,7 @@ setMethod(f = "plot",
 #' }
 #' @export 
 setMethod(f = "coef", 
-          signature = signature(object = "mvmreg_fit"),
+          signature = signature(object = "MoRFit"),
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
@@ -141,14 +160,14 @@ reorder_mvmreg = function(obs_stats,or){
 
 
 setMethod(f = "reorder", 
-          signature = signature("mvmreg", "list","integer"), 
+          signature = signature("MoR", "list","integer"), 
           definition = function(model, obs_stats,order){
             reorder_mvmreg(obs_stats,order)
           })
 
 
 setMethod(f = "seed", 
-          signature = signature("mvmreg","list","numeric"), 
+          signature = signature("MoR","list","numeric"), 
           definition = function(model,data, K){
             X=cbind(data$X,data$Y)
             sds=apply(X,2,stats::sd)
@@ -161,7 +180,7 @@ setMethod(f = "seed",
 
 
 setMethod(f = "preprocess", 
-          signature = signature("mvmreg"), 
+          signature = signature("MoR"), 
           definition = function(model, data){
             if(!any(class(data$Y)%in%c("data.frame","numeric","matrix"))){
               stop("Y must be a data.frame a numeric vector or a matrix.",call.=FALSE)

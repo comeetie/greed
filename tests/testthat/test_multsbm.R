@@ -36,7 +36,7 @@ test_that("MULTSBM hybrid directed", {
   mu[,,3] = 1- mu[,,1]-mu[,,2]
   lambda = 10
   multsbm = rmultsbm(N,pi,mu,10)
-  sol=greed(multsbm$x,model=new('multsbm'))
+  sol=greed(multsbm$x,model=MultSbm())
   expect_equal(sol@K, K)
   solc = cut(sol,2)
   expect_true(is.ggplot(plot(solc,type='tree')))
@@ -63,7 +63,7 @@ test_that("MULTSBM seed directed", {
   mu[,,3] = 1- mu[,,1]-mu[,,2]
   lambda = 10
   multsbm = rmultsbm(N,pi,mu,10)
-  sol=greed(multsbm$x,model=new('multsbm'),alg=new("seed"))
+  sol=greed(multsbm$x,model=MultSbm(),alg=Seed())
   expect_gte(sol@K, K-2)
   expect_lte(sol@K, K+2)
   solc = cut(sol,2)
@@ -116,7 +116,7 @@ test_that("MULTSBM hybrid undirected", {
   diag(multsbm$x[,,2])=0
   multsbm$x[,,3]=matrix(tril(multsbm$x[,,3])+t(tril(multsbm$x[,,3])))
   diag(multsbm$x[,,3])=0
-  sol=greed(multsbm$x,model=new('multsbm',type='undirected'))
+  sol=greed(multsbm$x,model=MultSbm(type='undirected'))
   expect_equal(sol@K, K)
   solc = cut(sol,2)
   expect_true(is.ggplot(plot(solc,type='tree')))
@@ -150,7 +150,7 @@ test_that("MULTSBM seed undirected", {
   multsbm$x[,,3]=matrix(tril(multsbm$x[,,3])+t(tril(multsbm$x[,,3])))
   diag(multsbm$x[,,3])=0
   
-  sol=greed(multsbm$x,model=new('multsbm',type="undirected"),alg=new("seed"))
+  sol=greed(multsbm$x,model=MultSbm(type="undirected"),alg=Seed())
   expect_gte(sol@K, K-2)
   expect_lte(sol@K, K+2)
   solc = cut(sol,2)

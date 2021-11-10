@@ -1,35 +1,57 @@
 #' @include models_classes.R fit_classes.R
 NULL
 
-#' @title Mixed Mixture model class
+#' @title Latent Class Analysis Model Prior class
 #' 
 #' @description 
-#' An S4 class to represent a Latent Class Analysis model, extends \code{\link{icl_model-class}}.
+#' An S4 class to represent a Latent Class Analysis model
 #' Such model can be used to cluster a data matrix \eqn{X} with the following generative model :  
-#' \deqn{ \pi \sim Dirichlet(\alpha)}
-#' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
-#' \deqn{ \theta_{kv} \sim Dirichlet(\beta)}
-#' ....
+#' \deqn{\pi&\sim \textrm{Dirichlet}(\alpha),}
+#' \deqn{\forall k, \forall j, \quad \theta_{kj} &\sim \textrm{Dirichlet}_{d_j}(\beta),}
+#' \deqn{Z_i&\sim \mathcal{M}_K(1,\pi),}
+#' \deqn{\forall j=1, \ldots, p, \quad X_{ij}|Z_{ik}=1 &\sim \mathcal{M}_{d_j}(1, \theta_{kj}),}
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot beta Dirichlet over vocabulary prior parameter (default to 1)
-#' @examples
-#' new("lca")
-#' new("lca",alpha=1,beta=1)
+#' @family DlvmModels
 #' @export
-setClass("lca",
+setClass("LcaPrior",
          representation = list(beta = "numeric"),
-         contains = "icl_model",
-         prototype(name="lca",beta=1,alpha=1))
+         prototype(beta=1))
+
+
+
+#' @describeIn LcaPrior-class LcaPrior class constructor
+#' @examples
+#' LcaPrior()
+#' LcaPrior(beta = 0.5)
+#' @export
+LcaPrior <- function(beta = 1) {
+  methods::new("LcaPrior", beta = 1)
+}
+
+#' @describeIn LcaPrior-class Lca class constructor
+setClass("Lca",
+         contains = c("DlvmPrior", "LcaPrior")
+)
+
+#' @describeIn LcaPrior-class Lca class constructor
+#' @examples
+#' Lca()
+#' Lca(beta = 0.5)
+#' @export
+Lca <- function(alpha = 1, beta = 1) {
+  methods::new("Lca", alpha = alpha, beta = beta)
+}
 
 #' @title Latent Class  Analysis fit results class
 #'
 #' @description An S4 class to represent a fit of a Latent Class Analysis model
-#'   for categorical data clustering, extend \code{\link{icl_fit-class}}. The
+#'   for categorical data clustering, extend \code{\link{IclFit-class}}. The
 #'   original data must be an n x p matrix where p is the number of variables
 #'   and each variable is encoded as a factor (integer-valued).
 #'
-#' @slot model a \code{\link{lca-class}} object to store the model fitted
+#' @slot model a \code{\link{Lca-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
@@ -42,14 +64,14 @@ setClass("lca",
 #' @slot train_hist data.frame with training history information (details
 #'   depends on the training procedure)
 #' @export
-setClass("lca_fit",slots = list(model="lca"),contains="icl_fit")
+setClass("LcaFit",slots = list(model="Lca"),contains="IclFit")
 
 
 #' @title Latent Class Analysis hierarchical fit results class
 #' 
 #' 
 #' @description An S4 class to represent a fit of a Latent Class Analysis model, extend \code{\link{icl_path-class}}.
-#' @slot model a \code{\link{lca-class}} object to store the model fitted
+#' @slot model a \code{\link{Lca-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
@@ -78,13 +100,13 @@ setClass("lca_fit",slots = list(model="lca"),contains="icl_fit")
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father  
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
 #' @export 
-setClass("lca_path",contains=c("icl_path","lca_fit"))
+setClass("LcaPath",contains=c("IclPath","LcaFit"))
 
 
-#' @title plot a \code{\link{lca_fit-class}} object
+#' @title plot a \code{\link{LcaFit-class}} object
 #' 
 #' 
-#' @param x a \code{\link{lca_fit-class}}
+#' @param x a \code{\link{LcaFit-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
@@ -92,7 +114,7 @@ setClass("lca_path",contains=c("icl_path","lca_fit"))
 #' @return a \code{\link{ggplot2}} graphic
 #' @export 
 setMethod(f = "plot", 
-          signature = signature("lca_fit","missing"),
+          signature = signature("LcaFit","missing"),
           definition = function(x,type='marginals'){
             pl=greed:::block_lca(x)
             grid::grid.newpage()
@@ -101,9 +123,9 @@ setMethod(f = "plot",
           });
 
 
-#' @title plot a \code{\link{lca_path-class}} object
+#' @title plot a \code{\link{LcaPath-class}} object
 #' 
-#' @param x an \code{\link{lca_path-class}} object
+#' @param x an \code{\link{LcaPath-class}} object
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'front'}: plot the extracted front in the plane ICL, log(alpha)
@@ -113,7 +135,7 @@ setMethod(f = "plot",
 #' @return a \code{\link{ggplot2}} graphic
 #' @export 
 setMethod(f = "plot", 
-          signature = signature("lca_path","missing"),
+          signature = signature("LcaPath","missing"),
           definition = function(x,type='marginals'){
             switch(type,tree = {
               dendo(x)
@@ -128,7 +150,7 @@ setMethod(f = "plot",
           })
 
 
-#' @title Extract parameters from an \code{\link{lca_fit-class}} object
+#' @title Extract parameters from an \code{\link{LcaFit-class}} object
 #' 
 #' @param object a \code{\link{mm_fit-class}}
 #' @return a list with the model parameters estimates (MAP), the fields are:
@@ -138,7 +160,7 @@ setMethod(f = "plot",
 #' }
 #' @export 
 setMethod(f = "coef", 
-          signature = signature(object = "lca_fit"),
+          signature = signature(object = "LcaFit"),
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
@@ -156,7 +178,7 @@ reorder_lca = function(obs_stats,or){
 }
 
 setMethod(f = "postprocess", 
-          signature = signature("lca_path"), 
+          signature = signature("LcaPath"), 
           definition = function(path,data,X,Y=NULL){
             path = clean_obs_stats_lca(path)
             path = name_obs_stats_lca(path,X)
@@ -200,14 +222,14 @@ name_obs_stats_lca=function(path,X){
 
 
 setMethod(f = "reorder", 
-          signature = signature("lca", "list","integer"), 
+          signature = signature("Lca", "list","integer"), 
           definition = function(model, obs_stats,order){
             reorder_lca(obs_stats,order)
           })
 
 
 setMethod(f = "seed", 
-          signature = signature("lca","list","numeric"), 
+          signature = signature("Lca","list","numeric"), 
           definition = function(model,data, K){
             km=stats::kmeans(as.matrix(data$X),K)
             km$cluster
@@ -215,19 +237,19 @@ setMethod(f = "seed",
 
 
 setMethod(f = "sample_cl", 
-          signature = signature("lca","list","numeric"), 
+          signature = signature("Lca","list","numeric"), 
           definition = function(model,data,K){
             sample(1:K,data$N,replace = TRUE)
           })
 
 setMethod(f = "preprocess", 
-          signature = signature("lca"), 
+          signature = signature("Lca"), 
           definition = function(model, data){
             if(!methods::is(data,"data.frame")){
-              stop("An lca model expect a data.frame.",call. = FALSE)
+              stop("An Lca model expect a data.frame.",call. = FALSE)
             }
             if(!all(sapply(data,is.factor)) & !all(sapply(data, is.character))){
-              stop("An lca model expect a data.frame with only factors or characters.",call. = FALSE)
+              stop("An Lca model expect a data.frame with only factors or characters.",call. = FALSE)
             }
             if(length(model@alpha)>1){
               stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
@@ -260,7 +282,7 @@ setMethod(f = "preprocess",
 # For now, seed is kmeans on raw table for categorical
 # May be improved
 setMethod(f = "seed", 
-          signature = signature("lca","list","numeric"), 
+          signature = signature("Lca","list","numeric"), 
           definition = function(model,data, K){
             km=stats::kmeans(as.matrix(data$X),K)
             km$cluster

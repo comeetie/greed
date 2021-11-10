@@ -7,7 +7,7 @@
 graph_balance(x)
 }
 \arguments{
-\item{x}{a \code{\link{sbm_fit-class}} object to be plot}
+\item{x}{a \code{\link{SbmFit-class}} object to be plot}
 }
 \value{
 a ggplot2 graph
