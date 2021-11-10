@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a>
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
@@ -112,7 +112,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a>
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -161,7 +161,7 @@
 <dt><code>obs_stats</code></dt><dd><p>a list with the following elements:
 <ul>
 <li><p>counts: numeric vector of size K with number of elements in each clusters</p></li>
-<li><p>regs: list of size $K$ with statistics for each clusters</p></li>
+<li><p>mvmregs: list of size $K$ with statistics for each clusters</p></li>
 </ul></p></dd>
 
 <dt><code>path</code></dt><dd><p>a list of size K-1 with each part of the path described by:
@@ -169,12 +169,11 @@
 <li><p>icl1: icl value reach with this solution for alpha=1</p></li>
 <li><p>logalpha: log(alpha) value were this solution is better than its parent</p></li>
 <li><p>K: number of clusters</p></li>
-<li><p>cl: vector of cluster indexes</p></li>
 <li><p>k,l: index of the cluster that were merged at this step</p></li>
 <li><p>merge_mat: lower triangular matrix of delta icl values</p></li>
 <li><p>obs_stats: a list with the following elements:</p><ul>
 <li><p>counts: numeric vector of size K with number of elements in each clusters</p></li>
-<li><p>regs: list of size $K$ with statistics for each clusters</p></li>
+<li><p>mvregs: list of size $K$ with statistics for each clusters</p></li>
 </ul></li>
 </ul></p></dd>
 

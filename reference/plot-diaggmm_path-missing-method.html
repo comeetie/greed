@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a>
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
@@ -112,7 +112,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a>
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -142,7 +142,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S4 method for diaggmm_path,missing</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>, type <span class='op'>=</span> <span class='st'>"tree"</span><span class='op'>)</span></pre>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>, type <span class='op'>=</span> <span class='st'>"marginals"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,6 +154,8 @@
     <tr>
       <th>type</th>
       <td><p>a string which specify plot type:</p><ul>
+<li><p><code>'marginals'</code>: plot the marginal densities</p></li>
+<li><p><code>'violins'</code>: make a violin plot for each clusters and features</p></li>
 <li><p><code>'front'</code>: plot the extracted front ICL, log(alpha)</p></li>
 <li><p><code>'path'</code>: plot the evolution of ICL with respect to K</p></li>
 <li><p><code>'tree'</code>: plot the associated dendrogram</p></li>
