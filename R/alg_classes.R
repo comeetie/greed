@@ -201,14 +201,14 @@ find_model <- function(X) {
       isSymmetric(X[, , d])
     }))
     if (issym) {
-      model <- methods::new("MultSbm", type = "undirected")
+      model <- MultSbm(type = "undirected")
     } else {
-      model <- methods::new("MultSbm")
+      model <- MultSbm()
     }
   } else {
     if (methods::is(X, "data.frame") & !all(apply(X, 2, is.numeric))) {
       if (all(sapply(X, is.factor)) | all(sapply(X, is.character))) {
-        return(methods::new("Lca"))
+        return(Lca())
       }
     }
     if (methods::is(X, "data.frame") & all(apply(X, 2, is.numeric))) {
@@ -220,16 +220,16 @@ find_model <- function(X) {
           stop("No missing value allowed for Sbm models. ", .call = FALSE)
         } else {
           if (isSymmetric(X)) {
-            model <- methods::new("DcSbm", type = "undirected")
+            model <- DcSbm("undirected")
           } else {
-            model <- methods::new("DcSbm")
+            model <- DcSbm()
           }
         }
       } else {
         if (all(round(X) == X)) {
-          model <- methods::new("DcLbm")
+          model <- DcLbm()
         } else {
-          model <- methods::new("Gmm", N0 = ncol(X), epsilon = 0.1 * diag(diag(stats::cov(X))), mu = apply(X, 2, mean), tau = 0.01)
+          model <- Gmm()
           # model = methods::new("diaggmm",mu=apply(X,2,mean),beta=0.1)
         }
       }

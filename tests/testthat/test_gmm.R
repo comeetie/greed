@@ -46,7 +46,7 @@ test_that("GMM hybrid", {
 test_that("GMM seed", {
   N=150
   X = rbind(MASS::mvrnorm(N/3,c(-5,0),diag(2)),MASS::mvrnorm(N/3,c(0,5),diag(2)),MASS::mvrnorm(N/3,c(5,0),diag(2)))
-  sol=greed(X,alg=new("seed"))
+  sol=greed(X,alg=Seed())
   expect_equal(sol@K, 3)
   solc = cut(sol,2)
   expect_true(is.ggplot(plot(solc,type='tree')))

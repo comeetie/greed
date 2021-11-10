@@ -193,10 +193,10 @@ setMethod(
   definition = function(object) {
     sol <- object
     pi <- (sol@obs_stats$counts + sol@model@alpha - 1) / sum(sol@obs_stats$counts + sol@model@alpha - 1)
-    muk <- lapply(sol@obs_stats$diaggmm, function(r) {
+    muk <- lapply(sol@obs_stats$DiagGmm, function(r) {
       (sol@model@tau * sol@model@mu + r$ng * r$m) / (sol@model@tau + r$ng)
     })
-    Sigmak <- lapply(sol@obs_stats$diaggmm, function(r) {
+    Sigmak <- lapply(sol@obs_stats$DiagGmm, function(r) {
       betan <- sol@model@beta + 0.5 * r$S + (sol@model@tau * r$ng * (r$m - sol@model@mu)^2) / (2 * sol@model@tau + r$ng)
       alphan <- sol@model@kappa + r$ng / 2
       dd <- as.vector(betan / (alphan - 1))
@@ -292,18 +292,18 @@ setMethod(
 name_obs_stats_diaggmm <- function(path, X) {
   num_names <- colnames(data.frame(X))
   for (k in 1:path@K) {
-    path@obs_stats$diaggmm[[k]] <- path@obs_stats$diaggmm[[k]][c("m", "S", "ng", "log_evidence")]
-    colnames(path@obs_stats$diaggmm[[k]]$m) <- num_names
-    colnames(path@obs_stats$diaggmm[[k]]$S) <- num_names
+    path@obs_stats$DiagGmm[[k]] <- path@obs_stats$DiagGmm[[k]][c("m", "S", "ng", "log_evidence")]
+    colnames(path@obs_stats$DiagGmm[[k]]$m) <- num_names
+    colnames(path@obs_stats$DiagGmm[[k]]$S) <- num_names
   }
-  names(path@obs_stats$diaggmm) <- paste0("cluster", 1:path@K)
+  names(path@obs_stats$DiagGmm) <- paste0("cluster", 1:path@K)
   for (p in 1:length(path@path)) {
     for (k in 1:path@path[[p]]$K) {
-      path@path[[p]]$obs_stats$diaggmm[[k]] <- path@path[[p]]$obs_stats$diaggmm[[k]][c("m", "S", "ng", "log_evidence")]
-      colnames(path@path[[p]]$obs_stats$diaggmm[[k]]$m) <- num_names
-      colnames(path@path[[p]]$obs_stats$diaggmm[[k]]$S) <- num_names
+      path@path[[p]]$obs_stats$DiagGmm[[k]] <- path@path[[p]]$obs_stats$DiagGmm[[k]][c("m", "S", "ng", "log_evidence")]
+      colnames(path@path[[p]]$obs_stats$DiagGmm[[k]]$m) <- num_names
+      colnames(path@path[[p]]$obs_stats$DiagGmm[[k]]$S) <- num_names
     }
-    names(path@path[[p]]$obs_stats$diaggmm) <- paste0("cluster", 1:path@path[[p]]$K)
+    names(path@path[[p]]$obs_stats$DiagGmm) <- paste0("cluster", 1:path@path[[p]]$K)
   }
   path
 }

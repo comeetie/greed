@@ -9,7 +9,7 @@ set.seed(1234)
 test_that("DIAGGMM hybrid", {
   N=150
   X = rbind(MASS::mvrnorm(N/3,c(-5,0),diag(2)),MASS::mvrnorm(N/3,c(0,5),diag(2)),MASS::mvrnorm(N/3,c(5,0),diag(2)))
-  mod = new("diaggmm",mu=apply(X,2,mean))
+  mod = DiagGmm(mu=apply(X,2,mean))
   sol=greed(X,model=mod)
   expect_equal(sol@K, 3)
   
@@ -25,11 +25,11 @@ test_that("DIAGGMM hybrid", {
   expect_true(is.ggplot(plot(sol,type='front')))
 })
 
-test_that("GMM seed", {
+test_that("DiagGMM seed", {
   N=150
   X = rbind(MASS::mvrnorm(N/3,c(-5,0),diag(2)),MASS::mvrnorm(N/3,c(0,5),diag(2)),MASS::mvrnorm(N/3,c(5,0),diag(2)))
-  mod = new("diaggmm",mu=apply(X,2,mean))
-  sol=greed(X,model=mod,alg=new("seed"))
+  mod = DiagGmm()
+  sol=greed(X,model=mod,alg=Seed())
   expect_equal(sol@K, 3)
   solc = cut(sol,2)
   expect_true(is.ggplot(plot(sol,type='tree')))

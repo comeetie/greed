@@ -34,7 +34,7 @@ setClass("GmmPrior",
 #' GmmPrior(tau = 0.1)
 #' @export
 GmmPrior <- function(tau = 0.001, N0 = NaN, mu = NaN, epsilon = as.matrix(NaN)) {
-  methods::new("GmmPrior", tau = tau, N0 = N0, mu = mu, espilon = epsilon)
+  methods::new("GmmPrior", tau = tau, N0 = N0, mu = mu, epsilon = epsilon)
 }
 
 #' @describeIn GmmPrior-class Gmm class constructor
@@ -48,7 +48,7 @@ setClass("Gmm",
 #' Gmm(N0 = 100)
 #' @export
 Gmm <- function(alpha = 1, tau = 0.001, N0 = NaN, mu = NaN, epsilon = as.matrix(NaN)) {
-  methods::new("Gmm", alpha = alpha, tau = tau, N0 = N0, mu = mu, espilon = epsilon)
+  methods::new("Gmm", alpha = alpha, tau = tau, N0 = N0, mu = mu, epsilon = epsilon)
 }
 
 
@@ -190,10 +190,10 @@ setMethod(
   definition = function(object) {
     sol <- object
     pi <- (sol@obs_stats$counts + sol@model@alpha - 1) / sum(sol@obs_stats$counts + sol@model@alpha - 1)
-    muk <- lapply(sol@obs_stats$gmm, function(r) {
+    muk <- lapply(sol@obs_stats$Gmm, function(r) {
       (sol@model@tau * sol@model@mu + r$ng * r$m) / (sol@model@tau + r$ng)
     })
-    Sigmak <- lapply(sol@obs_stats$gmm, function(r) {
+    Sigmak <- lapply(sol@obs_stats$Gmm, function(r) {
       mu <- (sol@model@tau * sol@model@mu + r$ng * r$m) / (sol@model@tau + r$ng)
       Sc <- r$S + t(r$m) %*% r$m - t(mu) %*% mu
       S <- (Sc + sol@model@tau * t(mu - sol@model@mu) %*% (mu - sol@model@mu) + sol@model@epsilon) / (r$ng + sol@model@N0 - length(mu))
@@ -286,20 +286,20 @@ setMethod(
 name_obs_stats_gmm <- function(path, X) {
   num_names <- colnames(data.frame(X))
   for (k in 1:path@K) {
-    path@obs_stats$gmm[[k]] <- path@obs_stats$gmm[[k]][c("m", "S", "ng", "log_evidence")]
-    colnames(path@obs_stats$gmm[[k]]$m) <- num_names
-    colnames(path@obs_stats$gmm[[k]]$S) <- num_names
-    rownames(path@obs_stats$gmm[[k]]$S) <- num_names
+    path@obs_stats$Gmm[[k]] <- path@obs_stats$Gmm[[k]][c("m", "S", "ng", "log_evidence")]
+    colnames(path@obs_stats$Gmm[[k]]$m) <- num_names
+    colnames(path@obs_stats$Gmm[[k]]$S) <- num_names
+    rownames(path@obs_stats$Gmm[[k]]$S) <- num_names
   }
-  names(path@obs_stats$gmm) <- paste0("cluster", 1:path@K)
+  names(path@obs_stats$Gmm) <- paste0("cluster", 1:path@K)
   for (p in 1:length(path@path)) {
     for (k in 1:path@path[[p]]$K) {
-      path@path[[p]]$obs_stats$gmm[[k]] <- path@path[[p]]$obs_stats$gmm[[k]][c("m", "S", "ng", "log_evidence")]
-      colnames(path@path[[p]]$obs_stats$gmm[[k]]$m) <- num_names
-      colnames(path@path[[p]]$obs_stats$gmm[[k]]$S) <- num_names
-      rownames(path@path[[p]]$obs_stats$gmm[[k]]$S) <- num_names
+      path@path[[p]]$obs_stats$Gmm[[k]] <- path@path[[p]]$obs_stats$Gmm[[k]][c("m", "S", "ng", "log_evidence")]
+      colnames(path@path[[p]]$obs_stats$Gmm[[k]]$m) <- num_names
+      colnames(path@path[[p]]$obs_stats$Gmm[[k]]$S) <- num_names
+      rownames(path@path[[p]]$obs_stats$Gmm[[k]]$S) <- num_names
     }
-    names(path@path[[p]]$obs_stats$gmm) <- paste0("cluster", 1:path@path[[p]]$K)
+    names(path@path[[p]]$obs_stats$Gmm) <- paste0("cluster", 1:path@path[[p]]$K)
   }
   path
 }
