@@ -4,7 +4,7 @@
 #' @name %<-%
 NULL
 
-#' @include models_classes.R fit_classes.R hybrid_alg.R genetic_alg.R misc.R
+#' @include models_classes.R fit_classes.R alg_hybrid.R alg_genetic.R tools_misc.R
 #' @import Matrix
 NULL
 

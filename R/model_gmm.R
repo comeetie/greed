@@ -1,4 +1,4 @@
-#' @include models_classes.R fit_classes.R mvmreg.R
+#' @include models_classes.R fit_classes.R
 NULL
 
 

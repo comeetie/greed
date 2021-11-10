@@ -1,4 +1,4 @@
-#' @include models_classes.R fit_classes.R dcsbm.R
+#' @include models_classes.R fit_classes.R model_dcsbm.R
 NULL
 
 

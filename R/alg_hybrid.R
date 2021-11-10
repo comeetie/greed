@@ -12,7 +12,7 @@ NULL
 #' @name %seed%
 NULL
 
-#' @include models_classes.R fit_classes.R cleanpath.R
+#' @include models_classes.R fit_classes.R tools_cleanpath.R
 #' @import Matrix
 NULL
 
