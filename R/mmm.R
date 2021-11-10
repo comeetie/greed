@@ -12,6 +12,10 @@ NULL
 #' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot beta Dirichlet over vocabulary prior parameter (default to 1)
+#' @slot tau Prior parameter (inverse variance) default 0.01 
+#' @slot N0 Prior parameter (pseudo count) should be > number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)
+#' @slot epsilon Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)  
+#' @slot mu Prior parameters for the means (vector of size D), (default to NaN, in this case mu will be estimated from the data and will be equal to the mean of X) 
 #' @examples
 #' new("mmm")
 #' new("mmm",alpha=1,beta=1)

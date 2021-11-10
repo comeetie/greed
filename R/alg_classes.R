@@ -178,11 +178,7 @@ find_model = function(X){
     if(methods::is(X,"dgCMatrix") | methods::is(X,"matrix")){
       if(nrow(X)==ncol(X)){
         if(sum(is.na(X))>0){
-          if(isSymmetric(X)){
-            model = methods::new("misssbm",type="undirected")
-          }else{
-            model = methods::new("misssbm")
-          } 
+          stop("No missing value allowed for Sbm models. ",.call=FALSE)
         }else{
           if(isSymmetric(X)){
             model = methods::new("dcsbm",type="undirected")

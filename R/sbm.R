@@ -118,25 +118,29 @@ setMethod(f = "plot",
 #' }
 #' @return a \code{\link{ggplot2}} graphic
 #' @export 
-setMethod(f = "plot", 
-          signature = signature("sbm_path","missing"),
-          definition = function(x,type='blocks'){
-            switch(type,tree = {
-              dendo(x)
-            },
-            path ={
-              lapath(x)
-            },
-            front = {
-              plot_front(x)
-            },
-            blocks ={
-              methods::callNextMethod()
-            },
-            nodelink={
-              methods::callNextMethod()
-            })   
-          })
+setMethod(
+  f = "plot",
+  signature = signature("sbm_path", "missing"),
+  definition = function(x, type = "blocks") {
+    switch(type,
+      tree = {
+        dendo(x)
+      },
+      path = {
+        lapath(x)
+      },
+      front = {
+        plot_front(x)
+      },
+      blocks = {
+        methods::callNextMethod()
+      },
+      nodelink = {
+        methods::callNextMethod()
+      }
+    )
+  }
+)
 
 #' @title Extract parameters from an \code{\link{sbm_fit-class}} object
 #' 

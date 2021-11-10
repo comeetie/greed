@@ -4,6 +4,10 @@
 #' @name %<-%
 NULL
 
+#' @importFrom future %seed%
+#' @name %seed%
+NULL
+
 #' @include models_classes.R fit_classes.R cleanpath.R
 #' @import Matrix
 NULL
@@ -23,8 +27,8 @@ genetic = function(model,alg,data,K,verbose=FALSE){
   for (i in 1:pop_size){
     cli = sample_cl(model,data,K)
     cli=as.numeric(factor(cli))
-    solutions[[i]] %<-% fit_greed(model,data,cli,type="none")
-  }
+    solutions[[i]] %<-% fit_greed(model,data,cli,type="none") %seed% TRUE
+  } 
   solutions = as.list(solutions)
   icls  = sapply(solutions,function(s){s@icl})
   # check for errors 
@@ -56,7 +60,7 @@ genetic = function(model,alg,data,K,verbose=FALSE){
     children = as.list(children)
     for (i in 1:(alg@pop_size-1)){
       if(stats::runif(1)<alg@prob_mutation){
-        new_solutions[[i]] %<-% fit_greed(model,data,children[[i]]@cl,"swap",1)
+        new_solutions[[i]] %<-% fit_greed(model,data,children[[i]]@cl,"swap",1) %seed% TRUE
       }else{
         new_solutions[[i]] = children[[i]]
       }

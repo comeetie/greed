@@ -20,6 +20,14 @@ An S4 class to represent a Mixed mixture model, extends
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
 
 \item{\code{beta}}{Dirichlet over vocabulary prior parameter (default to 1)}
+
+\item{\code{tau}}{Prior parameter (inverse variance) default 0.01}
+
+\item{\code{N0}}{Prior parameter (pseudo count) should be > number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)}
+
+\item{\code{epsilon}}{Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)}
+
+\item{\code{mu}}{Prior parameters for the means (vector of size D), (default to NaN, in this case mu will be estimated from the data and will be equal to the mean of X)}
 }}
 
 \examples{

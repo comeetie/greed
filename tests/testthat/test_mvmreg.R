@@ -1,4 +1,4 @@
-context("GMM test")
+context("MVMREG test")
 library(greed)
 library(ggplot2)
 set.seed(1234)
@@ -20,7 +20,7 @@ test_that("MVMREG hybrid", {
   expect_equal(length(co$pi),3)
 })
 
-test_that("GMM seed", {
+test_that("MVMREG seed", {
   regs=rmreg(500,rep(1/3,3),mu=cbind(c(5,1,-125),c(1,20,1),c(15,100,200)),sigma=1)
   sol=greed_cond(regs$X,as.matrix(regs$y),alg=new("seed"))
   expect_equal(sol@K, 3)

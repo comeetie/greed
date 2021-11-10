@@ -15,6 +15,9 @@ double MultSbmUndirected::icl_emiss(const List & obs_stats){
       if(k==l && arma::accu(edges_counts.tube(k,l))!=0){
           arma::vec klcounts = edges_counts.tube(k,l)/2;
           icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
+      }else{
+          arma::vec klcounts = edges_counts.tube(k,l);
+          icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
       }
     }
   }
@@ -31,13 +34,21 @@ double MultSbmUndirected::icl_emiss(const List & obs_stats,int oldcl,int newcl, 
   for (arma::uword i = 0;i<si.n_rows;++i){
     k=si(i,0);
     l=si(i,1);
-    bool toskip = dead && (k==oldcl || l==oldcl);
-    if(!toskip){
+    if(!dead){
       if(k<l){
         arma::vec klcounts = edges_counts.tube(k,l);
         icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
       }
       if((k==l) && (arma::accu(edges_counts.tube(k,l))>0)){
+        arma::vec klcounts = edges_counts.tube(k,l)/2;
+        icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
+      }
+    }else{
+      if((k!=oldcl) && (l!=oldcl) && (k<l)){
+        arma::vec klcounts = edges_counts.tube(k,l);
+        icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
+      }
+      if((k==l) && (k!=oldcl) &&  (arma::accu(edges_counts.tube(k,l))>0)){
         arma::vec klcounts = edges_counts.tube(k,l)/2;
         icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
       }

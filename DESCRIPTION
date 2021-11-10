@@ -28,7 +28,13 @@ Suggests:
     dplyr,
     tibble,
     tidyr,
-    spelling
+    purrr,
+    spelling,
+    ggpubr,
+    ggrepel,
+    stringr,
+    aricode,
+    careless
 Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
@@ -50,11 +56,10 @@ Collate:
     'gmm.R'
     'greed.R'
     'lca.R'
-    'sbm.R'
-    'misssbm.R'
     'mm.R'
     'mmm.R'
     'multistart_alg.R'
     'multsbm.R'
     'plot.R'
+    'sbm.R'
 Language: en-US

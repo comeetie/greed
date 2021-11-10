@@ -531,7 +531,7 @@ gmmpairs = function(sol,X){
   if(!(methods::is(X,"matrix") | methods::is(X,"data.frame") )){
     stop("Input X must be a matrix or data.frame.",call. = FALSE)
   }
-  if(nrow(X)!=length(sol@cl) | ncol(X)!=length(sol@obs_stats$regs[[1]]$m) ){
+  if(nrow(X)!=length(sol@cl) | ncol(X)!=length(coef(sol)$muk[[1]]) ){
     stop("Dimension mismatch between the fitted model and the data.",call. = FALSE)
   }
   vnames = names(X)

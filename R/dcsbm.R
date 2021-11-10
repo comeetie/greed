@@ -4,7 +4,7 @@ NULL
 
 
 #' @title Degree Corrected Stochastic Block Model class
-#' 
+#'
 #' @description 
 #' An S4 class to represent a degree corrected stochastic block model, extend \code{\link{icl_model-class}}.
 #' Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :  

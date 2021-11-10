@@ -122,7 +122,7 @@ Finally if we look at the clusters centers, they look coherent and thanks to the
 
 ```{r fashion-means, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
 im_list=lapply(1:sol@K,function(k){
-    data.frame(i=rep(28:1,each=28),j=rep(1:28,28),v=t(sol@obs_stats$regs[[k]]$m),k=k)
+    data.frame(i=rep(28:1,each=28),j=rep(1:28,28),v=t(sol@obs_stats$diaggmm[[k]]$m),k=k)
     })
 
 ims = do.call(rbind,im_list)
