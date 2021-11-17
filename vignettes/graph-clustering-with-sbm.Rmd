@@ -38,10 +38,10 @@ mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,K
 sbm = rsbm(N,pi,mu)
 ```
 
-Perform the clustering with default model and algorithm. We specify to choose an sbm model since for squared sparse matrix the default is a dc-sbm model. An hybrid  algorithm is selected by default and the default value for the parameter K is 20.
+Perform the clustering with default model and algorithm. We specify to choose an sbm model since for squared sparse matrix the default is a DcSbm model. An hybrid  algorithm is selected by default and the default value for the parameter K is 20.
 
 ```{r}
-sol = greed(sbm$x,model=new("sbm"))
+sol = greed(sbm$x,model = Sbm())
 ```
 Plot the results using a block representation.
 

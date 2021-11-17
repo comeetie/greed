@@ -32,8 +32,6 @@ Such model can be used to cluster a data matrix \eqn{X} with the following gener
 \section{Slots}{
 
 \describe{
-\item{\code{name}}{name of the model}
-
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
 
 \item{\code{beta}}{Dirichlet over vocabulary prior parameter (default to 1)}
@@ -51,6 +49,7 @@ Other DlvmModels:
 \code{\link{DcSbmPrior-class}},
 \code{\link{DiagGmmPrior-class}},
 \code{\link{GmmPrior-class}},
+\code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{MultSbmPrior-class}},

@@ -33,7 +33,8 @@ Suggests:
     ggrepel,
     stringr,
     aricode,
-    careless
+    careless,
+    ggwordcloud
 Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
@@ -54,6 +55,7 @@ Collate:
     'model_diaggmm.R'
     'model_gmm.R'
     'model_lca.R'
+    'model_mixedmodels.R'
     'model_mom.R'
     'model_mor.R'
     'model_multsbm.R'

@@ -13,7 +13,6 @@ NULL
 #' \deqn{ \mu_k^{(d)} \sim \mathcal{N}(\mu,(\tau \lambda_k)^{-1})}
 #' \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,\lambda_{k}^{-1})}
 #' with \eqn{\mathcal{G}(\kappa,\beta)} the Gamma distribution with shape parameter \eqn{\kappa} and rate parameter \eqn{\beta}.
-#' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot tau Prior parameter (inverse variance), (default 0.01)
 #' @slot kappa Prior parameter (gamma shape), (default to 1)
@@ -24,10 +23,40 @@ NULL
 #' @references Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5. #'
 #' @export
 setClass("DiagGmmPrior",
-  representation = list(tau = "numeric", kappa = "numeric", beta = "numeric", mu = "numeric"),
-  prototype(tau = 0.01, kappa = 1, beta = NaN, mu = NaN)
+  representation = list(tau = "numeric", kappa = "numeric", beta = "numeric", mu = "matrix"),
+  prototype(tau = 0.01, kappa = 1, beta = NaN, mu = as.matrix(NaN))
 )
 
+
+setValidity("DiagGmmPrior",function(object){
+  if (length(object@tau) > 1) {
+    return("DiagGmm model prior misspecification, tau must be of length 1.")
+  }
+  if (is.na(object@tau)) {
+    return("DiagGmm model prior misspecification, tau is NA.")
+  }
+  if (object@tau <= 0) {
+    return("DiagGmm model prior misspecification, tau must be positive.")
+  }
+  
+  if (length(object@kappa) > 1) {
+    return("DiagGmm model prior misspecification, kappa must be of length 1.")
+  }
+  if (is.na(object@kappa)) {
+    return("DiagGmm model prior misspecification, kappa is NA.")
+  }
+  if (object@kappa <= 0) {
+    return("DiagGmm model prior misspecification, kappa must be positive.")
+  }
+  
+  if (length(object@beta) > 1) {
+    return("DiagGmm model prior misspecification, beta must be of length 1.")
+  }
+  if (!is.nan(object@beta) && object@beta <= 0) {
+    return("DiagGmm model prior misspecification, beta must be positive.")
+  }
+  TRUE
+})
 
 #' @describeIn DiagGmmPrior-class DiagGmmPrior class constructor
 #' @examples
@@ -35,7 +64,7 @@ setClass("DiagGmmPrior",
 #' DiagGmmPrior(tau = 0.1)
 #' @export
 DiagGmmPrior <- function(tau = 0.01, kappa = 1, beta = NaN, mu = NaN) {
-  methods::new("DiagGmmPrior", tau = tau, kappa = kappa, beta = beta, mu = mu)
+  methods::new("DiagGmmPrior", tau = tau, kappa = kappa, beta = beta, mu = as.matrix(mu))
 }
 
 #' @describeIn DiagGmmPrior-class DiagGmm class constructor
@@ -49,7 +78,7 @@ setClass("DiagGmm",
 #' DiagGmm(N0 = 100)
 #' @export
 DiagGmm <- function(alpha = 1, tau = 0.01, kappa = 1, beta = NaN, mu = NaN) {
-  methods::new("DiagGmm", alpha = alpha, tau = tau, kappa = kappa, beta = beta, mu = mu)
+  methods::new("DiagGmm", alpha = alpha, tau = tau, kappa = kappa, beta = beta, mu = as.matrix(mu))
 }
 
 
@@ -224,48 +253,14 @@ setMethod(
 
 setMethod(
   f = "preprocess",
-  signature = signature("DiagGmm"),
+  signature = signature("DiagGmmPrior"),
   definition = function(model, data) {
     if (methods::is(data, "matrix") | methods::is(data, "data.frame") | methods::is(data, "dgCMatrix")) {
       X <- as.matrix(data)
     } else {
       stop(paste0("Unsupported data type: ", class(X), " use a data.frame, a matrix, a sparse dgCMatrix."), call. = FALSE)
     }
-    if (length(model@alpha) > 1) {
-      stop("Model prior misspecification, alpha must be of length 1.", call. = FALSE)
-    }
-    if (is.na(model@alpha)) {
-      stop("Model prior misspecification, alpha is NA.", call. = FALSE)
-    }
-    if (model@alpha <= 0) {
-      stop("Model prior misspecification, alpha must be positive.", call. = FALSE)
-    }
-    if (length(model@tau) > 1) {
-      stop("Model prior misspecification, tau must be of length 1.", call. = FALSE)
-    }
-    if (is.na(model@tau)) {
-      stop("Model prior misspecification, tau is NA.", call. = FALSE)
-    }
-    if (model@tau <= 0) {
-      stop("Model prior misspecification, tau must be positive.", call. = FALSE)
-    }
 
-    if (length(model@kappa) > 1) {
-      stop("Model prior misspecification, kappa must be of length 1.", call. = FALSE)
-    }
-    if (is.na(model@kappa)) {
-      stop("Model prior misspecification, kappa is NA.", call. = FALSE)
-    }
-    if (model@kappa <= 0) {
-      stop("Model prior misspecification, kappa must be positive.", call. = FALSE)
-    }
-
-    if (length(model@beta) > 1) {
-      stop("Model prior misspecification, beta must be of length 1.", call. = FALSE)
-    }
-    if (!is.nan(model@beta) && model@beta <= 0) {
-      stop("Model prior misspecification, beta must be positive.", call. = FALSE)
-    }
     if (!all(is.nan(model@mu)) && length(model@mu) != ncol(X)) {
       stop("Model prior misspecification, mu length is incompatible with the data.", call. = FALSE)
     }
@@ -274,46 +269,56 @@ setMethod(
   }
 )
 
-reorder_gmm <- function(obs_stats, or) {
-  obs_stats$counts <- obs_stats$counts[or]
-  obs_stats$diaggmm <- obs_stats$diaggmm[or]
-  obs_stats
-}
+
+
+setMethod(
+  f = "reorder",
+  signature = signature("DiagGmmPrior", "list", "integer"),
+  definition = function(model, obs_stats, order) {
+    obs_stats[order]
+  }
+)
 
 
 setMethod(
   f = "reorder",
   signature = signature("DiagGmm", "list", "integer"),
   definition = function(model, obs_stats, order) {
-    reorder_gmm(obs_stats, order)
+    obs_stats$DiagGmm <- obs_stats$DiagGmm[order]
+    obs_stats$counts <- obs_stats$counts[order]
+    obs_stats
   }
 )
 
-name_obs_stats_diaggmm <- function(path, X) {
-  num_names <- colnames(data.frame(X))
-  for (k in 1:path@K) {
-    path@obs_stats$DiagGmm[[k]] <- path@obs_stats$DiagGmm[[k]][c("m", "S", "ng", "log_evidence")]
-    colnames(path@obs_stats$DiagGmm[[k]]$m) <- num_names
-    colnames(path@obs_stats$DiagGmm[[k]]$S) <- num_names
-  }
-  names(path@obs_stats$DiagGmm) <- paste0("cluster", 1:path@K)
-  for (p in 1:length(path@path)) {
-    for (k in 1:path@path[[p]]$K) {
-      path@path[[p]]$obs_stats$DiagGmm[[k]] <- path@path[[p]]$obs_stats$DiagGmm[[k]][c("m", "S", "ng", "log_evidence")]
-      colnames(path@path[[p]]$obs_stats$DiagGmm[[k]]$m) <- num_names
-      colnames(path@path[[p]]$obs_stats$DiagGmm[[k]]$S) <- num_names
-    }
-    names(path@path[[p]]$obs_stats$DiagGmm) <- paste0("cluster", 1:path@path[[p]]$K)
-  }
-  path
-}
+
 
 setMethod(
-  f = "postprocess",
-  signature = signature("DiagGmmPath"),
-  definition = function(path, data, X) {
-    cat("postprocessing\n")
-    path <- name_obs_stats_diaggmm(path, X)
-    path
+  f = "cleanObsStats",
+  signature = signature("DiagGmmPrior", "list"),
+  definition = function(model, obs_stats, data) {
+    num_names <- colnames(data.frame(data))
+    new_obs_stats <- lapply(obs_stats, function(clust_stats) {
+      new_clust_stats <- clust_stats[c("m", "S", "ng", "log_evidence")]
+      colnames(new_clust_stats$m) <- num_names
+      colnames(new_clust_stats$S) <- num_names
+      rownames(new_clust_stats$S) <- num_names
+      new_clust_stats
+    })
+    names(new_obs_stats) <- paste0("cluster", 1:length(obs_stats))
+    new_obs_stats
   }
 )
+
+setMethod(
+  f = "cleanObsStats",
+  signature = signature("DiagGmm", "list"),
+  definition = function(model, obs_stats, data) {
+    if (!is.null(obs_stats$Gmm)) {
+      obs_stats$DiagGmm <- callNextMethod(model, obs_stats$DiagGmm, data)
+    }
+    obs_stats
+  }
+)
+
+
+

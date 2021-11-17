@@ -2,12 +2,12 @@
 % Please edit documentation in R/model_dcsbm.R
 \name{coef,DcSbmFit-method}
 \alias{coef,DcSbmFit-method}
-\title{Extract parameters from an \code{\link{DcSbm_fit-class}} object}
+\title{Extract parameters from an \code{\link{DcSbmFit-class}} object}
 \usage{
 \S4method{coef}{DcSbmFit}(object)
 }
 \arguments{
-\item{object}{a \code{\link{DcSbm_fit-class}}}
+\item{object}{a \code{\link{DcSbmFit-class}}}
 }
 \value{
 a list with the model parameters estimates (MAP), the fields are the following for "directed" models :
@@ -25,7 +25,7 @@ And as follow for un-directed models :
 }
 }
 \description{
-Extract parameters from an \code{\link{DcSbm_fit-class}} object
+Extract parameters from an \code{\link{DcSbmFit-class}} object
 }
 \details{
 in case of undirected graph

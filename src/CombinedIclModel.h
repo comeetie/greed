@@ -32,6 +32,7 @@ public:
   };
 private:
   std::vector<IclModelEmission*> IclModels;
+  CharacterVector components_names;
 };
 
 #endif

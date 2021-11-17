@@ -13,8 +13,7 @@ NULL
 #' \deqn{ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})}
 #' \deqn{ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})}
 #' with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Whishart distribution.
-#' @slot name name of the model
-#' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
+#' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1, only for Gmm)
 #' @slot tau Prior parameter (inverse variance) default 0.01
 #' @slot N0 Prior parameter (pseudo count) should be > number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)
 #' @slot epsilon Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)
@@ -24,20 +23,36 @@ NULL
 #' @references Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5. #'
 #' @export
 setClass("GmmPrior",
-  representation = list(tau = "numeric", mu = "numeric", epsilon = "matrix", N0 = "numeric"),
-  prototype(tau = 0.001, N0 = NaN, mu = NaN, epsilon = as.matrix(NaN))
+  representation = list(tau = "numeric", mu = "matrix", epsilon = "matrix", N0 = "numeric"),
+  prototype(tau = 0.01, N0 = NaN, mu = as.matrix(NaN), epsilon = as.matrix(NaN))
 )
+
+setValidity("GmmPrior", function(object) {
+  if (length(object@tau) > 1) {
+    return("GMM model prior misspecification, tau must be of length 1.")
+  }
+  if (is.na(object@tau)) {
+    return("GMM model prior misspecification, tau is NA.")
+  }
+  if (object@tau <= 0) {
+    return("GMM model prior misspecification, tau must be positive.")
+  }
+  if (length(object@N0) > 1) {
+    return("GMM model prior misspecification, N0 must be of length 1.")
+  }
+  TRUE
+})
+
 
 #' @describeIn GmmPrior-class GmmPrior class constructor
 #' @examples
 #' GmmPrior()
 #' GmmPrior(tau = 0.1)
 #' @export
-GmmPrior <- function(tau = 0.001, N0 = NaN, mu = NaN, epsilon = as.matrix(NaN)) {
-  methods::new("GmmPrior", tau = tau, N0 = N0, mu = mu, epsilon = epsilon)
+GmmPrior <- function(tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN) {
+  methods::new("GmmPrior", tau = tau, N0 = N0, mu = as.matrix(mu), epsilon = as.matrix(epsilon))
 }
 
-#' @describeIn GmmPrior-class Gmm class constructor
 setClass("Gmm",
   contains = c("DlvmPrior", "GmmPrior")
 )
@@ -47,8 +62,8 @@ setClass("Gmm",
 #' Gmm()
 #' Gmm(N0 = 100)
 #' @export
-Gmm <- function(alpha = 1, tau = 0.001, N0 = NaN, mu = NaN, epsilon = as.matrix(NaN)) {
-  methods::new("Gmm", alpha = alpha, tau = tau, N0 = N0, mu = mu, epsilon = epsilon)
+Gmm <- function(alpha = 1, tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN) {
+  methods::new("Gmm", alpha = alpha, tau = tau, N0 = N0, mu = as.matrix(mu), epsilon = as.matrix(epsilon))
 }
 
 
@@ -74,7 +89,7 @@ setClass("GmmFit", slots = list(model = "Gmm"), contains = "IclFit")
 #' @title  Gaussian mixture model hierarchical fit results class
 #'
 #'
-#' @description An S4 class to represent a hierarchical fit of a gaussian mixture model, extend \code{\link{icl_path-class}}.
+#' @description An S4 class to represent a hierarchical fit of a gaussian mixture model, extend \code{\link{IclPath-class}}.
 #' @slot model a \code{\link{Gmm-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
@@ -220,35 +235,15 @@ setMethod(
 
 setMethod(
   f = "preprocess",
-  signature = signature("Gmm"),
+  signature = signature("GmmPrior"),
   definition = function(model, data) {
+    methods::validObject(model)
     if (methods::is(data, "matrix") | methods::is(data, "data.frame") | methods::is(data, "dgCMatrix")) {
       X <- as.matrix(data)
     } else {
       stop(paste0("Unsupported data type: ", class(X), " use a data.frame, a matrix, a sparse dgCMatrix."), call. = FALSE)
     }
-    if (length(model@alpha) > 1) {
-      stop("Model prior misspecification, alpha must be of length 1.", call. = FALSE)
-    }
-    if (is.na(model@alpha)) {
-      stop("Model prior misspecification, alpha is NA.", call. = FALSE)
-    }
-    if (model@alpha <= 0) {
-      stop("Model prior misspecification, alpha must be positive.", call. = FALSE)
-    }
-    if (length(model@tau) > 1) {
-      stop("Model prior misspecification, tau must be of length 1.", call. = FALSE)
-    }
-    if (is.na(model@tau)) {
-      stop("Model prior misspecification, tau is NA.", call. = FALSE)
-    }
-    if (model@tau <= 0) {
-      stop("Model prior misspecification, tau must be positive.", call. = FALSE)
-    }
 
-    if (length(model@N0) > 1) {
-      stop("Model prior misspecification, N0 must be of length 1.", call. = FALSE)
-    }
     if (!is.na(model@N0) & model@N0 < ncol(X)) {
       stop("Model prior misspecification, N0 must be > ncol(X).", call. = FALSE)
     }
@@ -267,49 +262,54 @@ setMethod(
   }
 )
 
-reorder_gmm <- function(obs_stats, or) {
-  obs_stats$counts <- obs_stats$counts[or]
-  obs_stats$gmm <- obs_stats$gmm[or]
-  obs_stats
-}
+
+
+
+setMethod(
+  f = "reorder",
+  signature = signature("GmmPrior", "list", "integer"),
+  definition = function(model, obs_stats, order) {
+    obs_stats[order]
+  }
+)
 
 
 setMethod(
   f = "reorder",
   signature = signature("Gmm", "list", "integer"),
   definition = function(model, obs_stats, order) {
-    reorder_gmm(obs_stats, order)
+    obs_stats$Gmm <- obs_stats$Gmm[order]
+    obs_stats$counts <- obs_stats$counts[order]
+    obs_stats
   }
 )
 
 
-name_obs_stats_gmm <- function(path, X) {
-  num_names <- colnames(data.frame(X))
-  for (k in 1:path@K) {
-    path@obs_stats$Gmm[[k]] <- path@obs_stats$Gmm[[k]][c("m", "S", "ng", "log_evidence")]
-    colnames(path@obs_stats$Gmm[[k]]$m) <- num_names
-    colnames(path@obs_stats$Gmm[[k]]$S) <- num_names
-    rownames(path@obs_stats$Gmm[[k]]$S) <- num_names
-  }
-  names(path@obs_stats$Gmm) <- paste0("cluster", 1:path@K)
-  for (p in 1:length(path@path)) {
-    for (k in 1:path@path[[p]]$K) {
-      path@path[[p]]$obs_stats$Gmm[[k]] <- path@path[[p]]$obs_stats$Gmm[[k]][c("m", "S", "ng", "log_evidence")]
-      colnames(path@path[[p]]$obs_stats$Gmm[[k]]$m) <- num_names
-      colnames(path@path[[p]]$obs_stats$Gmm[[k]]$S) <- num_names
-      rownames(path@path[[p]]$obs_stats$Gmm[[k]]$S) <- num_names
-    }
-    names(path@path[[p]]$obs_stats$Gmm) <- paste0("cluster", 1:path@path[[p]]$K)
-  }
-  path
-}
 
 setMethod(
-  f = "postprocess",
-  signature = signature("GmmPath"),
-  definition = function(path, data, X) {
-    cat("postprocessing\n")
-    path <- name_obs_stats_gmm(path, X)
-    path
+  f = "cleanObsStats",
+  signature = signature("GmmPrior", "list"),
+  definition = function(model, obs_stats, data) {
+    num_names <- colnames(data.frame(data))
+    new_obs_stats <- lapply(obs_stats, function(clust_stats) {
+      new_clust_stats <- clust_stats[c("m", "S", "ng", "log_evidence")]
+      colnames(new_clust_stats$m) <- num_names
+      colnames(new_clust_stats$S) <- num_names
+      rownames(new_clust_stats$S) <- num_names
+      new_clust_stats
+    })
+    names(new_obs_stats) <- paste0("cluster", 1:length(obs_stats))
+    new_obs_stats
+  }
+)
+
+setMethod(
+  f = "cleanObsStats",
+  signature = signature("Gmm", "list"),
+  definition = function(model, obs_stats, data) {
+    if (!is.null(obs_stats$Gmm)) {
+      obs_stats$Gmm <- callNextMethod(model, obs_stats$Gmm, data)
+    }
+    obs_stats
   }
 )

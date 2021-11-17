@@ -35,8 +35,6 @@ with \eqn{\mathcal{W}(\epsilon^{-1},n_0)} the Whishart distribution and \eqn{\ma
 \section{Slots}{
 
 \describe{
-\item{\code{name}}{name of the model}
-
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
 
 \item{\code{tau}}{Prior parameter (inverse variance) default 0.01}
@@ -59,6 +57,7 @@ Other DlvmModels:
 \code{\link{DiagGmmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
+\code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MultSbmPrior-class}},
 \code{\link{SbmPrior-class}}

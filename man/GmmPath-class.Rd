@@ -5,7 +5,7 @@
 \alias{GmmPath-class}
 \title{Gaussian mixture model hierarchical fit results class}
 \description{
-An S4 class to represent a hierarchical fit of a gaussian mixture model, extend \code{\link{icl_path-class}}.
+An S4 class to represent a hierarchical fit of a gaussian mixture model, extend \code{\link{IclPath-class}}.
 }
 \section{Slots}{
 

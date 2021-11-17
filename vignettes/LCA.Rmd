@@ -1,5 +1,5 @@
 ---
-title: "Categorical data Clustering with Latent Class Analysis and the Integrated Classification Likelihood"
+title: "LCA"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{LCA}
@@ -55,7 +55,6 @@ We now illustrate the use of the `greed` package on two real datasets:
 The data are imported by the `greed` package.
 ```{r loading-data}
 data("mushroom")
-data("Youngpeoplesurvey")
 ```
 
 
@@ -65,7 +64,7 @@ We begin by forming the necessary vectors for analysis. The data has $n=`r nrow(
 
 ```{r muhroom-data}
 X = mushroom[,-1]
-subset =sample(1:nrow(X), size = 1000, replace = F)
+subset =sample(1:nrow(X), size = 1000)
 label = mushroom$edibility[subset]
 head(X[subset,])
 ```
@@ -75,8 +74,8 @@ head(X[subset,])
 The clustering is again done via the main function `greed()` with argument `model` set to LCA and the genetic hybrid algorithm for ICLex maximization. The value of the $\beta$ hyperparameter for the Dirichlet prior on $\theta_{kj}$ can be specified by the user, it defaults to 1.  
 
 ```{r cluster-mushroom}
-sol_greed<-greed(X[subset,] %>% droplevels(),model=new("lca"))
-table(Edibility=label, Cluster=sol_greed@cl)
+sol_greed<-greed(X[subset,] ,model=Lca())
+table(Edibility=label, Cluster=clustering(sol_greed))
 ```
 
 The hybrid genetic algorithm found a solution with $K=`r sol_greed@K`$ clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. The ARI of the partition is `r round(ARI(label, sol_greed@cl),2)` which is explained by the over-segmentation of the solution compared to the $2$-class problem.
@@ -95,28 +94,7 @@ plot(sol_greed, type='tree')
 
 ```{r cut-K2-mushroom}
 sol2 = cut(sol_greed, 2)
-table(Edibility=label, Cluster=sol2@cl)
+table(Edibility=label, Cluster=clustering(sol2))
 ```
 Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is `r round(ARI(sol2@cl, label),2)`. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the [way the labels have been set](https://archive.ics.uci.edu/ml/datasets/Mushroom), since mushrooms for which the edibility status was *unknown* were classified as *poisonous* by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ''\textit{there is no simple rule for determining the edibility of a mushroom}''. Thus, the unsupervised problem is hard and the obtained clustering is satisfying on this unsupervised problem. Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.
-
-
-## Young people survey data
-We begin by preprocessing the data, only keeping the categorical variable. The original dataset has $n=`r nrow(Youngpeoplesurvey)`$ respondents for $p=`r ncol(Youngpeoplesurvey)`$.
-```{r,cache=TRUE}
-nc  = 19
-
-selected = Youngpeoplesurvey %>% 
-  select(all_of(1:nc)) %>%
-  mutate(string = longstring(.)) %>%
-  mutate(sel = if_else(string <= 10,TRUE,FALSE) ) %>% pull(sel)
-
-Xnum = Youngpeoplesurvey %>% 
-  select(all_of(1:nc)) %>%
-  filter(all_of(selected) )
-X = Xnum %>% 
-  mutate_all(\(x){factor(x,levels=1:5)}) %>% 
-  droplevels()
-
-```
-
 

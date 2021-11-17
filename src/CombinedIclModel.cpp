@@ -11,6 +11,8 @@ CombinedIclModel::CombinedIclModel(std::vector<IclModelEmission*> IclModelsi,S4 
   model=modeli;
   alpha = model.slot("alpha");
   IclModels = IclModelsi;
+  List priors = model.slot("models");
+  components_names = priors.names();
   set_cl(cli);
   verbose=verb;
 }
@@ -32,9 +34,10 @@ void CombinedIclModel::set_cl(arma::uvec cli){
 
 List CombinedIclModel::get_obs_stats(){
   List obs_stats = List::create(Named("counts", counts));
+  
   for(int i=0;i<IclModels.size();i++){
     IclModelEmission * Mp = IclModels[i];
-    obs_stats.push_back(Mp->get_obs_stats());
+    obs_stats[as<std::string>(components_names[i])]=Mp->get_obs_stats();
   }
   //return observed stats
   return obs_stats;

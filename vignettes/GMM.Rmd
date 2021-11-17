@@ -45,8 +45,8 @@ See ``?`gmm-class` `` for more details. These values were chosen to accommodate 
 ```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 data(diabetes)
 X=diabetes[,-1]
-sol = greed(X,model=new("gmm"))
-table(diabetes$cl,sol@cl)
+sol = greed(X,model=Gmm())
+table(diabetes$cl,clustering(sol))
 ```
 
 
@@ -59,11 +59,9 @@ gmmpairs(sol,X)
 The obtained results are those expected and correspond to the known groups. If you want to experiments with other values for the prior parameters, the most important is $\varepsilon$, which control the covariance matrix Whishart prior. You may try smaller values for example. In this case, you may also decrease $\tau$ to keep a flat priors on clusters means. For the diabetes data such choices leads to an interesting solution where one cluster is then used to fit one outlier.
 
 ```{r diabetes-gmm-0.01, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
-data(diabetes)
-X=diabetes[,-1]
-sol = greed(X,model=new("gmm",epsilon=0.01*diag(diag(cov(X))), tau =0.001))
+sol = greed(X,model=Gmm(epsilon=0.01*diag(diag(cov(X))), tau =0.001))
 gmmpairs(sol,X)
-table(diabetes$cl,sol@cl)
+table(diabetes$cl,clustering(sol))
 ``` 
 
 
@@ -72,18 +70,16 @@ table(diabetes$cl,sol@cl)
 You may also used diagonal covariance matrix. The ``?`diaggmm-class` `` allow to use such GMM type model. If you try such model on the previous diabetes dataset, greed this time found a 4 components GMM.
 
 ```{r diabetes-diaggmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
-data(diabetes)
-X=diabetes[,-1]
-soldiag = greed(X,model=new("diaggmm"))
+soldiag = greed(X,model=DiagGmm())
 gmmpairs(soldiag,X)
-table(diabetes$cl,soldiag@cl)
+table(diabetes$cl,clustering(soldiag))
 ```
 
 You may still look at coarser clustering and inspect the clustering dendrogram:
 ```{r diabetes-diaggmm-cut, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
 plot(soldiag,type='tree')
 solK3 = cut(soldiag,3)
-table(diabetes$cl,solK3@cl)
+table(diabetes$cl,clustering(solK3))
 ```
 
 
@@ -93,8 +89,8 @@ gmmpairs(solK3,X)
 
 The clusters corresponds to the known group and if we compare the ICL of the, between the full model:
 ```{r icl-comp}
-sol@icl
-soldiag@icl
+ICL(sol)
+ICL(soldiag)
 ```
 
 The full model seems preferable on this dataset. If you want to look at the mixture component parameters you may access their Maximum a posteriori estimate with the generic `coef` function.
@@ -109,7 +105,7 @@ Such simpler diagonal model may be of interest in particular for high dimensiona
 ```{r fashion-diaggmm}
 data("fashion")
 dim(fashion$X)
-sol=greed(fashion$X,model=new("diaggmm"),alg=new("seed"),K=60)
+sol=greed(fashion$X,model=DiagGmm(),alg=Seed(),K=60)
 ```
 
 On this more complex dataset, we may look at the dendrogram which is more interesting with the complex structure of these data.
@@ -121,8 +117,10 @@ plot(sol,type='tree')
 Finally if we look at the clusters centers, they look coherent and thanks to the hierarchical ordering performed by greed are also well organized.
 
 ```{r fashion-means, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
+
+clust_centers = coef(sol)$muk
 im_list=lapply(1:sol@K,function(k){
-    data.frame(i=rep(28:1,each=28),j=rep(1:28,28),v=t(sol@obs_stats$diaggmm[[k]]$m),k=k)
+    data.frame(i=rep(28:1,each=28),j=rep(1:28,28),v=t(clust_centers[[k]]),k=k)
     })
 
 ims = do.call(rbind,im_list)

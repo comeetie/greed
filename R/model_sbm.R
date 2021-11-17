@@ -1,7 +1,6 @@
 #' @include models_classes.R fit_classes.R
 NULL
 
-
 #' @title Stochastic Block Model Prior class
 #'
 #' @description
@@ -12,11 +11,10 @@ NULL
 #' \deqn{ \theta_{kl} \sim Beta(a_0,b_0)}
 #' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\theta_{kl})}
 #' This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model in the following slots:
-#' @slot name name of the model
 #' @slot a0 Beta prior parameter over links (default to 1)
 #' @slot b0 Beta prior parameter over no-links (default to 1)
 #' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess"), for undirected graphs the adjacency matrix is supposed to be symmetric.
-#' @seealso \code{\link{sbm_fit-class}},\code{\link{sbm_path-class}}
+#' @seealso \code{\link{SbmFit-class}},\code{\link{SbmPath-class}}
 #' @seealso \code{\link{greed}}
 #' @family DlvmModels
 #' @examples
@@ -29,6 +27,26 @@ setClass("SbmPrior",
   representation = list(a0 = "numeric", b0 = "numeric", type = "character"),
   prototype(a0 = 1, b0 = 1, type = "guess")
 )
+
+setValidity("SbmPrior",function(object){
+  if (length(object@a0) > 1) {
+    return("SBM model prior misspecification, a0 must be of length 1.")
+  }
+  if (object@a0 <= 0) {
+    return("SBM model prior misspecification, a0 must be positive.")
+  }
+  if (length(object@b0) > 1) {
+    return("SBM model prior misspecification, b0 must be of length 1.")
+  }
+  if (object@b0 <= 0) {
+    return("SBM model prior misspecification, b0 must be positive.")
+  }
+  if (!(object@type %in% c("directed", "undirected", "guess"))) {
+    return("SBM model prior misspecification, model type must directed, undirected or guess.")
+  }
+  TRUE
+})
+
 
 #' @describeIn SbmPrior-class SbmPrior class constructor
 #' @examples
@@ -182,13 +200,22 @@ setMethod(
   definition = function(object) {
     sol <- object
     pi <- (sol@obs_stats$counts + sol@model@alpha - 1) / sum(sol@obs_stats$counts + sol@model@alpha - 1)
-    thetakl <- (sol@obs_stats$x_counts + sol@model@a0 - 1) / (t(t(sol@obs_stats$counts)) %*% sol@obs_stats$counts + sol@model@a0 + sol@model@b0 - 2)
+    thetakl <- (sol@obs_stats$Sbm$x_counts + sol@model@a0 - 1) / (t(t(sol@obs_stats$counts)) %*% sol@obs_stats$counts + sol@model@a0 + sol@model@b0 - 2)
     if (sol@model@type == "undirected") {
-      diag(thetakl) <- (diag(sol@obs_stats$x_counts) / 2 + sol@model@a0 - 1) / (sol@obs_stats$counts * (sol@obs_stats$counts - 1) / 2 + sol@model@a0 + sol@model@b0 - 2)
+      diag(thetakl) <- (diag(sol@obs_stats$Sbm$x_counts) / 2 + sol@model@a0 - 1) / (sol@obs_stats$counts * (sol@obs_stats$counts - 1) / 2 + sol@model@a0 + sol@model@b0 - 2)
     }
     list(pi = pi, thetakl = thetakl)
   }
 )
+
+
+extractParams  <- function(model,obs_stats,counts){
+  thetakl <- (obs_stats$x_counts + model@a0 - 1) / (t(t(counts)) %*% counts + model@a0 + model@b0 - 2)
+  if (sol@model@type == "undirected") {
+    diag(thetakl) <- (diag(obs_stats$x_counts) / 2 + model@a0 - 1) / (counts * (counts - 1) / 2 + model@a0 + model@b0 - 2)
+  }
+  list(thetakl = thetakl)
+}
 
 
 reorder_sbm <- function(obs_stats, or) {
@@ -200,11 +227,30 @@ reorder_sbm <- function(obs_stats, or) {
 
 setMethod(
   f = "reorder",
-  signature = signature("Sbm", "list", "integer"),
+  signature = signature("SbmPrior", "list", "integer"),
   definition = function(model, obs_stats, order) {
     reorder_sbm(obs_stats, order)
   }
 )
+
+setMethod(
+  f = "reorder",
+  signature = signature("Sbm", "list", "integer"),
+  definition = function(model, obs_stats, order) {
+    obs_stats$Sbm <- reorder_sbm(obs_stats$Sbm, order)
+    obs_stats$counts <- obs_stats$counts[order]
+    obs_stats
+  }
+)
+
+setMethod(
+  f = "cleanObsStats",
+  signature = signature("SbmPrior", "list"),
+  definition = function(model, obs_stats, data) {
+    obs_stats
+  }
+)
+
 
 setMethod(
   f = "seed",
@@ -216,70 +262,31 @@ setMethod(
 
 setMethod(
   f = "preprocess",
-  signature = signature("Sbm"),
+  signature = signature("SbmPrior"),
   definition = function(model, data) {
+    
+    methods::validObject(model)
+    
     if (!(methods::is(data, "dgCMatrix") | methods::is(data, "matrix") | methods::is(data, "data.frame"))) {
-      stop("An sbm model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.", call. = FALSE)
+      stop("An SBM model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.", call. = FALSE)
     }
     if (methods::is(data, "data.frame")) {
       data <- as.matrix(data)
     }
     if (nrow(data) != ncol(data)) {
-      stop("An sbm model expect a square matrix.", call. = FALSE)
+      stop("An SBM model expect a square matrix.", call. = FALSE)
     }
     if (!all(round(data) == data) || min(data) != 0 || max(data) != 1) {
-      stop("An sbm model expect a binary matrix.", call. = FALSE)
+      stop("An SBM model expect a binary matrix.", call. = FALSE)
     }
     if (model@type == "undirected" & !isSymmetric(data)) {
       stop("An undirected sbm model expect a symmetric matrix.", call. = FALSE)
     }
     if (model@type == "undirected" & sum(diag(data)) != 0) {
       diag(data) <- 0
-      warning("An undirected sbm model does not allow self loops, self loops were removed from the graph.", call. = FALSE)
-    }
-    if (length(model@alpha) > 1) {
-      stop("Model prior misspecification, alpha must be of length 1.", call. = FALSE)
-    }
-    if (is.na(model@alpha)) {
-      stop("Model prior misspecification, alpha is NA.", call. = FALSE)
-    }
-    if (model@alpha <= 0) {
-      stop("Model prior misspecification, alpha must be positive.", call. = FALSE)
-    }
-    if (length(model@a0) > 1) {
-      stop("Model prior misspecification, a0 must be of length 1.", call. = FALSE)
-    }
-    if (model@a0 <= 0) {
-      stop("Model prior misspecification, a0 must be positive.", call. = FALSE)
-    }
-    if (length(model@b0) > 1) {
-      stop("Model prior misspecification, b0 must be of length 1.", call. = FALSE)
-    }
-    if (model@b0 <= 0) {
-      stop("Model prior misspecification, b0 must be positive.", call. = FALSE)
+      warning("An undirected SBM model does not allow self loops, self loops were removed from the graph.", call. = FALSE)
     }
 
-    if (!(model@type %in% c("directed", "undirected", "guess"))) {
-      stop("Model prior misspecification, model type must directed, undirected or guess.", call. = FALSE)
-    }
     list(X = as.sparse(data), N = nrow(data))
-  }
-)
-
-setMethod(
-  f = "postprocess",
-  signature = signature("SbmPath"),
-  definition = function(path, data, X, Y = NULL) {
-    path@obs_stats <- list(
-      counts = path@obs_stats$counts,
-      x_counts = path@obs_stats$Sbm$x_counts
-    )
-    for (p in 1:length(path@path)) {
-      path@path[[p]]$obs_stats <- list(
-        counts = path@path[[p]]$obs_stats$counts,
-        x_counts = path@path[[p]]$obs_stats$Sbm$x_counts
-      )
-    }
-    path
   }
 )

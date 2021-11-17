@@ -1,6 +1,7 @@
 context("DCSBM test")
 library(greed)
 library(ggplot2)
+library(Matrix)
 set.seed(1234)
 
 test_that("DCSBM sim", {
@@ -43,7 +44,7 @@ test_that("DCSBM seed", {
   pi = rep(1/K,K)
   mu = diag(rep(1/5,K))+runif(K*K)*0.01
   sbm = rdcsbm(N,pi,mu,rep(15,N),rep(15,N))
-  sol=greed(sbm$x,alg=new("seed"))
+  sol=greed(sbm$x,alg=Seed())
   expect_gte(sol@K, K-2)
   expect_lte(sol@K, K+2)
   solc = cut(sol,4)
@@ -85,7 +86,7 @@ test_that("DCSBM seed undirected", {
   x=tril(sbm$x)+t(tril(sbm$x))
   diag(x)=0
   
-  sol=greed(x,alg=new("seed"))
+  sol=greed(x,alg=Seed())
   expect_gte(sol@K, K-2)
   expect_lte(sol@K, K+2)
   solc = cut(sol,4)

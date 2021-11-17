@@ -11,7 +11,6 @@ NULL
 #' \deqn{ \theta_{k} \sim Dirichlet(\beta)}
 #' \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{M}(L_i,\theta_{k})}
 #' With \eqn{L_i=\sum_d=1^DX_{id}}. This class mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model in the following slots:
-#' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot beta Dirichlet over vocabulary prior parameter (default to 1)
 #' @family DlvmModels
@@ -20,6 +19,22 @@ setClass("MoMPrior",
   representation = list(beta = "numeric"),
   prototype(beta = 1)
 )
+
+
+setValidity("MoMPrior",function(object){
+  
+  if (length(object@beta) > 1) {
+    return("MoM model prior misspecification, beta must be of length 1.")
+  }
+  if (is.na(object@beta)) {
+    return("MoM model prior misspecification, beta is NA.")
+  }
+  if (object@beta <= 0) {
+    return("MoM model prior misspecification, beta must be positive.")
+  }
+  TRUE
+})
+
 
 #' @describeIn MoMPrior-class MoMPrior class constructor
 #' @examples
@@ -172,26 +187,32 @@ setMethod(
   definition = function(object) {
     sol <- object
     pi <- (sol@obs_stats$counts + sol@model@alpha - 1) / sum(sol@obs_stats$counts + sol@model@alpha - 1)
-    thetak <- (t(sol@obs_stats$x_counts) + sol@model@beta - 1)
+    thetak <- (t(sol@obs_stats$MoM$x_counts) + sol@model@beta - 1)
     thetak <- as.matrix(thetak / rowSums(thetak))
     list(pi = pi, thetak = thetak)
   }
 )
 
-reorder_mm <- function(obs_stats, or) {
-  obs_stats$counts <- obs_stats$counts[or]
-  obs_stats$x_counts <- obs_stats$x_counts[, or]
-  obs_stats
-}
 
 
 setMethod(
   f = "reorder",
   signature = signature("MoM", "list", "integer"),
   definition = function(model, obs_stats, order) {
-    reorder_mm(obs_stats, order)
+    obs_stats$counts=obs_stats$counts[order]
+    obs_stats$MoM$x_counts=obs_stats$MoM$x_counts[, order]
+    obs_stats
   }
 )
+setMethod(
+  f = "reorder",
+  signature = signature("MoMPrior", "list", "integer"),
+  definition = function(model, obs_stats, order) {
+    obs_stats$x_counts=obs_stats$x_counts[, order]
+    obs_stats
+  }
+)
+
 
 
 setMethod(
@@ -204,18 +225,12 @@ setMethod(
 )
 
 
-setMethod(
-  f = "sample_cl",
-  signature = signature("MoM", "list", "numeric"),
-  definition = function(model, data, K) {
-    sample(1:K, data$N, replace = TRUE)
-  }
-)
 
 setMethod(
   f = "preprocess",
-  signature = signature("MoM"),
+  signature = signature("MoMPrior"),
   definition = function(model, data) {
+    methods::validObject(model)
     if (!(methods::is(data, "dgCMatrix") | methods::is(data, "matrix") | methods::is(data, "data.frame"))) {
       stop("n dcsbm model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.", call. = FALSE)
     }
@@ -225,44 +240,14 @@ setMethod(
     if (!all(round(data) == data) || min(data) < 0) {
       stop("A MoM model expect an integer matrix with postive values.", call. = FALSE)
     }
-    if (length(model@alpha) > 1) {
-      stop("Model prior misspecification, alpha must be of length 1.", call. = FALSE)
-    }
-    if (is.na(model@alpha)) {
-      stop("Model prior misspecification, alpha is NA.", call. = FALSE)
-    }
-    if (model@alpha <= 0) {
-      stop("Model prior misspecification, alpha must be positive.", call. = FALSE)
-    }
-
-    if (length(model@beta) > 1) {
-      stop("Model prior misspecification, beta must be of length 1.", call. = FALSE)
-    }
-    if (is.na(model@beta)) {
-      stop("Model prior misspecification, beta is NA.", call. = FALSE)
-    }
-    if (model@beta <= 0) {
-      stop("Model prior misspecification, beta must be positive.", call. = FALSE)
-    }
     list(X = as.sparse(data), N = nrow(data))
   }
 )
 
-
 setMethod(
-  f = "postprocess",
-  signature = signature("MoMPath"),
-  definition = function(path, data, X, Y = NULL) {
-    path@obs_stats <- list(
-      counts = path@obs_stats$counts,
-      x_counts = path@obs_stats$MoM$x_counts
-    )
-    for (p in 1:length(path@path)) {
-      path@path[[p]]$obs_stats <- list(
-        counts = path@path[[p]]$obs_stats$counts,
-        x_counts = path@path[[p]]$obs_stats$MoM$x_counts
-      )
-    }
-    path
+  f = "cleanObsStats",
+  signature = signature("MoMPrior", "list"),
+  definition = function(model, obs_stats, data) {
+    obs_stats
   }
 )

@@ -34,8 +34,6 @@ with \eqn{\mathcal{G}(\kappa,\beta)} the Gamma distribution with shape parameter
 \section{Slots}{
 
 \describe{
-\item{\code{name}}{name of the model}
-
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
 
 \item{\code{tau}}{Prior parameter (inverse variance), (default 0.01)}
@@ -62,6 +60,7 @@ Other DlvmModels:
 \code{\link{DcSbmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
+\code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{MultSbmPrior-class}},

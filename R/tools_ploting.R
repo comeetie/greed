@@ -5,7 +5,7 @@
 
 
 
-#' @title print an IclPath object
+#' @title show an IclPath object
 #'
 #' @description
 #' Print an \code{\link{IclPath-class}} object, model type and number of found clusters are provided.
@@ -13,10 +13,10 @@
 #' @return None (invisible NULL). No return value, called for side effects.
 #' @export
 setMethod(
-  f = "print",
-  signature = signature("IclPath"),
-  definition = function(x) {
-    cat(paste0("ICL clustering with a ", toupper(class(x@model)), " model, ", length(x@obs_stats$counts), " clusters and an icl of ", round(x@icl), "."))
+  f = "show",
+  signature = signature("IclFit"),
+  definition = function(object) {
+    cat(paste0("ICL clustering with a ", toupper(class(object@model)), " model, ", length(object@obs_stats$counts), " clusters and an icl of ", round(object@icl), "."))
   }
 )
 
@@ -124,13 +124,23 @@ iclpath <- function(x) {
 # Node link visualisations
 
 nodelink <- function(sol) {
-  ij <- Matrix::which(sol@obs_stats$x_counts > 0, arr.ind = TRUE)
-  ld <- sol@obs_stats$x_counts
+  if(!(is(sol,"SbmFit") | is(sol,"DcSbmFit"))){
+    stop("Nodes and Links diagrams only available for Sbm and DcSbm models",.call=FALSE)
+  }
+  if(is(sol,"SbmFit")){
+    x_counts = sol@obs_stats$Sbm$x_counts
+  }
+  
+  if(is(sol,"DcSbmFit")){
+    x_counts = sol@obs_stats$DcSbm$x_counts
+  }
+  ij <- Matrix::which(x_counts > 0, arr.ind = TRUE)
+  ld <- x_counts
   # /(sol@obs_stats$counts%*%t(sol@obs_stats$counts))
   ij <- ij[ij[, 1] != ij[, 2], ]
   gglink <- data.frame(from = ij[, 1], to = ij[, 2], p = ld[ij])
   gglink$y <- ifelse(gglink$from < gglink$to, -0.3, 0.3)
-  ggnode <- data.frame(i = 1:length(sol@obs_stats$counts), pi = diag(sol@obs_stats$x_counts))
+  ggnode <- data.frame(i = 1:length(sol@obs_stats$counts), pi = diag(x_counts))
   gl <- ggplot2::guide_legend()
   ggplot2::ggplot() +
     ggplot2::geom_curve(data = gglink, ggplot2::aes_(x = ~from, xend = ~to, y = ~y, yend = ~y, size = ~p, alpha = ~p), arrow = grid::arrow(length = grid::unit(2, "mm")), curvature = 0.7) +
@@ -142,6 +152,8 @@ nodelink <- function(sol) {
     ggplot2::ggtitle(paste0(toupper(class(sol@model)), " model with : ", max(sol@cl), " clusters.")) +
     ggplot2::theme_minimal()
 }
+
+
 
 #' nodelinklab
 #' @param sol \code{\link{MoMPath-class}} object to be plot
@@ -249,13 +261,24 @@ co_dendo <- function(x) {
 # matrice blocks visualisation
 
 graph_blocks <- function(x) {
+  if(!(is(x,"SbmFit") | is(x,"DcSbmFit"))){
+    stop("Nodes and Links diagrams only available for Sbm and DcSbm models",.call=FALSE)
+  }
+  if(is(x,"SbmFit")){
+    x_counts = x@obs_stats$Sbm$x_counts
+  }
+  
+  if(is(x,"DcSbmFit")){
+    x_counts = x@obs_stats$DcSbm$x_counts
+  }
+  
   K <- length(x@obs_stats$counts)
   gg <- data.frame(
     kc = rep(cumsum(x@obs_stats$counts), each = K),
     lc = rep(cumsum(x@obs_stats$counts), K),
     sizek = rep(x@obs_stats$counts, each = K),
     sizel = rep(x@obs_stats$counts, K),
-    count = as.vector(x@obs_stats$x_counts)
+    count = as.vector(x_counts)
   )
   ggplot2::ggplot(gg[gg$count > 0, ]) +
     ggplot2::geom_tile(ggplot2::aes_(x = ~ kc - sizek / 2, y = ~ lc - sizel / 2, width = ~sizek, height = ~sizel, fill = ~ count / (sizek * sizel), alpha = ~ count / (sizek * sizel))) +
@@ -304,13 +327,13 @@ co_blocks <- function(x) {
 
 mat_blocks <- function(x) {
   K <- length(x@obs_stats$counts)
-  D <- dim(x@obs_stats$x_counts)[1]
+  D <- dim(x@obs_stats$MoM$x_counts)[1]
   gg <- data.frame(
     kc = rep(cumsum(x@obs_stats$counts), D),
     lc = rep(1:D, each = K),
     sizek = rep(x@obs_stats$counts, D),
     sizel = rep(1, K * D),
-    count = as.vector(Matrix::t(x@obs_stats$x_counts) / Matrix::rowSums(Matrix::t(x@obs_stats$x_counts)))
+    count = as.vector(Matrix::t(x@obs_stats$MoM$x_counts) / Matrix::rowSums(Matrix::t(x@obs_stats$MoM$x_counts)))
   )
 
   ggplot2::ggplot(gg) +
@@ -525,14 +548,14 @@ update_tree_prop <- function(tree, counts) {
 
 graph_blocks_cube <- function(x) {
   K <- length(x@obs_stats$counts)
-  M <- dim(x@obs_stats$x_counts)[3]
+  M <- dim(x@obs_stats$MultSbm$x_counts)[3]
   ggl <- lapply(1:M, function(m) {
     data.frame(
       kc = rep(cumsum(x@obs_stats$counts), each = K),
       lc = rep(cumsum(x@obs_stats$counts), K),
       sizek = rep(x@obs_stats$counts, each = K),
       sizel = rep(x@obs_stats$counts, K),
-      count = as.vector(x@obs_stats$x_counts[, , m]), m = paste("Slice ", m), stringsAsFactors = FALSE
+      count = as.vector(x@obs_stats$MultSbm$x_counts[, , m]), m = paste("Slice ", m), stringsAsFactors = FALSE
     )
   })
 
@@ -560,10 +583,10 @@ graph_blocks_cube <- function(x) {
 
 
 nodelink_cube <- function(sol) {
-  M <- dim(sol@obs_stats$x_counts)[3]
+  M <- dim(sol@obs_stats$MultSbm$x_counts)[3]
   gglink_list <- lapply(1:M, function(m) {
-    ij <- which(sol@obs_stats$x_counts[, , m] > 0, arr.ind = TRUE)
-    ld <- sol@obs_stats$x_counts[, , m]
+    ij <- which(sol@obs_stats$MultSbm$x_counts[, , m] > 0, arr.ind = TRUE)
+    ld <- sol@obs_stats$MultSbm$x_counts[, , m]
     # /(sol@obs_stats$counts%*%t(sol@obs_stats$counts))
     ij <- ij[ij[, 1] != ij[, 2], ]
     gglink <- data.frame(from = ij[, 1], to = ij[, 2], p = ld[ij])
@@ -573,7 +596,7 @@ nodelink_cube <- function(sol) {
   })
   gglink <- do.call(rbind, gglink_list)
   ggnode_list <- lapply(1:M, function(m) {
-    data.frame(i = 1:length(sol@obs_stats$counts), pi = diag(sol@obs_stats$x_counts[, , m]), m = paste("Slice", m), stringsAsFactors = FALSE)
+    data.frame(i = 1:length(sol@obs_stats$counts), pi = diag(sol@obs_stats$MultSbm$x_counts[, , m]), m = paste("Slice", m), stringsAsFactors = FALSE)
   })
   ggnode <- do.call(rbind, ggnode_list)
   gl <- ggplot2::guide_legend()
@@ -677,8 +700,9 @@ gmmpairs <- function(sol, X) {
   glegend <- ggplot2::ggplotGrob(ggplot2::ggplot() +
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white")) +
     ggplot2::annotation_custom(legend))
-  gtl <- gridExtra::grid.arrange(gt, glegend, nrow = 2, heights = c(10, 1))
-  gridExtra::grid.arrange(top = paste0(class(sol@model), " clustering with ", max(sol@cl), " clusters.\n"), gtl)
+  gtl <- gridExtra::arrangeGrob(grobs=list(gt, glegend), nrow = 2, heights = c(10, 1))
+  finished_plot = gridExtra::grid.arrange(top = paste0(class(sol@model), " clustering with ", max(sol@cl), " clusters.\n"), gtl)
+  invisible(finished_plot)
 }
 
 

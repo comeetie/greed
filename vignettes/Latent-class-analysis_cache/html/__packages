@@ -1,0 +1,9 @@
+base
+dplyr
+stringr
+careless
+ggplot2
+ggrepel
+greed
+purrr
+ggwordcloud

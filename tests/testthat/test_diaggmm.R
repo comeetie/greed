@@ -23,6 +23,8 @@ test_that("DIAGGMM hybrid", {
   expect_true(is.ggplot(plot(sol,type='tree')))
   expect_true(is.ggplot(plot(sol,type='path')))
   expect_true(is.ggplot(plot(sol,type='front')))
+  expect_true(is(plot(sol),"gtable"))
+  expect_true(is(plot(sol,type="violins"),"gtable"))
 })
 
 test_that("DiagGMM seed", {
@@ -35,6 +37,8 @@ test_that("DiagGMM seed", {
   expect_true(is.ggplot(plot(sol,type='tree')))
   expect_true(is.ggplot(plot(sol,type='path')))
   expect_true(is.ggplot(plot(sol,type='front')))
+  expect_true(is(plot(sol),"gtable"))
+  expect_true(is(plot(sol,type="violins"),"gtable"))
 })
 
 

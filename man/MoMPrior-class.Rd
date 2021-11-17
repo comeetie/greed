@@ -33,8 +33,6 @@ With \eqn{L_i=\sum_d=1^DX_{id}}. This class mainly store the prior parameters va
 \section{Slots}{
 
 \describe{
-\item{\code{name}}{name of the model}
-
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
 
 \item{\code{beta}}{Dirichlet over vocabulary prior parameter (default to 1)}
@@ -53,6 +51,7 @@ Other DlvmModels:
 \code{\link{DiagGmmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
+\code{\link{MixedModels-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{MultSbmPrior-class}},
 \code{\link{SbmPrior-class}}

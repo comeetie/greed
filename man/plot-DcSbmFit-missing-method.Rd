@@ -7,7 +7,7 @@
 \S4method{plot}{DcSbmFit,missing}(x, type = "blocks")
 }
 \arguments{
-\item{x}{a \code{\link{sbm_fit-class}}}
+\item{x}{a \code{\link{DcSbmFit-class}}}
 
 \item{type}{a string which specify plot type:
 \itemize{

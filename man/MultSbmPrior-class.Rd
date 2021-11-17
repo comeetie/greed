@@ -32,8 +32,6 @@ With \eqn{L_{ij}=\sum_{m=1}^MX_{ijm}}. This class mainly store the prior paramet
 \section{Slots}{
 
 \describe{
-\item{\code{name}}{name of the model}
-
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter}
 
 \item{\code{beta}}{Dirichlet prior parameter over Multinomial links}
@@ -56,6 +54,7 @@ Other DlvmModels:
 \code{\link{DiagGmmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
+\code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{SbmPrior-class}}

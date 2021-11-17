@@ -35,8 +35,6 @@ These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i
 \section{Slots}{
 
 \describe{
-\item{\code{name}}{name of the model}
-
 \item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 10)}
 
 \item{\code{p}}{Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)}
@@ -56,6 +54,7 @@ Other DlvmModels:
 \code{\link{DiagGmmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
+\code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{MultSbmPrior-class}},

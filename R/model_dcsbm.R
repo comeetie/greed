@@ -15,7 +15,6 @@ NULL
 #' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)}
 #' The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity.
 #' These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i:z_{ik}=1}\gamma_i^+=1}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
-#' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 10)
 #' @slot p Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)
 #' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
@@ -26,7 +25,18 @@ setClass("DcSbmPrior",
   prototype(p = NaN, type = "guess")
 )
 
-
+setValidity("DcSbmPrior",function(object){
+  if (length(object@p) > 1) {
+    return("DcSbm model prior misspecification, p must be of length 1.")
+  }
+  if (!is.nan(object@p) && object@p <= 0) {
+    return("DcSbm model prior misspecification, p must be positive.")
+  }
+  if (!(object@type %in% c("directed", "undirected", "guess"))) {
+    return("DcSbm model prior misspecification, model type must directed, undirected or guess.")
+  }
+  TRUE
+})
 #' @describeIn DcSbmPrior-class DcSbmPrior class constructor
 #' @examples
 #' DcSbmPrior()
@@ -124,7 +134,7 @@ setClass("DcSbmPath", contains = c("IclPath", "DcSbmFit"))
 
 #' @title plot a \code{\link{DcSbmFit-class}} object
 #'
-#' @param x a \code{\link{sbm_fit-class}}
+#' @param x a \code{\link{DcSbmFit-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
@@ -144,9 +154,9 @@ setMethod(
 )
 
 
-#' @title plot a \code{\link{sbm_path-class}} object
+#' @title plot a \code{\link{DcSbmPath-class}} object
 #'
-#' @param x an \code{\link{sbm_path-class}} object
+#' @param x an \code{\link{DcSbmPath-class}} object
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
@@ -182,9 +192,9 @@ setMethod(
 )
 
 
-#' @title Extract parameters from an \code{\link{DcSbm_fit-class}} object
+#' @title Extract parameters from an \code{\link{DcSbmFit-class}} object
 #'
-#' @param object a \code{\link{DcSbm_fit-class}}
+#' @param object a \code{\link{DcSbmFit-class}}
 #' @return a list with the model parameters estimates (MAP), the fields are the following for "directed" models :
 #' \itemize{
 #' \item \code{'pi'}: cluster proportions
@@ -207,40 +217,20 @@ setMethod(
     sol <- object
     pi <- (sol@obs_stats$counts + sol@model@alpha - 1) / sum(sol@obs_stats$counts + sol@model@alpha - 1)
     if (sol@model@type == "directed") {
-      thetakl <- (sol@obs_stats$x_counts) / (t(t(sol@obs_stats$counts)) %*% sol@obs_stats$counts + 1 / sol@model@p)
-      gammain <- sol@obs_stats_cst$din_node / sol@obs_stats$din[sol@cl]
-      gammaout <- sol@obs_stats_cst$dout_node / sol@obs_stats$dout[sol@cl]
+      thetakl <- (sol@obs_stats$DcSbm$x_counts) / (t(t(sol@obs_stats$counts)) %*% sol@obs_stats$counts + 1 / sol@model@p)
+      gammain <- sol@obs_stats_cst$din_node / sol@obs_stats$DcSbm$din[sol@cl]
+      gammaout <- sol@obs_stats_cst$dout_node / sol@obs_stats$DcSbm$dout[sol@cl]
       params <- list(pi = pi, thetakl = thetakl, gammain = gammain, gammaout = gammaout)
     } else {
-      thetakl <- (sol@obs_stats$x_counts)
+      thetakl <- (sol@obs_stats$DcSbm$x_counts)
       diag(thetakl) <- diag(thetakl) / 2
       norm <- t(t(sol@obs_stats$counts)) %*% sol@obs_stats$counts
       diag(norm) <- diag(norm) / 2 - sol@obs_stats$counts
       thetakl <- thetakl / (norm + 1 / sol@model@p)
-      gamma <- sol@obs_stats_cst$din_node / sol@obs_stats$din[sol@cl]
+      gamma <- sol@obs_stats_cst$din_node / sol@obs_stats$DcSbm$din[sol@cl]
       params <- list(pi = pi, thetakl = thetakl, gamma = gamma)
     }
     params
-  }
-)
-
-
-reorder_dcsbm <- function(obs_stats, or) {
-  obs_stats$counts <- obs_stats$counts[or]
-  obs_stats$din <- obs_stats$din[or]
-  obs_stats$dout <- obs_stats$dout[or]
-  obs_stats$x_counts <- obs_stats$x_counts[or, or]
-  obs_stats
-}
-
-
-
-
-setMethod(
-  f = "reorder",
-  signature = signature("DcSbm", "list", "integer"),
-  definition = function(model, obs_stats, order) {
-    reorder_dcsbm(obs_stats, order)
   }
 )
 
@@ -255,7 +245,7 @@ setMethod(
 
 setMethod(
   f = "preprocess",
-  signature = signature("DcSbm"),
+  signature = signature("DcSbmPrior"),
   definition = function(model, data) {
     if (!(methods::is(data, "dgCMatrix") | methods::is(data, "matrix") | methods::is(data, "data.frame"))) {
       stop("A DcSbm model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.", call. = FALSE)
@@ -276,46 +266,47 @@ setMethod(
       diag(data) <- 0
       warning("An undirected DcSbm model does not allow self loops, self loops were removed from the graph.", call. = FALSE)
     }
-    if (length(model@alpha) > 1) {
-      stop("Model prior misspecification, alpha must be of length 1.", call. = FALSE)
-    }
-    if (is.na(model@alpha)) {
-      stop("Model prior misspecification, alpha is NA.", call. = FALSE)
-    }
-    if (model@alpha <= 0) {
-      stop("Model prior misspecification, alpha must be positive.", call. = FALSE)
-    }
-    if (length(model@p) > 1) {
-      stop("Model prior misspecification, p must be of length 1.", call. = FALSE)
-    }
-    if (!is.nan(model@p) && model@p <= 0) {
-      stop("Model prior misspecification, p must be positive.", call. = FALSE)
-    }
-    if (!(model@type %in% c("directed", "undirected", "guess"))) {
-      stop("Model prior misspecification, model type must directed, undirected or guess.", call. = FALSE)
-    }
     list(X = as.sparse(data), N = nrow(data))
   }
 )
 
+
+
+
 setMethod(
-  f = "postprocess",
-  signature = signature("DcSbmPath"),
-  definition = function(path, data, X, Y = NULL) {
-    path@obs_stats <- list(
-      counts = path@obs_stats$counts,
-      din = path@obs_stats$dcsbm$din,
-      dout = path@obs_stats$dcsbm$dout,
-      x_counts = path@obs_stats$dcsbm$x_counts
-    )
-    for (p in 1:length(path@path)) {
-      path@path[[p]]$obs_stats <- list(
-        counts = path@path[[p]]$obs_stats$counts,
-        din = path@path[[p]]$obs_stats$dcsbm$din,
-        dout = path@path[[p]]$obs_stats$dcsbm$dout,
-        x_counts = path@path[[p]]$obs_stats$dcsbm$x_counts
-      )
-    }
-    path
+  f = "cleanObsStats",
+  signature = signature("DcSbmPrior", "list"),
+  definition = function(model, obs_stats, data) {
+    obs_stats
   }
 )
+
+
+
+setMethod(
+  f = "reorder",
+  signature = signature("DcSbmPrior", "list", "integer"),
+  definition = function(model, obs_stats, order) {
+    obs_stats$counts <- obs_stats$counts[order]
+    obs_stats$din <- obs_stats$din[order]
+    obs_stats$dout <- obs_stats$dout[order]
+    obs_stats$x_counts <- obs_stats$x_counts[order, order]
+    obs_stats
+  }
+)
+
+
+
+setMethod(
+  f = "reorder",
+  signature = signature("DcSbm", "list", "integer"),
+  definition = function(model, obs_stats, order) {
+    obs_stats$DcSbm$counts <- obs_stats$DcSbm$counts[order]
+    obs_stats$DcSbm$din <- obs_stats$DcSbm$din[order]
+    obs_stats$DcSbm$dout <- obs_stats$DcSbm$dout[order]
+    obs_stats$DcSbm$x_counts <- obs_stats$DcSbm$x_counts[order, order]
+    obs_stats$counts <- obs_stats$counts[order]
+    obs_stats
+  }
+)
+

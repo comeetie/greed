@@ -114,6 +114,53 @@ Genetic <- function(pop_size = 100, nb_max_gen = 20, prob_mutation = 0.25, sel_f
 }
 
 
+setGeneric("clustering", function(fit) standardGeneric("clustering"))
+
+#' @title Method to extract the clustering results from an \code{\link{IclFit-class}} object
+#'
+#' @description This method take a \code{\link{IclFit-class}} object and return an integer vector with the cluster assignments that were found.
+#' @param x an \code{IclFit} solution
+#' @return an integer vector with cluster assignments. Zero indicates noise points.
+#' @export
+setMethod(
+  f = "clustering",
+  signature = signature("IclFit"),
+  definition = function(fit){
+    as.integer(fit@cl)    
+})
+  
+setGeneric("ICL", function(fit) standardGeneric("ICL"))
+
+#' @title Method to extract the ICL value from an \code{\link{IclFit-class}} object
+#'
+#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score. 
+#' @param x an \code{IclFit} solution
+#' @return The ICL value achieved
+#' @export
+setMethod(
+  f = "ICL",
+  signature = signature("IclFit"),
+  definition = function(fit){
+    fit@icl
+  })
+
+
+setGeneric("K", function(fit) standardGeneric("K"))
+
+#' @title Method to extract the number of clusters found from an \code{\link{IclFit-class}} object
+#'
+#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score. 
+#' @param x an \code{IclFit} solution
+#' @return The number of clusters 
+#' @export
+setMethod(
+  f = "K",
+  signature = signature("IclFit"),
+  definition = function(fit){
+    fit@K
+  })
+
+
 
 #' @title Method to cut a path solution to a desired number of cluster
 #'
@@ -180,6 +227,11 @@ greed <- function(X, K = 20, model = find_model(X), alg = Hybrid(), verbose = FA
   }
   cat(paste0("------- ", modelname, " model fitting ------\n"))
   sol <- fit(model, alg, data, K, verbose)
+  sol@obs_stats = cleanObsStats(model,sol@obs_stats,X)
+  for (p in 1:length(sol@path)) {
+    sol@path[[p]]$obs_stats = cleanObsStats(model,sol@path[[p]]$obs_stats,X)
+  }
+  print("clean ok")
   sol <- postprocess(sol, data, X)
   cat("------- Final clustering -------\n")
   print(sol)
@@ -219,11 +271,7 @@ find_model <- function(X) {
         if (sum(is.na(X)) > 0) {
           stop("No missing value allowed for Sbm models. ", .call = FALSE)
         } else {
-          if (isSymmetric(X)) {
-            model <- DcSbm("undirected")
-          } else {
             model <- DcSbm()
-          }
         }
       } else {
         if (all(round(X) == X)) {
@@ -285,14 +333,19 @@ setMethod(
 )
 
 setGeneric("preprocess", function(model, ...) standardGeneric("preprocess"))
+# 
+# setMethod(
+#   f = "preprocess",
+#   signature = signature("DlvmPrior"),
+#   definition = function(model, data) {
+#     list(X = as.sparse(data), N = nrow(data))
+#   }
+# )
 
-setMethod(
-  f = "preprocess",
-  signature = signature("DlvmPrior"),
-  definition = function(model, data) {
-    list(X = as.sparse(data), N = nrow(data))
-  }
-)
+
+
+setGeneric("cleanObsStats", function(model, obs_stats,data) standardGeneric("cleanObsStats"))
+
 
 setGeneric("postprocess", function(path, ...) standardGeneric("postprocess"))
 

@@ -19,15 +19,17 @@ Loads packages.
 library(dplyr)
 library(stringr)
 library(careless)
-library(ggrepel)
 library(greed)
 library(ggplot2)
 library(purrr)
+library(ggwordcloud)
 #https://www.kaggle.com/miroslavsabo/young-people-survey
 #survey=read_csv("data-raw/responses.csv")
 data("Youngpeoplesurvey")
 ```
 
+## Young people survey data
+We begin by preprocessing the data, only keeping the categorical variable. The original dataset has $n=`r nrow(Youngpeoplesurvey)`$ respondents for $p=`r ncol(Youngpeoplesurvey)`$.
 
 ```{r,cache=TRUE}
 nc  = 19
@@ -53,20 +55,18 @@ X = X[rowSums(is.na(X))==0,]
 set.seed(31)
 library(future)
 plan(multisession)
-sol=greed(X,alg=new("seed"),K=10)
+sol=greed(X,alg=Seed(),K=10)
 plot(sol,type='tree')
 ```
 
 
 
 ```{r, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
-table(sol@cl)
-ncut = 3
-solf=cut(sol, ncut)
+table(clustering(sol))
 ```
 
-```{r posplot, fig.show='hold',fig.width=8,fig.height=12,out.width="100%"}
-params = coef(solf)
+```{r posplot, fig.show='hold',fig.width=8,fig.height=7,out.width="100%"}
+params = coef(sol)
 means_scores = lapply(params$Thetak,\(x){apply(x,1,\(r){sum(r*as.numeric(names(r)))})})
 means_scores_long = do.call(rbind,map2(means_scores,names(means_scores),\(x,y){tibble(cluster=names(x),mean=x,var=y)}))  %>% mutate(var = gsub("\\."," ",var))
 
@@ -79,30 +79,15 @@ gg = means_scores_long %>%
   left_join(means_scores_glob) %>% 
   mutate(dm=mean-value) 
 
-cluster_profile = function(clid){
-  df = gg %>% filter(cluster==paste0("cluster",clid)) %>% arrange(desc(abs(dm))) %>% head(25)
-  ggplotGrob(ggplot(df)+
-    geom_text_repel(aes(x=0,y=dm,size=abs(dm),color=dm,label=var),
-                    direction="x",
-                    min.segment.length = 800,    
-                    force_pull    = 0,
-                    max.time      = 0.5,
-                    max.iter      = 1e5,
-                    max.overlaps  = Inf,
-                    segment.color = NA,
-                    point.padding = NA)+
-    scale_color_gradient2(guide="none")+
-    scale_size_area(guide="none",max_size = 3)+
-    theme_minimal()+
-    scale_x_discrete("",breaks=c(),expand = c(0.2,1))+
-    scale_y_continuous("cluster score difference with average",limits = c(-1.5,1.5))+
-    ggtitle(paste("Cluster",clid),subtitle = paste(round(params$pi[clid]*100),"% of the respondents")))
-}
 
-plts_list = lapply(1:ncut,\(cli){cluster_profile(cli)})
+ggplot(gg %>% filter(abs(dm)>0.1), aes(label = var, size = abs(dm),color=dm)) +
+  geom_text_wordcloud() +
+  scale_size_area(max_size = 5) +
+  theme_minimal() +
+  scale_color_gradient2(guide="none")+
+  facet_wrap(~cluster)
 
 
-grid::grid.draw(gridExtra::arrangeGrob(grobs=plts_list, nrow = ncut,ncol = 1))
 
 ```
 

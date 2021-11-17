@@ -4,13 +4,12 @@
 \name{GmmPrior-class}
 \alias{GmmPrior-class}
 \alias{GmmPrior}
-\alias{Gmm-class}
 \alias{Gmm}
 \title{Gaussian Mixture Model Prior description class}
 \usage{
-GmmPrior(tau = 0.001, N0 = NaN, mu = NaN, epsilon = as.matrix(NaN))
+GmmPrior(tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN)
 
-Gmm(alpha = 1, tau = 0.001, N0 = NaN, mu = NaN, epsilon = as.matrix(NaN))
+Gmm(alpha = 1, tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN)
 }
 \description{
 An S4 class to represent a multivariate Gaussian mixture  model
@@ -26,17 +25,13 @@ with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Whishart distribution.
 \itemize{
 \item \code{GmmPrior}: GmmPrior class constructor
 
-\item \code{Gmm-class}: Gmm class constructor
-
 \item \code{Gmm}: Gmm class constructor
 }}
 
 \section{Slots}{
 
 \describe{
-\item{\code{name}}{name of the model}
-
-\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
+\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1, only for Gmm)}
 
 \item{\code{tau}}{Prior parameter (inverse variance) default 0.01}
 
@@ -62,6 +57,7 @@ Other DlvmModels:
 \code{\link{DcSbmPrior-class}},
 \code{\link{DiagGmmPrior-class}},
 \code{\link{LcaPrior-class}},
+\code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{MultSbmPrior-class}},

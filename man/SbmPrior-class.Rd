@@ -33,8 +33,6 @@ This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this 
 \section{Slots}{
 
 \describe{
-\item{\code{name}}{name of the model}
-
 \item{\code{a0}}{Beta prior parameter over links (default to 1)}
 
 \item{\code{b0}}{Beta prior parameter over no-links (default to 1)}
@@ -55,7 +53,7 @@ Sbm(type = "undirected")
 Nowicki, Krzysztof and Tom A B Snijders (2001). “Estimation and prediction for stochastic block structures”. In:Journal of the American statistical association 96.455, pp. 1077–1087
 }
 \seealso{
-\code{\link{sbm_fit-class}},\code{\link{sbm_path-class}}
+\code{\link{SbmFit-class}},\code{\link{SbmPath-class}}
 
 \code{\link{greed}}
 
@@ -65,6 +63,7 @@ Other DlvmModels:
 \code{\link{DiagGmmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
+\code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{MultSbmPrior-class}}

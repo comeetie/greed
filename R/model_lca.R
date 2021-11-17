@@ -10,7 +10,6 @@ NULL
 #' \deqn{\forall k, \forall j, \quad \theta_{kj} &\sim \textrm{Dirichlet}_{d_j}(\beta),}
 #' \deqn{Z_i&\sim \mathcal{M}_K(1,\pi),}
 #' \deqn{\forall j=1, \ldots, p, \quad X_{ij}|Z_{ik}=1 &\sim \mathcal{M}_{d_j}(1, \theta_{kj}),}
-#' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
 #' @slot beta Dirichlet over vocabulary prior parameter (default to 1)
 #' @family DlvmModels
@@ -18,6 +17,20 @@ NULL
 setClass("LcaPrior",
          representation = list(beta = "numeric"),
          prototype(beta=1))
+
+setValidity("LcaPrior",function(object){
+  
+  if (length(object@beta) > 1) {
+    return("Lca model prior misspecification, beta must be of length 1.")
+  }
+  if (is.na(object@beta)) {
+    return("Lca model prior misspecification, beta is NA.")
+  }
+  if (object@beta <= 0) {
+    return("Lca model prior misspecification, beta must be positive.")
+  }
+  TRUE
+})
 
 
 
@@ -164,68 +177,10 @@ setMethod(f = "coef",
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
-            Thetak = lapply(sol@obs_stats$lca,function(mat){(mat+sol@model@beta-1)/rowSums(mat+sol@model@beta-1)})
+            Thetak = lapply(sol@obs_stats$Lca$x_counts,function(mat){(mat+sol@model@beta-1)/rowSums(mat+sol@model@beta-1)})
             list(pi=pi,Thetak=Thetak)
 })
 
-reorder_lca = function(obs_stats,or){
-  obs_stats[[2]]$counts = obs_stats[[2]]$counts[or]
-  for(v in 1:length(obs_stats[[2]]$x_counts)){
-    obs_stats[[2]]$x_counts[[v]] = obs_stats[[2]]$x_counts[[v]][or,]
-  }
-  obs_stats$counts = obs_stats$counts[or] 
-  obs_stats
-}
-
-setMethod(f = "postprocess", 
-          signature = signature("LcaPath"), 
-          definition = function(path,data,X,Y=NULL){
-            path = clean_obs_stats_lca(path)
-            path = name_obs_stats_lca(path,X)
-            path
-          }
-          )
-
-clean_obs_stats_lca = function(path) {
-  # clean path@obs_stats to have clearer and non-redundant slots
-  path@obs_stats = list(counts = path@obs_stats$counts,
-                        lca = path@obs_stats[[2]]$x_counts)
-  
-  # Do the same thing for all submodels in the hierarchy path@path
-  for(k in seq_along(path@path)) {
-    path@path[[k]]$obs_stats = list(counts = path@path[[k]]$obs_stats$counts,
-                                    lca = path@path[[k]]$obs_stats[[2]]$x_counts)
-  }
-  path
-}
-
-
-name_obs_stats_lca=function(path,X){
-  cat_names = colnames(data.frame(X))
-  for(v in 1:length(path@obs_stats$lca)){
-    path@obs_stats$lca[[v]]=as.matrix(path@obs_stats$lca[[v]])
-    colnames(path@obs_stats$lca[[v]])=levels(X[[v]])
-    rownames(path@obs_stats$lca[[v]])=paste0("cluster",1:path@K)
-  }
-  names(path@obs_stats$lca)=cat_names
-  
-  for(p in 1:length(path@path)){
-    for(v in 1:length(path@obs_stats$lca)){
-      path@path[[p]]$obs_stats$lca[[v]]=matrix(path@path[[p]]$obs_stats$lca[[v]],nrow = path@path[[p]]$K)
-      colnames(path@path[[p]]$obs_stats$lca[[v]])=levels(X[[v]])
-      rownames(path@path[[p]]$obs_stats$lca[[v]])=paste0("cluster",1:path@path[[p]]$K)
-    }
-    names(path@path[[p]]$obs_stats$lca)=cat_names
-  }
-  path
-}
-
-
-setMethod(f = "reorder", 
-          signature = signature("Lca", "list","integer"), 
-          definition = function(model, obs_stats,order){
-            reorder_lca(obs_stats,order)
-          })
 
 
 setMethod(f = "seed", 
@@ -236,39 +191,16 @@ setMethod(f = "seed",
           })
 
 
-setMethod(f = "sample_cl", 
-          signature = signature("Lca","list","numeric"), 
-          definition = function(model,data,K){
-            sample(1:K,data$N,replace = TRUE)
-          })
+
 
 setMethod(f = "preprocess", 
-          signature = signature("Lca"), 
+          signature = signature("LcaPrior"), 
           definition = function(model, data){
             if(!methods::is(data,"data.frame")){
               stop("An Lca model expect a data.frame.",call. = FALSE)
             }
             if(!all(sapply(data,is.factor)) & !all(sapply(data, is.character))){
               stop("An Lca model expect a data.frame with only factors or characters.",call. = FALSE)
-            }
-            if(length(model@alpha)>1){
-              stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
-            }
-            if(is.na(model@alpha)){
-              stop("Model prior misspecification, alpha is NA.",call. = FALSE)
-            }
-            if(model@alpha<=0){
-              stop("Model prior misspecification, alpha must be positive.",call. = FALSE)
-            }
-            
-            if(length(model@beta)>1){
-              stop("Model prior misspecification, beta must be of length 1.",call. = FALSE)
-            }
-            if(is.na(model@beta)){
-              stop("Model prior misspecification, beta is NA.",call. = FALSE)
-            }
-            if(model@beta<=0){
-              stop("Model prior misspecification, beta must be positive.",call. = FALSE)
             }
             
             if(all(sapply(data, is.character))) {
@@ -287,3 +219,55 @@ setMethod(f = "seed",
             km=stats::kmeans(as.matrix(data$X),K)
             km$cluster
           })
+
+
+
+
+
+
+
+setMethod(f = "reorder", 
+          signature = signature("Lca", "list","integer"), 
+          definition = function(model, obs_stats,order){
+            obs_stats$Lca$x_counts = lapply(obs_stats$Lca$x_counts,function(var_counts){var_counts[order,]})
+            obs_stats$Lca$counts = obs_stats$Lca$counts[order] 
+            obs_stats$counts = obs_stats$counts[order] 
+            obs_stats
+          })
+
+
+
+setMethod(f = "reorder", 
+          signature = signature("LcaPrior", "list","integer"), 
+          definition = function(model, obs_stats,order){
+            obs_stats$x_counts = lapply(obs_stats$x_counts,function(var_counts){var_counts[order,]})
+            obs_stats$counts = obs_stats$Lca$counts[order] 
+            obs_stats
+          })
+
+
+setMethod(
+  f = "cleanObsStats",
+  signature = signature("LcaPrior", "list"),
+  definition = function(model, obs_stats, data) {
+    cat_names = colnames(data.frame(data))
+    for(v in 1:length(obs_stats$x_counts)){
+      obs_stats$x_counts[[v]]=matrix(obs_stats$x_counts[[v]],ncol=length(levels(data[[v]])))
+      colnames(obs_stats$x_counts[[v]])=levels(data[[v]])
+      rownames(obs_stats$x_counts[[v]])=paste0("cluster",1:nrow(obs_stats$x_counts[[v]]))
+    }
+    names(obs_stats$x_counts)=cat_names
+    obs_stats
+  }
+)
+
+setMethod(
+  f = "cleanObsStats",
+  signature = signature("Lca", "list"),
+  definition = function(model, obs_stats, data) {
+    if (!is.null(obs_stats$Lca)) {
+      obs_stats$Lca <- callNextMethod(model, obs_stats$Lca, data)
+    }
+    obs_stats
+  }
+)

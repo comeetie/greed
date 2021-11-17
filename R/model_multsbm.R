@@ -11,7 +11,6 @@ NULL
 #' \deqn{ \theta_{kl} \sim Dirichlet(\beta)}
 #' \deqn{ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{M}(L_{ij},\theta_{kl})}
 #' With \eqn{L_{ij}=\sum_{m=1}^MX_{ijm}}. This class mainly store the prior parameters value \eqn{\alpha,\beta} of this generative model in the following slots:
-#' @slot name name of the model
 #' @slot alpha Dirichlet over cluster proportions prior parameter
 #' @slot beta Dirichlet prior parameter over Multinomial links
 #' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
@@ -23,6 +22,23 @@ setClass("MultSbmPrior",
   prototype(beta = 1, type = "guess")
 )
 
+
+setValidity("MultSbmPrior",function(object){
+
+  if (length(object@beta) > 1) {
+    return("MultSbm model prior misspecification, beta must be of length 1.")
+  }
+  if (is.na(object@beta)) {
+    return("MultSbm model prior misspecification, beta is NA.")
+  }
+  if (object@beta <= 0) {
+    return("MultSbm model prior misspecification, beta must be positive.")
+  }
+  if (!(object@type %in% c("directed", "undirected", "guess"))) {
+    return("MultSbm model prior misspecification, model type must directed, undirected or guess.")
+  }
+  TRUE
+})
 
 #' @describeIn MultSbmPrior-class MultSbmPrior class constructor
 #' @examples
@@ -176,14 +192,14 @@ setMethod(
     sol <- object
     pi <- (sol@obs_stats$counts + sol@model@alpha - 1) / sum(sol@obs_stats$counts + sol@model@alpha - 1)
     if (sol@model@type == "undirected") {
-      x_counts <- sol@obs_stats$x_counts
+      x_counts <- sol@obs_stats$MultSbm$x_counts
       for (k in 1:dim(x_counts)[1]) {
         for (d in 1:dim(x_counts)[3]) {
           x_counts[k, k, d] <- x_counts[k, k, d] / 2
         }
       }
     } else {
-      x_counts <- sol@obs_stats$x_counts
+      x_counts <- sol@obs_stats$MultSbm$x_counts
     }
     thetakl <- x_counts + sol@model@beta - 1
     norm <- colSums(aperm(thetakl, c(3, 1, 2)), 2)
@@ -194,20 +210,7 @@ setMethod(
   }
 )
 
-reorder_multsbm <- function(obs_stats, or) {
-  obs_stats$counts <- obs_stats$counts[or]
-  obs_stats$x_counts <- obs_stats$x_counts[or, or, ]
-  obs_stats
-}
 
-
-setMethod(
-  f = "reorder",
-  signature = signature("MultSbm", "list", "integer"),
-  definition = function(model, obs_stats, order) {
-    reorder_multsbm(obs_stats, order)
-  }
-)
 
 setMethod(
   f = "seed",
@@ -222,8 +225,9 @@ setMethod(
 
 setMethod(
   f = "preprocess",
-  signature = signature("MultSbm"),
+  signature = signature("MultSbmPrior"),
   definition = function(model, data) {
+    methods::validObject(model)
     if (!methods::is(data, "array")) {
       stop("A multsbm model expect an array with 3 dimensions.", call. = FALSE)
     }
@@ -252,47 +256,43 @@ setMethod(
       warning("An undirected multsbm model does not allow self loops, self loops were removed from the graph.", call. = FALSE)
     }
 
-    if (length(model@alpha) > 1) {
-      stop("Model prior misspecification, alpha must be of length 1.", call. = FALSE)
-    }
-    if (is.na(model@alpha)) {
-      stop("Model prior misspecification, alpha is NA.", call. = FALSE)
-    }
-    if (model@alpha <= 0) {
-      stop("Model prior misspecification, alpha must be positive.", call. = FALSE)
-    }
-    if (length(model@beta) > 1) {
-      stop("Model prior misspecification, beta must be of length 1.", call. = FALSE)
-    }
-    if (is.na(model@beta)) {
-      stop("Model prior misspecification, beta is NA.", call. = FALSE)
-    }
-    if (model@beta <= 0) {
-      stop("Model prior misspecification, beta must be positive.", call. = FALSE)
-    }
-    if (!(model@type %in% c("directed", "undirected", "guess"))) {
-      stop("Model prior misspecification, model type must directed, undirected or guess.", call. = FALSE)
-    }
+
 
     list(X = data, N = nrow(data))
   }
 )
 
 
+
+
+
+
+
 setMethod(
-  f = "postprocess",
-  signature = signature("MultSbmPath"),
-  definition = function(path, data, X, Y = NULL) {
-    path@obs_stats <- list(
-      counts = path@obs_stats$counts,
-      x_counts = path@obs_stats$MultSbm$x_counts
-    )
-    for (p in 1:length(path@path)) {
-      path@path[[p]]$obs_stats <- list(
-        counts = path@path[[p]]$obs_stats$counts,
-        x_counts = path@path[[p]]$obs_stats$MultSbm$x_counts
-      )
-    }
-    path
+  f = "reorder",
+  signature = signature("MultSbm", "list", "integer"),
+  definition = function(model, obs_stats, order) {
+    obs_stats$MultSbm$x_counts  = obs_stats$MultSbm$x_counts[order, order, ]
+    obs_stats$counts = obs_stats$counts[order]
+    obs_stats
+  }
+)
+
+setMethod(
+  f = "reorder",
+  signature = signature("MultSbmPrior", "list", "integer"),
+  definition = function(model, obs_stats, order) {
+    obs_stats$x_counts  = obs_stats$x_counts[order, order, ]
+    obs_stats
+  }
+)
+
+
+
+setMethod(
+  f = "cleanObsStats",
+  signature = signature("MultSbmPrior", "list"),
+  definition = function(model, obs_stats, data) {
+    obs_stats
   }
 )
