@@ -7,7 +7,7 @@
 \S4method{ICL}{IclFit}(fit)
 }
 \arguments{
-\item{x}{an \code{IclFit} solution}
+\item{fit}{an \code{IclFit} solution}
 }
 \value{
 The ICL value achieved

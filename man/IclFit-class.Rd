@@ -27,6 +27,3 @@ An S4 abstract class to represent an icl fit of a clustering model.
 \item{\code{name}}{generative model name}
 }}
 
-\seealso{
-\code{\link{sbm_fit-class}}, \code{\link{dcsbm_fit-class}}, \code{\link{co_dcsbm_fit-class}}
-}

@@ -8,6 +8,18 @@
 \usage{
 Hybrid(pop_size = 20, nb_max_gen = 10, prob_mutation = 0.25, Kmax = 100)
 }
+\arguments{
+\item{pop_size}{size of the solutions populations (default to 20)}
+
+\item{nb_max_gen}{maximal number of generation to produce (default to 10)}
+
+\item{prob_mutation}{mutation probability (default to 0.25)}
+
+\item{Kmax}{maximum number of clusters (default to 100)}
+}
+\value{
+a \code{Hybrid-class} object
+}
 \description{
 An S4 class to represent an hybrid genetic/greedy algorithm (extends \code{\link{Alg-class}} class).
 }

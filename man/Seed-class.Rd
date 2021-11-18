@@ -8,6 +8,9 @@
 \usage{
 Seed()
 }
+\value{
+a \code{Seed-class} object
+}
 \description{
 An S4 class to represent a greedy algorithm with initialization from spectral clustering and or k-means (extends \code{\link{Alg-class}} class ).
 }

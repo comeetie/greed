@@ -3,8 +3,8 @@
 \docType{class}
 \name{MultSbmPrior-class}
 \alias{MultSbmPrior-class}
-\alias{MultSbmPrior}
 \alias{MultSbm-class}
+\alias{MultSbmPrior}
 \alias{MultSbm}
 \title{Multinomial Stochastic Block Model Prior class}
 \usage{
@@ -12,19 +12,32 @@ MultSbmPrior(beta = 1, type = "guess")
 
 MultSbm(alpha = 1, beta = 1, type = "guess")
 }
+\arguments{
+\item{beta}{Dirichlet prior parameter over Multinomial links}
+
+\item{type}{define the type of networks (either "directed", "undirected" or "guess", default to "guess"), for undirected graphs the adjacency matrix is supposed to be symmetric.}
+
+\item{alpha}{Dirichlet prior parameter over the cluster proportions (default to 1)}
+}
+\value{
+a \code{MultSbmPrior-class} object
+
+a \code{MultSbm-class} object
+}
 \description{
 An S4 class to represent a Multinomial Stochastic Block Model. Such model can be used to cluster multilayer-graph vertex, and model a square adjacency cube \eqn{X} of size NxNxM with the following generative model :
 \deqn{ \pi \sim Dirichlet(\alpha)}
 \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 \deqn{ \theta_{kl} \sim Dirichlet(\beta)}
 \deqn{ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{M}(L_{ij},\theta_{kl})}
-With \eqn{L_{ij}=\sum_{m=1}^MX_{ijm}}. This class mainly store the prior parameters value \eqn{\alpha,\beta} of this generative model in the following slots:
+With \eqn{L_{ij}=\sum_{m=1}^MX_{ijm}}. These classes mainly store the prior parameters value \eqn{\alpha,\beta} of this generative model.
+The \code{MultSbm-class} must be used when fitting a simple MultSbm whereas the \code{MultSbmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
 }
 \section{Functions}{
 \itemize{
-\item \code{MultSbmPrior}: MultSbmPrior class constructor
-
 \item \code{MultSbm-class}: MultSbm class constructor
+
+\item \code{MultSbmPrior}: MultSbmPrior class constructor
 
 \item \code{MultSbm}: MultSbm class constructor
 }}
@@ -32,11 +45,11 @@ With \eqn{L_{ij}=\sum_{m=1}^MX_{ijm}}. This class mainly store the prior paramet
 \section{Slots}{
 
 \describe{
-\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter}
-
 \item{\code{beta}}{Dirichlet prior parameter over Multinomial links}
 
 \item{\code{type}}{define the type of networks (either "directed", "undirected" or "guess", default to "guess")}
+
+\item{\code{alpha}}{Dirichlet prior parameter over the cluster proportions (default to 1)}
 }}
 
 \examples{
@@ -52,11 +65,13 @@ Other DlvmModels:
 \code{\link{DcLbmPrior-class}},
 \code{\link{DcSbmPrior-class}},
 \code{\link{DiagGmmPrior-class}},
+\code{\link{DlvmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
 \code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
-\code{\link{SbmPrior-class}}
+\code{\link{SbmPrior-class}},
+\code{\link{greed}()}
 }
 \concept{DlvmModels}

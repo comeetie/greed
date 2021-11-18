@@ -28,13 +28,13 @@ Greed enables model based clustering of networks, matrices of count data and muc
 
 The following generative models are available currently : 
 
-* **Stochastic Block Models** (see ``?`sbm-class` `` and ``?`misssbm-class` ``),
-* **Degree Corrected Stochastic Block Models** (see ``?`dcsbm-class` ``),
-* **Multinomial Stochastic Block Models** (see ``?`multsbm-class` ``),
-* **Degree Corrected Latent Block Models** (see ``?`co_dcsbm-class` ``),
-* **Mixture of Multinomials** (see ``?`mm-class` ``), 
-* **Gaussian Mixture Model** (see ``?`gmm-class` `` and ``?`diaggmm-class` ``),
-* **Multivariate Mixture of Gaussian Regression Model** (see ``?`mvmreg-class` ``).
+* **Stochastic Block Models** (see ``?`Sbm-class` ),
+* **Degree Corrected Stochastic Block Models** (see ``?`DcSbm-class` ``),
+* **Multinomial Stochastic Block Models** (see ``?`MultSbm-class` ``),
+* **Mixture of Multinomials** (see ``?`MoR-class` ``), 
+* **Latent Class Analysis** (see ``?`Lca-class` ``), 
+* **Gaussian Mixture Model** (see ``?`Gmm-class` `` and ``?`DiagGmm-class` ``),
+* **Multivariate Mixture of Gaussian Regression Model** (see ``?`MoR-class` ``).
 
 
 With the Integrated Classification Likelihood, the parameters of the models are integrated out. This allows a natural regularization for complex models. Since the Integrated Classification Likelihood penalizes complex models it allows to automatically find a "natural" value for the number of clusters $K^*$, the user only needs to provide an initial guess as well as values for the prior parameters (sensible default values are used if no prior information is available). The optimization is performed by default thanks to a combination of a greedy local search and a genetic algorithm. Several optimization algorithms are available.
@@ -68,7 +68,7 @@ data(Jazz)
 sol=greed(Jazz)
 ```
 
-Here Jazz is a square sparse matrix and a ``?`dcsbm-class` `` model will be used by default. Some plotting function enable the exploration of the clustering results:
+Here Jazz is a square sparse matrix and a ``?`DcSbm-class` `` model will be used by default. Some plotting function enable the exploration of the clustering results:
 ```{r plot,message=FALSE,results="hide"}
 plot(sol)
 ```

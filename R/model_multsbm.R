@@ -10,8 +10,9 @@ NULL
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 #' \deqn{ \theta_{kl} \sim Dirichlet(\beta)}
 #' \deqn{ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{M}(L_{ij},\theta_{kl})}
-#' With \eqn{L_{ij}=\sum_{m=1}^MX_{ijm}}. This class mainly store the prior parameters value \eqn{\alpha,\beta} of this generative model in the following slots:
-#' @slot alpha Dirichlet over cluster proportions prior parameter
+#' With \eqn{L_{ij}=\sum_{m=1}^MX_{ijm}}. These classes mainly store the prior parameters value \eqn{\alpha,\beta} of this generative model.
+#' The \code{MultSbm-class} must be used when fitting a simple MultSbm whereas the \code{MultSbmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
+#' 
 #' @slot beta Dirichlet prior parameter over Multinomial links
 #' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
 #' @seealso \code{\link{MultSbmFit-class}}, \code{\link{MultSbmPath-class}}
@@ -40,7 +41,18 @@ setValidity("MultSbmPrior",function(object){
   TRUE
 })
 
+#' @describeIn MultSbmPrior-class MultSbm class constructor
+#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @export
+setClass("MultSbm",
+         contains = c("DlvmPrior", "MultSbmPrior")
+)
+
+
 #' @describeIn MultSbmPrior-class MultSbmPrior class constructor
+#' @param beta Dirichlet prior parameter over Multinomial links
+#' @param type define the type of networks (either "directed", "undirected" or "guess", default to "guess"), for undirected graphs the adjacency matrix is supposed to be symmetric.
+#' @return a \code{MultSbmPrior-class} object
 #' @examples
 #' MultSbmPrior()
 #' MultSbmPrior(type = "undirected")
@@ -49,12 +61,10 @@ MultSbmPrior <- function(beta = 1, type = "guess") {
   methods::new("MultSbmPrior", beta = beta, type = type)
 }
 
-#' @describeIn MultSbmPrior-class MultSbm class constructor
-setClass("MultSbm",
-  contains = c("DlvmPrior", "MultSbmPrior")
-)
 
 #' @describeIn MultSbmPrior-class MultSbm class constructor
+#' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @return a \code{MultSbm-class} object
 #' @examples
 #' MultSbm()
 #' MultSbm(type = "undirected")

@@ -5,7 +5,7 @@
 \alias{LcaPath-class}
 \title{Latent Class Analysis hierarchical fit results class}
 \description{
-An S4 class to represent a fit of a Latent Class Analysis model, extend \code{\link{icl_path-class}}.
+An S4 class to represent a fit of a Latent Class Analysis model, extend \code{\link{IclPath-class}}.
 }
 \section{Slots}{
 

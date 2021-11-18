@@ -32,57 +32,67 @@ reference:
     Main clustering functions 
   contents:
     - '`greed`'
-    - '`greed_cond`'
+- title: 'Generic methods to explore a hierarchical fit'
+  desc: >
+    Description of methods to extract coefficients and cut/plot a hierachical model fit.
+  contents:
+    - '`clustering,IclFit-method`'
+    - '`ICL,IclFit-method`'
+    - '`K,IclFit-method`'
+    - '`coef,IclFit-method`'
+    - '`cut,IclPath-method`'
+    - '`plot,IclPath-method`'
+
     
 - title: 'Fitting algorithms classes'
   desc: >
     Description of classes that describe the possible fitting algorithms.
   contents:
-    - '`hybrid-class`'
-    - '`multistarts-class`'
-    - '`genetic-class`'
-    - '`seed-class`'
+    - '`Hybrid-class`'
+    - '`Multistarts-class`'
+    - '`Genetic-class`'
+    - '`Seed-class`'
 - title: 'Supported generative models'
   desc: >
     Description of classes that corresponds to the different type of generative models that greed may use.
   contents:
-    - '`sbm-class`'
-    - '`misssbm-class`'
-    - '`dcsbm-class`'
-    - '`multsbm-class`'
-    - '`co_dcsbm-class`'
-    - '`mm-class`'
-    - '`gmm-class`'
-    - '`diaggmm-class`'
-    - '`mvmreg-class`'
+    - '`SbmPrior-class`'
+    - '`DcSbmPrior-class`'
+    - '`MultSbmPrior-class`'
+    - '`LcaPrior-class`'
+    - '`MoMPrior-class`'
+    - '`GmmPrior-class`'
+    - '`DiagGmmPrior-class`'
+    - '`MoRPrior-class`'
+    - '`MixedModelsPrior-class`'
 - title: 'Models fit classes'
   desc: >
     Description of classes that describe a model fit.
   contents:
-    - '`sbm_fit-class`'
-    - '`misssbm_fit-class`'
-    - '`dcsbm_fit-class`'
-    - '`multsbm_fit-class`'
-    - '`co_dcsbm_fit-class`'
-    - '`mm_fit-class`'
-    - '`gmm_fit-class`'
-    - '`diaggmm_fit-class`'
-    - '`mvmreg_fit-class`'
+    - '`SbmFit-class`'
+    - '`DcSbmFit-class`'
+    - '`MultSbmFit-class`'
+    - '`LcaFit-class`'
+    - '`MoMFit-class`'
+    - '`GmmFit-class`'
+    - '`DiagGmmFit-class`'
+    - '`MoRFit-class`'
+    - '`MixedModelsFit-class`'
 
 - title: 'Hierarchical models fit classes'
   desc: >
     Description of classes that describe a hierachical model fit.
   contents:
-    - '`sbm_path-class`'
-    - '`misssbm_path-class`'
-    - '`dcsbm_path-class`'
-    - '`multsbm_path-class`'
-    - '`co_dcsbm_path-class`'
-    - '`mm_path-class`'
-    - '`gmm_path-class`'
-    - '`diaggmm_path-class`'
-    - '`mvmreg_path-class`'
-
+    - '`SbmPath-class`'
+    - '`DcSbmPath-class`'
+    - '`MultSbmPath-class`'
+    - '`LcaPath-class`'
+    - '`MoMPath-class`'
+    - '`GmmPath-class`'
+    - '`DiagGmmPath-class`'
+    - '`MoRPath-class`'
+    - '`MixedModelsPath-class`'
+    
 - title: 'Methods to explore a hierarchical fit'
   desc: >
     Description of methods to extract coefficients and cut/plot a hierachical model fit.
@@ -121,4 +131,5 @@ reference:
     - '`Jazz_full`'
     - '`Xvlegislature`'
     - '`fashion`'
+    
 

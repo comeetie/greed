@@ -19,6 +19,3 @@ An S4 class to represent a hierarchical path of solution.
 \item{\code{logalpha}}{a numeric value which corresponds to the starting value of log(alpha).}
 }}
 
-\seealso{
-\code{\link{sbm_path-class}}, \code{\link{dcsbm_path-class}}, \code{\link{co_dcsbm_path-class}}
-}

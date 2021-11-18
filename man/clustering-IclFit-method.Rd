@@ -7,7 +7,7 @@
 \S4method{clustering}{IclFit}(fit)
 }
 \arguments{
-\item{x}{an \code{IclFit} solution}
+\item{fit}{an \code{IclFit} solution}
 }
 \value{
 an integer vector with cluster assignments. Zero indicates noise points.

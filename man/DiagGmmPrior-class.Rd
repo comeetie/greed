@@ -3,14 +3,30 @@
 \docType{class}
 \name{DiagGmmPrior-class}
 \alias{DiagGmmPrior-class}
-\alias{DiagGmmPrior}
 \alias{DiagGmm-class}
+\alias{DiagGmmPrior}
 \alias{DiagGmm}
 \title{Diagonal Gaussian Mixture Model Prior description class}
 \usage{
 DiagGmmPrior(tau = 0.01, kappa = 1, beta = NaN, mu = NaN)
 
 DiagGmm(alpha = 1, tau = 0.01, kappa = 1, beta = NaN, mu = NaN)
+}
+\arguments{
+\item{tau}{Prior parameter (inverse variance), (default 0.01)}
+
+\item{kappa}{Prior parameter (gamma shape), (default to 1)}
+
+\item{beta}{Prior parameter (gamma rate), (default to NaN, in this case beta will be estimated from data as 0.1 time the mean of X columns variances)}
+
+\item{mu}{Prior for the means (vector of size D), (default to NaN, in this case mu will be estimated from data as the mean of X)}
+
+\item{alpha}{Dirichlet prior parameter over the cluster proportions (default to 1)}
+}
+\value{
+a \code{DiagGmmPrior-class} object
+
+a \code{DiagGmm-class} object
 }
 \description{
 An S4 class to represent a multivariate diagonal Gaussian mixture model.
@@ -21,12 +37,14 @@ The model corresponds to the following generative model:
 \deqn{ \mu_k^{(d)} \sim \mathcal{N}(\mu,(\tau \lambda_k)^{-1})}
 \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,\lambda_{k}^{-1})}
 with \eqn{\mathcal{G}(\kappa,\beta)} the Gamma distribution with shape parameter \eqn{\kappa} and rate parameter \eqn{\beta}.
+These classes mainly store the prior parameters value (\eqn{\alpha,\tau,\kappa\beta,\mu}) of this generative model.
+The \code{DiagGmm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DiagGmmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
 }
 \section{Functions}{
 \itemize{
-\item \code{DiagGmmPrior}: DiagGmmPrior class constructor
-
 \item \code{DiagGmm-class}: DiagGmm class constructor
+
+\item \code{DiagGmmPrior}: DiagGmmPrior class constructor
 
 \item \code{DiagGmm}: DiagGmm class constructor
 }}
@@ -34,8 +52,6 @@ with \eqn{\mathcal{G}(\kappa,\beta)} the Gamma distribution with shape parameter
 \section{Slots}{
 
 \describe{
-\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
-
 \item{\code{tau}}{Prior parameter (inverse variance), (default 0.01)}
 
 \item{\code{kappa}}{Prior parameter (gamma shape), (default to 1)}
@@ -43,13 +59,15 @@ with \eqn{\mathcal{G}(\kappa,\beta)} the Gamma distribution with shape parameter
 \item{\code{beta}}{Prior parameter (gamma rate), (default to NaN, in this case beta will be estimated from data as 0.1 time the mean of X columns variances)}
 
 \item{\code{mu}}{Prior for the means (vector of size D), (default to NaN, in this case mu will be estimated from data as the mean of X)}
+
+\item{\code{alpha}}{Dirichlet prior parameter over the cluster proportions (default to 1)}
 }}
 
 \examples{
 DiagGmmPrior()
 DiagGmmPrior(tau = 0.1)
 DiagGmm()
-DiagGmm(N0 = 100)
+DiagGmm(tau=0.1)
 }
 \references{
 Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5. #'
@@ -58,12 +76,14 @@ Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the numbe
 Other DlvmModels: 
 \code{\link{DcLbmPrior-class}},
 \code{\link{DcSbmPrior-class}},
+\code{\link{DlvmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
 \code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{MultSbmPrior-class}},
-\code{\link{SbmPrior-class}}
+\code{\link{SbmPrior-class}},
+\code{\link{greed}()}
 }
 \concept{DlvmModels}

@@ -133,7 +133,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Compute the entropy of a discrete sample</h1>
-    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/misc.R'><code>R/misc.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/tools_misc.R'><code>R/tools_misc.R</code></a></small>
     <div class="hidden name"><code>H.Rd</code></div>
     </div>
 
@@ -157,9 +157,10 @@
     <p>the entropy of the sample</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>cl</span> <span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>500</span>,replace<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'>H</span><span class='op'>(</span><span class='va'>cl</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.6930192</div></pre>
+    <pre class="examples"><span class='r-in'><span class='va'>cl</span> <span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>500</span>,replace<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>H</span><span class='op'>(</span><span class='va'>cl</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.6930192</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

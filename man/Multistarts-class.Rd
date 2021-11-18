@@ -8,6 +8,12 @@
 \usage{
 Multistarts(nb_start = 10)
 }
+\arguments{
+\item{nb_start}{number of random starts (default to 10)}
+}
+\value{
+a \code{Multistarts-class} object
+}
 \description{
 An S4 class to represent a greedy algorithm  with multiple start (extends \code{\link{Alg-class}} class).
 }

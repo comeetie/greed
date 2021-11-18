@@ -14,11 +14,21 @@ An S4 class to represent an abstract generative model
 \section{Slots}{
 
 \describe{
-\item{\code{name}}{a character vector}
-
 \item{\code{alpha}}{a numeric vector of length 1 which define the parameters of the Dirichlet over the cluster proportions (default to 1)}
 }}
 
 \seealso{
-\code{\link{Lca-class}}, \code{\link{Gmm-class}}, \code{\link{Sbm-class}}, \code{\link{DcSbm-class}},...
+Other DlvmModels: 
+\code{\link{DcLbmPrior-class}},
+\code{\link{DcSbmPrior-class}},
+\code{\link{DiagGmmPrior-class}},
+\code{\link{GmmPrior-class}},
+\code{\link{LcaPrior-class}},
+\code{\link{MixedModels-class}},
+\code{\link{MoMPrior-class}},
+\code{\link{MoRPrior-class}},
+\code{\link{MultSbmPrior-class}},
+\code{\link{SbmPrior-class}},
+\code{\link{greed}()}
 }
+\concept{DlvmModels}

@@ -6,11 +6,10 @@ NULL
 #' @title Mixed Models classes
 #'
 #' @description
-#' An S4 class to represent a mixed clustering models.
-#' Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :
-#' @slot alpha Dirichlet over cluster proportions prior parameter (default to 10)
-#' @slot p Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)
-#' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
+#' An S4 class to represent a mixed clustering models, where sevral models are used to model different datasets. A conditional independence assumption between the view knowing the cluster is made.
+#' @slot models a named list of DlvmModels Emission prior such as (\code{\link{GmmPrior}},\code{\link{LcaPrior}},\code{\link{SbmPrior}},...)
+#' @details
+#' The filed name in the models list must match the name of the list use to provide the datasets to cluster together.
 #' @family DlvmModels
 #' @export
 setClass("MixedModels",
@@ -21,8 +20,12 @@ setClass("MixedModels",
 
 
 #' @describeIn MixedModels-class MixedModels class constructor
+#' @param models a named list of DlvmPrior's object
+#' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @return a \code{MixedModels-class} object
+#' @alpha
 #' @examples
-#' MixedModels(models = list(continuous=Gmm(),discrete=Lca()))
+#' MixedModels(models = list(continuous=GmmPrior(),discrete=LcaPrior()))
 #' @export
 MixedModels <- function(alpha = 1, models) {
   methods::new("MixedModels", alpha = alpha,models=models)
@@ -167,15 +170,20 @@ setMethod(
     data_prep
   }
 )
-
-setGeneric("extractSubModel", function(sol, sub_model_name, ...) standardGeneric("extractSubModel"))
+#' @title extract a part of a \code{\link{MixedModelsPath-class}} object
+#'
+#' @param sol an \code{\link{MixedModelsPath-class}} object
+#' @param sub_model_name a string which specify the part of the model to extract
+#' @return a \code{\link{IclFit-class}} object of the relevant class
+#' @export
+setGeneric("extractSubModel", function(sol, sub_model_name) standardGeneric("extractSubModel"))
 
 
 #' @title extract a part of a \code{\link{MixedModelsPath-class}} object
 #'
-#' @param x an \code{\link{MixedModelsPath-class}} object
+#' @param sol an \code{\link{MixedModelsPath-class}} object
 #' @param sub_model_name a string which specify the part of the model to extract
-#' @return a \code{\link{IclFit}} object of the relevant class
+#' @return a \code{\link{IclFit-class}} object of the relevant class
 #' @export
 setMethod(
   f = "extractSubModel",
@@ -183,9 +191,9 @@ setMethod(
   definition = function(sol, sub_model_name) {
     model <- sol@model@models[[sub_model_name]]
     model_type <- gsub("Prior", "", as.character(class(model)))
-    model <- as(model, model_type)
+    model <- methods::as(model, model_type)
     model@alpha <- sol@model@alpha
-    sol <- as(as(sol, "IclFit"), paste0(model_type, "Fit"))
+    sol <- methods::as(methods::as(sol, "IclFit"), paste0(model_type, "Fit"))
     sol@model <- model
     sol@obs_stats[[model_type]] <- sol@obs_stats[[sub_model_name]]
     sol@obs_stats <- sol@obs_stats[c("counts", model_type)]

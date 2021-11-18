@@ -10,7 +10,7 @@ An S4 class to represent a hierarchical fit of a gaussian mixture model, extend 
 \section{Slots}{
 
 \describe{
-\item{\code{model}}{a \code{\link{Gmm-class}} object to store the model fitted}
+\item{\code{model}}{a \code{\link{GmmPrior-class}} object to store the model fitted}
 
 \item{\code{name}}{generative model name}
 

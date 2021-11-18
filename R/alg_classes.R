@@ -13,13 +13,8 @@ NULL
 #'
 #' @description
 #' An S4 class to represent an abstract optimization algorithm.
-#' @slot name algorithm name
 #' @export
 setClass("Alg")
-
-
-
-
 
 #' @title Greedy algorithm with multiple start class
 #'
@@ -34,6 +29,8 @@ setClass("Multistarts",
 )
 
 #' @describeIn Multistarts-class Multistarts algorithm class constructor
+#' @param nb_start number of random starts (default to 10)
+#' @return a \code{Multistarts-class} object
 #' @examples
 #' Multistarts()
 #' Multistarts(15)
@@ -54,11 +51,12 @@ setClass("Seed",
 )
 
 #' @describeIn Seed-class Seed algorithm class constructor
+#' @return a \code{Seed-class} object
 #' @examples
 #' Seed()
 #' @export
 Seed <- function() {
-  methods:::new("Seed")
+  methods::new("Seed")
 }
 
 
@@ -79,6 +77,11 @@ setClass("Hybrid",
 )
 
 #' @describeIn Hybrid-class Hybrid algorithm class constructor
+#' @param pop_size size of the solutions populations (default to 20)
+#' @param nb_max_gen maximal number of generation to produce (default to 10)
+#' @param prob_mutation mutation probability (default to 0.25)
+#' @param Kmax maximum number of clusters (default to 100)
+#' @return a \code{Hybrid-class} object
 #' @examples
 #' Hybrid()
 #' Hybrid(pop_size = 100)
@@ -105,6 +108,11 @@ setClass("Genetic",
 )
 
 #' @describeIn Genetic-class Genetic algorithm class constructor
+#' @param pop_size size of the solutions populations (default to 10)
+#' @param nb_max_gen maximal number of generation to produce (default to 4)
+#' @param prob_mutation probability of mutation (default to 0.25)
+#' @param sel_frac fraction of best solutions selected for crossing  (default to 0.75)
+#' @return a \code{Genetic-class} object
 #' @examples
 #' Genetic()
 #' Genetic(pop_size = 500)
@@ -114,12 +122,18 @@ Genetic <- function(pop_size = 100, nb_max_gen = 20, prob_mutation = 0.25, sel_f
 }
 
 
+#' @title Generic method to extract the clustering results from an \code{\link{IclFit-class}} object
+#'
+#' @description This method take a \code{\link{IclFit-class}} object and return an integer vector with the cluster assignments that were found.
+#' @param fit an \code{IclFit} solution
+#' @return an integer vector with cluster assignments. Zero indicates noise points.
+#' @export
 setGeneric("clustering", function(fit) standardGeneric("clustering"))
 
 #' @title Method to extract the clustering results from an \code{\link{IclFit-class}} object
 #'
 #' @description This method take a \code{\link{IclFit-class}} object and return an integer vector with the cluster assignments that were found.
-#' @param x an \code{IclFit} solution
+#' @param fit an \code{IclFit} solution
 #' @return an integer vector with cluster assignments. Zero indicates noise points.
 #' @export
 setMethod(
@@ -128,13 +142,19 @@ setMethod(
   definition = function(fit){
     as.integer(fit@cl)    
 })
-  
+
+#' @title Genric method to extract the ICL value from an \code{\link{IclFit-class}} object
+#'
+#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score. 
+#' @param fit an \code{IclFit} solution
+#' @return The ICL value achieved
+#' @export
 setGeneric("ICL", function(fit) standardGeneric("ICL"))
 
 #' @title Method to extract the ICL value from an \code{\link{IclFit-class}} object
 #'
 #' @description This method take a \code{\link{IclFit-class}} object and return its ICL score. 
-#' @param x an \code{IclFit} solution
+#' @param fit an \code{IclFit} solution
 #' @return The ICL value achieved
 #' @export
 setMethod(
@@ -144,13 +164,17 @@ setMethod(
     fit@icl
   })
 
-
+#' @title Generic method to extract the number of clusters found from an \code{\link{IclFit-class}} object
+#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score. 
+#' @param fit an \code{IclFit} solution
+#' @return The number of clusters 
+#' @export
 setGeneric("K", function(fit) standardGeneric("K"))
 
 #' @title Method to extract the number of clusters found from an \code{\link{IclFit-class}} object
 #'
 #' @description This method take a \code{\link{IclFit-class}} object and return its ICL score. 
-#' @param x an \code{IclFit} solution
+#' @param fit an \code{IclFit} solution
 #' @return The number of clusters 
 #' @export
 setMethod(
@@ -211,12 +235,12 @@ setMethod(
 #'
 #' @param X data to cluster either a data.frame, a matrix, an array or a \code{\link{dgCMatrix-class}}
 #' @param K initial number of cluster
-#' @param model a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}}, \code{\link{lca-class}}, \code{\link{gmm-class}}, \code{\link{diaggmm-class}} or \code{\link{mvmreg-class}}
-#' @param Alg an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}
+#' @param model a generative model to fit \code{\link{DlvmPrior-class}}
+#' @param alg an optimization algorithm of class \code{\link{Alg-class}} such as \code{\link{Hybrid-class}} (default), \code{\link{Multistarts-class}}, \code{\link{Seed-class}} or \code{\link{Genetic-class}}
 #' @param verbose Boolean for verbose mode
 #' @return an \code{\link{IclPath-class}} object
 #' @export
-greed <- function(X, K = 20, model = find_model(X), alg = Hybrid(), verbose = FALSE) {
+greed <- function(X, model = find_model(X), K = 20,  alg = Hybrid(), verbose = FALSE) {
   data <- preprocess(model, X)
   modelname <- toupper(class(model))
   if ("type" %in% methods::slotNames(model)) {
@@ -333,14 +357,7 @@ setMethod(
 )
 
 setGeneric("preprocess", function(model, ...) standardGeneric("preprocess"))
-# 
-# setMethod(
-#   f = "preprocess",
-#   signature = signature("DlvmPrior"),
-#   definition = function(model, data) {
-#     list(X = as.sparse(data), N = nrow(data))
-#   }
-# )
+
 
 
 

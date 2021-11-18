@@ -13,7 +13,8 @@ NULL
 #' \deqn{ \mu_k^{(d)} \sim \mathcal{N}(\mu,(\tau \lambda_k)^{-1})}
 #' \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,\lambda_{k}^{-1})}
 #' with \eqn{\mathcal{G}(\kappa,\beta)} the Gamma distribution with shape parameter \eqn{\kappa} and rate parameter \eqn{\beta}.
-#' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
+#' These classes mainly store the prior parameters value (\eqn{\alpha,\tau,\kappa\beta,\mu}) of this generative model.
+#' The \code{DiagGmm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DiagGmmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
 #' @slot tau Prior parameter (inverse variance), (default 0.01)
 #' @slot kappa Prior parameter (gamma shape), (default to 1)
 #' @slot beta Prior parameter (gamma rate), (default to NaN, in this case beta will be estimated from data as 0.1 time the mean of X columns variances)
@@ -58,7 +59,20 @@ setValidity("DiagGmmPrior",function(object){
   TRUE
 })
 
+#' @describeIn DiagGmmPrior-class DiagGmm class constructor
+#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @export
+setClass("DiagGmm",
+         contains = c("DlvmPrior", "DiagGmmPrior")
+)
+
+
 #' @describeIn DiagGmmPrior-class DiagGmmPrior class constructor
+#' @param tau Prior parameter (inverse variance), (default 0.01)
+#' @param kappa Prior parameter (gamma shape), (default to 1)
+#' @param beta Prior parameter (gamma rate), (default to NaN, in this case beta will be estimated from data as 0.1 time the mean of X columns variances)
+#' @param mu Prior for the means (vector of size D), (default to NaN, in this case mu will be estimated from data as the mean of X)
+#' @return a \code{DiagGmmPrior-class} object
 #' @examples
 #' DiagGmmPrior()
 #' DiagGmmPrior(tau = 0.1)
@@ -67,15 +81,14 @@ DiagGmmPrior <- function(tau = 0.01, kappa = 1, beta = NaN, mu = NaN) {
   methods::new("DiagGmmPrior", tau = tau, kappa = kappa, beta = beta, mu = as.matrix(mu))
 }
 
-#' @describeIn DiagGmmPrior-class DiagGmm class constructor
-setClass("DiagGmm",
-  contains = c("DlvmPrior", "DiagGmmPrior")
-)
 
 #' @describeIn DiagGmmPrior-class DiagGmm class constructor
+#' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @return a \code{DiagGmm-class} object
+#' @export
 #' @examples
 #' DiagGmm()
-#' DiagGmm(N0 = 100)
+#' DiagGmm(tau=0.1)
 #' @export
 DiagGmm <- function(alpha = 1, tau = 0.01, kappa = 1, beta = NaN, mu = NaN) {
   methods::new("DiagGmm", alpha = alpha, tau = tau, kappa = kappa, beta = beta, mu = as.matrix(mu))
@@ -314,7 +327,7 @@ setMethod(
   signature = signature("DiagGmm", "list"),
   definition = function(model, obs_stats, data) {
     if (!is.null(obs_stats$Gmm)) {
-      obs_stats$DiagGmm <- callNextMethod(model, obs_stats$DiagGmm, data)
+      obs_stats$DiagGmm <- methods::callNextMethod(model, obs_stats$DiagGmm, data)
     }
     obs_stats
   }

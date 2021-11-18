@@ -1,8 +1,6 @@
 #' @include models_classes.R fit_classes.R
 NULL
 
-
-
 #' @title Degree Corrected Stochastic Block Model Prior class
 #'
 #' @description
@@ -14,8 +12,9 @@ NULL
 #' \deqn{ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)}
 #' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)}
 #' The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity.
-#' These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i:z_{ik}=1}\gamma_i^+=1}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
-#' @slot alpha Dirichlet over cluster proportions prior parameter (default to 10)
+#' These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i:z_{ik}=1}\gamma_i^+=1}. 
+#' These classes mainly store the prior parameters value \eqn{\alpha,p} of this generative model.
+#' The \code{DcSbm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DcSbmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
 #' @slot p Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)
 #' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
 #' @family DlvmModels
@@ -37,7 +36,19 @@ setValidity("DcSbmPrior",function(object){
   }
   TRUE
 })
+
+#' @describeIn DcSbmPrior-class DcSbm class constructor
+#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @export
+setClass("DcSbm",
+         contains = c("DlvmPrior", "DcSbmPrior")
+)
+
+
 #' @describeIn DcSbmPrior-class DcSbmPrior class constructor
+#' @param p Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)
+#' @param type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
+#' @return a \code{DcSbmPrior-class} object
 #' @examples
 #' DcSbmPrior()
 #' DcSbmPrior(type = "undirected")
@@ -46,12 +57,10 @@ DcSbmPrior <- function(p = NaN, type = "guess") {
   methods::new("DcSbmPrior", p = p, type = type)
 }
 
-#' @describeIn DcSbmPrior-class DcSbm class constructor
-setClass("DcSbm",
-  contains = c("DlvmPrior", "DcSbmPrior")
-)
 
 #' @describeIn DcSbmPrior-class DcSbm class constructor
+#' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @return a \code{DcSbm-class} object
 #' @examples
 #' DcSbm()
 #' DcSbm(type = "undirected")

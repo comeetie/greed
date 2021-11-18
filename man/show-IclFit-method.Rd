@@ -7,7 +7,7 @@
 \S4method{show}{IclFit}(object)
 }
 \arguments{
-\item{x}{\code{\link{IclPath-class}} object to print}
+\item{object}{\code{\link{IclPath-class}} object to print}
 }
 \value{
 None (invisible NULL). No return value, called for side effects.

@@ -7,12 +7,12 @@
 \S4method{extractSubModel}{MixedModelsPath,character}(sol, sub_model_name)
 }
 \arguments{
-\item{sub_model_name}{a string which specify the part of the model to extract}
+\item{sol}{an \code{\link{MixedModelsPath-class}} object}
 
-\item{x}{an \code{\link{MixedModelsPath-class}} object}
+\item{sub_model_name}{a string which specify the part of the model to extract}
 }
 \value{
-a \code{\link{IclFit}} object of the relevant class
+a \code{\link{IclFit-class}} object of the relevant class
 }
 \description{
 extract a part of a \code{\link{MixedModelsPath-class}} object

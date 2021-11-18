@@ -3,7 +3,7 @@ NULL
 
 #' @title Degree Corrected Latent Block Model for bipartite graph class
 #'
-#' @description An S4 class to represent a degree corrected stochastic block model for co_clustering of bipartite graph, extends \code{\link{icl_model-class}} class.
+#' @description An S4 class to represent a degree corrected stochastic block model for co_clustering of bipartite graph.
 #' Such model can be used to cluster graph vertex, and model a bipartite graph adjacency matrix \eqn{X} with the following generative model :
 #' \deqn{ \pi \sim Dirichlet(\alpha)}
 #' \deqn{ Z_i^r  \sim \mathcal{M}(1,\pi^r)}
@@ -13,8 +13,9 @@ NULL
 #' \deqn{ \gamma_i^c\sim \mathcal{U}(S_l)}
 #' \deqn{ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)}
 #' The individuals parameters \eqn{\gamma_i^r,\gamma_j^c} allow to take into account the node degree heterogeneity.
-#' These parameters have uniform priors over simplex \eqn{S_k}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
-#' @slot alpha Dirichlet parameters for the prior over clusters proportions (default to 1)
+#' These parameters have uniform priors over simplex \eqn{S_k}. 
+#' These classes mainly store the prior parameters value \eqn{\alpha,p} of this generative model.
+#' The \code{DcLbm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DcLbmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
 #' @slot p Exponential prior parameter (default to Nan, in this case p will be estimated from data as the average intensities of X)
 #' @family DlvmModels
 #' @export
@@ -23,9 +24,16 @@ setClass("DcLbmPrior",
   prototype(p = NaN)
 )
 
-
+#' @describeIn DcLbmPrior-class DcLbm class constructor
+#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @export
+setClass("DcLbm",
+         contains = c("DlvmPrior", "DcLbmPrior")
+)
 
 #' @describeIn DcLbmPrior-class DcLbmPrior class constructor
+#' @param p Exponential prior parameter (default to Nan, in this case p will be estimated from data as the average intensities of X)
+#' @return a \code{DcLbmPrior-class}
 #' @examples
 #' DcLbmPrior()
 #' DcLbmPrior(p = 0.7)
@@ -34,12 +42,11 @@ DcLbmPrior <- function(p = NaN) {
   methods::new("DcLbmPrior", p = p)
 }
 
-#' @describeIn DcLbmPrior-class DcLbm class constructor
-setClass("DcLbm",
-  contains = c("DlvmPrior", "DcLbmPrior")
-)
+
 
 #' @describeIn DcLbmPrior-class DcLbm class constructor
+#' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @return a \code{DcLbm-class} object
 #' @examples
 #' DcLbm()
 #' DcLbm(p = 0.7)
@@ -136,7 +143,7 @@ setClass("DcLbmPath", slots = list(ggtreerow = "data.frame", ggtreecol = "data.f
 #' @description this method take a \code{\link{DcLbmPath-class}} and an integer K and return the solution from the path with K clusters
 #' @param x A an \code{\link{DcLbmPath-class}} solution
 #' @param K Desired number of cluster
-#' @return an icl_path object with the desired number of cluster
+#' @return an \code{\link{IclPath-class}} object with the desired number of cluster
 #' @export
 setMethod(
   f = "cut",

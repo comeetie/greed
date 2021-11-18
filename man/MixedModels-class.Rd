@@ -8,9 +8,19 @@
 \usage{
 MixedModels(alpha = 1, models)
 }
+\arguments{
+\item{alpha}{Dirichlet prior parameter over the cluster proportions (default to 1)}
+
+\item{models}{a named list of DlvmPrior's object}
+}
+\value{
+a \code{MixedModels-class} object
+}
 \description{
-An S4 class to represent a mixed clustering models.
-Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :
+An S4 class to represent a mixed clustering models, where sevral models are used to model different datasets. A conditional independence assumption between the view knowing the cluster is made.
+}
+\details{
+The filed name in the models list must match the name of the list use to provide the datasets to cluster together.
 }
 \section{Functions}{
 \itemize{
@@ -20,26 +30,24 @@ Such model can be used to cluster graph vertex, and model a square adjacency mat
 \section{Slots}{
 
 \describe{
-\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 10)}
-
-\item{\code{p}}{Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)}
-
-\item{\code{type}}{define the type of networks (either "directed", "undirected" or "guess", default to "guess")}
+\item{\code{models}}{a named list of DlvmModels Emission prior such as (\code{\link{GmmPrior}},\code{\link{LcaPrior}},\code{\link{SbmPrior}},...)}
 }}
 
 \examples{
-MixedModels(models = list(continuous=Gmm(),discrete=Lca()))
+MixedModels(models = list(continuous=GmmPrior(),discrete=LcaPrior()))
 }
 \seealso{
 Other DlvmModels: 
 \code{\link{DcLbmPrior-class}},
 \code{\link{DcSbmPrior-class}},
 \code{\link{DiagGmmPrior-class}},
+\code{\link{DlvmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{MultSbmPrior-class}},
-\code{\link{SbmPrior-class}}
+\code{\link{SbmPrior-class}},
+\code{\link{greed}()}
 }
 \concept{DlvmModels}

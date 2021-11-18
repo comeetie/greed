@@ -5,13 +5,14 @@ NULL
 #' 
 #' @description 
 #' An S4 class to represent a Latent Class Analysis model
-#' Such model can be used to cluster a data matrix \eqn{X} with the following generative model :  
+#' Such model can be used to cluster a data.frame \eqn{X} with several columns of factors with the following generative model :  
 #' \deqn{\pi&\sim \textrm{Dirichlet}(\alpha),}
 #' \deqn{\forall k, \forall j, \quad \theta_{kj} &\sim \textrm{Dirichlet}_{d_j}(\beta),}
 #' \deqn{Z_i&\sim \mathcal{M}_K(1,\pi),}
 #' \deqn{\forall j=1, \ldots, p, \quad X_{ij}|Z_{ik}=1 &\sim \mathcal{M}_{d_j}(1, \theta_{kj}),}
-#' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
-#' @slot beta Dirichlet over vocabulary prior parameter (default to 1)
+#' These classes mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model.
+#' The \code{Lca-class} must be used when fitting a simple Latent Class Analysis whereas the \code{LcaPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
+#' @slot beta Dirichlet prior parameter for all the categorical feature (default to 1)
 #' @family DlvmModels
 #' @export
 setClass("LcaPrior",
@@ -32,9 +33,17 @@ setValidity("LcaPrior",function(object){
   TRUE
 })
 
+#' @describeIn LcaPrior-class Lca class constructor
+#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @export
+setClass("Lca",
+         contains = c("DlvmPrior", "LcaPrior")
+)
 
 
 #' @describeIn LcaPrior-class LcaPrior class constructor
+#' @param beta Dirichlet prior parameter for all the categorical feature (default to 1)
+#' @return a \code{LcaPrior-class} object
 #' @examples
 #' LcaPrior()
 #' LcaPrior(beta = 0.5)
@@ -43,12 +52,10 @@ LcaPrior <- function(beta = 1) {
   methods::new("LcaPrior", beta = 1)
 }
 
-#' @describeIn LcaPrior-class Lca class constructor
-setClass("Lca",
-         contains = c("DlvmPrior", "LcaPrior")
-)
 
 #' @describeIn LcaPrior-class Lca class constructor
+#' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @return a \code{Lca-class} object
 #' @examples
 #' Lca()
 #' Lca(beta = 0.5)
@@ -83,7 +90,7 @@ setClass("LcaFit",slots = list(model="Lca"),contains="IclFit")
 #' @title Latent Class Analysis hierarchical fit results class
 #' 
 #' 
-#' @description An S4 class to represent a fit of a Latent Class Analysis model, extend \code{\link{icl_path-class}}.
+#' @description An S4 class to represent a fit of a Latent Class Analysis model, extend \code{\link{IclPath-class}}.
 #' @slot model a \code{\link{Lca-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
@@ -165,7 +172,7 @@ setMethod(f = "plot",
 
 #' @title Extract parameters from an \code{\link{LcaFit-class}} object
 #' 
-#' @param object a \code{\link{mm_fit-class}}
+#' @param object a \code{\link{LcaFit-class}}
 #' @return a list with the model parameters estimates (MAP), the fields are:
 #' \itemize{
 #' \item \code{'pi'}: cluster proportions 
@@ -266,7 +273,7 @@ setMethod(
   signature = signature("Lca", "list"),
   definition = function(model, obs_stats, data) {
     if (!is.null(obs_stats$Lca)) {
-      obs_stats$Lca <- callNextMethod(model, obs_stats$Lca, data)
+      obs_stats$Lca <- methods::callNextMethod(model, obs_stats$Lca, data)
     }
     obs_stats
   }

@@ -1,8 +1,11 @@
-pandoc: 2.7.3
+pandoc: 2.11.4
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   GMM: GMM.html
+  LCA: LCA.html
+  Latent-class-analysis: Latent-class-analysis.html
+  Mixed-data-clustering: Mixed-data-clustering.html
   graph-clustering-with-sbm: graph-clustering-with-sbm.html
-last_built: 2021-05-11T10:20Z
+last_built: 2021-11-18T16:39Z
 

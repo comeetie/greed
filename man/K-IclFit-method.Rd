@@ -7,7 +7,7 @@
 \S4method{K}{IclFit}(fit)
 }
 \arguments{
-\item{x}{an \code{IclFit} solution}
+\item{fit}{an \code{IclFit} solution}
 }
 \value{
 The number of clusters

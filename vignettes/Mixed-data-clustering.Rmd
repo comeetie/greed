@@ -1,5 +1,5 @@
 ---
-title: "Mixed Data CLustering"
+title: "MixedData"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{MixedData}
@@ -38,7 +38,7 @@ X_{i}^{discr}|Z_{ik}=1 &\sim \mathcal{C}(\pi_k)\\
 \end{align}
 $$
 
-```{r fifa-mmm,cache=TRUE}
+```{r fifa-mmm}
 data(Fifa)
 X=Fifa[,-c(1,2)] %>% filter(value_eur>1000000) %>% select(-value_eur,-GK)
 library(future)

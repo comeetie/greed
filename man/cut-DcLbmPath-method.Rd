@@ -12,7 +12,7 @@
 \item{K}{Desired number of cluster}
 }
 \value{
-an icl_path object with the desired number of cluster
+an \code{\link{IclPath-class}} object with the desired number of cluster
 }
 \description{
 this method take a \code{\link{DcLbmPath-class}} and an integer K and return the solution from the path with K clusters

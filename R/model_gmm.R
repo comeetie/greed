@@ -5,15 +5,16 @@ NULL
 #' @title Gaussian Mixture Model Prior description class
 #'
 #' @description
-#' An S4 class to represent a multivariate Gaussian mixture  model
+#' An S4 class to represent a multivariate Gaussian mixture model. 
 #' The model corresponds to the following generative model:
 #' \deqn{ \pi \sim Dirichlet(\alpha)}
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 #' \deqn{ V_k \sim \mathcal{W}(\varepsilon^{-1},n_0)}
 #' \deqn{ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})}
 #' \deqn{ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})}
-#' with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Whishart distribution.
-#' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1, only for Gmm)
+#' with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Whishart distribution. 
+#' The \code{Gmm-class} must be used when fitting a simple Gmm whereas the \code{GmmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
+#' 
 #' @slot tau Prior parameter (inverse variance) default 0.01
 #' @slot N0 Prior parameter (pseudo count) should be > number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)
 #' @slot epsilon Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)
@@ -43,8 +44,19 @@ setValidity("GmmPrior", function(object) {
   TRUE
 })
 
+#' @describeIn GmmPrior-class Gmm class 
+#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @export
+setClass("Gmm",
+         contains = c("GmmPrior","DlvmPrior")
+)
 
 #' @describeIn GmmPrior-class GmmPrior class constructor
+#' @param tau Prior parameter (inverse variance) default 0.01
+#' @param N0 Prior parameter (pseudo count) should be > number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)
+#' @param epsilon Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)
+#' @param mu Prior parameters for the means (vector of size D), (default to NaN, in this case mu will be estimated from the data and will be equal to the mean of X)
+#' @return a \code{GmmPrior-class} object
 #' @examples
 #' GmmPrior()
 #' GmmPrior(tau = 0.1)
@@ -53,16 +65,14 @@ GmmPrior <- function(tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN) {
   methods::new("GmmPrior", tau = tau, N0 = N0, mu = as.matrix(mu), epsilon = as.matrix(epsilon))
 }
 
-setClass("Gmm",
-  contains = c("DlvmPrior", "GmmPrior")
-)
-
 #' @describeIn GmmPrior-class Gmm class constructor
+#' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @return a \code{Gmm-class} object
 #' @examples
 #' Gmm()
 #' Gmm(N0 = 100)
 #' @export
-Gmm <- function(alpha = 1, tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN) {
+Gmm <- function(tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN,alpha = 1) {
   methods::new("Gmm", alpha = alpha, tau = tau, N0 = N0, mu = as.matrix(mu), epsilon = as.matrix(epsilon))
 }
 
@@ -70,7 +80,7 @@ Gmm <- function(alpha = 1, tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN) {
 #' @title Gaussian mixture model fit results class
 #'
 #' @description An S4 class to represent a fit of a multivariate mixture of regression model, extend \code{\link{IclFit-class}}.
-#' @slot model a \code{\link{gmm-class}} object to store the model fitted
+#' @slot model a \code{\link{GmmPrior-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
@@ -90,7 +100,7 @@ setClass("GmmFit", slots = list(model = "Gmm"), contains = "IclFit")
 #'
 #'
 #' @description An S4 class to represent a hierarchical fit of a gaussian mixture model, extend \code{\link{IclPath-class}}.
-#' @slot model a \code{\link{Gmm-class}} object to store the model fitted
+#' @slot model a \code{\link{GmmPrior-class}} object to store the model fitted
 #' @slot name generative model name
 #' @slot icl icl value of the fitted model
 #' @slot K number of extracted clusters over row and columns
@@ -308,7 +318,7 @@ setMethod(
   signature = signature("Gmm", "list"),
   definition = function(model, obs_stats, data) {
     if (!is.null(obs_stats$Gmm)) {
-      obs_stats$Gmm <- callNextMethod(model, obs_stats$Gmm, data)
+      obs_stats$Gmm <- methods::callNextMethod(model, obs_stats$Gmm, data)
     }
     obs_stats
   }

@@ -10,7 +10,9 @@ NULL
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 #' \deqn{ \theta_{kl} \sim Beta(a_0,b_0)}
 #' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\theta_{kl})}
-#' This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model in the following slots:
+#' These classes mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model. 
+#' The \code{Sbm-class} must be used when fitting a simple Sbm whereas the \code{SbmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
+#' 
 #' @slot a0 Beta prior parameter over links (default to 1)
 #' @slot b0 Beta prior parameter over no-links (default to 1)
 #' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess"), for undirected graphs the adjacency matrix is supposed to be symmetric.
@@ -47,8 +49,18 @@ setValidity("SbmPrior",function(object){
   TRUE
 })
 
+#' @describeIn SbmPrior-class Sbm class constructor
+#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @export
+setClass("Sbm",
+         contains = c("DlvmPrior", "SbmPrior")
+)
 
 #' @describeIn SbmPrior-class SbmPrior class constructor
+#' @param a0 Beta prior parameter over links (default to 1)
+#' @param b0 Beta prior parameter over no-links (default to 1)
+#' @param type define the type of networks (either "directed", "undirected" or "guess", default to "guess"), for undirected graphs the adjacency matrix is supposed to be symmetric.
+#' @return a \code{SbmPrior-class} object
 #' @examples
 #' SbmPrior()
 #' SbmPrior(type = "undirected")
@@ -57,12 +69,11 @@ SbmPrior <- function(a0 = 1, b0 = 1, type = "guess") {
   methods::new("SbmPrior", a0 = a0, b0 = b0, type = type)
 }
 
-#' @describeIn SbmPrior-class Sbm class constructor
-setClass("Sbm",
-  contains = c("DlvmPrior", "SbmPrior")
-)
+
 
 #' @describeIn SbmPrior-class Sbm class constructor
+#' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @return a \code{Sbm-class} object
 #' @examples
 #' Sbm()
 #' Sbm(type = "undirected")
@@ -209,13 +220,6 @@ setMethod(
 )
 
 
-extractParams  <- function(model,obs_stats,counts){
-  thetakl <- (obs_stats$x_counts + model@a0 - 1) / (t(t(counts)) %*% counts + model@a0 + model@b0 - 2)
-  if (sol@model@type == "undirected") {
-    diag(thetakl) <- (diag(obs_stats$x_counts) / 2 + model@a0 - 1) / (counts * (counts - 1) / 2 + model@a0 + model@b0 - 2)
-  }
-  list(thetakl = thetakl)
-}
 
 
 reorder_sbm <- function(obs_stats, or) {

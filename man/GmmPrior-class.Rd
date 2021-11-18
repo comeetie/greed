@@ -3,16 +3,33 @@
 \docType{class}
 \name{GmmPrior-class}
 \alias{GmmPrior-class}
+\alias{Gmm-class}
 \alias{GmmPrior}
 \alias{Gmm}
 \title{Gaussian Mixture Model Prior description class}
 \usage{
 GmmPrior(tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN)
 
-Gmm(alpha = 1, tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN)
+Gmm(tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN, alpha = 1)
+}
+\arguments{
+\item{tau}{Prior parameter (inverse variance) default 0.01}
+
+\item{N0}{Prior parameter (pseudo count) should be > number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)}
+
+\item{mu}{Prior parameters for the means (vector of size D), (default to NaN, in this case mu will be estimated from the data and will be equal to the mean of X)}
+
+\item{epsilon}{Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)}
+
+\item{alpha}{Dirichlet prior parameter over the cluster proportions (default to 1)}
+}
+\value{
+a \code{GmmPrior-class} object
+
+a \code{Gmm-class} object
 }
 \description{
-An S4 class to represent a multivariate Gaussian mixture  model
+An S4 class to represent a multivariate Gaussian mixture model.
 The model corresponds to the following generative model:
 \deqn{ \pi \sim Dirichlet(\alpha)}
 \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
@@ -20,9 +37,12 @@ The model corresponds to the following generative model:
 \deqn{ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})}
 \deqn{ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})}
 with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Whishart distribution.
+The \code{Gmm-class} must be used when fitting a simple Gmm whereas the \code{GmmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
 }
 \section{Functions}{
 \itemize{
+\item \code{Gmm-class}: Gmm class
+
 \item \code{GmmPrior}: GmmPrior class constructor
 
 \item \code{Gmm}: Gmm class constructor
@@ -31,8 +51,6 @@ with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Whishart distribution.
 \section{Slots}{
 
 \describe{
-\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1, only for Gmm)}
-
 \item{\code{tau}}{Prior parameter (inverse variance) default 0.01}
 
 \item{\code{N0}}{Prior parameter (pseudo count) should be > number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)}
@@ -40,6 +58,8 @@ with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Whishart distribution.
 \item{\code{epsilon}}{Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)}
 
 \item{\code{mu}}{Prior parameters for the means (vector of size D), (default to NaN, in this case mu will be estimated from the data and will be equal to the mean of X)}
+
+\item{\code{alpha}}{Dirichlet prior parameter over the cluster proportions (default to 1)}
 }}
 
 \examples{
@@ -56,11 +76,13 @@ Other DlvmModels:
 \code{\link{DcLbmPrior-class}},
 \code{\link{DcSbmPrior-class}},
 \code{\link{DiagGmmPrior-class}},
+\code{\link{DlvmPrior-class}},
 \code{\link{LcaPrior-class}},
 \code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{MultSbmPrior-class}},
-\code{\link{SbmPrior-class}}
+\code{\link{SbmPrior-class}},
+\code{\link{greed}()}
 }
 \concept{DlvmModels}

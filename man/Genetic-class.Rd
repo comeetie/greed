@@ -8,6 +8,18 @@
 \usage{
 Genetic(pop_size = 100, nb_max_gen = 20, prob_mutation = 0.25, sel_frac = 0.75)
 }
+\arguments{
+\item{pop_size}{size of the solutions populations (default to 10)}
+
+\item{nb_max_gen}{maximal number of generation to produce (default to 4)}
+
+\item{prob_mutation}{probability of mutation (default to 0.25)}
+
+\item{sel_frac}{fraction of best solutions selected for crossing  (default to 0.75)}
+}
+\value{
+a \code{Genetic-class} object
+}
 \description{
 An S4 class to represent a genetic algorithm (extends \code{\link{Alg-class}} class).
 }

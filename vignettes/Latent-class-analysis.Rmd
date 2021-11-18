@@ -31,7 +31,7 @@ data("Youngpeoplesurvey")
 ## Young people survey data
 We begin by preprocessing the data, only keeping the categorical variable. The original dataset has $n=`r nrow(Youngpeoplesurvey)`$ respondents for $p=`r ncol(Youngpeoplesurvey)`$.
 
-```{r,cache=TRUE}
+```{r}
 nc  = 19
 
 selected = Youngpeoplesurvey %>% 

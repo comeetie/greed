@@ -3,14 +3,30 @@
 \docType{class}
 \name{MoRPrior-class}
 \alias{MoRPrior-class}
-\alias{MoRPrior}
 \alias{MoR-class}
+\alias{MoRPrior}
 \alias{MoR}
 \title{Multivariate mixture of regression Prior model description class}
 \usage{
-MoRPrior(tau = 0.01, N0 = NaN, epsilon = as.matrix(NaN))
+MoRPrior(formula, tau = 0.1, N0 = NaN, epsilon = as.matrix(NaN))
 
-MoR(tau = 0.01, N0 = NaN, epsilon = as.matrix(NaN))
+MoR(formula, alpha = 1, tau = 0.1, N0 = NaN, epsilon = as.matrix(NaN))
+}
+\arguments{
+\item{formula}{a \code{\link{formula}} that describe the linear model to use}
+
+\item{tau}{Prior parameter (inverse variance) default 0.01}
+
+\item{N0}{Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)}
+
+\item{epsilon}{Covariance matrix prior parameter (default to NaN, in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.)}
+
+\item{alpha}{Dirichlet prior parameter over the cluster proportions (default to 1)}
+}
+\value{
+a \code{MoRPrior-class} object
+
+a \code{MoR-class} object
 }
 \description{
 An S4 class to represent a multivariate mixture of regression model.
@@ -22,12 +38,13 @@ The model corresponds to the following generative model:
 \deqn{ A_k \sim \mathcal{MN}(0,(V_k)^{-1},\tau X^{t}X)}
 \deqn{ Y_{i.}|X_{i.}Z_{ik}=1 \sim \mathcal{N}(A_kx_{i.},V_{k}^{-1})}
 with \eqn{\mathcal{W}(\epsilon^{-1},n_0)} the Whishart distribution and \eqn{\mathcal{MN}} the matrix-normal distribution.
+The \code{MoR-class} must be used when fitting a simple Mixture of Regression whereas the \code{MoRPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
 }
 \section{Functions}{
 \itemize{
-\item \code{MoRPrior}: MoRPrior class constructor
-
 \item \code{MoR-class}: MoR class constructor
+
+\item \code{MoRPrior}: MoRPrior class constructor
 
 \item \code{MoR}: MoR class constructor
 }}
@@ -35,31 +52,37 @@ with \eqn{\mathcal{W}(\epsilon^{-1},n_0)} the Whishart distribution and \eqn{\ma
 \section{Slots}{
 
 \describe{
-\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
+\item{\code{formula}}{a \code{\link{formula}} that describe the linear model to use}
 
 \item{\code{tau}}{Prior parameter (inverse variance) default 0.01}
 
 \item{\code{epsilon}}{Covariance matrix prior parameter (default to NaN, in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.)}
 
 \item{\code{N0}}{Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)}
+
+\item{\code{alpha}}{Dirichlet prior parameter over the cluster proportions (default to 1)}
 }}
 
 \examples{
-MoRPrior()
-MoRPrior(N0=100)
-MoR()
-MoR(N0=100)
+MoRPrior(y ~ x1 + x2)
+MoRPrior(y ~ x1 + x2, N0=100)
+MoRPrior(cbind(y1,y2) ~ x1 + x2, N0=100)
+MoR(y ~ x1 + x2)
+MoR(y ~ x1 + x2, N0=100)
+MoR(cbind(y1,y2) ~ x1 + x2, N0=100)
 }
 \seealso{
 Other DlvmModels: 
 \code{\link{DcLbmPrior-class}},
 \code{\link{DcSbmPrior-class}},
 \code{\link{DiagGmmPrior-class}},
+\code{\link{DlvmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
 \code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MultSbmPrior-class}},
-\code{\link{SbmPrior-class}}
+\code{\link{SbmPrior-class}},
+\code{\link{greed}()}
 }
 \concept{DlvmModels}

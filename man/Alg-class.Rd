@@ -7,9 +7,3 @@
 \description{
 An S4 class to represent an abstract optimization algorithm.
 }
-\section{Slots}{
-
-\describe{
-\item{\code{name}}{algorithm name}
-}}
-

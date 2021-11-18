@@ -3,8 +3,8 @@
 \docType{class}
 \name{LcaPrior-class}
 \alias{LcaPrior-class}
-\alias{LcaPrior}
 \alias{Lca-class}
+\alias{LcaPrior}
 \alias{Lca}
 \title{Latent Class Analysis Model Prior class}
 \usage{
@@ -12,19 +12,31 @@ LcaPrior(beta = 1)
 
 Lca(alpha = 1, beta = 1)
 }
+\arguments{
+\item{beta}{Dirichlet prior parameter for all the categorical feature (default to 1)}
+
+\item{alpha}{Dirichlet prior parameter over the cluster proportions (default to 1)}
+}
+\value{
+a \code{LcaPrior-class} object
+
+a \code{Lca-class} object
+}
 \description{
 An S4 class to represent a Latent Class Analysis model
-Such model can be used to cluster a data matrix \eqn{X} with the following generative model :  
+Such model can be used to cluster a data.frame \eqn{X} with several columns of factors with the following generative model :  
 \deqn{\pi&\sim \textrm{Dirichlet}(\alpha),}
 \deqn{\forall k, \forall j, \quad \theta_{kj} &\sim \textrm{Dirichlet}_{d_j}(\beta),}
 \deqn{Z_i&\sim \mathcal{M}_K(1,\pi),}
 \deqn{\forall j=1, \ldots, p, \quad X_{ij}|Z_{ik}=1 &\sim \mathcal{M}_{d_j}(1, \theta_{kj}),}
+These classes mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model.
+The \code{Lca-class} must be used when fitting a simple Latent Class Analysis whereas the \code{LcaPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
 }
 \section{Functions}{
 \itemize{
-\item \code{LcaPrior}: LcaPrior class constructor
-
 \item \code{Lca-class}: Lca class constructor
+
+\item \code{LcaPrior}: LcaPrior class constructor
 
 \item \code{Lca}: Lca class constructor
 }}
@@ -32,9 +44,9 @@ Such model can be used to cluster a data matrix \eqn{X} with the following gener
 \section{Slots}{
 
 \describe{
-\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
+\item{\code{beta}}{Dirichlet prior parameter for all the categorical feature (default to 1)}
 
-\item{\code{beta}}{Dirichlet over vocabulary prior parameter (default to 1)}
+\item{\code{alpha}}{Dirichlet prior parameter over the cluster proportions (default to 1)}
 }}
 
 \examples{
@@ -48,11 +60,13 @@ Other DlvmModels:
 \code{\link{DcLbmPrior-class}},
 \code{\link{DcSbmPrior-class}},
 \code{\link{DiagGmmPrior-class}},
+\code{\link{DlvmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{MultSbmPrior-class}},
-\code{\link{SbmPrior-class}}
+\code{\link{SbmPrior-class}},
+\code{\link{greed}()}
 }
 \concept{DlvmModels}

@@ -3,8 +3,8 @@
 \docType{class}
 \name{DcLbmPrior-class}
 \alias{DcLbmPrior-class}
-\alias{DcLbmPrior}
 \alias{DcLbm-class}
+\alias{DcLbmPrior}
 \alias{DcLbm}
 \title{Degree Corrected Latent Block Model for bipartite graph class}
 \usage{
@@ -12,8 +12,18 @@ DcLbmPrior(p = NaN)
 
 DcLbm(alpha = 1, p = NaN)
 }
+\arguments{
+\item{p}{Exponential prior parameter (default to Nan, in this case p will be estimated from data as the average intensities of X)}
+
+\item{alpha}{Dirichlet prior parameter over the cluster proportions (default to 1)}
+}
+\value{
+a \code{DcLbmPrior-class}
+
+a \code{DcLbm-class} object
+}
 \description{
-An S4 class to represent a degree corrected stochastic block model for co_clustering of bipartite graph, extends \code{\link{icl_model-class}} class.
+An S4 class to represent a degree corrected stochastic block model for co_clustering of bipartite graph.
 Such model can be used to cluster graph vertex, and model a bipartite graph adjacency matrix \eqn{X} with the following generative model :
 \deqn{ \pi \sim Dirichlet(\alpha)}
 \deqn{ Z_i^r  \sim \mathcal{M}(1,\pi^r)}
@@ -23,13 +33,15 @@ Such model can be used to cluster graph vertex, and model a bipartite graph adja
 \deqn{ \gamma_i^c\sim \mathcal{U}(S_l)}
 \deqn{ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)}
 The individuals parameters \eqn{\gamma_i^r,\gamma_j^c} allow to take into account the node degree heterogeneity.
-These parameters have uniform priors over simplex \eqn{S_k}. This class mainly store the prior parameters value \eqn{\alpha} of this generative model in the following slots (the prior parameter \eqn{p} is estimated from the data as the global average probability of connection between two nodes):
+These parameters have uniform priors over simplex \eqn{S_k}. 
+These classes mainly store the prior parameters value \eqn{\alpha,p} of this generative model.
+The \code{DcLbm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DcLbmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
 }
 \section{Functions}{
 \itemize{
-\item \code{DcLbmPrior}: DcLbmPrior class constructor
-
 \item \code{DcLbm-class}: DcLbm class constructor
+
+\item \code{DcLbmPrior}: DcLbmPrior class constructor
 
 \item \code{DcLbm}: DcLbm class constructor
 }}
@@ -37,9 +49,9 @@ These parameters have uniform priors over simplex \eqn{S_k}. This class mainly s
 \section{Slots}{
 
 \describe{
-\item{\code{alpha}}{Dirichlet parameters for the prior over clusters proportions (default to 1)}
-
 \item{\code{p}}{Exponential prior parameter (default to Nan, in this case p will be estimated from data as the average intensities of X)}
+
+\item{\code{alpha}}{Dirichlet prior parameter over the cluster proportions (default to 1)}
 }}
 
 \examples{
@@ -52,12 +64,14 @@ DcLbm(p = 0.7)
 Other DlvmModels: 
 \code{\link{DcSbmPrior-class}},
 \code{\link{DiagGmmPrior-class}},
+\code{\link{DlvmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
 \code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{MultSbmPrior-class}},
-\code{\link{SbmPrior-class}}
+\code{\link{SbmPrior-class}},
+\code{\link{greed}()}
 }
 \concept{DlvmModels}

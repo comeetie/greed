@@ -15,7 +15,6 @@ NULL
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist a data.frame to store training history (format depends on the used algorithm used).
 #' @slot name generative model name
-#' @seealso \code{\link{sbm_fit-class}}, \code{\link{dcsbm_fit-class}}, \code{\link{co_dcsbm_fit-class}}
 #' @export
 setClass("IclFit", slots = list(name = "character", K = "numeric", obs_stats = "list", obs_stats_cst = "list", icl = "numeric", cl = "numeric", train_hist = "data.frame", move_mat = "dgCMatrix"))
 
@@ -31,6 +30,5 @@ setClass("IclFit", slots = list(name = "character", K = "numeric", obs_stats = "
 #' @slot tree a tree representation of the merges.
 #' @slot ggtree a data.frame for easy plotting of the dendrogram
 #' @slot logalpha a numeric value which corresponds to the starting value of log(alpha).
-#' @seealso \code{\link{sbm_path-class}}, \code{\link{dcsbm_path-class}}, \code{\link{co_dcsbm_path-class}}
 #' @export
 setClass("IclPath", slots = list(path = "list", tree = "numeric", ggtree = "data.frame", logalpha = "numeric"))

@@ -3,14 +3,28 @@
 \docType{class}
 \name{SbmPrior-class}
 \alias{SbmPrior-class}
-\alias{SbmPrior}
 \alias{Sbm-class}
+\alias{SbmPrior}
 \alias{Sbm}
 \title{Stochastic Block Model Prior class}
 \usage{
 SbmPrior(a0 = 1, b0 = 1, type = "guess")
 
 Sbm(alpha = 1, a0 = 1, b0 = 1, type = "guess")
+}
+\arguments{
+\item{a0}{Beta prior parameter over links (default to 1)}
+
+\item{b0}{Beta prior parameter over no-links (default to 1)}
+
+\item{type}{define the type of networks (either "directed", "undirected" or "guess", default to "guess"), for undirected graphs the adjacency matrix is supposed to be symmetric.}
+
+\item{alpha}{Dirichlet prior parameter over the cluster proportions (default to 1)}
+}
+\value{
+a \code{SbmPrior-class} object
+
+a \code{Sbm-class} object
 }
 \description{
 An S4 class to represent a Stochastic Block Model.
@@ -19,13 +33,14 @@ Such model can be used to cluster graph vertex, and model a square adjacency mat
 \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 \deqn{ \theta_{kl} \sim Beta(a_0,b_0)}
 \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\theta_{kl})}
-This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model in the following slots:
+These classes mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model. 
+The \code{Sbm-class} must be used when fitting a simple Sbm whereas the \code{SbmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
 }
 \section{Functions}{
 \itemize{
-\item \code{SbmPrior}: SbmPrior class constructor
-
 \item \code{Sbm-class}: Sbm class constructor
+
+\item \code{SbmPrior}: SbmPrior class constructor
 
 \item \code{Sbm}: Sbm class constructor
 }}
@@ -38,6 +53,8 @@ This class mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this 
 \item{\code{b0}}{Beta prior parameter over no-links (default to 1)}
 
 \item{\code{type}}{define the type of networks (either "directed", "undirected" or "guess", default to "guess"), for undirected graphs the adjacency matrix is supposed to be symmetric.}
+
+\item{\code{alpha}}{Dirichlet prior parameter over the cluster proportions (default to 1)}
 }}
 
 \examples{
@@ -61,11 +78,13 @@ Other DlvmModels:
 \code{\link{DcLbmPrior-class}},
 \code{\link{DcSbmPrior-class}},
 \code{\link{DiagGmmPrior-class}},
+\code{\link{DlvmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
 \code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},
-\code{\link{MultSbmPrior-class}}
+\code{\link{MultSbmPrior-class}},
+\code{\link{greed}()}
 }
 \concept{DlvmModels}

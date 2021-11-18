@@ -14,7 +14,8 @@ NULL
 #' \deqn{ A_k \sim \mathcal{MN}(0,(V_k)^{-1},\tau X^{t}X)}
 #' \deqn{ Y_{i.}|X_{i.}Z_{ik}=1 \sim \mathcal{N}(A_kx_{i.},V_{k}^{-1})}
 #' with \eqn{\mathcal{W}(\epsilon^{-1},n_0)} the Whishart distribution and \eqn{\mathcal{MN}} the matrix-normal distribution. 
-#' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
+#' The \code{MoR-class} must be used when fitting a simple Mixture of Regression whereas the \code{MoRPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
+#' @slot formula a \code{\link{formula}} that describe the linear model to use
 #' @slot tau Prior parameter (inverse variance) default 0.01 
 #' @slot epsilon Covariance matrix prior parameter (default to NaN, in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.) 
 #' @slot N0 Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)
@@ -22,30 +23,59 @@ NULL
 #' @md
 #' @export
 setClass("MoRPrior",
-         representation = list(tau = "numeric",N0="numeric",epsilon ="matrix"),
-         prototype(tau=0.01,N0=NaN,epsilon=as.matrix(NaN)))
+         representation = list(formula="formula",tau = "numeric",N0="numeric",epsilon ="matrix"),
+         prototype(tau=0.1,N0=NaN,epsilon=as.matrix(NaN)))
 
-#' @describeIn MoRPrior-class MoRPrior class constructor
-#' @examples
-#' MoRPrior()
-#' MoRPrior(N0=100)
-#' @export
-MoRPrior <- function(tau=0.01,N0=NaN,epsilon=as.matrix(NaN)) {
-  methods::new("MoRPrior", tau=tau,N0=N0,epsilon=epsilon)
-}
+setValidity("MoRPrior",function(object){
+  if(length(object@tau)>1){
+    return("MoR model prior misspecification, tau must be of length 1.")
+  }
+  if(is.na(object@tau)){
+    return("MoR model prior misspecification, tau is NA.")
+  }
+  if(object@tau<=0){
+    return("MoR model prior misspecification, tau must be positive.")
+  }
+  if(length(object@N0)>1){
+    return("MoR model prior misspecification, N0 must be of length 1.")
+  }
+  TRUE
+})
 
 #' @describeIn MoRPrior-class MoR class constructor
+#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @export
 setClass("MoR",
-         contains = c("DlvmPrior", "MoRPrior")
+         contains = c("MoRPrior","DlvmPrior")
 )
 
-#' @describeIn MoRPrior-class MoR class constructor
+
+#' @describeIn MoRPrior-class MoRPrior class constructor
+#' @param formula a \code{\link{formula}} that describe the linear model to use
+#' @param tau Prior parameter (inverse variance) default 0.01 
+#' @param epsilon Covariance matrix prior parameter (default to NaN, in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.) 
+#' @param N0 Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)
+#' @return a \code{MoRPrior-class} object
 #' @examples
-#' MoR()
-#' MoR(N0=100)
+#' MoRPrior(y ~ x1 + x2)
+#' MoRPrior(y ~ x1 + x2, N0=100)
+#' MoRPrior(cbind(y1,y2) ~ x1 + x2, N0=100)
 #' @export
-MoR <- function(tau=0.01,N0=NaN,epsilon=as.matrix(NaN)) {
-  methods::new("MoR", alpha = alpha,tau=tau,N0=N0,epsilon=epsilon)
+MoRPrior <- function(formula,tau=0.1,N0=NaN,epsilon=as.matrix(NaN)) {
+  methods::new("MoRPrior",formula=stats::as.formula(formula), tau=tau,N0=N0,epsilon=epsilon)
+}
+
+
+#' @describeIn MoRPrior-class MoR class constructor
+#' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @return a \code{MoR-class} object
+#' @examples
+#' MoR(y ~ x1 + x2)
+#' MoR(y ~ x1 + x2, N0=100)
+#' MoR(cbind(y1,y2) ~ x1 + x2, N0=100)
+#' @export
+MoR <- function(formula,alpha=1,tau=0.1,N0=NaN,epsilon=as.matrix(NaN)) {
+  methods::new("MoR",formula=formula, alpha = alpha,tau=tau,N0=N0,epsilon=epsilon)
 }
 
 #' @title Clustering with a multivariate mixture of regression model fit results class
@@ -106,7 +136,7 @@ setClass("MoRPath",contains=c("IclPath","MoRFit"))
 #' @title plot a \code{\link{MoRPath-class}} object
 #' 
 #' 
-#' @param x a \code{\link{MoRPpath-class}}
+#' @param x a \code{\link{MoRPath-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
 #' \item \code{'front'}: plot the extracted front ICL, log(alpha)
@@ -136,7 +166,7 @@ setMethod(f = "plot",
 #' \itemize{
 #' \item \code{'pi'}: cluster proportions 
 #' \item \code{'A'}: cluster regression matrix
-#' \item \code{'Sigmak'}: cluster noise co-variance matrices
+#' \item \code{'Sigmak'}: cluster noise co-variance matrices 
 #' }
 #' @export 
 setMethod(f = "coef", 
@@ -144,25 +174,12 @@ setMethod(f = "coef",
           definition = function(object){
             sol=object
             pi=(sol@obs_stats$counts+sol@model@alpha-1)/sum(sol@obs_stats$counts+sol@model@alpha-1)
-            muk = lapply(sol@obs_stats$mvmreg, function(r){1/(1+sol@model@tau)*r$mu})
-            Sigmak = lapply(sol@obs_stats$mvmreg, function(r){
-              S = (r$Syx+sol@model@epsilon)/(r$n+sol@model@N0)
-            })
-            list(pi=pi,muk=muk,Sigmak=Sigmak)
+            A = lapply(sol@obs_stats$MoR,function(reg){reg$iS%*%reg$Xty/(sol@model@tau+1)})
+            Sigmak = lapply(sol@obs_stats$MoR,\(reg){(reg$Syx+diag(rep(sol@model@N0,nrow(reg$Syx))))/(reg$n+sol@model@N0+1)})
+            list(pi=pi,A=A,Sigmak=Sigmak)
           })
 
-reorder_mvmreg = function(obs_stats,or){
-  obs_stats$counts = obs_stats$counts[or]
-  obs_stats$mvmreg = obs_stats$mvmreg[or]
-  obs_stats
-}
 
-
-setMethod(f = "reorder", 
-          signature = signature("MoR", "list","integer"), 
-          definition = function(model, obs_stats,order){
-            reorder_mvmreg(obs_stats,order)
-          })
 
 
 setMethod(f = "seed", 
@@ -181,55 +198,61 @@ setMethod(f = "seed",
 setMethod(f = "preprocess", 
           signature = signature("MoR"), 
           definition = function(model, data){
-            if(!any(class(data$Y)%in%c("data.frame","numeric","matrix"))){
-              stop("Y must be a data.frame a numeric vector or a matrix.",call.=FALSE)
-            }
             
-            if(!any(class(data$X)%in%c("data.frame","numeric","matrix"))){
+            if(!methods::is(data,"data.frame")){
               stop("X must be a data.frame a numeric vector or a matrix.",call.=FALSE)
             }
-            if(methods::is(data$Y,"numeric")|methods::is(data$Y,"data.frame")){
-              data$Y=as.matrix(data$Y)
-            }
-            if(methods::is(data$X,"numeric")|methods::is(data$X,"data.frame")){
-              data$X=as.matrix(data$X)
-            }
-            if(nrow(data$X)!=nrow(data$Y)){
-              stop("Incomptible sizes between X and Y.")
-            }
-            if(length(model@alpha)>1){
-              stop("Model prior misspecification, alpha must be of length 1.",call. = FALSE)
-            }
-            if(is.na(model@alpha)){
-              stop("Model prior misspecification, alpha is NA.",call. = FALSE)
-            }
-            if(model@alpha<=0){
-              stop("Model prior misspecification, alpha must be positive.",call. = FALSE)
-            }
-            if(length(model@tau)>1){
-              stop("Model prior misspecification, tau must be of length 1.",call. = FALSE)
-            }
-            if(is.na(model@tau)){
-              stop("Model prior misspecification, tau is NA.",call. = FALSE)
-            }
-            if(model@tau<=0){
-              stop("Model prior misspecification, tau must be positive.",call. = FALSE)
-            }
             
-            if(length(model@N0)>1){
-              stop("Model prior misspecification, N0 must be of length 1.",call. = FALSE)
-            }
-            if(!is.na(model@N0) & model@N0<ncol(data$Y)){
-              stop("Model prior misspecification, N0 must be > ncol(Y).",call. = FALSE)
-            }
-            
+            mod_frame = stats::model.frame(model@formula,data)
+            X = stats::model.matrix(model@formula,mod_frame)
+            Y = stats::model.response(mod_frame)
             
             if(prod(dim(model@epsilon))!=1 | !all(is.nan(model@epsilon))){
-              if(dim(model@epsilon)[1]!=ncol(data$Y)|| dim(model@epsilon)[2]!=ncol(data$Y)){
+              if(dim(model@epsilon)[1]!=ncol(Y)|| dim(model@epsilon)[2]!=ncol(Y)){
                 stop("Model prior misspecification, the dimensions of epsilon are not compatible with the data.",call. = FALSE)
               }
             }
-            list(Y=as.matrix(data$Y),X=as.matrix(data$X),N=nrow(data$X))
+            list(Y=as.matrix(Y),X=as.matrix(X),N=nrow(X))
           })
+
+
+
+
+
+setMethod(
+  f = "seed",
+  signature = signature("MoRPrior", "list", "numeric"),
+  definition = function(model, data, K) {
+    km <- stats::kmeans(zscore(data$X), K)
+    km$cluster
+  }
+)
+
+setMethod(
+  f = "reorder",
+  signature = signature("MoRPrior", "list", "integer"),
+  definition = function(model, obs_stats, order) {
+    obs_stats[order]
+  }
+)
+
+
+setMethod(
+  f = "reorder",
+  signature = signature("MoR", "list", "integer"),
+  definition = function(model, obs_stats, order) {
+    obs_stats$MoR <- obs_stats$MoR[order]
+    obs_stats$counts <- obs_stats$counts[order]
+    obs_stats
+  }
+)
+
+
+setMethod(f = "cleanObsStats", 
+          signature = signature("MoRPrior", "list"), 
+          definition = function(model, obs_stats){
+            obs_stats
+          })
+
 
 

@@ -9,7 +9,7 @@
 #'
 #' @description
 #' Print an \code{\link{IclPath-class}} object, model type and number of found clusters are provided.
-#' @param x \code{\link{IclPath-class}} object to print
+#' @param object \code{\link{IclPath-class}} object to print
 #' @return None (invisible NULL). No return value, called for side effects.
 #' @export
 setMethod(
@@ -124,14 +124,14 @@ iclpath <- function(x) {
 # Node link visualisations
 
 nodelink <- function(sol) {
-  if(!(is(sol,"SbmFit") | is(sol,"DcSbmFit"))){
+  if(!(methods::is(sol,"SbmFit") | methods::is(sol,"DcSbmFit"))){
     stop("Nodes and Links diagrams only available for Sbm and DcSbm models",.call=FALSE)
   }
-  if(is(sol,"SbmFit")){
+  if(methods::is(sol,"SbmFit")){
     x_counts = sol@obs_stats$Sbm$x_counts
   }
   
-  if(is(sol,"DcSbmFit")){
+  if(methods::is(sol,"DcSbmFit")){
     x_counts = sol@obs_stats$DcSbm$x_counts
   }
   ij <- Matrix::which(x_counts > 0, arr.ind = TRUE)
@@ -261,14 +261,14 @@ co_dendo <- function(x) {
 # matrice blocks visualisation
 
 graph_blocks <- function(x) {
-  if(!(is(x,"SbmFit") | is(x,"DcSbmFit"))){
+  if(!(methods::is(x,"SbmFit") | methods::is(x,"DcSbmFit"))){
     stop("Nodes and Links diagrams only available for Sbm and DcSbm models",.call=FALSE)
   }
-  if(is(x,"SbmFit")){
+  if(methods::is(x,"SbmFit")){
     x_counts = x@obs_stats$Sbm$x_counts
   }
   
-  if(is(x,"DcSbmFit")){
+  if(methods::is(x,"DcSbmFit")){
     x_counts = x@obs_stats$DcSbm$x_counts
   }
   
@@ -616,7 +616,7 @@ nodelink_cube <- function(sol) {
 #'
 #' @description
 #' Make a matrix of plots with a given data and gmm fitted parameters with ellipses.
-#' @param sol a \code{\link{gmm_fit-class}} or \code{\link{diaggmm_fit-class}}
+#' @param sol a \code{\link{GmmFit-class}} or \code{\link{DiagGmmFit-class}}
 #' @param X the data used for the fit a data.frame or matrix.
 #' @return a \code{\link{ggplot2}} graphic
 #' @export

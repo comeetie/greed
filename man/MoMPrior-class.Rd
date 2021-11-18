@@ -3,8 +3,8 @@
 \docType{class}
 \name{MoMPrior-class}
 \alias{MoMPrior-class}
-\alias{MoMPrior}
 \alias{MoM-class}
+\alias{MoMPrior}
 \alias{MoM}
 \title{Mixture of Multinomial Model Prior description class}
 \usage{
@@ -12,20 +12,31 @@ MoMPrior(beta = 1)
 
 MoM(alpha = 1, beta = 1)
 }
+\arguments{
+\item{beta}{Dirichlet over vocabulary prior parameter (default to 1)}
+
+\item{alpha}{Dirichlet prior parameter over the cluster proportions (default to 1)}
+}
+\value{
+a \code{MoMPrior-class} object
+
+a \code{MoM-class} object
+}
 \description{
-An S4 class to represent a Multinomial model model.
+An S4 class to represent a Mixture of Multinomial model.
 Such model can be used to cluster a data matrix \eqn{X} with the following generative model :
 \deqn{ \pi \sim Dirichlet(\alpha)}
 \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 \deqn{ \theta_{k} \sim Dirichlet(\beta)}
 \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{M}(L_i,\theta_{k})}
-With \eqn{L_i=\sum_d=1^DX_{id}}. This class mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model in the following slots:
+With \eqn{L_i=\sum_d=1^DX_{id}}. These classes mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model.
+The \code{MoM-class} must be used when fitting a simple Mixture of Multinomials whereas the \code{MoMPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
 }
 \section{Functions}{
 \itemize{
-\item \code{MoMPrior}: MoMPrior class constructor
-
 \item \code{MoM-class}: MoM class constructor
+
+\item \code{MoMPrior}: MoMPrior class constructor
 
 \item \code{MoM}: MoM class constructor
 }}
@@ -33,9 +44,9 @@ With \eqn{L_i=\sum_d=1^DX_{id}}. This class mainly store the prior parameters va
 \section{Slots}{
 
 \describe{
-\item{\code{alpha}}{Dirichlet over cluster proportions prior parameter (default to 1)}
-
 \item{\code{beta}}{Dirichlet over vocabulary prior parameter (default to 1)}
+
+\item{\code{alpha}}{Dirichlet prior parameter over the cluster proportions (default to 1)}
 }}
 
 \examples{
@@ -49,11 +60,13 @@ Other DlvmModels:
 \code{\link{DcLbmPrior-class}},
 \code{\link{DcSbmPrior-class}},
 \code{\link{DiagGmmPrior-class}},
+\code{\link{DlvmPrior-class}},
 \code{\link{GmmPrior-class}},
 \code{\link{LcaPrior-class}},
 \code{\link{MixedModels-class}},
 \code{\link{MoRPrior-class}},
 \code{\link{MultSbmPrior-class}},
-\code{\link{SbmPrior-class}}
+\code{\link{SbmPrior-class}},
+\code{\link{greed}()}
 }
 \concept{DlvmModels}

@@ -4,14 +4,14 @@ NULL
 #' @title Mixture of Multinomial Model Prior description class
 #'
 #' @description
-#' An S4 class to represent a Multinomial model model.
+#' An S4 class to represent a Mixture of Multinomial model.
 #' Such model can be used to cluster a data matrix \eqn{X} with the following generative model :
 #' \deqn{ \pi \sim Dirichlet(\alpha)}
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 #' \deqn{ \theta_{k} \sim Dirichlet(\beta)}
 #' \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{M}(L_i,\theta_{k})}
-#' With \eqn{L_i=\sum_d=1^DX_{id}}. This class mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model in the following slots:
-#' @slot alpha Dirichlet over cluster proportions prior parameter (default to 1)
+#' With \eqn{L_i=\sum_d=1^DX_{id}}. These classes mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model.
+#' The \code{MoM-class} must be used when fitting a simple Mixture of Multinomials whereas the \code{MoMPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
 #' @slot beta Dirichlet over vocabulary prior parameter (default to 1)
 #' @family DlvmModels
 #' @export
@@ -36,7 +36,16 @@ setValidity("MoMPrior",function(object){
 })
 
 
+#' @describeIn MoMPrior-class MoM class constructor
+#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @export
+setClass("MoM",
+         contains = c("DlvmPrior", "MoMPrior")
+)
+
 #' @describeIn MoMPrior-class MoMPrior class constructor
+#' @param beta Dirichlet over vocabulary prior parameter (default to 1)
+#' @return a \code{MoMPrior-class} object
 #' @examples
 #' MoMPrior()
 #' MoMPrior(beta = 0.5)
@@ -46,11 +55,8 @@ MoMPrior <- function(beta = 1) {
 }
 
 #' @describeIn MoMPrior-class MoM class constructor
-setClass("MoM",
-  contains = c("DlvmPrior", "MoMPrior")
-)
-
-#' @describeIn MoMPrior-class MoM class constructor
+#' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @return a \code{MoM-class} object
 #' @examples
 #' MoM()
 #' MoM(beta = 0.5)

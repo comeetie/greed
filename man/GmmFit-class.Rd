@@ -10,7 +10,7 @@ An S4 class to represent a fit of a multivariate mixture of regression model, ex
 \section{Slots}{
 
 \describe{
-\item{\code{model}}{a \code{\link{gmm-class}} object to store the model fitted}
+\item{\code{model}}{a \code{\link{GmmPrior-class}} object to store the model fitted}
 
 \item{\code{name}}{generative model name}
 

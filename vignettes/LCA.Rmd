@@ -78,7 +78,7 @@ sol_greed<-greed(X[subset,] ,model=Lca())
 table(Edibility=label, Cluster=clustering(sol_greed))
 ```
 
-The hybrid genetic algorithm found a solution with $K=`r sol_greed@K`$ clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. The ARI of the partition is `r round(ARI(label, sol_greed@cl),2)` which is explained by the over-segmentation of the solution compared to the $2$-class problem.
+The hybrid genetic algorithm found a solution with $K=`r sol_greed@K`$ clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. The ARI of the partition is `r round(ARI(label, clustering(sol_greed)),2)` which is explained by the over-segmentation of the solution compared to the $2$-class problem.
 
 
 #### Hierarchy 
@@ -96,5 +96,5 @@ plot(sol_greed, type='tree')
 sol2 = cut(sol_greed, 2)
 table(Edibility=label, Cluster=clustering(sol2))
 ```
-Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is `r round(ARI(sol2@cl, label),2)`. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the [way the labels have been set](https://archive.ics.uci.edu/ml/datasets/Mushroom), since mushrooms for which the edibility status was *unknown* were classified as *poisonous* by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ''\textit{there is no simple rule for determining the edibility of a mushroom}''. Thus, the unsupervised problem is hard and the obtained clustering is satisfying on this unsupervised problem. Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.
+Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is `r round(ARI(clustering(sol2), label),2)`. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the [way the labels have been set](https://archive.ics.uci.edu/ml/datasets/Mushroom), since mushrooms for which the edibility status was *unknown* were classified as *poisonous* by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ''\textit{there is no simple rule for determining the edibility of a mushroom}''. Thus, the unsupervised problem is hard and the obtained clustering is satisfying on this unsupervised problem. Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.
 

@@ -12,11 +12,11 @@ greed(X, K = 20, model = find_model(X), alg = Hybrid(), verbose = FALSE)
 
 \item{K}{initial number of cluster}
 
-\item{model}{a generative model to fit \code{\link{sbm-class}}, \code{\link{dcsbm-class}}, \code{\link{co_dcsbm-class}}, \code{\link{mm-class}}, \code{\link{lca-class}}, \code{\link{gmm-class}}, \code{\link{diaggmm-class}} or \code{\link{mvmreg-class}}}
+\item{model}{a generative model to fit \code{\link{DlvmPrior-class}}}
+
+\item{alg}{an optimization algorithm of class \code{\link{Alg-class}} such as \code{\link{Hybrid-class}} (default), \code{\link{Multistarts-class}}, \code{\link{Seed-class}} or \code{\link{Genetic-class}}}
 
 \item{verbose}{Boolean for verbose mode}
-
-\item{Alg}{an optimization algorithm of class \code{\link{hybrid-class}} (default), \code{\link{multistarts-class}}, \code{\link{seed-class}} or \code{\link{genetic-class}}}
 }
 \value{
 an \code{\link{IclPath-class}} object
@@ -30,7 +30,20 @@ combination by optimizing the Integrated Classification Likelihood.
 Optimization is performed thanks to a combination of greedy local search and
 a genetic algorithm. The main entry point is the \code{\link{greed}} function
 to perform the clustering, which is documented below. The package also
-provides sampling functions for all the implemented DLVMs: Mixture of
-Multinomials (\code{\link{rmm}}), Latent Class Analysis (\code{\link{rlca}}), Stochastic Block Model (\code{\link{rsbm}},
-\code{\link{rdcsbm}}) and Latent Block Model (\code{\link{rlbm}}).
+provides sampling functions for all the implemented DLVMs
 }
+\seealso{
+Other DlvmModels: 
+\code{\link{DcLbmPrior-class}},
+\code{\link{DcSbmPrior-class}},
+\code{\link{DiagGmmPrior-class}},
+\code{\link{DlvmPrior-class}},
+\code{\link{GmmPrior-class}},
+\code{\link{LcaPrior-class}},
+\code{\link{MixedModels-class}},
+\code{\link{MoMPrior-class}},
+\code{\link{MoRPrior-class}},
+\code{\link{MultSbmPrior-class}},
+\code{\link{SbmPrior-class}}
+}
+\concept{DlvmModels}

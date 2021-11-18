@@ -7,7 +7,7 @@
 gmmpairs(sol, X)
 }
 \arguments{
-\item{sol}{a \code{\link{gmm_fit-class}} or \code{\link{diaggmm_fit-class}}}
+\item{sol}{a \code{\link{GmmFit-class}} or \code{\link{DiagGmmFit-class}}}
 
 \item{X}{the data used for the fit a data.frame or matrix.}
 }

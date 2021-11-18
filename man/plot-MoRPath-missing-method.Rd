@@ -7,7 +7,7 @@
 \S4method{plot}{MoRPath,missing}(x, type = "tree")
 }
 \arguments{
-\item{x}{a \code{\link{MoRPpath-class}}}
+\item{x}{a \code{\link{MoRPath-class}}}
 
 \item{type}{a string which specify plot type:
 \itemize{
