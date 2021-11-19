@@ -229,6 +229,50 @@ setMethod(
   }
 )
 
+#' @title plot a \code{\link{IclPath-class}} object
+#' 
+#' 
+#' @param x a \code{\link{IclPath-class}}
+#' @param type a string which specify plot type:
+#' \itemize{
+#' \item \code{'front'}: plot the extracted front ICL, log(alpha)
+#' \item \code{'path'}: plot the evolution of ICL with respect to K
+#' \item \code{'tree'}: plot the associated dendrogram
+#' }
+#' @return a \code{\link{ggplot2}} graphic
+#' @export 
+setMethod(f = "plot", 
+          signature = signature("IclPath","missing"),
+          definition = function(x,type='tree'){
+            switch(type,tree = {
+              dendo(x)
+            },
+            path ={
+              lapath(x)
+            },
+            front = {
+              plot_front(x)
+            },
+            plot(as(x,gsub("Path","Fit",class(x))),type=type)
+            )
+          })
+
+#' @title Extract parameters from an \code{\link{IclFit-class}} object
+#'
+#' @param object a \code{\link{IclFit-class}}
+#' @return a list with the model parameters estimates (MAP)
+#' @details The results depends of the used model, in case the method is not yet implemented for a model, this generic method will be used. Which will return the \code{obs_stats} slot of the model.
+#' @export
+setMethod(
+  f = "coef",
+  signature = signature(object = "IclFit"),
+  definition = function(object) {
+    object@obs_stats
+  }
+)
+
+
+
 #' @title Model based hierarchical clustering
 #'
 #' @description
@@ -255,7 +299,6 @@ greed <- function(X, model = find_model(X), K = 20,  alg = Hybrid(), verbose = F
   for (p in 1:length(sol@path)) {
     sol@path[[p]]$obs_stats = cleanObsStats(model,sol@path[[p]]$obs_stats,X)
   }
-  print("clean ok")
   sol <- postprocess(sol, data, X)
   cat("------- Final clustering -------\n")
   print(sol)

@@ -140,42 +140,7 @@ setMethod(
     mat_blocks(x)
   }
 )
-#' @title plot a \code{\link{MoMPath-class}} object
-#'
-#' @param x an \code{\link{MoMPath-class}} object
-#' @param type a string which specify plot type:
-#' \itemize{
-#' \item \code{'blocks'}: plot a block matrix with summarizing
-#' \item \code{'nodelink'}: plot a nodelink diagram
-#' \item \code{'front'}: plot the extracted front in the plane ICL, log(alpha)
-#' \item \code{'path'}: plot the evolution of ICL with respect to K
-#' \item \code{'tree'}: plot the associated dendrogram
-#' }
-#' @return a \code{\link{ggplot2}} graphic
-#' @export
-setMethod(
-  f = "plot",
-  signature = signature("MoMPath", "missing"),
-  definition = function(x, type = "blocks") {
-    switch(type,
-      tree = {
-        dendo(x)
-      },
-      path = {
-        lapath(x)
-      },
-      front = {
-        plot_front(x)
-      },
-      blocks = {
-        methods::callNextMethod()
-      },
-      nodelink = {
-        methods::callNextMethod()
-      }
-    )
-  }
-)
+
 
 
 #' @title Extract parameters from an \code{\link{MoMFit-class}} object

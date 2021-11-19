@@ -16,7 +16,7 @@ NULL
 #' with \eqn{\mathcal{W}(\epsilon^{-1},n_0)} the Whishart distribution and \eqn{\mathcal{MN}} the matrix-normal distribution. 
 #' The \code{MoR-class} must be used when fitting a simple Mixture of Regression whereas the \code{MoRPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
 #' @slot formula a \code{\link{formula}} that describe the linear model to use
-#' @slot tau Prior parameter (inverse variance) default 0.01 
+#' @slot tau Prior parameter (inverse variance) default 0.001 
 #' @slot epsilon Covariance matrix prior parameter (default to NaN, in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.) 
 #' @slot N0 Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)
 #' @family DlvmModels
@@ -24,7 +24,7 @@ NULL
 #' @export
 setClass("MoRPrior",
          representation = list(formula="formula",tau = "numeric",N0="numeric",epsilon ="matrix"),
-         prototype(tau=0.1,N0=NaN,epsilon=as.matrix(NaN)))
+         prototype(tau=0.001,N0=NaN,epsilon=as.matrix(NaN)))
 
 setValidity("MoRPrior",function(object){
   if(length(object@tau)>1){
@@ -52,7 +52,7 @@ setClass("MoR",
 
 #' @describeIn MoRPrior-class MoRPrior class constructor
 #' @param formula a \code{\link{formula}} that describe the linear model to use
-#' @param tau Prior parameter (inverse variance) default 0.01 
+#' @param tau Prior parameter (inverse variance) default 0.001 
 #' @param epsilon Covariance matrix prior parameter (default to NaN, in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.) 
 #' @param N0 Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)
 #' @return a \code{MoRPrior-class} object
@@ -61,7 +61,7 @@ setClass("MoR",
 #' MoRPrior(y ~ x1 + x2, N0=100)
 #' MoRPrior(cbind(y1,y2) ~ x1 + x2, N0=100)
 #' @export
-MoRPrior <- function(formula,tau=0.1,N0=NaN,epsilon=as.matrix(NaN)) {
+MoRPrior <- function(formula,tau=0.001,N0=NaN,epsilon=as.matrix(NaN)) {
   methods::new("MoRPrior",formula=stats::as.formula(formula), tau=tau,N0=N0,epsilon=epsilon)
 }
 
@@ -133,31 +133,7 @@ setClass("MoRPath",contains=c("IclPath","MoRFit"))
 
 
 
-#' @title plot a \code{\link{MoRPath-class}} object
-#' 
-#' 
-#' @param x a \code{\link{MoRPath-class}}
-#' @param type a string which specify plot type:
-#' \itemize{
-#' \item \code{'front'}: plot the extracted front ICL, log(alpha)
-#' \item \code{'path'}: plot the evolution of ICL with respect to K
-#' \item \code{'tree'}: plot the associated dendrogram
-#' }
-#' @return a \code{\link{ggplot2}} graphic
-#' @export 
-setMethod(f = "plot", 
-          signature = signature("MoRPath","missing"),
-          definition = function(x,type='tree'){
-            switch(type,tree = {
-              dendo(x)
-            },
-            path ={
-              lapath(x)
-            },
-            front = {
-              plot_front(x)
-            })
-          })
+
 
 #' @title Extract mixture parameters from \code{\link{MoRFit-class}} object
 #' 
@@ -182,16 +158,6 @@ setMethod(f = "coef",
 
 
 
-setMethod(f = "seed", 
-          signature = signature("MoR","list","numeric"), 
-          definition = function(model,data, K){
-            X=cbind(data$X,data$Y)
-            sds=apply(X,2,stats::sd)
-            X=X[,sds!=0]
-            X=t(t(X)/sds[sds!=0])
-            km=stats::kmeans(X,K)
-            km$cluster
-          })
 
 
 

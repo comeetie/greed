@@ -18,9 +18,13 @@ navbar:
     - text: "Articles"
       menu:
       - text: "Graph clustering"
-        href: articles/graph-clustering-with-sbm.html
-      - text: "Gaussian Mixture Model Clustering"
+        href: articles/SBM.html
+      - text: "Gaussian Mixture Models Clustering"
         href: articles/GMM.html
+      - text: "Latent Class Analysis"
+        href: articles/LCA.html
+      - text: "Mixed Models"
+        href: articles/Mixed-Models.html
   right:
     - icon: fa-github
     - text: github
@@ -29,10 +33,10 @@ navbar:
 reference:
 - title: 'Top-level fitting functions'
   desc: >
-    Main clustering functions 
+    Main clustering function
   contents:
     - '`greed`'
-- title: 'Generic methods to explore a hierarchical fit'
+- title: 'Generic methods to explore a fit'
   desc: >
     Description of methods to extract coefficients and cut/plot a hierachical model fit.
   contents:
@@ -40,14 +44,16 @@ reference:
     - '`ICL,IclFit-method`'
     - '`K,IclFit-method`'
     - '`coef,IclFit-method`'
+    - '`show,IclFit-method`'
     - '`cut,IclPath-method`'
-    - '`plot,IclPath-method`'
-
+    - '`plot,IclPath,missing-method`'
+    - '`extractSubModel,MixedModelsPath,character-method`'
     
 - title: 'Fitting algorithms classes'
   desc: >
     Description of classes that describe the possible fitting algorithms.
   contents:
+    - '`Alg-class`'
     - '`Hybrid-class`'
     - '`Multistarts-class`'
     - '`Genetic-class`'
@@ -56,19 +62,21 @@ reference:
   desc: >
     Description of classes that corresponds to the different type of generative models that greed may use.
   contents:
-    - '`SbmPrior-class`'
-    - '`DcSbmPrior-class`'
-    - '`MultSbmPrior-class`'
-    - '`LcaPrior-class`'
-    - '`MoMPrior-class`'
-    - '`GmmPrior-class`'
-    - '`DiagGmmPrior-class`'
-    - '`MoRPrior-class`'
-    - '`MixedModelsPrior-class`'
+    - '`Sbm-class`'
+    - '`DcSbm-class`'
+    - '`MultSbm-class`'
+    - '`Lca-class`'
+    - '`MoM-class`'
+    - '`Gmm-class`'
+    - '`DiagGmm-class`'
+    - '`MoR-class`'
+    - '`MixedModels-class`'
 - title: 'Models fit classes'
   desc: >
     Description of classes that describe a model fit.
   contents:
+    - '`IclFit-class`'
+    - '`IclPath-class`'
     - '`SbmFit-class`'
     - '`DcSbmFit-class`'
     - '`MultSbmFit-class`'
@@ -110,6 +118,7 @@ reference:
     - '`H`'
     - '`MI`'
     - '`spectral`'
+    - '`to_multinomial`'
 
 - title: 'Data generation function'
   desc: >
@@ -120,6 +129,8 @@ reference:
     - '`rmultsbm`'
     - '`rmm`'
     - '`rmreg`'
+    - '`rlbm`'
+    - '`rlca`'
 
 - title: Data sets
   desc: ~
@@ -131,5 +142,9 @@ reference:
     - '`Jazz_full`'
     - '`Xvlegislature`'
     - '`fashion`'
-    
-
+    - '`mushroom`'
+    - '`Fifa`'
+    - '`Fifa_positions`'
+    - '`FrenchParliament`'
+    - '`Ndrangheta`'
+    - '`Youngpeoplesurvey`'

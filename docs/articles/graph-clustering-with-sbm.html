@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">greed</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1</span>
       </span>
     </div>
 
@@ -76,7 +78,7 @@
   </a>
 </li>
 <li>
-  <a href="https://github.com/comeetie/greed">github</a>
+  <a href="https://github.com/comeetie/greed" class="external-link">github</a>
 </li>
       </ul>
 </div>
@@ -88,15 +90,15 @@
 
       
 
-      </header><script src="graph-clustering-with-sbm_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Graph clustering with SBM</h1>
-                        <h4 class="author">Etienne Côme</h4>
+                        <h4 data-toc-skip class="author">Etienne Côme</h4>
             
-            <h4 class="date">2021-11-18</h4>
+            <h4 data-toc-skip class="date">2021-11-19</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/comeetie/greed/blob/master/vignettes/graph-clustering-with-sbm.Rmd"><code>vignettes/graph-clustering-with-sbm.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/comeetie/greed/blob/HEAD/vignettes/graph-clustering-with-sbm.Rmd" class="external-link"><code>vignettes/graph-clustering-with-sbm.Rmd</code></a></small>
       <div class="hidden name"><code>graph-clustering-with-sbm.Rmd</code></div>
 
     </div>
@@ -105,53 +107,53 @@
     
 <p>Loads packages and set a future plan for parallel processing if you want.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://Matrix.R-forge.R-project.org/">Matrix</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/">greed</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://Matrix.R-forge.R-project.org/" class="external-link">Matrix</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/" class="external-link">greed</a></span><span class="op">)</span></code></pre></div>
 <p>Simulation of an SBM graph with a hierarchical structure.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">N</span><span class="op">=</span><span class="fl">400</span>
 <span class="va">K</span><span class="op">=</span><span class="fl">6</span>
-<span class="va">pi</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">K</span>,<span class="va">K</span><span class="op">)</span>
+<span class="va">pi</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">K</span>,<span class="va">K</span><span class="op">)</span>
 <span class="va">lambda</span>  <span class="op">=</span> <span class="fl">0.1</span>
 <span class="va">lambda_o</span> <span class="op">=</span> <span class="fl">0.01</span>
 <span class="va">Ks</span><span class="op">=</span><span class="fl">3</span>
-<span class="va">mu</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/bdiag.html">bdiag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">K</span><span class="op">/</span><span class="va">Ks</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">k</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="va">lambda_o</span>,<span class="va">Ks</span>,<span class="va">Ks</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">lambda</span>,<span class="va">Ks</span><span class="op">)</span><span class="op">)</span><span class="op">}</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fl">0.001</span>
+<span class="va">mu</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/bdiag.html" class="external-link">bdiag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">K</span><span class="op">/</span><span class="va">Ks</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">k</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="va">lambda_o</span>,<span class="va">Ks</span>,<span class="va">Ks</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">lambda</span>,<span class="va">Ks</span><span class="op">)</span><span class="op">)</span><span class="op">}</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fl">0.001</span>
 <span class="va">sbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/rsbm.html">rsbm</a></span><span class="op">(</span><span class="va">N</span>,<span class="va">pi</span>,<span class="va">mu</span><span class="op">)</span></code></pre></div>
 <p>Perform the clustering with default model and algorithm. We specify to choose an sbm model since for squared sparse matrix the default is a DcSbm model. An hybrid algorithm is selected by default and the default value for the parameter K is 20.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">sbm</span><span class="op">$</span><span class="va">x</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/SbmPrior-class.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess SBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -14209 and 6 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -14209 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -14174 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -14174 and 6 clusters #################</span>
 <span class="co">#&gt; [1] "clean ok"</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a SBM model, 6 clusters and an icl of -14209.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a SBM model, 6 clusters and an icl of -14174.</span></code></pre></div>
 <p>Plot the results using a block representation.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
 <p><img src="graph-clustering-with-sbm_files/figure-html/unnamed-chunk-4-1.png" width="70%"></p>
 <p>Plot the results with a node link diagram.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'nodelink'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'nodelink'</span><span class="op">)</span></code></pre></div>
 <p><img src="graph-clustering-with-sbm_files/figure-html/unnamed-chunk-5-1.png" width="70%"></p>
 <p>Or a dendrogram for selecting a smaller value for K.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
 <p><img src="graph-clustering-with-sbm_files/figure-html/unnamed-chunk-6-1.png" width="70%"></p>
 <p>Eventually study the evolution of <span class="math inline">\(-log(\alpha)\)</span> with respect to <span class="math inline">\(K\)</span>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'path'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'path'</span><span class="op">)</span></code></pre></div>
 <p><img src="graph-clustering-with-sbm_files/figure-html/unnamed-chunk-7-1.png" width="70%"></p>
 <p>Or of ICL with respect to <span class="math inline">\(log(\alpha)\)</span></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'front'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'front'</span><span class="op">)</span></code></pre></div>
 <p><img src="graph-clustering-with-sbm_files/figure-html/unnamed-chunk-8-1.png" width="70%"></p>
 <p>And select a smaller value to extract a new solution.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sol2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">sol</span>,<span class="fl">2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol2</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">sol2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">sol</span>,<span class="fl">2</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol2</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
 <p><img src="graph-clustering-with-sbm_files/figure-html/unnamed-chunk-9-1.png" width="70%"></p>
   </div>
 
@@ -164,11 +166,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Etienne Côme, Nicolas Jouvin.</p>
+  <p></p>
+<p>Developed by Etienne Côme, Nicolas Jouvin.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
 </div>
 
       </footer>
@@ -176,6 +180,8 @@
 
   
 
+
+  
 
   </body>
 </html>

@@ -6,12 +6,12 @@ NULL
 #' @description 
 #' An S4 class to represent a Latent Class Analysis model
 #' Such model can be used to cluster a data.frame \eqn{X} with several columns of factors with the following generative model :  
-#' \deqn{\pi&\sim \textrm{Dirichlet}(\alpha),}
-#' \deqn{\forall k, \forall j, \quad \theta_{kj} &\sim \textrm{Dirichlet}_{d_j}(\beta),}
-#' \deqn{Z_i&\sim \mathcal{M}_K(1,\pi),}
-#' \deqn{\forall j=1, \ldots, p, \quad X_{ij}|Z_{ik}=1 &\sim \mathcal{M}_{d_j}(1, \theta_{kj}),}
+#' \deqn{\pi \sim \textrm{Dirichlet}(\alpha),}
+#' \deqn{\forall k, \forall j, \quad \theta_{kj} \sim \textrm{Dirichlet}_{d_j}(\beta),}
+#' \deqn{Z_i \sim \mathcal{M}_K(1,\pi),}
+#' \deqn{\forall j=1, \ldots, p, \quad X_{ij}|Z_{ik}=1 \sim \mathcal{M}_{d_j}(1, \theta_{kj}),}
 #' These classes mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model.
-#' The \code{Lca-class} must be used when fitting a simple Latent Class Analysis whereas the \code{LcaPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
+#' The \code{Lca-class} must be used when fitting a simple Latent Class Analysis whereas the \code{LcaPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
 #' @slot beta Dirichlet prior parameter for all the categorical feature (default to 1)
 #' @family DlvmModels
 #' @export
@@ -143,32 +143,6 @@ setMethod(f = "plot",
           });
 
 
-#' @title plot a \code{\link{LcaPath-class}} object
-#' 
-#' @param x an \code{\link{LcaPath-class}} object
-#' @param type a string which specify plot type:
-#' \itemize{
-#' \item \code{'front'}: plot the extracted front in the plane ICL, log(alpha)
-#' \item \code{'path'}: plot the evolution of ICL with respect to K
-#' \item \code{'tree'}: plot the associated dendrogram
-#' }
-#' @return a \code{\link{ggplot2}} graphic
-#' @export 
-setMethod(f = "plot", 
-          signature = signature("LcaPath","missing"),
-          definition = function(x,type='marginals'){
-            switch(type,tree = {
-              dendo(x)
-            },
-            path ={
-              lapath(x)
-            },
-            front = {
-              plot_front(x)
-            },invisible(methods::callNextMethod()))
-            
-          })
-
 
 #' @title Extract parameters from an \code{\link{LcaFit-class}} object
 #' 
@@ -187,15 +161,6 @@ setMethod(f = "coef",
             Thetak = lapply(sol@obs_stats$Lca$x_counts,function(mat){(mat+sol@model@beta-1)/rowSums(mat+sol@model@beta-1)})
             list(pi=pi,Thetak=Thetak)
 })
-
-
-
-setMethod(f = "seed", 
-          signature = signature("Lca","list","numeric"), 
-          definition = function(model,data, K){
-            km=stats::kmeans(as.matrix(data$X),K)
-            km$cluster
-          })
 
 
 
@@ -257,13 +222,16 @@ setMethod(
   f = "cleanObsStats",
   signature = signature("LcaPrior", "list"),
   definition = function(model, obs_stats, data) {
-    cat_names = colnames(data.frame(data))
-    for(v in 1:length(obs_stats$x_counts)){
-      obs_stats$x_counts[[v]]=matrix(obs_stats$x_counts[[v]],ncol=length(levels(data[[v]])))
-      colnames(obs_stats$x_counts[[v]])=levels(data[[v]])
-      rownames(obs_stats$x_counts[[v]])=paste0("cluster",1:nrow(obs_stats$x_counts[[v]]))
+    if(length(obs_stats$x_counts)>0){
+      cat_names = colnames(data.frame(data))
+      for(v in 1:length(obs_stats$x_counts)){
+        nb_levels = length(levels(droplevels(data[[v]])))
+        obs_stats$x_counts[[v]]=matrix(obs_stats$x_counts[[v]],ncol=nb_levels)
+        colnames(obs_stats$x_counts[[v]])= levels(droplevels(data[[v]]))
+        rownames(obs_stats$x_counts[[v]])= paste0("cluster",1:nrow(obs_stats$x_counts[[v]]))
+      }
+      names(obs_stats$x_counts)=cat_names
     }
-    names(obs_stats$x_counts)=cat_names
     obs_stats
   }
 )

@@ -13,7 +13,7 @@ NULL
 #' \deqn{ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})}
 #' \deqn{ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})}
 #' with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Whishart distribution. 
-#' The \code{Gmm-class} must be used when fitting a simple Gmm whereas the \code{GmmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
+#' The \code{Gmm-class} must be used when fitting a simple Gaussian Mixture Model whereas the \code{GmmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
 #' 
 #' @slot tau Prior parameter (inverse variance) default 0.01
 #' @slot N0 Prior parameter (pseudo count) should be > number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)
@@ -157,47 +157,13 @@ setMethod(
         grid::grid.newpage()
         gpl <- grid::grid.draw(gg)
         invisible(gg)
-      }
+      },
+      stop(paste0("No plot available with type :",type),call. = FALSE)
     )
   }
 )
 
 
-#' @title plot a \code{\link{GmmPath-class}} object
-#'
-#'
-#' @param x a \code{\link{GmmPath-class}}
-#' @param type a string which specify plot type:
-#' \itemize{
-#' \item \code{'front'}: plot the extracted front ICL, log(alpha)
-#' \item \code{'path'}: plot the evolution of ICL with respect to K
-#' \item \code{'tree'}: plot the associated dendrogram
-#' }
-#' @return a \code{\link{ggplot2}} graphic
-#' @export
-setMethod(
-  f = "plot",
-  signature = signature("GmmPath", "missing"),
-  definition = function(x, type = "marginals") {
-    switch(type,
-      tree = {
-        dendo(x)
-      },
-      path = {
-        lapath(x)
-      },
-      front = {
-        plot_front(x)
-      },
-      marginals = {
-        invisible(methods::callNextMethod())
-      },
-      violins = {
-        invisible(methods::callNextMethod())
-      }
-    )
-  }
-)
 
 #' @title Extract mixture parameters from \code{\link{GmmFit-class}} object
 #'

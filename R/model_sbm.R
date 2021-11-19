@@ -137,7 +137,6 @@ setClass("SbmPath", contains = c("IclPath", "SbmFit"))
 
 #' @title plot a \code{\link{SbmFit-class}} object
 #'
-#'
 #' @param x a \code{\link{SbmFit-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
@@ -145,7 +144,7 @@ setClass("SbmPath", contains = c("IclPath", "SbmFit"))
 #' \item \code{'nodelink'}: plot a nodelink diagram of the graph summarizing connections between clusters
 #' }
 #' @return a \code{\link{ggplot2}} graphic
-#' @rdname plot-sbm_fit
+#' @seealso \code{\link{plot,IclPath,missing-method}}
 #' @export
 setMethod(
   f = "plot",
@@ -153,48 +152,12 @@ setMethod(
   definition = function(x, type = "blocks") {
     switch(type,
       blocks = graph_blocks(x),
-      nodelink = nodelink(x)
+      nodelink = nodelink(x),
+      stop(paste0("No plot available with type :",type),call. = FALSE)
     )
   }
 )
 
-
-#' @title plot a \code{\link{SbmPath-class}} object
-#'
-#' @param x an \code{\link{SbmPath-class}} object
-#' @param type a string which specify plot type:
-#' \itemize{
-#' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
-#' \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between clusters
-#' \item \code{'front'}: plot the extracted front ICL, log(alpha)
-#' \item \code{'path'}: plot the evolution of ICL with respect to K
-#' \item \code{'tree'}: plot the associated dendrogram
-#' }
-#' @return a \code{\link{ggplot2}} graphic
-#' @export
-setMethod(
-  f = "plot",
-  signature = signature("SbmPath", "missing"),
-  definition = function(x, type = "blocks") {
-    switch(type,
-      tree = {
-        dendo(x)
-      },
-      path = {
-        lapath(x)
-      },
-      front = {
-        plot_front(x)
-      },
-      blocks = {
-        methods::callNextMethod()
-      },
-      nodelink = {
-        methods::callNextMethod()
-      }
-    )
-  }
-)
 
 #' @title Extract parameters from an \code{\link{SbmFit-class}} object
 #'

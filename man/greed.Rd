@@ -5,14 +5,14 @@
 \alias{greed}
 \title{Model based hierarchical clustering}
 \usage{
-greed(X, K = 20, model = find_model(X), alg = Hybrid(), verbose = FALSE)
+greed(X, model = find_model(X), K = 20, alg = Hybrid(), verbose = FALSE)
 }
 \arguments{
 \item{X}{data to cluster either a data.frame, a matrix, an array or a \code{\link{dgCMatrix-class}}}
 
-\item{K}{initial number of cluster}
-
 \item{model}{a generative model to fit \code{\link{DlvmPrior-class}}}
+
+\item{K}{initial number of cluster}
 
 \item{alg}{an optimization algorithm of class \code{\link{Alg-class}} such as \code{\link{Hybrid-class}} (default), \code{\link{Multistarts-class}}, \code{\link{Seed-class}} or \code{\link{Genetic-class}}}
 

@@ -4,7 +4,7 @@ NULL
 #' @title Degree Corrected Stochastic Block Model Prior class
 #'
 #' @description
-#' An S4 class to represent a degree corrected stochastic block model.
+#' An S4 class to represent a Degree Corrected Stochastic Block Model.
 #' Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :
 #' \deqn{ \pi \sim Dirichlet(\alpha)}
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
@@ -14,7 +14,7 @@ NULL
 #' The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity.
 #' These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i:z_{ik}=1}\gamma_i^+=1}. 
 #' These classes mainly store the prior parameters value \eqn{\alpha,p} of this generative model.
-#' The \code{DcSbm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DcSbmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
+#' The \code{DcSbm-class} must be used when fitting a simple Degree Corrected Stochastic Block Model whereas the \code{DcSbmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
 #' @slot p Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)
 #' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
 #' @family DlvmModels
@@ -150,6 +150,7 @@ setClass("DcSbmPath", contains = c("IclPath", "DcSbmFit"))
 #' \item \code{'nodelink'}: plot a nodelink diagram of the graph summarizing connections between clusters
 #' }
 #' @return a \code{\link{ggplot2}} graphic
+#' @seealso \code{\link{plot,IclPath,missing-method}}
 #' @export
 setMethod(
   f = "plot",
@@ -157,45 +158,8 @@ setMethod(
   definition = function(x, type = "blocks") {
     switch(type,
       blocks = graph_blocks(x),
-      nodelink = nodelink(x)
-    )
-  }
-)
-
-
-#' @title plot a \code{\link{DcSbmPath-class}} object
-#'
-#' @param x an \code{\link{DcSbmPath-class}} object
-#' @param type a string which specify plot type:
-#' \itemize{
-#' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
-#' \item \code{'nodelink'}: plot a nodelink diagram of the graph summarizing connections between clusters
-#' \item \code{'front'}: plot the extracted front in the plane ICL, log(alpha)
-#' \item \code{'path'}: plot the evolution of ICL with respect to K
-#' \item \code{'tree'}: plot the associated dendrogram
-#' }
-#' @return a \code{\link{ggplot2}} graphic
-#' @export
-setMethod(
-  f = "plot",
-  signature = signature("DcSbmPath", "missing"),
-  definition = function(x, type = "blocks") {
-    switch(type,
-      tree = {
-        dendo(x)
-      },
-      path = {
-        lapath(x)
-      },
-      front = {
-        plot_front(x)
-      },
-      blocks = {
-        methods::callNextMethod()
-      },
-      nodelink = {
-        methods::callNextMethod()
-      }
+      nodelink = nodelink(x),      
+      stop(paste0("No plot available with type :",type),call. = FALSE)
     )
   }
 )

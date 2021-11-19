@@ -18,16 +18,23 @@ setClass("MixedModels",
   prototype(alpha=1,models=list())
 )
 
+setValidity("MixedModels",function(object){
+  models_classes = lapply(object@models,class)
+  valid_models  = c("GmmPrior","DiagGmmPrior","MoRPrior","SbmPrior","DcSbmPrior","MultDcSbmPrior","MoMPrior","LcaPrior")
+  if(!all(models_classes %in% valid_models)){
+    return(paste0("At least one of the provided models to MixedModels is not of the good classe, only ",valid_models," may be used with a MixedModels."))
+  }
+  TRUE
+})
 
 #' @describeIn MixedModels-class MixedModels class constructor
 #' @param models a named list of DlvmPrior's object
 #' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @return a \code{MixedModels-class} object
-#' @alpha
 #' @examples
 #' MixedModels(models = list(continuous=GmmPrior(),discrete=LcaPrior()))
 #' @export
-MixedModels <- function(alpha = 1, models) {
+MixedModels <- function(models,alpha = 1) {
   methods::new("MixedModels", alpha = alpha,models=models)
 }
 
@@ -81,36 +88,6 @@ setClass("MixedModelsPath", contains = c("IclPath", "MixedModelsFit"))
 
 
 
-
-
-#' @title plot a \code{\link{MixedModelsPath-class}} object
-#'
-#' @param x an \code{\link{MixedModelsPath-class}} object
-#' @param type a string which specify plot type:
-#' \itemize{
-#' \item \code{'front'}: plot the extracted front in the plane ICL, log(alpha)
-#' \item \code{'path'}: plot the evolution of ICL with respect to K
-#' \item \code{'tree'}: plot the associated dendrogram
-#' }
-#' @return a \code{\link{ggplot2}} graphic
-#' @export
-setMethod(
-  f = "plot",
-  signature = signature("MixedModelsPath", "missing"),
-  definition = function(x, type = "tree") {
-    switch(type,
-      tree = {
-        dendo(x)
-      },
-      path = {
-        lapath(x)
-      },
-      front = {
-        plot_front(x)
-      }
-    )
-  }
-)
 
 
 setMethod(

@@ -21,16 +21,19 @@ plan(multisession)
 library(greed)
 library(dplyr)
 library(tidyr)
+library(purrr)
 library(ggpubr)
 library(ggplot2)
 library(aricode)
 library(careless) # string processing
+library(ggwordcloud)
 set.seed(1234)
 ```
 
 The `greed` package and DLVM framework allows the clustering of categorical data. This vignette describes typical use cases of the `greed()` function in this context, and illustrates its use on real datasets.
 
 # Categorical data clustering with the Latent Class Analysis
+
 We are interested in the clustering of categorical datasets, which are typically found in survey data or item response theory (ITR). In this context, we observe $n$ individuals described by $p$ variables, taking one among $d_j$ modalities for each variable $j$. Such datasets are typically represented using a one-hot-encoding of each factor in a design matrix $\mathbf{X} \in \{0,1\}^{n \times d}$ where $d = \sum_{j=1}^p d_j$. Latent class analysis (LCA) is a generative model for categorical data clustering which posits conditional independance of the factor variables conditionally on the (unknown) partition. Below is a description of its Bayesian formulation with the use of proper conjugate priors
 \[
 \begin{equation}
@@ -60,25 +63,25 @@ data("mushroom")
 
 ## Mushroom data
 
-We begin by forming the necessary vectors for analysis. The data has $n=`r nrow(mushroom)`$ rows and $p=`r ncol(mushroom)`$ columns. The first column contains the poisonous status of each mushroom with two possible values, "p" for "poisonous" and "e" for edible, it will serve as the clustering we seek to recover. The remaining variables are used for clustering. Note that we only use a subset of the data for illustration purpose here.
+We begin by forming the necessary vectors for analysis. The data has $n=`r nrow(mushroom)`$ rows and $p=`r ncol(mushroom)`$ columns. The first column contains the poisonous status of each mushroom with two possible values, "p" for "poisonous" and "e" for edible, it will serve as the clustering we seek to recover. The remaining variables are used for clustering. Note that we only use a subset of the data for illustration purpose here. 
 
 ```{r muhroom-data}
 X = mushroom[,-1]
 subset =sample(1:nrow(X), size = 1000)
 label = mushroom$edibility[subset]
-head(X[subset,])
+head(X[subset,1:10])
 ```
 
 #### Clustering 
 
-The clustering is again done via the main function `greed()` with argument `model` set to LCA and the genetic hybrid algorithm for ICLex maximization. The value of the $\beta$ hyperparameter for the Dirichlet prior on $\theta_{kj}$ can be specified by the user, it defaults to 1.  
+The clustering is again done via the main function `greed()` with argument `model` set to LCA and the genetic hybrid algorithm for ICLex maximization. The value of the $\beta$ hyperparameter for the Dirichlet prior on $\theta_{kj}$ can be specified by the user, it defaults to 1. The Lca model may only be used with datasets stored in a data.frame object with only factors, when such data are provided to the greed function the Lca model is picked by default. To perform the clustering it thereofore sufficient to call greed with the prepared data.frame. 
 
 ```{r cluster-mushroom}
-sol_greed<-greed(X[subset,] ,model=Lca())
+sol_greed<-greed(X[subset,])
 table(Edibility=label, Cluster=clustering(sol_greed))
 ```
 
-The hybrid genetic algorithm found a solution with $K=`r sol_greed@K`$ clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. The ARI of the partition is `r round(ARI(label, clustering(sol_greed)),2)` which is explained by the over-segmentation of the solution compared to the $2$-class problem.
+The hybrid genetic algorithm found a solution with $K=`r sol_greed@K`$ clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. The ARI of the partition is `r round(aricode::ARI(label, clustering(sol_greed)),2)` which is explained by the over-segmentation of the solution compared to the $2$-class problem.
 
 
 #### Hierarchy 
@@ -87,7 +90,7 @@ Exploring the dendrogram provided by the hierarchical algorithm is quite useful 
 
 
 
-```{r dendo-mushroom, fig.dim=c(5,5)}
+```{r dendo-mushroom, fig.dim=c(5,5),fig.align='center'}
 plot(sol_greed, type='tree')
 ```
 
@@ -96,5 +99,97 @@ plot(sol_greed, type='tree')
 sol2 = cut(sol_greed, 2)
 table(Edibility=label, Cluster=clustering(sol2))
 ```
-Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is `r round(ARI(clustering(sol2), label),2)`. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the [way the labels have been set](https://archive.ics.uci.edu/ml/datasets/Mushroom), since mushrooms for which the edibility status was *unknown* were classified as *poisonous* by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ''\textit{there is no simple rule for determining the edibility of a mushroom}''. Thus, the unsupervised problem is hard and the obtained clustering is satisfying on this unsupervised problem. Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.
+Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is `r round(aricode::ARI(clustering(sol2), label),2)`. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the [way the labels have been set](https://archive.ics.uci.edu/ml/datasets/Mushroom), since mushrooms for which the edibility status was *unknown* were classified as *poisonous* by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ''\textit{there is no simple rule for determining the edibility of a mushroom}''. Thus, the unsupervised problem is hard and the obtained clustering is satisfying on this unsupervised problem. Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.
 
+
+
+## Young people survey data
+
+
+```{r datayoungpeople,message=FALSE}
+data("Youngpeoplesurvey")
+```
+We begin by preprocessing the data, only keeping the categorical variable. The original dataset has $n=`r nrow(Youngpeoplesurvey)`$ respondents for $p=`r ncol(Youngpeoplesurvey)`$. We keep only the feature related to the musical taste of the respondent and remove potential strike of identical responses. Eventually, the data are cast to factors with an explicit levels for the missing responses. 
+
+
+
+
+
+```{r}
+nc  = 19
+
+selected = Youngpeoplesurvey %>% 
+  select(all_of(1:nc)) %>%
+  mutate(string = longstring(.)) %>%
+  mutate(sel = if_else(string <= 10,TRUE,FALSE) ) %>% pull(sel)
+
+Xnum = Youngpeoplesurvey %>% 
+  select(all_of(1:nc)) %>%
+  filter(all_of(selected) )
+
+X = Xnum %>% 
+  mutate_all(\(x){
+    x[is.na(x)]="NA"
+    factor(x,levels=c(1:5,"NA"))
+    }) %>%
+  droplevels()
+
+
+```
+
+
+As previouslythe clustering is obtained with a call to greed and the Lca generative model will be taken by default since the dataset is a data.frame with factors only. 
+
+```{r survey-lca-cust,fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+sol=greed(X)
+```
+The algorithm found $K=`r K(sol)`$ clusters which are quite balanced. To explore the results, we plot the dendogram found and used the marginals plot to depict the conditional probilities of the different responses knowing the clusters assignment.
+
+```{r survey-lca-plot1,fig.dim=c(5,5),fig.align='center'}
+plot(sol,type='tree')
+```
+
+```{r survey-lca-plot2,fig.show='hold',out.width="100%",fig.dim=c(8,6)}
+plot(sol,type='marginals')
+```
+
+
+
+
+The cluster appears to be quite different and coherent. If needed, we may get the estimated conditional probabilities with the help of the generic function `coef()`. 
+
+```{r}
+params = coef(sol)
+params$Thetak[c("Country","Latino")]
+```
+
+To show in another way the clusters structure we will use word clouds of feature names with a color encoding that depict if the feature has an average score greater than the average score of the whole population. With this representation big blue feature correspond to music type that score higher than the mean in this cluster and big red feature to music type that have a smaller score than the mean in the corresponding group. 
+
+```{r posplot, fig.show='hold',fig.width=8,fig.height=7,out.width="100%"}
+params = coef(sol)
+means_scores = lapply(params$Thetak,\(x){apply(x[,1:5],1,\(r){sum(r*1:5)})})
+means_scores_long = do.call(rbind,
+                            map2(means_scores,names(means_scores),\(x,y){
+                              tibble(cluster=1:K(sol),mean=x,var=y)
+                              }))  %>% 
+  mutate(var = gsub("\\."," ",var))
+
+means_scores_glob = Xnum %>% 
+  summarise_all(\(x){mean(x,na.rm=TRUE)}) %>% 
+  tidyr::pivot_longer(all_of(1:nc),names_to = "var",) %>% 
+  mutate(var = gsub("[,-/]"," ",var))
+
+gg = means_scores_long %>% 
+  left_join(means_scores_glob) %>% 
+  mutate(dm=mean-value) 
+
+
+ggplot(gg %>% filter(abs(dm)>0.1), aes(label = var, size = abs(dm),color=dm)) +
+  geom_text_wordcloud() +
+  scale_size_area(max_size = 7) +
+  theme_minimal() +
+  scale_color_gradient2(guide="none")+
+  facet_wrap(~cluster)
+```
+
+The first cluster is close to the global mean, the second corresponds to Classical music and Opera lovers, the third to peoples that like almost all the musical genres, the forth to Rockers, the Fifth to Hard Rockers and the sixth to Rap lovers.

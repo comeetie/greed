@@ -25,12 +25,12 @@ a \code{Lca-class} object
 \description{
 An S4 class to represent a Latent Class Analysis model
 Such model can be used to cluster a data.frame \eqn{X} with several columns of factors with the following generative model :  
-\deqn{\pi&\sim \textrm{Dirichlet}(\alpha),}
-\deqn{\forall k, \forall j, \quad \theta_{kj} &\sim \textrm{Dirichlet}_{d_j}(\beta),}
-\deqn{Z_i&\sim \mathcal{M}_K(1,\pi),}
-\deqn{\forall j=1, \ldots, p, \quad X_{ij}|Z_{ik}=1 &\sim \mathcal{M}_{d_j}(1, \theta_{kj}),}
+\deqn{\pi \sim \textrm{Dirichlet}(\alpha),}
+\deqn{\forall k, \forall j, \quad \theta_{kj} \sim \textrm{Dirichlet}_{d_j}(\beta),}
+\deqn{Z_i \sim \mathcal{M}_K(1,\pi),}
+\deqn{\forall j=1, \ldots, p, \quad X_{ij}|Z_{ik}=1 \sim \mathcal{M}_{d_j}(1, \theta_{kj}),}
 These classes mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model.
-The \code{Lca-class} must be used when fitting a simple Latent Class Analysis whereas the \code{LcaPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
+The \code{Lca-class} must be used when fitting a simple Latent Class Analysis whereas the \code{LcaPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
 }
 \section{Functions}{
 \itemize{

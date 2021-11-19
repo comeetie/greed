@@ -21,3 +21,6 @@ a \code{\link{ggplot2}} graphic
 \description{
 plot a \code{\link{DcSbmFit-class}} object
 }
+\seealso{
+\code{\link{plot,IclPath,missing-method}}
+}

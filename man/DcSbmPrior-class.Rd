@@ -25,7 +25,7 @@ a \code{DcSbmPrior-class} object
 a \code{DcSbm-class} object
 }
 \description{
-An S4 class to represent a degree corrected stochastic block model.
+An S4 class to represent a Degree Corrected Stochastic Block Model.
 Such model can be used to cluster graph vertex, and model a square adjacency matrix \eqn{X} with the following generative model :
 \deqn{ \pi \sim Dirichlet(\alpha)}
 \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
@@ -35,7 +35,7 @@ Such model can be used to cluster graph vertex, and model a square adjacency mat
 The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity.
 These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i:z_{ik}=1}\gamma_i^+=1}. 
 These classes mainly store the prior parameters value \eqn{\alpha,p} of this generative model.
-The \code{DcSbm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DcSbmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
+The \code{DcSbm-class} must be used when fitting a simple Degree Corrected Stochastic Block Model whereas the \code{DcSbmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
 }
 \section{Functions}{
 \itemize{

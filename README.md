@@ -23,33 +23,32 @@ Bouveyron (2021)
 
 The following generative models are available currently :
 
-  - **Stochastic Block Models** (see `` ?`sbm-class` `` and
-    `` ?`misssbm-class` ``),
-  - **Degree Corrected Stochastic Block Models** (see
-    `` ?`dcsbm-class` ``),
-  - **Multinomial Stochastic Block Models** (see
-    `` ?`multsbm-class` ``),
-  - **Degree Corrected Latent Block Models** (see
-    `` ?`co_dcsbm-class` ``),
-  - **Mixture of Multinomials** (see `` ?`mm-class` ``),
-  - **Gaussian Mixture Model** (see `` ?`gmm-class` `` and
-    `` ?`diaggmm-class` ``),
-  - **Multivariate Mixture of Gaussian Regression Model** (see
-    `` ?`mvmreg-class` ``).
+-   **Stochastic Block Models** (see \``?`Sbm-class\` ),
+-   **Degree Corrected Stochastic Block Models** (see
+    `` ?`DcSbm-class` ``),
+-   **Multinomial Stochastic Block Models** (see
+    `` ?`MultSbm-class` ``),
+-   **Mixture of Multinomials** (see `` ?`MoR-class` ``),
+-   **Latent Class Analysis** (see `` ?`Lca-class` ``),
+-   **Gaussian Mixture Model** (see `` ?`Gmm-class` `` and
+    `` ?`DiagGmm-class` ``),
+-   **Multivariate Mixture of Gaussian Regression Model** (see
+    `` ?`MoR-class` ``).
 
 With the Integrated Classification Likelihood, the parameters of the
 models are integrated out. This allows a natural regularization for
 complex models. Since the Integrated Classification Likelihood penalizes
 complex models it allows to automatically find a “natural” value for the
-number of clusters \(K^*\), the user only needs to provide an initial
-guess as well as values for the prior parameters (sensible default
-values are used if no prior information is available). The optimization
-is performed by default thanks to a combination of a greedy local search
-and a genetic algorithm. Several optimization algorithms are available.
+number of clusters *K*<sup>\*</sup>, the user only needs to provide an
+initial guess as well as values for the prior parameters (sensible
+default values are used if no prior information is available). The
+optimization is performed by default thanks to a combination of a greedy
+local search and a genetic algorithm. Several optimization algorithms
+are available.
 
-Eventually, the whole path of solutions from \(K^*\) to 1 cluster is
-extracted. This enables a partial ordering of the clusters, and the
-evaluation of simpler clustering. The package also provides some
+Eventually, the whole path of solutions from *K*<sup>\*</sup> to 1
+cluster is extracted. This enables a partial ordering of the clusters,
+and the evaluation of simpler clustering. The package also provides some
 plotting functionality.
 
 ## Installation
@@ -82,21 +81,17 @@ network:
 library(greed)
 data(Jazz)
 sol=greed(Jazz)
-#> ------- undirected DCSBM model fitting ------
-#> ################# Generation  1: best solution with an ICL of -28628 and 18 clusters #################
-#> ################# Generation  2: best solution with an ICL of -28617 and 17 clusters #################
-#> ################# Generation  3: best solution with an ICL of -28601 and 15 clusters #################
-#> ################# Generation  4: best solution with an ICL of -28584 and 16 clusters #################
-#> ################# Generation  5: best solution with an ICL of -28582 and 13 clusters #################
-#> ################# Generation  6: best solution with an ICL of -28579 and 17 clusters #################
-#> ################# Generation  7: best solution with an ICL of -28577 and 17 clusters #################
-#> ################# Generation  8: best solution with an ICL of -28577 and 17 clusters #################
-#> ################# Generation  9: best solution with an ICL of -28577 and 17 clusters #################
+#> ------- guess DCSBM model fitting ------
+#> ################# Generation  1: best solution with an ICL of -28614 and 18 clusters #################
+#> ################# Generation  2: best solution with an ICL of -28601 and 17 clusters #################
+#> ################# Generation  3: best solution with an ICL of -28588 and 13 clusters #################
+#> ################# Generation  4: best solution with an ICL of -28575 and 16 clusters #################
+#> ################# Generation  5: best solution with an ICL of -28575 and 16 clusters #################
 #> ------- Final clustering -------
-#> ICL clustering with a DCSBM model, 16 clusters and an icl of -28561.
+#> ICL clustering with a DCSBM model, 15 clusters and an icl of -28557.
 ```
 
-Here Jazz is a square sparse matrix and a `` ?`dcsbm-class` `` model
+Here Jazz is a square sparse matrix and a `` ?`DcSbm-class` `` model
 will be used by default. Some plotting function enable the exploration
 of the clustering results:
 
@@ -133,18 +128,15 @@ library(future)
 plan(multisession)
 data("Blogs")
 sol=greed(Blogs$X)
-#> ------- directed DCSBM model fitting ------
-#> ################# Generation  1: best solution with an ICL of -84494 and 19 clusters #################
-#> ################# Generation  2: best solution with an ICL of -84348 and 18 clusters #################
-#> ################# Generation  3: best solution with an ICL of -84227 and 18 clusters #################
-#> ################# Generation  4: best solution with an ICL of -84220 and 18 clusters #################
-#> ################# Generation  5: best solution with an ICL of -84165 and 16 clusters #################
-#> ################# Generation  6: best solution with an ICL of -84141 and 18 clusters #################
-#> ################# Generation  7: best solution with an ICL of -84130 and 18 clusters #################
-#> ################# Generation  8: best solution with an ICL of -84125 and 17 clusters #################
-#> ################# Generation  9: best solution with an ICL of -84125 and 17 clusters #################
+#> ------- guess DCSBM model fitting ------
+#> ################# Generation  1: best solution with an ICL of -84503 and 16 clusters #################
+#> ################# Generation  2: best solution with an ICL of -84413 and 17 clusters #################
+#> ################# Generation  3: best solution with an ICL of -84341 and 19 clusters #################
+#> ################# Generation  4: best solution with an ICL of -84293 and 17 clusters #################
+#> ################# Generation  5: best solution with an ICL of -84275 and 18 clusters #################
+#> ################# Generation  6: best solution with an ICL of -84275 and 18 clusters #################
 #> ------- Final clustering -------
-#> ICL clustering with a DCSBM model, 16 clusters and an icl of -84099.
+#> ICL clustering with a DCSBM model, 17 clusters and an icl of -84250.
 plot(sol)
 ```
 

@@ -1,0 +1,58 @@
+---
+title: "MoR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{MoR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r setup}
+library(greed)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+reg_formula <- log(value_eur) ~ age + pace + shooting + dribbling + passing + defending  + physic
+mod_reg = MoR(reg_formula,tau=0.01)
+Xreg=Fifa %>% sample_n(3000) %>% filter(value_eur>0) %>% mutate(nationality=factor(nationality))
+sol=greed(Xreg,mod_reg,alg=Seed())
+cl=clustering(sol)
+co=coef(sol)
+
+Xdesign = model.matrix(regformula,Xreg)
+Xpred = lapply(1:K(sol),function(k){Xdesign%*%co$A[[k]]})
+names(Xpred)=paste0("cluster",1:K(sol))
+data.frame(Xpred)
+Xpred = cbind(Xpred,data.frame(value_eur=Xreg$value_eur,cl=factor(cl)))
+
+ggplot()+geom_point(data=Xpred %>% filter(cl==1),aes(x=cluster1,y=log(value_eur),color=cl))+
+  geom_point(data=Xpred %>% filter(cl==2),aes(x=cluster2,y=log(value_eur),color=cl))+
+  geom_point(data=Xpred %>% filter(cl==3),aes(x=cluster3,y=log(value_eur),color=cl))+
+  geom_abline(color="red")+
+  coord_equal()+
+  xlim(c(7.5,19))+
+  ylim(c(7.5,19))
+
+mean_feat = Xdesign %>% apply(2,mean)
+
+reg1 = lapply(names(mean_feat)[3:6],\(ff){
+  Xt=t(matrix(rep(mean_feat,75),ncol=75))
+  Xt[,names(mean_feat)==ff]=26:100
+  Xt%*%co$A[[3]]
+})
+names(reg1)=names(mean_feat)[3:6]
+reg1 = data.frame(reg1)
+gg=cbind(reg1,data.frame(score=26:100)) %>% pivot_longer(1:4,names_to="feat")
+ggplot(gg)+geom_line(aes(x=score,y=value,group=feat,color=feat))
+
+```

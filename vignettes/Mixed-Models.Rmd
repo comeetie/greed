@@ -1,0 +1,107 @@
+---
+title: "Mixed Models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Mixed Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+Loads packages.
+```{r setup}
+library(greed)
+library(dplyr)
+library(tidyr)
+library(ggpubr)
+library(mclust)
+
+library(ggplot2)
+set.seed(2134)
+```
+
+## Mixed Models clustering
+
+One of distinctive feature of greed is that you may mix several model together. Using such an approach one may perform a simultaneous clustering of several view of the same individuals with different generative models. In all case this approach suppose that the different view are generated in an independent way when the clustering assignment is known. To explore this capability we will begin with the Fifa dataset and cluster simultaneously the categorical features with an Lca and the continuous one with a Gmm.
+
+
+### The Fifa data-set Lca + GMM
+
+We first load the Fifa dataset that correspond to several feature of Soccer players in the Fifa 2020 videogame. We remove the first two columns that give the players names and nationality, and we kept only the players which earn more than  1000000 euros.
+
+```{r fifa-data}
+data(Fifa)
+X <- Fifa[,-c(1,2)] %>% 
+  filter(value_eur>1000000) %>% 
+  select(-value_eur,-GK)
+```
+
+This leave us with a dataset of $n=`r nrow(X)`$ rows and $p=`r ncol(X)`$ columns. The features correspond to players characteristics (age,height,weight), skills scores (pace,shooting,...) and a set of binary factors that describe the field position were the players may be aligned.
+
+```{r fifa-desc}
+summary(X)
+```
+
+Preparing the data and the model is a little bit complicated than for the other models since we must specify the different models we want to use:
+```{r fifa-mmm}
+library(future)
+plan(multisession)
+# prepare the dataset create a list with the factor colums in one slot and the numeric columns in another slot
+data <- list(categorical = X %>% select_if(is.factor),
+            cont = X %>% select_if(function(v){!is.factor(v)}))
+# create the MixedModels, as expected we will use an LcaPrior for the fcators and a GmmPrior for the numeric columns 
+mixmod <- MixedModels(models=list(categorical=LcaPrior(),cont=GmmPrior()))
+#perform the clustering
+sol = greed(data,model = mixmod)
+```
+When the model  is fitted the `extractSubModel()` function allow to retrieve the fitted sub-models, and use the plotting capabilities of each of them. We may for example look at the categorical part of the model and make a `marginals` plot. We see with this figure that the 
+
+```{r genplotcat, fig.show='hold',out.width="100%",fig.width=8,fig.height=8.5}
+plot(extractSubModel(sol,"categorical"),type="marginals")
+```
+```{r genplotcont, fig.show='hold',out.width="100%",fig.width=8,fig.height=8.5}
+plot(extractSubModel(sol,"cont"),type="violins")
+```
+
+
+```{r genplotcont, fig.show='hold',out.width="100%",fig.width=8,fig.height=8.5}
+gmmpairs(extractSubModel(sol,"cont"),data$cont)
+```
+
+```{r posplot, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
+data("Fifa_positions")
+params=coef(extractSubModel(sol,"categorical"))
+
+pos_clust = data.frame(do.call(rbind,lapply(1:K(sol),\(k){
+  sapply(params$Thetak[2:length(params$Thetak)],\(x){1-x[k,1]})
+})))
+pos_clust$cluster=factor(1:K(sol))
+
+pos_clust_long = pos_clust %>% pivot_longer(cols = -ncol(pos_clust),names_to = "position",values_to = "p") %>% 
+  mutate(position=tolower(position)) %>% 
+  left_join(Fifa_positions$positions,by=c("position"="team_position"))
+
+pos_clust_mean = pos_clust_long %>% group_by(cluster) %>% summarise(x=weighted.mean(x,p),y=weighted.mean(y,p))
+
+library(ggpubr)
+ggplot(pos_clust_mean)+background_image(Fifa_positions$bg_img)+geom_text(aes(x=x,y=y,label=cluster),size=5,col="red")+
+  coord_fixed(ratio=1)+
+  scale_x_continuous(limits=c(0,203.2),expand = c(0,1))+
+  scale_y_continuous(limits=c(0,101.6),expand = c(0,1))+theme_void()
+
+```
+
+### The Ndrangheta data-set Sbm + Lca 
+
+```{r }
+data= list(graph=Ndrangheta$X,node_infos=data.frame(Role=Ndrangheta$node_meta$Role,stringsAsFactors = TRUE))
+mixmod = MixedModels(models= list(graph=SbmPrior(),node_infos=LcaPrior()))
+sol=greed(data,model=mixmod)
+plot(sol)
+plot(extractSubModel(sol,"graph"),type="blocks")
+```

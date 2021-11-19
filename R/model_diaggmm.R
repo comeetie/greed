@@ -181,43 +181,6 @@ setMethod(
   }
 )
 
-#' @title plot a \code{\link{DiagGmmPath-class}} object
-#'
-#'
-#' @param x a \code{\link{DiagGmmPath-class}}
-#' @param type a string which specify plot type:
-#' \itemize{
-#' \item \code{'marginals'}: plot the marginal densities
-#' \item \code{'violins'}: make a violin plot for each clusters and features
-#' \item \code{'front'}: plot the extracted front ICL, log(alpha)
-#' \item \code{'path'}: plot the evolution of ICL with respect to K
-#' \item \code{'tree'}: plot the associated dendrogram
-#' }
-#' @return a \code{\link{ggplot2}} graphic
-#' @export
-setMethod(
-  f = "plot",
-  signature = signature("DiagGmmPath", "missing"),
-  definition = function(x, type = "marginals") {
-    switch(type,
-      tree = {
-        dendo(x)
-      },
-      path = {
-        lapath(x)
-      },
-      front = {
-        plot_front(x)
-      },
-      marginals = {
-        invisible(methods::callNextMethod())
-      },
-      violins = {
-        invisible(methods::callNextMethod())
-      }
-    )
-  }
-)
 
 #' @title Extract mixture parameters from \code{\link{DiagGmmFit-class}} object
 #'

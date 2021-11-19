@@ -204,44 +204,6 @@ setMethod(
   }
 )
 
-#' @title plot a \code{\link{DcLbmPath-class}}
-#'
-#' @param x a \code{\link{DcLbmPath-class}}
-#' @param type a string which specify plot type:
-#' \itemize{
-#' \item \code{'blocks'}: plot a block matrix with summarizing connections between row and column clusters
-#' \item \code{'biplot'}: plot a block matrix with summarizing connections between row and column clusters aligned with row and clusters drendograms
-#' \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between row and column clusters
-#' \item \code{'front'}: plot the extracted front ICL, log(alpha)
-#' \item \code{'path'}: plot the evolution of ICL with respect to K
-#' \item \code{'tree'}: plot the associated dendrograms one for the row clusters and one for the column clusters
-#' }
-#' @return a \code{\link{ggplot2}} graphic
-#' @export
-setMethod(
-  f = "plot",
-  signature = signature("DcLbmPath", "missing"),
-  definition = function(x, type = "blocks") {
-    switch(type,
-      tree = {
-        co_dendo(x)
-      },
-      path = {
-        lapath(x)
-      },
-      front = {
-        plot_front(x)
-      },
-      blocks = {
-        methods::callNextMethod()
-      },
-      nodelink = {
-        methods::callNextMethod()
-      }
-    )
-  }
-)
-
 
 #' @title Extract parameters from an \code{\link{DcLbmFit-class}} object
 #'
