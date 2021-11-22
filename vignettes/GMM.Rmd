@@ -100,6 +100,8 @@ params$Sigmak[[2]]
 ```
 
 
+## The fashion MNIST dataset
+
 Such simpler diagonal model may be of interest in particular for high dimensional settings for two reasons. First, the number of parameters (even if they are integrated out in the clustering phase) is reduced and this can be interesting when $d$ is important, but also because the prior maybe defined such that it will be less informative. You may try with a subset of the fashion mnist data provided with the package which contains 784 dimensional vectors (28x28 flattened images). In such settings, you may also want to switch the optimization algorithm to `` ?`seed-class` ``, this algorithm is less efficient than the hybrid algorithm used by default by greed. But, since it relied on a seeded initialization it is also a little bit less costly. In this case, you may increase the initial value for $K$ since, this algorithm is not able to find an clustering with a number of cluster bigger than the value of $K$ provided by the user. Still, it may simplify the clustering and return an optimal clustering with less clusters.    
 
 ```{r fashion-diaggmm}

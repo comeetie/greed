@@ -74,7 +74,7 @@ head(X[subset,1:10])
 
 #### Clustering 
 
-The clustering is again done via the main function `greed()` with argument `model` set to LCA and the genetic hybrid algorithm for ICLex maximization. The value of the $\beta$ hyperparameter for the Dirichlet prior on $\theta_{kj}$ can be specified by the user, it defaults to 1. The Lca model may only be used with datasets stored in a data.frame object with only factors, when such data are provided to the greed function the Lca model is picked by default. To perform the clustering it thereofore sufficient to call greed with the prepared data.frame. 
+The clustering is again done via the main function `greed()` with argument `model` set to LCA and the genetic hybrid algorithm for ICLex maximization. The value of the $\beta$ hyperparameter for the Dirichlet prior on $\theta_{kj}$ can be specified by the user, it defaults to 1. The Lca model may only be used with datasets stored in a data.frame object with only factors, when such data are provided to the greed function the Lca model is picked by default. To perform the clustering it therefore sufficient to call greed with the prepared data.frame. 
 
 ```{r cluster-mushroom}
 sol_greed<-greed(X[subset,])
@@ -113,7 +113,7 @@ We begin by preprocessing the data, only keeping the categorical variable. The o
 
 
 
-
+#### Data preparation
 
 ```{r}
 nc  = 19
@@ -137,23 +137,26 @@ X = Xnum %>%
 
 ```
 
+#### Hierarchy 
 
 As previouslythe clustering is obtained with a call to greed and the Lca generative model will be taken by default since the dataset is a data.frame with factors only. 
 
 ```{r survey-lca-cust,fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
 sol=greed(X)
 ```
-The algorithm found $K=`r K(sol)`$ clusters which are quite balanced. To explore the results, we plot the dendogram found and used the marginals plot to depict the conditional probilities of the different responses knowing the clusters assignment.
-
+The algorithm found $K=`r K(sol)`$ clusters which are quite balanced. To explore the results, we plot the dendogram found. 
 ```{r survey-lca-plot1,fig.dim=c(5,5),fig.align='center'}
 plot(sol,type='tree')
 ```
 
+
+#### Clustering analysis
+
+We may also used the `marginals` plot to depict the conditional probabilities of the different responses knowing the clusters assignment.
+
 ```{r survey-lca-plot2,fig.show='hold',out.width="100%",fig.dim=c(8,6)}
 plot(sol,type='marginals')
 ```
-
-
 
 
 The cluster appears to be quite different and coherent. If needed, we may get the estimated conditional probabilities with the help of the generic function `coef()`. 
@@ -192,4 +195,4 @@ ggplot(gg %>% filter(abs(dm)>0.1), aes(label = var, size = abs(dm),color=dm)) +
   facet_wrap(~cluster)
 ```
 
-The first cluster is close to the global mean, the second corresponds to Classical music and Opera lovers, the third to peoples that like almost all the musical genres, the forth to Rockers, the Fifth to Hard Rockers and the sixth to Rap lovers.
+Using such a visualization allow to easily describe the different groups. The first cluster is close to the global mean, the second corresponds to Classical music and Opera lovers, the third to peoples that like almost all the musical genres, the forth to Rockers, the Fifth to Hard Rockers and the sixth to Rap lovers.

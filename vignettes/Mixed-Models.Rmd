@@ -32,12 +32,12 @@ One of distinctive feature of greed is that you may mix several model together. 
 
 ### The Fifa data-set Lca + GMM
 
-We first load the Fifa dataset that correspond to several feature of Soccer players in the Fifa 2020 videogame. We remove the first two columns that give the players names and nationality, and we kept only the players which earn more than  1000000 euros.
+We first load the Fifa dataset that correspond to several feature of Soccer players in the Fifa 2020 videogame. We remove the first two columns that give the players names and nationality, and we kept only the players which earn more than  3000000 euros.
 
 ```{r fifa-data}
 data(Fifa)
 X <- Fifa[,-c(1,2)] %>% 
-  filter(value_eur>1000000) %>% 
+  filter(value_eur>3000000) %>% 
   select(-value_eur,-GK)
 ```
 
@@ -54,24 +54,32 @@ plan(multisession)
 # prepare the dataset create a list with the factor colums in one slot and the numeric columns in another slot
 data <- list(categorical = X %>% select_if(is.factor),
             cont = X %>% select_if(function(v){!is.factor(v)}))
-# create the MixedModels, as expected we will use an LcaPrior for the fcators and a GmmPrior for the numeric columns 
+# create the MixedModels, as expected we will use an LcaPrior for the factors and a GmmPrior for the numeric columns.
+# !be carefull names in the models list and in the data list must match
 mixmod <- MixedModels(models=list(categorical=LcaPrior(),cont=GmmPrior()))
-#perform the clustering
+# perform the clustering
 sol = greed(data,model = mixmod)
 ```
-When the model  is fitted the `extractSubModel()` function allow to retrieve the fitted sub-models, and use the plotting capabilities of each of them. We may for example look at the categorical part of the model and make a `marginals` plot. We see with this figure that the 
+
+When the model  is fitted the `extractSubModel()` function allow to retrieve the fitted sub-models, and use the plotting capabilities of each of them. We may for example look at the categorical part of the model and make a `marginals` plot. We see with this figure that the clusters found agree quite strongly with the field positions features. The preferred foot feature has also an impact on cluster 2 and 3.
 
 ```{r genplotcat, fig.show='hold',out.width="100%",fig.width=8,fig.height=8.5}
 plot(extractSubModel(sol,"categorical"),type="marginals")
 ```
-```{r genplotcont, fig.show='hold',out.width="100%",fig.width=8,fig.height=8.5}
+
+
+When looking at the continuous features the clusters are quite well organized, the hierarchical ordering has produced a meaningful ordering, look at the shooting feature. We will go back to this point later.
+
+```{r genplotviol, fig.show='hold',out.width="100%",fig.width=8,fig.height=8.5}
 plot(extractSubModel(sol,"cont"),type="violins")
 ```
 
+For the marginals plots, one things that pop out is the clear bimodal aspect of the defending features, the mixture of the remaining feature is clearly not so well separated.
 
-```{r genplotcont, fig.show='hold',out.width="100%",fig.width=8,fig.height=8.5}
-gmmpairs(extractSubModel(sol,"cont"),data$cont)
+```{r genplotmar, fig.show='hold',out.width="100%",fig.width=8,fig.height=8.5}
+plot(extractSubModel(sol,"cont"),type="marginals")
 ```
+To clearly show, the alignment of the cluster with field position we will make a little figure and plot for each cluster their mean position on the field. This will be computed as the weighted average coordinate of each field position were the weight correspond to the probability that a cluster member can play at this position.
 
 ```{r posplot, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 data("Fifa_positions")
@@ -96,12 +104,20 @@ ggplot(pos_clust_mean)+background_image(Fifa_positions$bg_img)+geom_text(aes(x=x
 
 ```
 
+The organisation of the clusters clearly appears, cluster 1 correspond to central defensive players, cluster 2 and 3 to lateral defensive players (recall that the preferred foot of this player were quite different between this two clusters with almost only right footed players in cluster 2 and left footed players in cluster 3).
+
+
 ### The Ndrangheta data-set Sbm + Lca 
 
-```{r }
+Mixed models may also be used to analyse graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangeta dataset. This dataset 
+
+```{r}
+data(Ndrangheta)
 data= list(graph=Ndrangheta$X,node_infos=data.frame(Role=Ndrangheta$node_meta$Role,stringsAsFactors = TRUE))
 mixmod = MixedModels(models= list(graph=SbmPrior(),node_infos=LcaPrior()))
 sol=greed(data,model=mixmod)
 plot(sol)
 plot(extractSubModel(sol,"graph"),type="blocks")
+plot(extractSubModel(sol,"node_infos"),type="marginals")
 ```
+
