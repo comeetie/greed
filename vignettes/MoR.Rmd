@@ -18,15 +18,41 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(greed)
 library(dplyr)
+library(tidyr)
 library(ggplot2)
 ```
 
 ## Mixture of Regression
 
-```{r}
+Mixture of Regression as their name suggest fit several regression models at the same time and try to extract partition where different regression models holds. Formally, the Bayesian version of this model is given by the following generative model.
+
+$$
+\begin{align}
+\pi &\sim Dirichlet(\alpha)\\
+Z_i  &\sim \mathcal{M}(1,\pi)\\
+ V_k &\sim \mathcal{W}(\varepsilon^{-1},n_0)\\
+ A_k &\sim \mathcal{MN}(0,(V_k)^{-1},\tau X^{t}X)\\
+ Y_{i.}|X_{i.},Z_{ik}=1 &\sim \mathcal{N}(A_kx_{i.},V_{k}^{-1})
+ \end{align}
+$$
+with $\mathcal{MN}() the matrix normal distribution and $\mathcal{W}()$ the Whishart distribution. 
+
+#### An introductory example
+
+To introduce this model we will use a small artificial dataset from the `flexmix` package. The dataset correspond to two groups. One with a linear relationship between $x$ and $y$ and a second with a quadratic relationship between $x$ and $y$ 
+
+```{r, fig.width=5,fig.height=5,fig.align='center',out.with="50%"}
 data("NPreg", package = "flexmix")
-ggplot(NPreg)+geom_point(aes(x=x,y=yn,color=class))
-sol=greed(NPreg,MoR(yn~x + I(x^2),tau=0.1))
+ggplot(NPreg)+geom_point(aes(x=x,y=yn,color=class))+theme_bw()
+```
+
+
+```{r}
+sol=greed(NPreg,MoR(yn~x + I(x^2),tau=0.05))
+```
+
+
+```{r}
 cl = clustering(sol)
 table(cl,NPreg$class)
 params = coef(sol)

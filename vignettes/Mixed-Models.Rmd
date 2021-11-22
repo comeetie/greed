@@ -109,13 +109,18 @@ The organisation of the clusters clearly appears, cluster 1 correspond to centra
 
 ### The Ndrangheta data-set Sbm + Lca 
 
-Mixed models may also be used to analyse graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangeta dataset. This dataset 
+Mixed models may also be used to analyse graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangeta dataset. This dataset contains relationship information between members of the Ndrangheta mafia together with some information on their group affiliation and their role. We wil use an Sbm model to fit the adjacency matrix and an Lca model for the facotr describing the roles. 
 
 ```{r}
+# laod the dataset
 data(Ndrangheta)
+# prepare the data 
 data= list(graph=Ndrangheta$X,node_infos=data.frame(Role=Ndrangheta$node_meta$Role,stringsAsFactors = TRUE))
+# build the mixed model
 mixmod = MixedModels(models= list(graph=SbmPrior(),node_infos=LcaPrior()))
+# cluster
 sol=greed(data,model=mixmod)
+# analyse the results
 plot(sol)
 plot(extractSubModel(sol,"graph"),type="blocks")
 plot(extractSubModel(sol,"node_infos"),type="marginals")

@@ -34,7 +34,8 @@ Suggests:
     stringr,
     aricode,
     careless,
-    ggwordcloud
+    ggwordcloud,
+    flexmix
 Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
