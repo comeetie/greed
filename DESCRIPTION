@@ -64,3 +64,4 @@ Collate:
     'tools_generator.R'
     'tools_ploting.R'
 Language: en-US
+LazyData: true

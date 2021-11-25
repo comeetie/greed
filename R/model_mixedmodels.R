@@ -20,9 +20,9 @@ setClass("MixedModels",
 
 setValidity("MixedModels",function(object){
   models_classes = lapply(object@models,class)
-  valid_models  = c("GmmPrior","DiagGmmPrior","MoRPrior","SbmPrior","DcSbmPrior","MultDcSbmPrior","MoMPrior","LcaPrior")
+  valid_models  = c("GmmPrior","DiagGmmPrior","MoRPrior","SbmPrior","DcSbmPrior","MultSbmPrior","MoMPrior","LcaPrior")
   if(!all(models_classes %in% valid_models)){
-    return(paste0("At least one of the provided models to MixedModels is not of the good classe, only ",valid_models," may be used with a MixedModels."))
+    return(paste0("At least one of the provided models to MixedModels is not of the good classe, only ",valid_models," may be used with a MixedModels.",collapse = ", "))
   }
   TRUE
 })

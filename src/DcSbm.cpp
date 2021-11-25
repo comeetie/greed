@@ -6,7 +6,12 @@
 using namespace Rcpp;
 
 DcSbm::DcSbm(const arma::sp_mat  & xp,S4 modeli,bool verb){
-  model = modeli;
+  if(Rcpp::traits::is_nan<REALSXP>(modeli.slot("p"))){
+    model=clone(modeli);
+  }else{
+    model = modeli;
+  }
+  
   x  = xp;
   xt = xp.t();
   N  = x.n_rows;

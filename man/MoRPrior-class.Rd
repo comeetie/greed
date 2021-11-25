@@ -8,14 +8,14 @@
 \alias{MoR}
 \title{Multivariate mixture of regression Prior model description class}
 \usage{
-MoRPrior(formula, tau = 0.1, N0 = NaN, epsilon = as.matrix(NaN))
+MoRPrior(formula, tau = 0.01, N0 = NaN, epsilon = NaN)
 
-MoR(formula, alpha = 1, tau = 0.1, N0 = NaN, epsilon = as.matrix(NaN))
+MoR(formula, alpha = 1, tau = 0.01, N0 = NaN, epsilon = NaN)
 }
 \arguments{
 \item{formula}{a \code{\link{formula}} that describe the linear model to use}
 
-\item{tau}{Prior parameter (inverse variance) default 0.01}
+\item{tau}{Prior parameter (inverse variance) default 0.001}
 
 \item{N0}{Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)}
 

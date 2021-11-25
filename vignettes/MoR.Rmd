@@ -15,97 +15,114 @@ knitr::opts_chunk$set(
 ```
 
 
-```{r setup}
+```{r setup,message=FALSE}
 library(greed)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+set.seed(1234)
 ```
 
 ## Mixture of Regression
 
-Mixture of Regression as their name suggest fit several regression models at the same time and try to extract partition where different regression models holds. Formally, the Bayesian version of this model is given by the following generative model.
+Mixture of Regressions as their name suggest fit several regression models at the same time and try to extract a partition where different regression models holds for each subsets. Formally, the Bayesian version of this model with invariant priors is given by the following generative model.
 
 $$
 \begin{align}
 \pi &\sim Dirichlet(\alpha)\\
 Z_i  &\sim \mathcal{M}(1,\pi)\\
  V_k &\sim \mathcal{W}(\varepsilon^{-1},n_0)\\
- A_k &\sim \mathcal{MN}(0,(V_k)^{-1},\tau X^{t}X)\\
+ A_k|V_k,X &\sim \mathcal{MN}(0,(V_k)^{-1},\tau X^{t}X)\\
  Y_{i.}|X_{i.},Z_{ik}=1 &\sim \mathcal{N}(A_kx_{i.},V_{k}^{-1})
  \end{align}
 $$
-with $\mathcal{MN}() the matrix normal distribution and $\mathcal{W}()$ the Whishart distribution. 
+with $\mathcal{MN}()$ the matrix normal distribution and $\mathcal{W}()$ the Whishart distribution. The prior parameters may therefore have an impact on the results and they can't be non-informative. The main prior parameters to look at are $\tau$ and $\epsilon$. $\tau$ define the strength of the regularization applied on the regression problem, by default it equals $0.01$, $\epsilon$ and $n_0$ define the prior for the noise co-variance matrix. By default, it will be  equal to 0.1 time the variance of the regression residuals with only one cluster and $n_0$ is fixed by default to $d$ the dimension of $y$ for the prior to be as uninformative as possible.
+
 
 #### An introductory example
 
-To introduce this model we will use a small artificial dataset from the `flexmix` package. The dataset correspond to two groups. One with a linear relationship between $x$ and $y$ and a second with a quadratic relationship between $x$ and $y$ 
+To introduce this model we will use a small toy artificial dataset from the `flexmix` package. The dataset correspond to two groups. One with a linear relationship between $x$ and $y$ and a second with a quadratic relationship between $x$ and $y$ :
 
-```{r, fig.width=5,fig.height=5,fig.align='center',out.with="50%"}
+```{r, fig.width=6.5,fig.height=5,fig.align='center',out.with="50%"}
 data("NPreg", package = "flexmix")
-ggplot(NPreg)+geom_point(aes(x=x,y=yn,color=class))+theme_bw()
+ggplot(NPreg)+geom_point(aes(x=x,y=yn,color=factor(class)))+theme_bw()
 ```
-
+To fit a mixture of regression model with greed, you must provide a `data.frame` and a `MoR` model. To build such a model, we simply use the `MoR` function which has one mandatory argument, the formula of the supposed regression model. In our toy case, we  may thus use the following line of code to fit the clustering model using a polynomial regression model of degree two:
 
 ```{r}
-sol=greed(NPreg,MoR(yn~x + I(x^2),tau=0.05))
+sol=greed(NPreg,model=MoR(yn ~ x + I(x^2)))
 ```
-
+As expected the partition with two cluster that was used to simulate the data is recovered by the algoritthm. When, the clustering is performed, we may use the classical functions `clustering,coef,prior,plot,...`  to explore the results. We may start by comparing the found clustering with the true labels :
 
 ```{r}
 cl = clustering(sol)
 table(cl,NPreg$class)
+```
+
+Look at the value used for the prior parameters :
+```{r}
+prior(sol)
+```
+
+Extract the MAP model coefficient for further use :
+```{r}
 params = coef(sol)
+params
+```
+
+
+And plot prediction line of the fitted sub-models:
+
+```{r, fig.width=6.5,fig.height=5,fig.align='center',out.with="50%"}
 df.pred = data.frame(x=seq(0,10,length.out=200))
 X=model.matrix(~ x +I(x^2),df.pred)
 df.mpred = data.frame(sapply(params$A,function(A){X%*%A}))
 names(df.mpred)=c("cluster1","cluster2")
 df.mpred$x = df.pred$x
 ggplot(NPreg)+
-  geom_point(aes(x=x,y=yn,color=factor(cl)))+
+  geom_point(aes(x=x,y=yn,color=factor(class)))+
   geom_line(data=df.mpred,aes(x=x,y=cluster1))+
-  geom_line(data=df.mpred,aes(x=x,y=cluster2))
+  geom_line(data=df.mpred,aes(x=x,y=cluster2))+
+  theme_bw()
 ```
 
+
+#### An more challenging application with the Fifa dataset
+
+For this example we will use the Fifa dataset and take a subsample of 2000 players:
+```{r}
+data("Fifa")
+Xreg=Fifa %>% 
+    filter(value_eur>0) %>% 
+  sample_n(2000) %>% 
+  mutate_if(is.character,as.factor)
+```
+
+We will try to predict the log of the player value from it's age and ability scores. We therefore define the model and run the clustering in a similar fashion as previously: 
+```{r}
+reg_formula <- log(value_eur) ~ age + pace + shooting + dribbling + passing + defending  + physic
+mod_reg = MoR(reg_formula)
+sol=greed(Xreg,mod_reg)
+```
+
+The clustering found has two clusters, if we look at the regression models parameters :
 
 ```{r}
-data(Fifa)
-reg_formula <- log(value_eur) ~ age + pace + shooting + dribbling + passing + defending  + physic + preferred_foot
-mod_reg = MoR(reg_formula,tau=0.02)
-Xreg=Fifa %>% 
-  sample_n(3000) %>% 
-  filter(value_eur>0) %>% 
-  mutate_if(is.character,is.factor)
-sol=greed(Xreg,mod_reg,alg=Seed())
 cl=clustering(sol)
 co=coef(sol)
-
-Xdesign = model.matrix(reg_formula,Xreg)
-Xpred = lapply(1:K(sol),function(k){Xdesign%*%co$A[[k]]})
-names(Xpred)=paste0("cluster",1:K(sol))
-data.frame(Xpred)
-Xpred = cbind(Xpred,data.frame(value_eur=Xreg$value_eur,cl=factor(cl)))
-
-ggplot()+
-  geom_point(data=Xpred %>% filter(cl==1),aes(x=cluster1,y=log(value_eur),color=cl))+
-  geom_point(data=Xpred %>% filter(cl==2),aes(x=cluster2,y=log(value_eur),color=cl))+
-  geom_abline(color="red")+
-  coord_equal()+
-  xlim(c(7.5,19))+
-  ylim(c(7.5,19))
-
-mean_feat = Xdesign %>% apply(2,mean)
-
-reg1 = lapply(names(mean_feat)[3:6],\(ff){
-  Xt=t(matrix(rep(mean_feat,75),ncol=75))
-  Xt[,names(mean_feat)==ff]=26:100
-  Xt%*%co$A[[3]]
-})
-names(reg1)=names(mean_feat)[3:6]
-reg1 = data.frame(reg1)
-gg=cbind(reg1,data.frame(score=26:100)) %>% pivot_longer(1:4,names_to="feat")
-ggplot(gg)+geom_line(aes(x=score,y=value,group=feat,color=feat))
-
+co$A
 ```
 
-Un cluster pour les défenseurs / un cluster pour le reste.
+The two regression model extracted are quite different, one has an important weight for the defending ability and the physic. Whereas the player's value is more influenced by the dribling and shooting capabilities in the other regression model. The clustering seems therefore to have extracted two submarkets one for more defensive players and one for the other players. This can be confirmed by looking at the average position of the players of the two groups on the field:
+
+```{r}
+data("Fifa_positions")
+Xreg$cluster=clustering(sol)
+pos_clust_mean = Xreg %>% group_by(cluster) %>% summarize(x=mean(pos_x),y=mean(pos_y))
+library(ggpubr)
+ggplot(pos_clust_mean)+background_image(Fifa_positions$bg_img)+geom_text(aes(x=x,y=y,label=cluster),size=5,col="red")+
+  coord_fixed(ratio=1)+
+  scale_x_continuous(limits=c(0,203.2),expand = c(0,1))+
+  scale_y_continuous(limits=c(0,101.6),expand = c(0,1))+theme_void()
+```
+

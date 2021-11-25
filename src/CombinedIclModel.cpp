@@ -30,6 +30,16 @@ void CombinedIclModel::set_cl(arma::uvec cli){
   }
 }
 
+S4 CombinedIclModel::get_model(){
+  S4 used_model=clone(model);
+  List emission_models_prior=used_model.slot("models");
+  for(int i=0;i<IclModels.size();i++){
+    IclModelEmission * Mp = IclModels[i];
+      emission_models_prior[as<std::string>(components_names[i])]=Mp->get_model();
+  }
+  used_model.slot("models")=emission_models_prior;
+  return used_model;
+}
 
 
 List CombinedIclModel::get_obs_stats(){

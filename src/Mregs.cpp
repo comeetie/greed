@@ -5,7 +5,14 @@ using namespace Rcpp;
 
 Mregs::Mregs(const arma::mat & Xi,const arma::mat & Yi,S4 modeli,bool verb){
   // dirichlet prior parameter on proportion
-  model = modeli;
+  
+  S0 = as<arma::mat>(modeli.slot("epsilon"));
+  if(Rcpp::traits::is_nan<REALSXP>(modeli.slot("N0")) ||  S0.has_nan()){
+    model = clone(modeli);
+  }else{
+    model = modeli;
+  }
+  
   // data
   X  = Xi;
   Y  = Yi;
@@ -14,17 +21,18 @@ Mregs::Mregs(const arma::mat & Xi,const arma::mat & Yi,S4 modeli,bool verb){
   
   
   M  = inv_sympd(X.t()*X)*X.t()*Y;
+  M.zeros();
   double beta = model.slot("tau");
   Kp  =  beta*X.t()*X/N;
   
   
   arma::mat R  = Y-X*M;
   arma::mat RR = cov(R);
-  S0 = as<arma::mat>(model.slot("epsilon"));
+
   if(S0.has_nan()){
     S0 = RR;
     S0.zeros();
-    S0.diag() = 0.01*RR.diag();
+    S0.diag() = 0.1*RR.diag();
     model.slot("epsilon") = S0;
   }
   

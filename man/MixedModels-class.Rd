@@ -6,12 +6,12 @@
 \alias{MixedModels}
 \title{Mixed Models classes}
 \usage{
-MixedModels(alpha = 1, models)
+MixedModels(models, alpha = 1)
 }
 \arguments{
-\item{alpha}{Dirichlet prior parameter over the cluster proportions (default to 1)}
-
 \item{models}{a named list of DlvmPrior's object}
+
+\item{alpha}{Dirichlet prior parameter over the cluster proportions (default to 1)}
 }
 \value{
 a \code{MixedModels-class} object

@@ -53,6 +53,7 @@ IclModelEmission * init_emission_model(S4 model,List data, arma::uvec clt, bool 
       } 
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       if((strcmp(model.slot("type"),"guess")==0)){
+        model=clone(model);
         if(arma::accu(abs(xp-xp.t()))==0){
           model.slot("type")="undirected";
         }else{
@@ -77,6 +78,7 @@ IclModelEmission * init_emission_model(S4 model,List data, arma::uvec clt, bool 
       } 
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       if((strcmp(model.slot("type"),"guess")==0)){
+        model=clone(model);
         if(arma::accu(abs(xp-xp.t()))==0){
           model.slot("type")="undirected";
         }else{
@@ -102,6 +104,7 @@ IclModelEmission * init_emission_model(S4 model,List data, arma::uvec clt, bool 
       
       if((strcmp(model.slot("type"),"guess")==0)){
         int diff = 0;
+        model=clone(model);
         for (arma::uword s=0;s<xp.n_slices;s++){
           diff+=arma::accu(abs(xp.slice(s)-xp.slice(s).t()));
         }
@@ -179,7 +182,6 @@ IclModel * init(S4 model,List data, arma::uvec clr, bool verbose){
   }
   
   if(model.is("MixedModels")){
-
     List models = as<List>(model.slot("models"));
     std::vector<IclModelEmission*> icl_models;
     CharacterVector models_names = models.names();
@@ -380,6 +382,7 @@ double test_swap(S4 model,List data,arma::uvec& cl,int i, int newcl){
   double icls = Mswap->icl(Mswap->get_obs_stats());
 
   double delta = icls-icli;
+
   return delta-delta_swap[newcl-1];
 }
 

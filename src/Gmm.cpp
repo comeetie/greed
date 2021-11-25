@@ -8,7 +8,13 @@ using namespace Rcpp;
 
 
 Gmm::Gmm(const arma::mat & Xi,S4 modeli,bool verb){
-  model= modeli;
+  
+  if(Rcpp::traits::is_nan<REALSXP>(modeli.slot("N0")) || as<arma::rowvec>(modeli.slot("mu")).has_nan() || as<arma::mat>(modeli.slot("epsilon")).has_nan()){
+    model=clone(modeli);
+  }else{
+    model= modeli;
+  }
+
   // dirichlet prior parameter on proportion
 
   // data

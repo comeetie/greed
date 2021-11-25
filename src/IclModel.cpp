@@ -73,7 +73,14 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
         arma::vec delta = this->delta_swap(cnode,iclust);
 
         // best swap
-        int ncl = delta.index_max();
+        int ncl=cl(cnode);
+        try{
+          ncl = delta.index_max();
+        }catch(std::exception &ex){
+          warning("Undefined move cost, please check the priors parameters.");
+          ncl=cl(cnode);
+        }
+
         if(ncl!=cl(cnode)){
   
           // if best swap corresponds to a move
@@ -147,7 +154,14 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::sp_mat & mo
         arma::vec delta = this->delta_swap(cnode,iclust);
         //Rcout << delta << std::endl;
         // best swap
-        int ncl = delta.index_max();
+        int ncl=cl(cnode);
+        try{
+          ncl = delta.index_max();
+        }catch(std::exception &ex){
+          warning("Undefined move cost, please check the input data and the priors parameters.");
+          ncl=cl(cnode);
+        }
+        
         if(ncl!=cl(cnode)){
           
           // if best swap corresponds to a move
@@ -167,11 +181,16 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::sp_mat & mo
             break;
           }
         }else{
-          arma::vec deltaneg = delta.elem(arma::find(delta<0));
-          int bmn= deltaneg.index_max();
-          if(deltaneg(bmn) <  -5 ){
+          try{
+            arma::vec deltaneg = delta.elem(arma::find(delta<0));
+            int bmn= deltaneg.index_max();
+            if(deltaneg(bmn) <  -5 ){
+              workingset(cnode) = 0;
+              //Rcout << "BMN :"<< bmn << "val" << deltaneg(bmn) << std::endl;
+            }
+          }catch(std::exception &ex){
+            warning("Undefined move cost, please check the input data and the priors parameters.");
             workingset(cnode) = 0;
-            //Rcout << "BMN :"<< bmn << "val" << deltaneg(bmn) << std::endl;
           }
         }
       }

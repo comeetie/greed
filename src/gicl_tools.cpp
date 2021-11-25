@@ -429,7 +429,7 @@ List mvlm_post_comp(const arma::mat X,const arma::mat Y,const arma::mat M,const 
  
   arma::mat Yty = Y.t()*Y+M.t()*K*M;
 
-  arma::mat Syx = Yty - Y.t()*X*mu;
+  arma::mat Syx = Yty - Xty.t()*mu;
   
   arma::vec di = arma::linspace<arma::vec>(1, d,d);
   double log_evidence = arma::accu(lgamma((n+N0+1-di)/2)) - arma::accu(lgamma((N0+1-di)/2));

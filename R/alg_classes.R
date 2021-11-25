@@ -185,6 +185,28 @@ setMethod(
   })
 
 
+#' @title Generic method to extract the prior used to fit \code{\link{IclFit-class}} object
+#' @description This method take a \code{\link{IclFit-class}} object and return the prior used. 
+#' @param fit an \code{IclFit} solution
+#' @return 
+#' @export
+setGeneric("prior", function(fit) standardGeneric("prior"))
+
+#' @title Method to extract the prior used to fit  \code{\link{IclFit-class}} object
+#'
+#' @description This method take a \code{\link{IclFit-class}} object and return the prior used. 
+#' @param fit an \code{IclFit} solution
+#' @return The prior an S4 object of the relevant class with the prior parameters
+#' @seealso \code{\link{Sbm-class}},\code{\link{Gmmm-class}},...
+#' @export
+setMethod(
+  f = "prior",
+  signature = signature("IclFit"),
+  definition = function(fit){
+    fit@model
+  })
+
+
 
 #' @title Method to cut a path solution to a desired number of cluster
 #'
@@ -296,9 +318,14 @@ greed <- function(X, model = find_model(X), K = 20,  alg = Hybrid(), verbose = F
   cat(paste0("------- ", modelname, " model fitting ------\n"))
   sol <- fit(model, alg, data, K, verbose)
   sol@obs_stats = cleanObsStats(model,sol@obs_stats,X)
-  for (p in 1:length(sol@path)) {
-    sol@path[[p]]$obs_stats = cleanObsStats(model,sol@path[[p]]$obs_stats,X)
+
+  if(length(sol@path)>0){
+    for (p in 1:length(sol@path)){
+      sol@path[[p]]$obs_stats = cleanObsStats(model,sol@path[[p]]$obs_stats,X)
+    }
   }
+
+  
   sol <- postprocess(sol, data, X)
   cat("------- Final clustering -------\n")
   print(sol)

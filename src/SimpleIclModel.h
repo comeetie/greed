@@ -24,6 +24,7 @@ public:
   double delta_merge(int k, int l);
   double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats);
   void merge_update(int k, int l);
+  S4 get_model(){return emission_model->get_model();};
   List get_obs_stats();
   List get_obs_stats_cst(){return emission_model->get_obs_stats_cst();};
   ~SimpleIclModel(){

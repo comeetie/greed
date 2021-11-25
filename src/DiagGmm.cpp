@@ -8,7 +8,13 @@ using namespace Rcpp;
 
 
 DiagGmm::DiagGmm(const arma::mat & Xi,S4 modeli,bool verb){
-  model= modeli;
+  
+  if(Rcpp::traits::is_nan<REALSXP>(modeli.slot("beta"))||  as<arma::rowvec>(modeli.slot("mu")).has_nan()){
+    model=clone(modeli);
+  }else{
+    model= modeli;
+  }
+  
   
   // data
   X  = Xi;

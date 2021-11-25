@@ -58,7 +58,7 @@ public:
   virtual List get_obs_stats_cst(){return List::create();};
   arma::uvec get_cl(){return cl;};
   arma::vec get_counts(){return counts;};
-  S4 get_model(){return model;};
+  virtual S4 get_model(){return model;};
   int get_K(){return K;};
   virtual ~IclModel(){};
 protected:

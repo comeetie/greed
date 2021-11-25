@@ -31,6 +31,7 @@ public:
   virtual List get_obs_stats(){return List::create();};
   virtual List get_obs_stats_cst(){return List::create();};
   virtual ~IclModelEmission(){};
+  S4 get_model(){return model;};
 protected:
   bool verbose;
   // priors params
