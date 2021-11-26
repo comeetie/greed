@@ -27,6 +27,17 @@ test_that("GMM marginal",{
   expect_lte(abs(R1a$log_evidence-R1$log_evidence),10^-6)
 })
 
+
+test_that("GMM hybrid", {
+  N=150
+  X = rbind(MASS::mvrnorm(N/3,c(-5,0),diag(2)),MASS::mvrnorm(N/3,c(0,5),diag(2)),MASS::mvrnorm(N/3,c(5,0),diag(2)))
+  i=25
+  newcl = 2
+  data=greed:::preprocess(Gmm(),X)
+  expect_lte(greed:::test_merge(Gmm(),data,c(rep(1,50),rep(2,50),rep(3,50)),1,2),10^-6)
+  expect_lte(greed:::test_swap(Gmm(),data,c(rep(1,50),rep(2,50),rep(3,50)),25,2),10^-6)
+})
+
 test_that("GMM hybrid", {
   N=150
   X = rbind(MASS::mvrnorm(N/3,c(-5,0),diag(2)),MASS::mvrnorm(N/3,c(0,5),diag(2)),MASS::mvrnorm(N/3,c(5,0),diag(2)))

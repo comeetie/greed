@@ -15,7 +15,13 @@ test_that("SBM sim", {
   expect_equal(length(sbm$cl),N)
   expect_gte(min(sbm$cl), 1)
   expect_lte(max(sbm$cl), K)
-  
+  model = Sbm()
+  data = greed:::preprocess(model,sbm$x)
+  i=sample(100,1)
+  oldcl=sbm$cl[i]
+  newcl = sample(setdiff(1:K,oldcl),1)
+  expect_lte(greed:::test_swap(model,data,sbm$cl,i,newcl),10^-6)
+  expect_lte(greed:::test_merge(model,data,sbm$cl,oldcl,newcl),10^-6)
 })
 
 

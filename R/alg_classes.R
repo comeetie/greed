@@ -317,16 +317,16 @@ greed <- function(X, model = find_model(X), K = 20,  alg = Hybrid(), verbose = F
   }
   cat(paste0("------- ", modelname, " model fitting ------\n"))
   sol <- fit(model, alg, data, K, verbose)
-  sol@obs_stats = cleanObsStats(model,sol@obs_stats,X)
+  sol@obs_stats = cleanObsStats(model,sol@obs_stats,data)
 
   if(length(sol@path)>0){
     for (p in 1:length(sol@path)){
-      sol@path[[p]]$obs_stats = cleanObsStats(model,sol@path[[p]]$obs_stats,X)
+      sol@path[[p]]$obs_stats = cleanObsStats(model,sol@path[[p]]$obs_stats,data)
     }
   }
 
   
-  sol <- postprocess(sol, data, X)
+  sol <- postprocess(sol, data)
   cat("------- Final clustering -------\n")
   print(sol)
   cat("\n")
@@ -439,7 +439,7 @@ setGeneric("postprocess", function(path, ...) standardGeneric("postprocess"))
 setMethod(
   f = "postprocess",
   signature = signature("IclPath"),
-  definition = function(path, data = NULL, X = NULL, Y = NULL) {
+  definition = function(path, data = NULL) {
     path
   }
 )

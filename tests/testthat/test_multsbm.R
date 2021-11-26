@@ -20,7 +20,13 @@ test_that("MULTSBM sim", {
   expect_equal(length(multsbm$cl),N)
   expect_gte(min(multsbm$cl), 1)
   expect_lte(max(multsbm$cl), K)
-  
+  model = MultSbm()
+  data = greed:::preprocess(model,multsbm$x)
+  i=sample(100,1)
+  oldcl=multsbm$cl[i]
+  newcl = sample(setdiff(1:K,oldcl),1)
+  expect_lte(greed:::test_swap(model,data,multsbm$cl,i,newcl),10^-6)
+  expect_lte(greed:::test_merge(model,data,multsbm$cl,oldcl,newcl),10^-6)
 })
 
 

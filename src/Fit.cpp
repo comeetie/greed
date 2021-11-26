@@ -383,7 +383,7 @@ double test_swap(S4 model,List data,arma::uvec& cl,int i, int newcl){
 
   double delta = icls-icli;
 
-  return delta-delta_swap[newcl-1];
+  return std::abs(delta-delta_swap[newcl-1]);
 }
 
 // test_merge
@@ -411,6 +411,6 @@ double test_merge(S4 model,List data,arma::uvec& cl,int k, int l){
   
   double delta = Mmerge->icl(Mmerge->get_obs_stats())-M->icl(M->get_obs_stats());
 
-  return dmerge-delta;
+  return std::abs(dmerge-delta);
 }
 

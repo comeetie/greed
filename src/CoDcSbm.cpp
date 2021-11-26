@@ -14,7 +14,7 @@ CoDcSbm::CoDcSbm(const arma::sp_mat  & xp,int Nri, int Nci,S4 modeli,bool verb){
   alpha = model.slot("alpha");
 
   if(Rcpp::traits::is_nan<REALSXP>(model.slot("p"))){
-    p = arma::accu(x_counts)/(Nr*Nc);
+    p = arma::accu(x)/(Nr*Nc);
     model.slot("p") = p;
   }else{
     p = model.slot("p");
@@ -70,6 +70,7 @@ double CoDcSbm::icl_prop_cor(const List & obs_stats){
 
 
 double CoDcSbm::icl_prop_cor(const List & obs_stats,int oldcl,int newcl, bool dead){
+
   // compute the first part p(Zr,Zc) from clusters counts
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
   double icl_prop = 0;
@@ -82,14 +83,14 @@ double CoDcSbm::icl_prop_cor(const List & obs_stats,int oldcl,int newcl, bool de
   }
   if(!dead){
     // both clusters are healthy
-    icl_prop = lgamma(Kr*alpha)+lgamma(Kc*alpha)+lgamma(alpha+counts(oldcl))+lgamma(alpha+counts(newcl))-K*lgamma(alpha)-lgamma(Nr+alpha*Kr)-lgamma(Nc+alpha*Kc);
+    icl_prop += lgamma(Kr*alpha)+lgamma(Kc*alpha)+lgamma(alpha+counts(oldcl))+lgamma(alpha+counts(newcl))-K*lgamma(alpha)-lgamma(Nr+alpha*Kr)-lgamma(Nc+alpha*Kc);
   }else{
     // cluster oldclass is dead, count(oldcl)==0 chnage of dimension
     if(clusttypes(oldcl)==1){
-      icl_prop = lgamma((Kr-1)*alpha)+lgamma(Kc*alpha)+lgamma(alpha+counts(newcl))-(K-1)*lgamma(alpha)-lgamma(Nr+alpha*(Kr-1))-lgamma(Nc+alpha*Kc);
+      icl_prop += lgamma((Kr-1)*alpha)+lgamma(Kc*alpha)+lgamma(alpha+counts(newcl))-(K-1)*lgamma(alpha)-lgamma(Nr+alpha*(Kr-1))-lgamma(Nc+alpha*Kc);
     }
     if(clusttypes(oldcl)==2){
-      icl_prop = lgamma(Kr*alpha)+lgamma((Kc-1)*alpha)+lgamma(alpha+counts(newcl))-(K-1)*lgamma(alpha)-lgamma(Nr+alpha*Kr)-lgamma(Nc+alpha*(Kc-1));
+      icl_prop += lgamma(Kr*alpha)+lgamma((Kc-1)*alpha)+lgamma(alpha+counts(newcl))-(K-1)*lgamma(alpha)-lgamma(Nr+alpha*Kr)-lgamma(Nc+alpha*(Kc-1));
     }
   }
 
@@ -113,10 +114,10 @@ double CoDcSbm::icl_emiss(const List & obs_stats){
   
   // deggree correction
   double icl_emiss = arma::accu(lgamma(counts)-lgamma(counts+d)+d % log(counts));
-  
+
   // gamma poisson
   icl_emiss=icl_emiss + arma::accu(lgamma(sub_edges+1)-(sub_edges+1) % log(p*sub_mc+1));
-  //Rcout << icl_emiss << std::endl;
+
   return icl_emiss+icl_prop;
 }
 

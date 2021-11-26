@@ -183,8 +183,8 @@ nodelinklab <- function(sol, labels, s = 0) {
 }
 
 co_nodelink <- function(sol) {
-  ij <- Matrix::which(sol@obs_stats$co_x_counts > 0, arr.ind = TRUE)
-  ld <- sol@obs_stats$co_x_counts
+  ij <- Matrix::which(sol@obs_stats$DcLbm$co_x_counts > 0, arr.ind = TRUE)
+  ld <- sol@obs_stats$DcLbm$co_x_counts
   cccol <- as.numeric(table(sol@clcol))
   ccrow <- as.numeric(table(sol@clrow))
 
@@ -310,7 +310,7 @@ co_blocks <- function(x) {
     lc = rep(cccol, each = K),
     sizek = rep(table(x@clrow), D),
     sizel = rep(table(x@clcol), each = K),
-    count = as.vector(x@obs_stats$co_x_counts)
+    count = as.vector(x@obs_stats$DcLbm$co_x_counts)
   )
   ylab <- round(100 * table(x@clcol) / sum(table(x@clcol)))
   xlab <- round(100 * table(x@clrow) / sum(table(x@clrow)))
@@ -437,7 +437,7 @@ bi_plot <- function(x) {
     lc = rep(cccol, each = K),
     sizek = rep(table(x@clrow), D),
     sizel = rep(table(x@clcol), each = K),
-    count = as.vector(x@obs_stats$co_x_counts)
+    count = as.vector(x@obs_stats$DcLbm$co_x_counts)
   )
   ylab <- round(100 * table(x@clcol) / sum(table(x@clcol)))
   xlab <- round(100 * table(x@clrow) / sum(table(x@clrow)))
@@ -489,7 +489,7 @@ bi_plot <- function(x) {
   if (x@K < max(x@ggtree$K)) {
     treerow <- treerow[treerow$K <= x@K, ]
   }
-  ggtree <- update_tree_prop(treerow, x@obs_stats$rows_counts)
+  ggtree <- greed:::update_tree_prop(treerow, x@obs_stats$rows_counts)
   rowt <- ggplot2::ggplot() +
     ggplot2::geom_segment(data = ggtree[ggtree$node %in% ggtree$tree, ], ggplot2::aes_(y = ~xmin, x = ~H, yend = ~xmax, xend = ~H)) +
     ggplot2::geom_segment(data = ggtree[ggtree$Hend != -1, ], ggplot2::aes_(x = ~H, y = ~x, yend = ~x, xend = ~Hend)) +
@@ -503,7 +503,7 @@ bi_plot <- function(x) {
   if (x@K < max(x@ggtree$K)) {
     treecol <- treecol[treecol$K <= x@K, ]
   }
-  ggtree <- update_tree_prop(treecol, x@obs_stats$cols_counts)
+  ggtree <- greed:::update_tree_prop(treecol, x@obs_stats$cols_counts)
   colt <- ggplot2::ggplot() +
     ggplot2::geom_segment(data = ggtree[ggtree$node %in% ggtree$tree, ], ggplot2::aes_(x = ~xmin, y = ~H, xend = ~xmax, yend = ~H)) +
     ggplot2::geom_segment(data = ggtree[ggtree$Hend != -1, ], ggplot2::aes_(x = ~x, y = ~H, xend = ~x, yend = ~Hend)) +

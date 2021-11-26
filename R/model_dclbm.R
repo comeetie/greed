@@ -194,12 +194,13 @@ setMethod(
 #' @export
 setMethod(
   f = "plot",
-  signature = signature("DcLbmFit", "missing"),
+  signature = signature("DcLbmPath", "missing"),
   definition = function(x, type = "blocks") {
     switch(type,
       blocks = co_blocks(x),
       biplot = bi_plot(x),
-      nodelink = co_nodelink(x)
+      nodelink = co_nodelink(x),
+      callNextMethod(x,type)
     )
   }
 )
@@ -224,9 +225,9 @@ setMethod(
     sol <- object
     pirows <- (sol@obs_stats$rows_counts + sol@model@alpha - 1) / sum(sol@obs_stats$rows_counts + sol@model@alpha - 1)
     picols <- (sol@obs_stats$cols_counts + sol@model@alpha - 1) / sum(sol@obs_stats$cols_counts + sol@model@alpha - 1)
-    gammarows <- sol@obs_stats_cst$drow / sol@obs_stats$dr[sol@clrow]
-    gammacols <- sol@obs_stats_cst$dcol / sol@obs_stats$dc[sol@clcol]
-    thetakl <- (sol@obs_stats$co_x_counts) / (t(t(sol@obs_stats$rows_counts)) %*% sol@obs_stats$cols_counts + 1 / sol@model@p)
+    gammarows <- sol@obs_stats_cst$drow / sol@obs_stats$DcLbm$dr[sol@clrow]
+    gammacols <- sol@obs_stats_cst$dcol / sol@obs_stats$DcLbm$dc[sol@clcol]
+    thetakl <- (sol@obs_stats$DcLbm$co_x_counts) / (t(t(sol@obs_stats$rows_counts)) %*% sol@obs_stats$cols_counts + 1 / sol@model@p)
     list(pirows = pirows, picols = picols, thetakl = thetakl, gammarows = gammarows, gammacols = gammacols)
   }
 )
@@ -237,30 +238,13 @@ setMethod(
   definition = function(model, data) {
     X <- as.sparse(data)
     if (class(X) != "dgCMatrix") {
-      stop(paste0("Unsupported data type :", class(X), "for co_dcsbm model."), call. = FALSE)
-    }
-    if (nrow(X) == ncol(X)) {
-      stop("Square matrix as input, try dcsbm model instead.", call. = FALSE)
+      stop(paste0("Unsupported data type :", class(X), "for DcLbm model."), call. = FALSE)
     }
     ij <- which(X > 0, arr.ind = TRUE)
     if (!all(X[ij] == round(X[ij]))) {
       stop("Only integer matrix allowed as input, non integer values found.", call. = FALSE)
     }
-    if (length(model@alpha) > 1) {
-      stop("Model prior misspecification, alpha must be of length 1.", call. = FALSE)
-    }
-    if (is.na(model@alpha)) {
-      stop("Model prior misspecification, alpha is NA.", call. = FALSE)
-    }
-    if (model@alpha <= 0) {
-      stop("Model prior misspecification, alpha must be positive.", call. = FALSE)
-    }
-    if (length(model@p) > 1) {
-      stop("Model prior misspecification, p must be of length 1.", call. = FALSE)
-    }
-    if (!is.nan(model@p) && model@p <= 0) {
-      stop("Model prior misspecification, p must be positive.", call. = FALSE)
-    }
+   
 
     di <- dim(X)
     N <- sum(di)
@@ -271,24 +255,7 @@ setMethod(
 setMethod(
   f = "postprocess",
   signature = signature("DcLbmPath"),
-  definition = function(path, data = NULL, X = NULL, Y = NULL) {
-    if (!is.null(path@obs_stats$co_dcsbm)) {
-      path@obs_stats <- list(
-        counts = path@obs_stats$counts,
-        x_counts = path@obs_stats$co_dcsbm$x_counts,
-        dr = path@obs_stats$co_dcsbm$dr,
-        dc = path@obs_stats$co_dcsbm$dc
-      )
-      for (p in 1:length(path@path)) {
-        path@path[[p]]$obs_stats <- list(
-          counts = path@path[[p]]$obs_stats$counts,
-          x_counts = path@path[[p]]$obs_stats$co_dcsbm$x_counts,
-          dr = path@path[[p]]$obs_stats$co_dcsbm$dr,
-          dc = path@path[[p]]$obs_stats$co_dcsbm$dc
-        )
-      }
-    }
-
+  definition = function(path, data = NULL) {
     sol <- path
     if (!is.null(data)) {
       sol@Nrow <- data$Nrows
@@ -299,15 +266,14 @@ setMethod(
     clust_cols <- which(clusters_type == 2)
     icol <- (sol@Nrow + 1):length(sol@cl)
     irow <- 1:sol@Nrow
-
+    
     sol@clrow <- as.numeric(factor(sol@cl[irow], levels = clust_rows))
     sol@Krow <- max(sol@clrow, na.rm = TRUE)
     sol@clcol <- as.numeric(factor(sol@cl[icol], levels = clust_cols))
     sol@Kcol <- max(sol@clcol, na.rm = TRUE)
-    sol@obs_stats$co_x_counts <- sol@obs_stats$x_counts[clust_rows, clust_cols]
-    sol@obs_stats$dr <- sol@obs_stats$dr[clust_rows]
-    sol@obs_stats$dc <- sol@obs_stats$dc[clust_cols]
-    sol@obs_stats <- sol@obs_stats[names(sol@obs_stats) != "x_counts"]
+    sol@obs_stats$DcLbm$co_x_counts <- sol@obs_stats$DcLbm$x_counts[clust_rows, clust_cols]
+    sol@obs_stats$DcLbm$dr <- sol@obs_stats$DcLbm$dr[clust_rows]
+    sol@obs_stats$DcLbm$dc <- sol@obs_stats$DcLbm$dc[clust_cols]
     sol@obs_stats$rows_counts <- sol@obs_stats$counts[clust_rows]
     sol@obs_stats$cols_counts <- sol@obs_stats$counts[clust_cols]
     if (!is.null(data)) {
@@ -315,60 +281,14 @@ setMethod(
       root <- tree$node[tree$tree == 0]
       tree <- tree[tree$node != root, ]
       tree$tree[tree$tree == root] <- 0
-
+      
       xcol <- tree[tree$node %in% clust_cols, ]$x
       coltree <- tree[tree$x >= min(xcol) & tree$x <= max(xcol), ]
       xrow <- tree[tree$node %in% clust_rows, ]$x
       rowtree <- tree[tree$x >= min(xrow) & tree$x <= max(xrow), ]
-
-
-      # cat('-- post-processing --')
-      # tree= sol@ggtree[order(sol@ggtree$H,sol@ggtree$node),]
-      # coltree = tree[tree$node %in% clust_cols,]
-      # coltree$x = seq(1,-1,length.out = length(clust_cols))
-      # leafs   =  coltree
-      # fathers = unique(leafs$tree)
-      # while(length(fathers)>1){
-      #   leafs = tree[tree$node %in% fathers,]
-      #   coltree = rbind(coltree,leafs)
-      #   fathers = setdiff(unique(leafs$tree),coltree$node)
-      #   fathers=fathers[fathers!=0]
-      # }
-      # coltree=coltree[order(coltree$H),]
-      # noleaves = (which(coltree$H>0)[1]):nrow(coltree)
-      # for (nl in noleaves){
-      #   no =coltree$node[nl]
-      #   xch = coltree$x[coltree$tree==no]
-      #   coltree[nl,"x"]=mean(xch)
-      #   coltree[nl,"xmin"]=min(xch)
-      #   coltree[nl,"xmax"]=max(xch)
-      # }
-      #
-      #
-      # rowtree = tree[tree$node %in% clust_rows,]
-      # rowtree$x = seq(1,-1,length.out = length(clust_rows))
-      # leafs   =  rowtree
-      # fathers = unique(leafs$tree)
-      # while(length(fathers)>1){
-      #   leafs = tree[tree$node %in% fathers,]
-      #   rowtree = rbind(rowtree,leafs)
-      #   fathers = setdiff(unique(leafs$tree),rowtree$node)
-      #   fathers=fathers[fathers!=0]
-      # }
-      # rowtree=rowtree[order(rowtree$H),]
-      # noleaves = (which(rowtree$H>0)[1]):nrow(rowtree)
-      # for (nl in noleaves){
-      #   no =rowtree$node[nl]
-      #   xch = rowtree$x[rowtree$tree==no]
-      #   rowtree[nl,"x"]=mean(xch)
-      #   rowtree[nl,"xmin"]=min(xch)
-      #   rowtree[nl,"xmax"]=max(xch)
-      # }
-
       sol@ggtreecol <- coltree
       sol@ggtreerow <- rowtree
     }
-
     sol
   }
 )
@@ -384,21 +304,29 @@ setMethod(
   }
 )
 
-reorder_codcsbm <- function(obs_stats, or) {
-  obs_stats$counts <- obs_stats$counts[or]
-  obs_stats$dr <- obs_stats$dr[or]
-  obs_stats$dc <- obs_stats$dc[or]
-  obs_stats$x_counts <- obs_stats$x_counts[or, or]
-  obs_stats
-}
+
 setMethod(
   f = "reorder",
   signature = signature("DcLbm", "list", "integer"),
   definition = function(model, obs_stats, order) {
-    reorder_codcsbm(obs_stats, order)
+    obs_stats$counts <- obs_stats$counts[order]
+    obs_stats$DcLbm$counts <- obs_stats$DcLbm$counts[order]
+    obs_stats$DcLbm$dr <- obs_stats$DcLbm$dr[order]
+    obs_stats$DcLbm$dc <- obs_stats$DcLbm$dc[order]
+    obs_stats$DcLbm$x_counts <- obs_stats$DcLbm$x_counts[order, order]
+    obs_stats
   }
 )
 
+
+
+setMethod(
+  f = "cleanObsStats",
+  signature = signature("DcLbmPrior", "list"),
+  definition = function(model, obs_stats, data) {
+    obs_stats
+  }
+)
 
 setMethod(
   f = "seed",
@@ -407,6 +335,5 @@ setMethod(
     kmrow <- stats::kmeans(data$X, floor(K / 2))
     kmcol <- stats::kmeans(t(data$X), floor(K / 2))
     c(kmrow$cluster, kmcol$cluster + max(kmrow$cluster))
-    # spectral(data$X,K)
   }
 )

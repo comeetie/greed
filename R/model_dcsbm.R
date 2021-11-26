@@ -34,6 +34,7 @@ setValidity("DcSbmPrior",function(object){
   if (!(object@type %in% c("directed", "undirected", "guess"))) {
     return("DcSbm model prior misspecification, model type must directed, undirected or guess.")
   }
+  
   TRUE
 })
 

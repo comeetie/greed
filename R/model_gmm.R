@@ -234,7 +234,7 @@ setMethod(
     }
 
 
-    list(X = X, N = nrow(X))
+    list(X = X, N = nrow(X),var_names=colnames(data.frame(data)))
   }
 )
 
@@ -266,7 +266,7 @@ setMethod(
   f = "cleanObsStats",
   signature = signature("GmmPrior", "list"),
   definition = function(model, obs_stats, data) {
-    num_names <- colnames(data.frame(data))
+    num_names <- data$var_names
     new_obs_stats <- lapply(obs_stats, function(clust_stats) {
       new_clust_stats <- clust_stats[c("m", "S", "ng", "log_evidence")]
       colnames(new_clust_stats$m) <- num_names

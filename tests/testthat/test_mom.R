@@ -4,7 +4,7 @@ library(ggplot2)
 set.seed(1234)
 
 test_that("MM sim", {
-  N = 500
+  N = 200
   K = 10
   pi = rep(1/K,K)
   mu = cbind(diag(rep(5,K)),matrix(0,K,20))+matrix(runif(K*(20+K)),K,20+K)
@@ -14,6 +14,13 @@ test_that("MM sim", {
   expect_equal(length(mm$cl),N)
   expect_gte(min(mm$cl), 1)
   expect_lte(max(mm$cl), K)
+  model = MoM()
+  data = greed:::preprocess(model,mm$x)
+  i=sample(200,1)
+  oldcl=mm$cl[i]
+  newcl = sample(setdiff(1:K,oldcl),1)
+  expect_lte(greed:::test_swap(model,data,mm$cl,i,newcl),10^-6)
+  expect_lte(greed:::test_merge(model,data,mm$cl,oldcl,newcl),10^-6)
 })
 
 

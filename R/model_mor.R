@@ -16,7 +16,7 @@ NULL
 #' with \eqn{\mathcal{W}(\epsilon^{-1},n_0)} the Whishart distribution and \eqn{\mathcal{MN}} the matrix-normal distribution. 
 #' The \code{MoR-class} must be used when fitting a simple Mixture of Regression whereas the \code{MoRPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
 #' @slot formula a \code{\link{formula}} that describe the linear model to use
-#' @slot tau Prior parameter (inverse variance) default 0.01 
+#' @slot tau Prior parameter (inverse variance) default 0.001 
 #' @slot epsilon Covariance matrix prior parameter (default to NaN, in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.) 
 #' @slot N0 Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)
 #' @family DlvmModels
@@ -24,7 +24,7 @@ NULL
 #' @export
 setClass("MoRPrior",
          representation = list(formula="formula",tau = "numeric",N0="numeric",epsilon ="matrix"),
-         prototype(tau=0.01,N0=NaN,epsilon=as.matrix(NaN)))
+         prototype(tau=0.001,N0=NaN,epsilon=as.matrix(NaN)))
 
 setValidity("MoRPrior",function(object){
   if(length(object@tau)>1){
@@ -61,8 +61,8 @@ setClass("MoR",
 #' MoRPrior(y ~ x1 + x2, N0=100)
 #' MoRPrior(cbind(y1,y2) ~ x1 + x2, N0=100)
 #' @export
-MoRPrior <- function(formula,tau=0.01,N0=NaN,epsilon=NaN) {
-  methods::new("MoRPrior",formula=stats::as.formula(formula), tau=tau,N0=N0,epsilon=as.matrix(epsilon))
+MoRPrior <- function(formula,tau=0.001,N0=NaN,epsilon=as.matrix(NaN)) {
+  methods::new("MoRPrior",formula=stats::as.formula(formula), tau=tau,N0=N0,epsilon=epsilon)
 }
 
 
@@ -74,8 +74,8 @@ MoRPrior <- function(formula,tau=0.01,N0=NaN,epsilon=NaN) {
 #' MoR(y ~ x1 + x2, N0=100)
 #' MoR(cbind(y1,y2) ~ x1 + x2, N0=100)
 #' @export
-MoR <- function(formula,alpha=1,tau=0.01,N0=NaN,epsilon=NaN) {
-  methods::new("MoR",formula=formula, alpha = alpha,tau=tau,N0=N0,epsilon=as.matrix(epsilon))
+MoR <- function(formula,alpha=1,tau=0.1,N0=NaN,epsilon=as.matrix(NaN)) {
+  methods::new("MoR",formula=formula, alpha = alpha,tau=tau,N0=N0,epsilon=epsilon)
 }
 
 #' @title Clustering with a multivariate mixture of regression model fit results class
@@ -171,14 +171,14 @@ setMethod(f = "preprocess",
             
             mod_frame = stats::model.frame(model@formula,data)
             X = stats::model.matrix(model@formula,mod_frame)
-            Y = as.matrix(stats::model.response(mod_frame))
+            Y = stats::model.response(mod_frame)
             
             if(prod(dim(model@epsilon))!=1 | !all(is.nan(model@epsilon))){
               if(dim(model@epsilon)[1]!=ncol(Y)|| dim(model@epsilon)[2]!=ncol(Y)){
                 stop("Model prior misspecification, the dimensions of epsilon are not compatible with the data.",call. = FALSE)
               }
             }
-            list(Y=as.matrix(Y),X=as.matrix(X),N=nrow(X))
+            list(Y=as.matrix(Y),X=as.matrix(X),N=nrow(X),x_var_names=all.vars(model@formula[[3]]),y_var_names=all.vars(model@formula[[2]]))
           })
 
 
@@ -214,33 +214,31 @@ setMethod(
 )
 
 
-setMethod(
-  f = "cleanObsStats",
-  signature = signature("MoRPrior", "list"),
-  definition = function(model, obs_stats, data) {
-    x_names <- colnames(model.matrix(model@formula,data))
-    y_names <- all.vars(model@formula[[2]])
-    
-    new_obs_stats <- lapply(obs_stats, function(clust_stats) {
-      new_clust_stats <- clust_stats
-      colnames(new_clust_stats$S) <- x_names
-      rownames(new_clust_stats$S) <- x_names
-      colnames(new_clust_stats$iS) <- x_names
-      rownames(new_clust_stats$iS) <- x_names
-      rownames(new_clust_stats$mu) <- x_names
-      rownames(new_clust_stats$Xty) <- x_names
-      colnames(new_clust_stats$Xty) <- y_names
-      rownames(new_clust_stats$Yty) <- y_names
-      colnames(new_clust_stats$Yty) <- y_names      
-      rownames(new_clust_stats$Syx) <- y_names
-      colnames(new_clust_stats$Syx) <- y_names
-      
-      new_clust_stats
-    })
-    names(new_obs_stats) <- paste0("cluster", 1:length(obs_stats))
-    new_obs_stats
-  }
-)
+setMethod(f = "cleanObsStats", 
+          signature = signature("MoRPrior", "list"), 
+          definition = function(model, obs_stats,data){
+            xv_names = data$x_var_names
+            yv_names = data$y_var_names
+            new_obs_stats <- lapply(obs_stats, function(clust_stats) {
+              new_clust_stats <- clust_stats[c("m", "S", "ng", "log_evidence")]
+              rownames(new_clust_stats$mu) <- xv_names
+              colnames(new_clust_stats$S) <- xv_names
+              rownames(new_clust_stats$S) <- xv_names
+              colnames(new_clust_stats$iS) <- xv_names
+              rownames(new_clust_stats$iS) <- xv_names
+              rownames(new_clust_stats$Xty) <- xv_names
+              colnames(new_clust_stats$Xty) <- yv_names
+              colnames(new_clust_stats$Yty) <- yv_names
+              rownames(new_clust_stats$Yty) <- yv_names
+              colnames(new_clust_stats$Syx) <- yv_names
+              rownames(new_clust_stats$Syx) <- yv_names
+              
+              new_clust_stats
+            })
+            names(new_obs_stats) <- paste0("cluster", 1:length(obs_stats))
+            new_obs_stats
+          })
+
 
 setMethod(
   f = "cleanObsStats",
@@ -252,4 +250,3 @@ setMethod(
     obs_stats
   }
 )
-

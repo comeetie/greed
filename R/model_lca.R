@@ -180,7 +180,7 @@ setMethod(f = "preprocess",
               data = data.frame(lapply(data, factor))
             }
             data = droplevels(data)
-            list(X=sapply(data,unclass)-1,N=nrow(data))
+            list(X=sapply(data,unclass)-1,N=nrow(data),var_names=colnames(data),levels_names = lapply(data,levels))
           })
 
 # For now, seed is kmeans on raw table for categorical
@@ -223,11 +223,11 @@ setMethod(
   signature = signature("LcaPrior", "list"),
   definition = function(model, obs_stats, data) {
     if(length(obs_stats$x_counts)>0){
-      cat_names = colnames(data.frame(data))
+      cat_names = data$var_names
       for(v in 1:length(obs_stats$x_counts)){
-        nb_levels = length(levels(droplevels(data[[v]])))
+        nb_levels = length(data$levels_names[[v]])
         obs_stats$x_counts[[v]]=matrix(obs_stats$x_counts[[v]],ncol=nb_levels)
-        colnames(obs_stats$x_counts[[v]])= levels(droplevels(data[[v]]))
+        colnames(obs_stats$x_counts[[v]])= data$levels_names[[v]]
         rownames(obs_stats$x_counts[[v]])= paste0("cluster",1:nrow(obs_stats$x_counts[[v]]))
       }
       names(obs_stats$x_counts)=cat_names
