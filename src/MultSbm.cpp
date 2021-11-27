@@ -47,7 +47,7 @@ double MultSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl, bool dead_
       arma::vec klcounts = edges_counts.tube(k,l);
       icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
     }else{
-      if(k!=oldcl & l!=oldcl){
+      if((k!=oldcl) & (l!=oldcl)){
         arma::vec klcounts = edges_counts.tube(k,l);
         icl_emiss+=lgamma(M*beta)+arma::accu(lgamma(beta+klcounts))-M*lgamma(beta)-lgamma(arma::accu(klcounts+beta));
       }
