@@ -26,7 +26,7 @@ rmreg(
 \value{
 A list with fields:
 \itemize{
-\item X: the covariate matrix 
+\item X: the covariate matrix
 \item y: the target feature
 \item K: number of generated clusters
 \item N: sample size

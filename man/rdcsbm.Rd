@@ -26,7 +26,7 @@ A list with fields:
 \item cl: vector of clusters labels
 \item pi: clusters proportions
 \item mu: connectivity matrix
-\item betain: normalized in-degree parameters 
+\item betain: normalized in-degree parameters
 \item betaout: normalized out-degree parameters
 }
 }

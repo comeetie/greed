@@ -5,7 +5,7 @@
 \alias{fashion}
 \title{Fashion mnist dataset}
 \format{
-An object of class \code{list} with two fields; 
+An object of class \code{list} with two fields;
  \describe{
   \item{X}{pixels intensities values data.frame of size 1 000x784}
   \item{labels}{vector of labels with the following encoding (0 = T-shirt/top,
@@ -33,7 +33,7 @@ Zalando fashionmnist dataset, sample of 1 000 Zalando's article images from the 
 data(fashion)
 }
 \references{
-Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms. Han Xiao, Kashif Rasul, Roland Vollgraf (2017)  
+Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms. Han Xiao, Kashif Rasul, Roland Vollgraf (2017)
 (\href{https://arxiv.org/abs/1708.07747}{arXiv:1708.07747}).
 }
 \keyword{datasets}

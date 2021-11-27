@@ -33,7 +33,7 @@ Such model can be used to cluster graph vertex, and model a bipartite graph adja
 \deqn{ \gamma_i^c\sim \mathcal{U}(S_l)}
 \deqn{ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)}
 The individuals parameters \eqn{\gamma_i^r,\gamma_j^c} allow to take into account the node degree heterogeneity.
-These parameters have uniform priors over simplex \eqn{S_k}. 
+These parameters have uniform priors over simplex \eqn{S_k}.
 These classes mainly store the prior parameters value \eqn{\alpha,p} of this generative model.
 The \code{DcLbm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DcLbmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
 }

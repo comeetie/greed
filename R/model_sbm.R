@@ -10,9 +10,9 @@ NULL
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 #' \deqn{ \theta_{kl} \sim Beta(a_0,b_0)}
 #' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\theta_{kl})}
-#' These classes mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model. 
+#' These classes mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model.
 #' The \code{Sbm-class} must be used when fitting a simple Sbm whereas the \code{SbmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
-#' 
+#'
 #' @slot a0 Beta prior parameter over links (default to 1)
 #' @slot b0 Beta prior parameter over no-links (default to 1)
 #' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess"), for undirected graphs the adjacency matrix is supposed to be symmetric.
@@ -30,7 +30,7 @@ setClass("SbmPrior",
   prototype(a0 = 1, b0 = 1, type = "guess")
 )
 
-setValidity("SbmPrior",function(object){
+setValidity("SbmPrior", function(object) {
   if (length(object@a0) > 1) {
     return("SBM model prior misspecification, a0 must be of length 1.")
   }
@@ -53,7 +53,7 @@ setValidity("SbmPrior",function(object){
 #' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @export
 setClass("Sbm",
-         contains = c("DlvmPrior", "SbmPrior")
+  contains = c("DlvmPrior", "SbmPrior")
 )
 
 #' @describeIn SbmPrior-class SbmPrior class constructor
@@ -153,7 +153,7 @@ setMethod(
     switch(type,
       blocks = graph_blocks(x),
       nodelink = nodelink(x),
-      stop(paste0("No plot available with type :",type),call. = FALSE)
+      stop(paste0("No plot available with type :", type), call. = FALSE)
     )
   }
 )
@@ -231,9 +231,8 @@ setMethod(
   f = "preprocess",
   signature = signature("SbmPrior"),
   definition = function(model, data) {
-    
     methods::validObject(model)
-    
+
     if (!(methods::is(data, "dgCMatrix") | methods::is(data, "matrix") | methods::is(data, "data.frame"))) {
       stop("An SBM model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.", call. = FALSE)
     }

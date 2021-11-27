@@ -139,13 +139,14 @@ setGeneric("clustering", function(fit) standardGeneric("clustering"))
 setMethod(
   f = "clustering",
   signature = signature("IclFit"),
-  definition = function(fit){
-    as.integer(fit@cl)    
-})
+  definition = function(fit) {
+    as.integer(fit@cl)
+  }
+)
 
 #' @title Genric method to extract the ICL value from an \code{\link{IclFit-class}} object
 #'
-#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score. 
+#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score.
 #' @param fit an \code{IclFit} solution
 #' @return The ICL value achieved
 #' @export
@@ -153,58 +154,61 @@ setGeneric("ICL", function(fit) standardGeneric("ICL"))
 
 #' @title Method to extract the ICL value from an \code{\link{IclFit-class}} object
 #'
-#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score. 
+#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score.
 #' @param fit an \code{IclFit} solution
 #' @return The ICL value achieved
 #' @export
 setMethod(
   f = "ICL",
   signature = signature("IclFit"),
-  definition = function(fit){
+  definition = function(fit) {
     fit@icl
-  })
+  }
+)
 
 #' @title Generic method to extract the number of clusters found from an \code{\link{IclFit-class}} object
-#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score. 
+#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score.
 #' @param fit an \code{IclFit} solution
-#' @return The number of clusters 
+#' @return The number of clusters
 #' @export
 setGeneric("K", function(fit) standardGeneric("K"))
 
 #' @title Method to extract the number of clusters found from an \code{\link{IclFit-class}} object
 #'
-#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score. 
+#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score.
 #' @param fit an \code{IclFit} solution
-#' @return The number of clusters 
+#' @return The number of clusters
 #' @export
 setMethod(
   f = "K",
   signature = signature("IclFit"),
-  definition = function(fit){
+  definition = function(fit) {
     fit@K
-  })
+  }
+)
 
 
 #' @title Generic method to extract the prior used to fit \code{\link{IclFit-class}} object
-#' @description This method take a \code{\link{IclFit-class}} object and return the prior used. 
+#' @description This method take a \code{\link{IclFit-class}} object and return the prior used.
 #' @param fit an \code{IclFit} solution
-#' @return 
+#' @return An S4 object describing the prior parameters
 #' @export
 setGeneric("prior", function(fit) standardGeneric("prior"))
 
 #' @title Method to extract the prior used to fit  \code{\link{IclFit-class}} object
 #'
-#' @description This method take a \code{\link{IclFit-class}} object and return the prior used. 
+#' @description This method take a \code{\link{IclFit-class}} object and return the prior used.
 #' @param fit an \code{IclFit} solution
 #' @return The prior an S4 object of the relevant class with the prior parameters
-#' @seealso \code{\link{Sbm-class}},\code{\link{Gmmm-class}},...
+#' @seealso \code{\link{Sbm-class}},\code{\link{Gmm-class}},...
 #' @export
 setMethod(
   f = "prior",
   signature = signature("IclFit"),
-  definition = function(fit){
+  definition = function(fit) {
     fit@model
-  })
+  }
+)
 
 
 
@@ -252,8 +256,8 @@ setMethod(
 )
 
 #' @title plot a \code{\link{IclPath-class}} object
-#' 
-#' 
+#'
+#'
 #' @param x a \code{\link{IclPath-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
@@ -262,22 +266,25 @@ setMethod(
 #' \item \code{'tree'}: plot the associated dendrogram
 #' }
 #' @return a \code{\link{ggplot2}} graphic
-#' @export 
-setMethod(f = "plot", 
-          signature = signature("IclPath","missing"),
-          definition = function(x,type='tree'){
-            switch(type,tree = {
-              dendo(x)
-            },
-            path ={
-              lapath(x)
-            },
-            front = {
-              plot_front(x)
-            },
-            plot(as(x,gsub("Path","Fit",class(x))),type=type)
-            )
-          })
+#' @export
+setMethod(
+  f = "plot",
+  signature = signature("IclPath", "missing"),
+  definition = function(x, type = "tree") {
+    switch(type,
+      tree = {
+        dendo(x)
+      },
+      path = {
+        lapath(x)
+      },
+      front = {
+        plot_front(x)
+      },
+      plot(methods::as(x, gsub("Path", "Fit", class(x))), type = type)
+    )
+  }
+)
 
 #' @title Extract parameters from an \code{\link{IclFit-class}} object
 #'
@@ -306,7 +313,7 @@ setMethod(
 #' @param verbose Boolean for verbose mode
 #' @return an \code{\link{IclPath-class}} object
 #' @export
-greed <- function(X, model = find_model(X), K = 20,  alg = Hybrid(), verbose = FALSE) {
+greed <- function(X, model = find_model(X), K = 20, alg = Hybrid(), verbose = FALSE) {
   data <- preprocess(model, X)
   modelname <- toupper(class(model))
   if ("type" %in% methods::slotNames(model)) {
@@ -317,15 +324,15 @@ greed <- function(X, model = find_model(X), K = 20,  alg = Hybrid(), verbose = F
   }
   cat(paste0("------- ", modelname, " model fitting ------\n"))
   sol <- fit(model, alg, data, K, verbose)
-  sol@obs_stats = cleanObsStats(model,sol@obs_stats,data)
+  sol@obs_stats <- cleanObsStats(model, sol@obs_stats, data)
 
-  if(length(sol@path)>0){
-    for (p in 1:length(sol@path)){
-      sol@path[[p]]$obs_stats = cleanObsStats(model,sol@path[[p]]$obs_stats,data)
+  if (length(sol@path) > 0) {
+    for (p in 1:length(sol@path)) {
+      sol@path[[p]]$obs_stats <- cleanObsStats(model, sol@path[[p]]$obs_stats, data)
     }
   }
 
-  
+
   sol <- postprocess(sol, data)
   cat("------- Final clustering -------\n")
   print(sol)
@@ -365,7 +372,7 @@ find_model <- function(X) {
         if (sum(is.na(X)) > 0) {
           stop("No missing value allowed for Sbm models. ", .call = FALSE)
         } else {
-            model <- DcSbm()
+          model <- DcSbm()
         }
       } else {
         if (all(round(X) == X)) {
@@ -431,7 +438,7 @@ setGeneric("preprocess", function(model, ...) standardGeneric("preprocess"))
 
 
 
-setGeneric("cleanObsStats", function(model, obs_stats,data) standardGeneric("cleanObsStats"))
+setGeneric("cleanObsStats", function(model, obs_stats, data) standardGeneric("cleanObsStats"))
 
 
 setGeneric("postprocess", function(path, ...) standardGeneric("postprocess"))

@@ -29,7 +29,7 @@ setClass("DiagGmmPrior",
 )
 
 
-setValidity("DiagGmmPrior",function(object){
+setValidity("DiagGmmPrior", function(object) {
   if (length(object@tau) > 1) {
     return("DiagGmm model prior misspecification, tau must be of length 1.")
   }
@@ -39,7 +39,7 @@ setValidity("DiagGmmPrior",function(object){
   if (object@tau <= 0) {
     return("DiagGmm model prior misspecification, tau must be positive.")
   }
-  
+
   if (length(object@kappa) > 1) {
     return("DiagGmm model prior misspecification, kappa must be of length 1.")
   }
@@ -49,7 +49,7 @@ setValidity("DiagGmmPrior",function(object){
   if (object@kappa <= 0) {
     return("DiagGmm model prior misspecification, kappa must be positive.")
   }
-  
+
   if (length(object@beta) > 1) {
     return("DiagGmm model prior misspecification, beta must be of length 1.")
   }
@@ -63,7 +63,7 @@ setValidity("DiagGmmPrior",function(object){
 #' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @export
 setClass("DiagGmm",
-         contains = c("DlvmPrior", "DiagGmmPrior")
+  contains = c("DlvmPrior", "DiagGmmPrior")
 )
 
 
@@ -88,7 +88,7 @@ DiagGmmPrior <- function(tau = 0.01, kappa = 1, beta = NaN, mu = NaN) {
 #' @export
 #' @examples
 #' DiagGmm()
-#' DiagGmm(tau=0.1)
+#' DiagGmm(tau = 0.1)
 #' @export
 DiagGmm <- function(alpha = 1, tau = 0.01, kappa = 1, beta = NaN, mu = NaN) {
   methods::new("DiagGmm", alpha = alpha, tau = tau, kappa = kappa, beta = beta, mu = as.matrix(mu))
@@ -241,7 +241,7 @@ setMethod(
       stop("Model prior misspecification, mu length is incompatible with the data.", call. = FALSE)
     }
 
-    list(X = X, N = nrow(X),var_names=colnames(data.frame(data)))
+    list(X = X, N = nrow(X), var_names = colnames(data.frame(data)))
   }
 )
 
@@ -295,6 +295,3 @@ setMethod(
     obs_stats
   }
 )
-
-
-

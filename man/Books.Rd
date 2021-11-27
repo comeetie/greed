@@ -5,7 +5,7 @@
 \alias{Books}
 \title{Books about US politics network dataset}
 \format{
-An object of class \code{list} with two fields; 
+An object of class \code{list} with two fields;
  \describe{
   \item{X}{network adjacency matrix as a \code{\link[Matrix]{sparseMatrix}} of size 105x105}
   \item{label}{ a factor of length  (size 105) with levels "l", "n", or "c" to indicate whether the books are liberal, neutral, or conservative}
@@ -18,7 +18,7 @@ An object of class \code{list} with two fields;
 data(Books)
 }
 \description{
-A network of books about US politics published around the time of the 2004 presidential election and sold by the online bookseller Amazon.com. Edges between books represent frequent co-purchasing of books by the same buyers. 
+A network of books about US politics published around the time of the 2004 presidential election and sold by the online bookseller Amazon.com. Edges between books represent frequent co-purchasing of books by the same buyers.
 The network was compiled by V. Krebs and is unpublished, but can found on Krebs' web site. Thanks to Valdis Krebs for permission to post these data on this web site.
 }
 \examples{

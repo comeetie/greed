@@ -16,5 +16,5 @@ The prior an S4 object of the relevant class with the prior parameters
 This method take a \code{\link{IclFit-class}} object and return the prior used.
 }
 \seealso{
-\code{\link{Sbm-class}},\code{\link{Gmmm-class}},...
+\code{\link{Sbm-class}},\code{\link{Gmm-class}},...
 }

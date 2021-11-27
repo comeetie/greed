@@ -24,7 +24,7 @@ a \code{Lca-class} object
 }
 \description{
 An S4 class to represent a Latent Class Analysis model
-Such model can be used to cluster a data.frame \eqn{X} with several columns of factors with the following generative model :  
+Such model can be used to cluster a data.frame \eqn{X} with several columns of factors with the following generative model :
 \deqn{\pi \sim \textrm{Dirichlet}(\alpha),}
 \deqn{\forall k, \forall j, \quad \theta_{kj} \sim \textrm{Dirichlet}_{d_j}(\beta),}
 \deqn{Z_i \sim \mathcal{M}_K(1,\pi),}

@@ -124,15 +124,15 @@ iclpath <- function(x) {
 # Node link visualisations
 
 nodelink <- function(sol) {
-  if(!(methods::is(sol,"SbmFit") | methods::is(sol,"DcSbmFit"))){
-    stop("Nodes and Links diagrams only available for Sbm and DcSbm models",.call=FALSE)
+  if (!(methods::is(sol, "SbmFit") | methods::is(sol, "DcSbmFit"))) {
+    stop("Nodes and Links diagrams only available for Sbm and DcSbm models", .call = FALSE)
   }
-  if(methods::is(sol,"SbmFit")){
-    x_counts = sol@obs_stats$Sbm$x_counts
+  if (methods::is(sol, "SbmFit")) {
+    x_counts <- sol@obs_stats$Sbm$x_counts
   }
-  
-  if(methods::is(sol,"DcSbmFit")){
-    x_counts = sol@obs_stats$DcSbm$x_counts
+
+  if (methods::is(sol, "DcSbmFit")) {
+    x_counts <- sol@obs_stats$DcSbm$x_counts
   }
   ij <- Matrix::which(x_counts > 0, arr.ind = TRUE)
   ld <- x_counts
@@ -261,17 +261,17 @@ co_dendo <- function(x) {
 # matrice blocks visualisation
 
 graph_blocks <- function(x) {
-  if(!(methods::is(x,"SbmFit") | methods::is(x,"DcSbmFit"))){
-    stop("Nodes and Links diagrams only available for Sbm and DcSbm models",.call=FALSE)
+  if (!(methods::is(x, "SbmFit") | methods::is(x, "DcSbmFit"))) {
+    stop("Nodes and Links diagrams only available for Sbm and DcSbm models", .call = FALSE)
   }
-  if(methods::is(x,"SbmFit")){
-    x_counts = x@obs_stats$Sbm$x_counts
+  if (methods::is(x, "SbmFit")) {
+    x_counts <- x@obs_stats$Sbm$x_counts
   }
-  
-  if(methods::is(x,"DcSbmFit")){
-    x_counts = x@obs_stats$DcSbm$x_counts
+
+  if (methods::is(x, "DcSbmFit")) {
+    x_counts <- x@obs_stats$DcSbm$x_counts
   }
-  
+
   K <- length(x@obs_stats$counts)
   gg <- data.frame(
     kc = rep(cumsum(x@obs_stats$counts), each = K),
@@ -489,7 +489,7 @@ bi_plot <- function(x) {
   if (x@K < max(x@ggtree$K)) {
     treerow <- treerow[treerow$K <= x@K, ]
   }
-  ggtree <- greed:::update_tree_prop(treerow, x@obs_stats$rows_counts)
+  ggtree <- update_tree_prop(treerow, x@obs_stats$rows_counts)
   rowt <- ggplot2::ggplot() +
     ggplot2::geom_segment(data = ggtree[ggtree$node %in% ggtree$tree, ], ggplot2::aes_(y = ~xmin, x = ~H, yend = ~xmax, xend = ~H)) +
     ggplot2::geom_segment(data = ggtree[ggtree$Hend != -1, ], ggplot2::aes_(x = ~H, y = ~x, yend = ~x, xend = ~Hend)) +
@@ -503,7 +503,7 @@ bi_plot <- function(x) {
   if (x@K < max(x@ggtree$K)) {
     treecol <- treecol[treecol$K <= x@K, ]
   }
-  ggtree <- greed:::update_tree_prop(treecol, x@obs_stats$cols_counts)
+  ggtree <- update_tree_prop(treecol, x@obs_stats$cols_counts)
   colt <- ggplot2::ggplot() +
     ggplot2::geom_segment(data = ggtree[ggtree$node %in% ggtree$tree, ], ggplot2::aes_(x = ~xmin, y = ~H, xend = ~xmax, yend = ~H)) +
     ggplot2::geom_segment(data = ggtree[ggtree$Hend != -1, ], ggplot2::aes_(x = ~x, y = ~H, xend = ~x, yend = ~Hend)) +
@@ -700,8 +700,8 @@ gmmpairs <- function(sol, X) {
   glegend <- ggplot2::ggplotGrob(ggplot2::ggplot() +
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white")) +
     ggplot2::annotation_custom(legend))
-  gtl <- gridExtra::arrangeGrob(grobs=list(gt, glegend), nrow = 2, heights = c(10, 1))
-  finished_plot = gridExtra::grid.arrange(top = paste0(class(sol@model), " clustering with ", max(sol@cl), " clusters.\n"), gtl)
+  gtl <- gridExtra::arrangeGrob(grobs = list(gt, glegend), nrow = 2, heights = c(10, 1))
+  finished_plot <- gridExtra::grid.arrange(top = paste0(class(sol@model), " clustering with ", max(sol@cl), " clusters.\n"), gtl)
   invisible(finished_plot)
 }
 

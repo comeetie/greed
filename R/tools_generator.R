@@ -5,7 +5,7 @@
 #' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 #'
 #' @param N The size of the graph to generate
-#' @param pi A numeric vector of length K with clusters proportions (will be normalized to sum up to 1). 
+#' @param pi A numeric vector of length K with clusters proportions (will be normalized to sum up to 1).
 #' @param mu A numeric matrix of dim K x K with the connectivity pattern to generate. elements in [0,1].
 #' @return A list with fields:
 #' \itemize{
@@ -17,14 +17,14 @@
 #' \item mu: connectivity matrix
 #' }
 #' @examples
-#' simu = rsbm(100,rep(1/5,5),diag(rep(0.1,5))+0.001)
+#' simu <- rsbm(100, rep(1 / 5, 5), diag(rep(0.1, 5)) + 0.001)
 #' @export
-rsbm = function (N,pi,mu){
-  K  = length(pi)
-  cl = sample(1:K,N,replace=TRUE,prob = pi)
-  x  = matrix(stats::rbinom(N*N,1,mu[cbind(rep(cl,N),rep(cl,each=N))]),N,N)
-  links = Matrix::which(x==1,arr.ind = TRUE)
-  list(cl=cl, x = Matrix::sparseMatrix(links[,1],links[,2], x = rep(1,nrow(links))), K=K,N=N,pi=pi,mu=mu)
+rsbm <- function(N, pi, mu) {
+  K <- length(pi)
+  cl <- sample(1:K, N, replace = TRUE, prob = pi)
+  x <- matrix(stats::rbinom(N * N, 1, mu[cbind(rep(cl, N), rep(cl, each = N))]), N, N)
+  links <- Matrix::which(x == 1, arr.ind = TRUE)
+  list(cl = cl, x = Matrix::sparseMatrix(links[, 1], links[, 2], x = rep(1, nrow(links))), K = K, N = N, pi = pi, mu = mu)
 }
 
 #' Generate a data matrix using a Latent Block Model
@@ -35,8 +35,8 @@ rsbm = function (N,pi,mu){
 #'
 #' @param Nr desired Number of rows
 #' @param Nc desired Number of column
-#' @param pir A numeric vector of length Kr with rows clusters proportions (will be normalized to sum up to 1). 
-#' @param pic A numeric vector of length Kc with columns clusters proportions (will be normalized to sum up to 1). 
+#' @param pir A numeric vector of length Kr with rows clusters proportions (will be normalized to sum up to 1).
+#' @param pic A numeric vector of length Kc with columns clusters proportions (will be normalized to sum up to 1).
 #' @param mu A numeric matrix of dim Kr x Kc with the connectivity pattern to generate. elements in [0,1].
 #' @return A list with fields:
 #' \itemize{
@@ -52,19 +52,19 @@ rsbm = function (N,pi,mu){
 #' \item mu: connectivity matrix
 #' }
 #' @examples
-#' simu = rlbm(500,1000,rep(1/5,5),rep(1/10,10),matrix(runif(50),5,10))
+#' simu <- rlbm(500, 1000, rep(1 / 5, 5), rep(1 / 10, 10), matrix(runif(50), 5, 10))
 #' @export
-rlbm = function (Nr,Nc,pir,pic,mu){
-  Kr = length(pir)
-  Kc = length(pic)
-  clc = sample(1:Kc,Nc,replace=TRUE,prob = pic)
-  clr = sample(1:Kr,Nr,replace=TRUE,prob = pir)
-  if(dim(mu)[1]!=Kr | dim(mu)[1]!=Kr){
+rlbm <- function(Nr, Nc, pir, pic, mu) {
+  Kr <- length(pir)
+  Kc <- length(pic)
+  clc <- sample(1:Kc, Nc, replace = TRUE, prob = pic)
+  clr <- sample(1:Kr, Nr, replace = TRUE, prob = pir)
+  if (dim(mu)[1] != Kr | dim(mu)[1] != Kr) {
     stop("incompatible argument sizes")
   }
-  x  = matrix(stats::rbinom(Nr*Nc,1,mu[cbind(rep(clr,Nc),rep(clc,each=Nr))]),Nr,Nc)
-  links = Matrix::which(x==1,arr.ind = TRUE)
-  list(clr=clr,clc=clc, x = Matrix::sparseMatrix(links[,1],links[,2], x = rep(1,nrow(links))), Kr=Kr,Kc=Kc,Nr=Nr,Nc=Nc,pir=pir,pic=pic,mu=mu)
+  x <- matrix(stats::rbinom(Nr * Nc, 1, mu[cbind(rep(clr, Nc), rep(clc, each = Nr))]), Nr, Nc)
+  links <- Matrix::which(x == 1, arr.ind = TRUE)
+  list(clr = clr, clc = clc, x = Matrix::sparseMatrix(links[, 1], links[, 2], x = rep(1, nrow(links))), Kr = Kr, Kc = Kc, Nr = Nr, Nc = Nc, pir = pir, pic = pic, mu = mu)
 }
 
 
@@ -90,22 +90,22 @@ rlbm = function (Nr,Nc,pir,pic,mu){
 #' \item lambda: expectation of row sums
 #' }
 #' @export
-rmm = function (N,pi,mu,lambda){
-  K   = length(pi)
-  nbv = dim(mu)[2]
-  cl  = sample(1:K,N,replace=TRUE,prob = pi)
-  X   = matrix(0,N,nbv) 
-  if(length(lambda)==1 | length(lambda)!=N){
-    Nr=stats::rpois(N,lambda)  
-  }else{
-    Nr=lambda
+rmm <- function(N, pi, mu, lambda) {
+  K <- length(pi)
+  nbv <- dim(mu)[2]
+  cl <- sample(1:K, N, replace = TRUE, prob = pi)
+  X <- matrix(0, N, nbv)
+  if (length(lambda) == 1 | length(lambda) != N) {
+    Nr <- stats::rpois(N, lambda)
+  } else {
+    Nr <- lambda
   }
-  
-  for (k in 1:K){
-    X[cl==k]  = t(stats::rmultinom(sum(cl==k),Nr[cl==k],mu[k,]))
+
+  for (k in 1:K) {
+    X[cl == k] <- t(stats::rmultinom(sum(cl == k), Nr[cl == k], mu[k, ]))
   }
-  links = Matrix::which(X>0,arr.ind = TRUE)
-  list(cl=cl, x = Matrix::sparseMatrix(links[,1],links[,2], x = X[links]), K=K,N=N,pi=pi,mu=mu, lambda=lambda)
+  links <- Matrix::which(X > 0, arr.ind = TRUE)
+  list(cl = cl, x = Matrix::sparseMatrix(links[, 1], links[, 2], x = X[links]), K = K, N = N, pi = pi, mu = mu, lambda = lambda)
 }
 
 #' Generates graph adjacency matrix using a degree corrected SBM
@@ -127,20 +127,20 @@ rmm = function (N,pi,mu,lambda){
 #' \item cl: vector of clusters labels
 #' \item pi: clusters proportions
 #' \item mu: connectivity matrix
-#' \item betain: normalized in-degree parameters 
+#' \item betain: normalized in-degree parameters
 #' \item betaout: normalized out-degree parameters
 #' }
 #' @export
-rdcsbm = function (N,pi,mu,betain,betaout){
-  K  = length(pi)
-  cl = sample(1:K,N,replace=TRUE,prob = pi)
-  betain_cl = stats::aggregate(betain,list(cl),mean)$x
-  betain = betain/betain_cl[cl]
-  betaout_cl = stats::aggregate(betaout,list(cl),mean)$x
-  betaout = betaout/betaout_cl[cl]
-  x  = matrix(stats::rpois(N*N,mu[cbind(rep(cl,N),rep(cl,each=N))]*rep(betain,N)*rep(betaout,each=N)),N,N)
-  links = Matrix::which(x>0,arr.ind = TRUE)
-  list(cl=cl, x = Matrix::sparseMatrix(links[,1],links[,2], x = x[links]), K=K,N=N,pi=pi,mu=mu)
+rdcsbm <- function(N, pi, mu, betain, betaout) {
+  K <- length(pi)
+  cl <- sample(1:K, N, replace = TRUE, prob = pi)
+  betain_cl <- stats::aggregate(betain, list(cl), mean)$x
+  betain <- betain / betain_cl[cl]
+  betaout_cl <- stats::aggregate(betaout, list(cl), mean)$x
+  betaout <- betaout / betaout_cl[cl]
+  x <- matrix(stats::rpois(N * N, mu[cbind(rep(cl, N), rep(cl, each = N))] * rep(betain, N) * rep(betaout, each = N)), N, N)
+  links <- Matrix::which(x > 0, arr.ind = TRUE)
+  list(cl = cl, x = Matrix::sparseMatrix(links[, 1], links[, 2], x = x[links]), K = K, N = N, pi = pi, mu = mu)
 }
 
 
@@ -157,7 +157,7 @@ rdcsbm = function (N,pi,mu,betain,betaout){
 #' @param X A matrix of covariate
 #' @return A list with fields:
 #' \itemize{
-#' \item X: the covariate matrix 
+#' \item X: the covariate matrix
 #' \item y: the target feature
 #' \item K: number of generated clusters
 #' \item N: sample size
@@ -167,12 +167,12 @@ rdcsbm = function (N,pi,mu,betain,betaout){
 #' \item sigma: conditional variance
 #' }
 #' @export
-rmreg = function (N,pi,mu,sigma,X=cbind(matrix(stats::rnorm(N*(nrow(mu)-1)),N,nrow(mu)-1),rep(1,N))){
-  K  = length(pi)
-  cl = sample(1:K,N,replace=TRUE,prob = pi)
-  yt = X%*%mu+stats::rnorm(N,0,sigma)
-  y  = yt[cbind(1:N,cl)]
-  list(cl=cl, X = X,y=y, K=K,N=N,pi=pi,mu=mu,sigma=sigma)
+rmreg <- function(N, pi, mu, sigma, X = cbind(matrix(stats::rnorm(N * (nrow(mu) - 1)), N, nrow(mu) - 1), rep(1, N))) {
+  K <- length(pi)
+  cl <- sample(1:K, N, replace = TRUE, prob = pi)
+  yt <- X %*% mu + stats::rnorm(N, 0, sigma)
+  y <- yt[cbind(1:N, cl)]
+  list(cl = cl, X = X, y = y, K = K, N = N, pi = pi, mu = mu, sigma = sigma)
 }
 
 #' Generate a graph adjacency matrix using a Stochastic Block Model
@@ -182,7 +182,7 @@ rmreg = function (N,pi,mu,sigma,X=cbind(matrix(stats::rnorm(N*(nrow(mu)-1)),N,nr
 #' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 #'
 #' @param N The size of the graph to generate
-#' @param pi A numeric vector of length K with clusters proportions (will be normalized to sum up to 1). 
+#' @param pi A numeric vector of length K with clusters proportions (will be normalized to sum up to 1).
 #' @param mu A numeric array of dim K x K x M with the connectivity pattern to generate. elements in [0,1].
 #' @param lambda A double with the Poisson intensity to generate the total counts
 #' @return A list with fields:
@@ -196,29 +196,29 @@ rmreg = function (N,pi,mu,sigma,X=cbind(matrix(stats::rnorm(N*(nrow(mu)-1)),N,nr
 #' \item lambda:
 #' }
 #' @examples
-#' simu = rsbm(100,rep(1/5,5),diag(rep(0.1,5))+0.001)
+#' simu <- rsbm(100, rep(1 / 5, 5), diag(rep(0.1, 5)) + 0.001)
 #' @export
-rmultsbm = function (N,pi,mu,lambda){
-  K  = length(pi)
-  cl = sample(1:K,N,replace=TRUE,prob = pi)
-  x = array(dim=c(N,N,dim(mu)[3]))
-  for (i in 1:N){
-    for (j in 1:N){
-      x[i,j,]=stats::rmultinom(1,stats::rpois(1,lambda),mu[cl[i],cl[j],]) 
+rmultsbm <- function(N, pi, mu, lambda) {
+  K <- length(pi)
+  cl <- sample(1:K, N, replace = TRUE, prob = pi)
+  x <- array(dim = c(N, N, dim(mu)[3]))
+  for (i in 1:N) {
+    for (j in 1:N) {
+      x[i, j, ] <- stats::rmultinom(1, stats::rpois(1, lambda), mu[cl[i], cl[j], ])
     }
   }
-  list(cl=cl, x = x, K=K,N=N,pi=pi,mu=mu)
+  list(cl = cl, x = x, K = K, N = N, pi = pi, mu = mu)
 }
 
 
-#' Generate data from lca model 
+#' Generate data from lca model
 #'
 #' \code{rlca} returns a data.frame with factor sampled from an lca model
 #'
 #' This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 #'
 #' @param N The size of the graph to generate
-#' @param pi A numeric vector of length K with clusters proportions (will be normalized to sum up to 1). 
+#' @param pi A numeric vector of length K with clusters proportions (will be normalized to sum up to 1).
 #' @param theta A list of size V
 #' @return A list with fields:
 #' \itemize{
@@ -227,24 +227,26 @@ rmultsbm = function (N,pi,mu,lambda){
 #' \item N: number of vertex
 #' \item cl: vector of clusters labels
 #' \item pi: clusters proportions
-#' \item theta: 
+#' \item theta:
 #' }
 #' @examples
-#' theta = list(matrix(c(0.1,0.9,0.9,0.1,0.5,0.5,0.3,0.7),ncol=2,byrow=TRUE),
-#' matrix(c(0.5,0.5,0.3,0.7,0.05,0.95,0.3,0.7),ncol=2,byrow=TRUE),
-#' matrix(c(0.5,0.5,0.9,0.1,0.5,0.5,0.1,0.9),ncol=2,byrow=TRUE))
-#' lca.data = rlca(100,rep(1/4,4),theta)
+#' theta <- list(
+#'   matrix(c(0.1, 0.9, 0.9, 0.1, 0.5, 0.5, 0.3, 0.7), ncol = 2, byrow = TRUE),
+#'   matrix(c(0.5, 0.5, 0.3, 0.7, 0.05, 0.95, 0.3, 0.7), ncol = 2, byrow = TRUE),
+#'   matrix(c(0.5, 0.5, 0.9, 0.1, 0.5, 0.5, 0.1, 0.9), ncol = 2, byrow = TRUE)
+#' )
+#' lca.data <- rlca(100, rep(1 / 4, 4), theta)
 #' @export
-rlca = function (N,pi,theta){
-  K  = length(pi)
-  cl = sample(1:K,N,replace=TRUE,prob = pi)
-  V=length(theta);
-  x = data.frame(matrix(NA,N,V))
-  for (v in 1:V){
-    for(k in 1:K){
-      x[cl==k,v]=sample(1:ncol(theta[[v]]),sum(cl==k),prob =theta[[v]][k,], replace = TRUE)
+rlca <- function(N, pi, theta) {
+  K <- length(pi)
+  cl <- sample(1:K, N, replace = TRUE, prob = pi)
+  V <- length(theta)
+  x <- data.frame(matrix(NA, N, V))
+  for (v in 1:V) {
+    for (k in 1:K) {
+      x[cl == k, v] <- sample(1:ncol(theta[[v]]), sum(cl == k), prob = theta[[v]][k, ], replace = TRUE)
     }
-    x[,v]=factor(x[,v],levels = 1:ncol(theta[[v]]))
+    x[, v] <- factor(x[, v], levels = 1:ncol(theta[[v]]))
   }
-  list(cl=cl, x = x, K=K,N=N,pi=pi,theta=theta)
+  list(cl = cl, x = x, K = K, N = N, pi = pi, theta = theta)
 }

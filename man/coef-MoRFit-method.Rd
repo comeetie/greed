@@ -12,9 +12,9 @@
 \value{
 a list with the mixture parameters estimates (MAP), the fields are:
 \itemize{
-\item \code{'pi'}: cluster proportions 
+\item \code{'pi'}: cluster proportions
 \item \code{'A'}: cluster regression matrix
-\item \code{'Sigmak'}: cluster noise co-variance matrices 
+\item \code{'Sigmak'}: cluster noise co-variance matrices
 }
 }
 \description{

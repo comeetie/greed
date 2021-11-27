@@ -16,6 +16,6 @@ the entropy of the sample
 Compute the entropy of a discrete sample
 }
 \examples{
-cl =sample(2,500,replace=TRUE)
+cl <- sample(2, 500, replace = TRUE)
 H(cl)
 }

@@ -13,7 +13,7 @@ NULL
 #' \deqn{ \gamma_i^c\sim \mathcal{U}(S_l)}
 #' \deqn{ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)}
 #' The individuals parameters \eqn{\gamma_i^r,\gamma_j^c} allow to take into account the node degree heterogeneity.
-#' These parameters have uniform priors over simplex \eqn{S_k}. 
+#' These parameters have uniform priors over simplex \eqn{S_k}.
 #' These classes mainly store the prior parameters value \eqn{\alpha,p} of this generative model.
 #' The \code{DcLbm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DcLbmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
 #' @slot p Exponential prior parameter (default to Nan, in this case p will be estimated from data as the average intensities of X)
@@ -28,7 +28,7 @@ setClass("DcLbmPrior",
 #' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @export
 setClass("DcLbm",
-         contains = c("DlvmCoPrior", "DcLbmPrior")
+  contains = c("DlvmCoPrior", "DcLbmPrior")
 )
 
 #' @describeIn DcLbmPrior-class DcLbmPrior class constructor
@@ -200,7 +200,7 @@ setMethod(
       blocks = co_blocks(x),
       biplot = bi_plot(x),
       nodelink = co_nodelink(x),
-      callNextMethod(x,type)
+      methods::callNextMethod(x, type)
     )
   }
 )
@@ -244,7 +244,7 @@ setMethod(
     if (!all(X[ij] == round(X[ij]))) {
       stop("Only integer matrix allowed as input, non integer values found.", call. = FALSE)
     }
-   
+
 
     di <- dim(X)
     N <- sum(di)
@@ -266,7 +266,7 @@ setMethod(
     clust_cols <- which(clusters_type == 2)
     icol <- (sol@Nrow + 1):length(sol@cl)
     irow <- 1:sol@Nrow
-    
+
     sol@clrow <- as.numeric(factor(sol@cl[irow], levels = clust_rows))
     sol@Krow <- max(sol@clrow, na.rm = TRUE)
     sol@clcol <- as.numeric(factor(sol@cl[icol], levels = clust_cols))
@@ -281,7 +281,7 @@ setMethod(
       root <- tree$node[tree$tree == 0]
       tree <- tree[tree$node != root, ]
       tree$tree[tree$tree == root] <- 0
-      
+
       xcol <- tree[tree$node %in% clust_cols, ]$x
       coltree <- tree[tree$x >= min(xcol) & tree$x <= max(xcol), ]
       xrow <- tree[tree$node %in% clust_rows, ]$x

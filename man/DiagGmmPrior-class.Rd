@@ -67,7 +67,7 @@ The \code{DiagGmm-class} must be used when fitting a simple Diagonal Gaussian Mi
 DiagGmmPrior()
 DiagGmmPrior(tau = 0.1)
 DiagGmm()
-DiagGmm(tau=0.1)
+DiagGmm(tau = 0.1)
 }
 \references{
 Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5. #'

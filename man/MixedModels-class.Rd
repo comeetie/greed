@@ -34,7 +34,7 @@ The filed name in the models list must match the name of the list use to provide
 }}
 
 \examples{
-MixedModels(models = list(continuous=GmmPrior(),discrete=LcaPrior()))
+MixedModels(models = list(continuous = GmmPrior(), discrete = LcaPrior()))
 }
 \seealso{
 Other DlvmModels: 

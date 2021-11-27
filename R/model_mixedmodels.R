@@ -15,14 +15,14 @@ NULL
 setClass("MixedModels",
   representation = list(models = "list"),
   contains = "DlvmPrior",
-  prototype(alpha=1,models=list())
+  prototype(alpha = 1, models = list())
 )
 
-setValidity("MixedModels",function(object){
-  models_classes = lapply(object@models,class)
-  valid_models  = c("GmmPrior","DiagGmmPrior","MoRPrior","SbmPrior","DcSbmPrior","MultSbmPrior","MoMPrior","LcaPrior")
-  if(!all(models_classes %in% valid_models)){
-    return(paste0("At least one of the provided models to MixedModels is not of the good classe, only ",valid_models," may be used with a MixedModels.",collapse = ", "))
+setValidity("MixedModels", function(object) {
+  models_classes <- lapply(object@models, class)
+  valid_models <- c("GmmPrior", "DiagGmmPrior", "MoRPrior", "SbmPrior", "DcSbmPrior", "MultSbmPrior", "MoMPrior", "LcaPrior")
+  if (!all(models_classes %in% valid_models)) {
+    return(paste0("At least one of the provided models to MixedModels is not of the good classe, only ", valid_models, " may be used with a MixedModels.", collapse = ", "))
   }
   TRUE
 })
@@ -32,10 +32,10 @@ setValidity("MixedModels",function(object){
 #' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @return a \code{MixedModels-class} object
 #' @examples
-#' MixedModels(models = list(continuous=GmmPrior(),discrete=LcaPrior()))
+#' MixedModels(models = list(continuous = GmmPrior(), discrete = LcaPrior()))
 #' @export
-MixedModels <- function(models,alpha = 1) {
-  methods::new("MixedModels", alpha = alpha,models=models)
+MixedModels <- function(models, alpha = 1) {
+  methods::new("MixedModels", alpha = alpha, models = models)
 }
 
 
@@ -94,12 +94,12 @@ setMethod(
   f = "reorder",
   signature = signature("MixedModels", "list", "integer"),
   definition = function(model, obs_stats, order) {
-    mnames=names(model@models)
-    new_obs_stats = lapply(mnames,function(current_name){
-        reorder(model@models[[current_name]],obs_stats[[current_name]],order)
-      })
-    names(new_obs_stats)=mnames
-    new_obs_stats[["counts"]]=obs_stats$counts[order]
+    mnames <- names(model@models)
+    new_obs_stats <- lapply(mnames, function(current_name) {
+      reorder(model@models[[current_name]], obs_stats[[current_name]], order)
+    })
+    names(new_obs_stats) <- mnames
+    new_obs_stats[["counts"]] <- obs_stats$counts[order]
     new_obs_stats
   }
 )
@@ -109,12 +109,12 @@ setMethod(
   f = "cleanObsStats",
   signature = signature("MixedModels", "list"),
   definition = function(model, obs_stats, data) {
-    mnames=names(model@models)
-    new_obs_stats = lapply(mnames,function(current_name){
-      cleanObsStats(model@models[[current_name]],obs_stats[[current_name]],data[[current_name]])
+    mnames <- names(model@models)
+    new_obs_stats <- lapply(mnames, function(current_name) {
+      cleanObsStats(model@models[[current_name]], obs_stats[[current_name]], data[[current_name]])
     })
-    names(new_obs_stats)=mnames
-    new_obs_stats[["counts"]]=obs_stats$counts
+    names(new_obs_stats) <- mnames
+    new_obs_stats[["counts"]] <- obs_stats$counts
     new_obs_stats
   }
 )
@@ -126,24 +126,27 @@ setMethod(
   f = "preprocess",
   signature = signature("MixedModels"),
   definition = function(model, data) {
-    
-    mnames= names(model@models)
-    if("counts" %in% mnames){
-      stop("Prohibited models name counts is reserved, please use another model name.",.call=FALSE)
+    mnames <- names(model@models)
+    if ("counts" %in% mnames) {
+      stop("Prohibited models name counts is reserved, please use another model name.", .call = FALSE)
     }
-    
-    if(!(all(names(data) %in% mnames) & all(mnames %in% names(data)))){
-      stop("Models names do notch match datasets names, please check the model and dataset list.",.call=FALSE)
+
+    if (!(all(names(data) %in% mnames) & all(mnames %in% names(data)))) {
+      stop("Models names do notch match datasets names, please check the model and dataset list.", .call = FALSE)
     }
-    data_prep = lapply(mnames,function(current_name){greed:::preprocess(model@models[[current_name]],data[[current_name]])})
-    names(data_prep)=mnames
-    Ns = sapply(data_prep,function(x){x$N})
-    if(!all(Ns==Ns[1])){
-      stop("All datasets must have the same number of elements.",.call=FALSE)
+    data_prep <- lapply(mnames, function(current_name) {
+      greed:::preprocess(model@models[[current_name]], data[[current_name]])
+    })
+    names(data_prep) <- mnames
+    Ns <- sapply(data_prep, function(x) {
+      x$N
+    })
+    if (!all(Ns == Ns[1])) {
+      stop("All datasets must have the same number of elements.", .call = FALSE)
     }
-    
-    data_prep$N=Ns[1]
-    
+
+    data_prep$N <- Ns[1]
+
     data_prep
   }
 )

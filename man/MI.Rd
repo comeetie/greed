@@ -18,7 +18,7 @@ the mutual information between the two discrete samples
 Compute the mutual information of two discrete samples
 }
 \examples{
-cl1 =sample(2,500,replace=TRUE)
-cl2 =sample(2,500,replace=TRUE)
-MI(cl1,cl2)
+cl1 <- sample(2, 500, replace = TRUE)
+cl2 <- sample(2, 500, replace = TRUE)
+MI(cl1, cl2)
 }

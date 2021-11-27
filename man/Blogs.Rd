@@ -5,7 +5,7 @@
 \alias{Blogs}
 \title{Political blogs network dataset}
 \format{
-An object of class \code{list} with two fields; 
+An object of class \code{list} with two fields;
  \describe{
   \item{X}{network adjacency matrix as a \code{\link[Matrix]{sparseMatrix}} of size 1222x1222}
   \item{label}{vector of political leaning of each blogs (size 1222) with the following encoding (0 = left or liberal,1 = right or conservative)}
@@ -18,14 +18,14 @@ An object of class \code{list} with two fields;
 data(Blogs)
 }
 \description{
-A directed network of hyperlinks between weblogs on US politics, recorded in 2005 by Adamic and Glance. 
+A directed network of hyperlinks between weblogs on US politics, recorded in 2005 by Adamic and Glance.
 Only the biggest connected component of the original graph is provided.
 }
 \examples{
 data(Blogs)
 }
 \references{
-Lada A. Adamic and Natalie Glance, "The political blogosphere and the 2004 US Election", in Proceedings of the WWW-2005 Workshop 
+Lada A. Adamic and Natalie Glance, "The political blogosphere and the 2004 US Election", in Proceedings of the WWW-2005 Workshop
 on the Weblogging Ecosystem (2005) (\href{https://dl.acm.org/doi/10.1145/1134271.1134277}{ACM}).
 }
 \keyword{datasets}

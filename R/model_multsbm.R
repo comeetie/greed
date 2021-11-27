@@ -12,7 +12,7 @@ NULL
 #' \deqn{ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{M}(L_{ij},\theta_{kl})}
 #' With \eqn{L_{ij}=\sum_{m=1}^MX_{ijm}}. These classes mainly store the prior parameters value \eqn{\alpha,\beta} of this generative model.
 #' The \code{MultSbm-class} must be used when fitting a simple MultSbm whereas the \code{MultSbmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
-#' 
+#'
 #' @slot beta Dirichlet prior parameter over Multinomial links
 #' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
 #' @seealso \code{\link{MultSbmFit-class}}, \code{\link{MultSbmPath-class}}
@@ -24,8 +24,7 @@ setClass("MultSbmPrior",
 )
 
 
-setValidity("MultSbmPrior",function(object){
-
+setValidity("MultSbmPrior", function(object) {
   if (length(object@beta) > 1) {
     return("MultSbm model prior misspecification, beta must be of length 1.")
   }
@@ -45,7 +44,7 @@ setValidity("MultSbmPrior",function(object){
 #' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @export
 setClass("MultSbm",
-         contains = c("DlvmPrior", "MultSbmPrior")
+  contains = c("DlvmPrior", "MultSbmPrior")
 )
 
 
@@ -146,7 +145,7 @@ setMethod(
     switch(type,
       blocks = graph_blocks_cube(x),
       nodelink = nodelink_cube(x),
-      stop(paste0("No plot available with type :",type),call. = FALSE)
+      stop(paste0("No plot available with type :", type), call. = FALSE)
     )
   }
 )
@@ -247,8 +246,8 @@ setMethod(
   f = "reorder",
   signature = signature("MultSbm", "list", "integer"),
   definition = function(model, obs_stats, order) {
-    obs_stats$MultSbm$x_counts  = obs_stats$MultSbm$x_counts[order, order, ]
-    obs_stats$counts = obs_stats$counts[order]
+    obs_stats$MultSbm$x_counts <- obs_stats$MultSbm$x_counts[order, order, ]
+    obs_stats$counts <- obs_stats$counts[order]
     obs_stats
   }
 )
@@ -257,7 +256,7 @@ setMethod(
   f = "reorder",
   signature = signature("MultSbmPrior", "list", "integer"),
   definition = function(model, obs_stats, order) {
-    obs_stats$x_counts  = obs_stats$x_counts[order, order, ]
+    obs_stats$x_counts <- obs_stats$x_counts[order, order, ]
     obs_stats
   }
 )

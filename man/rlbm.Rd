@@ -39,5 +39,5 @@ A list with fields:
 This function takes the desired graph size, cluster proportions and connectivity matrix as input and sample a graph accordingly together with the clusters labels.
 }
 \examples{
-simu = rlbm(500,1000,rep(1/5,5),rep(1/10,10),matrix(runif(50),5,10))
+simu <- rlbm(500, 1000, rep(1 / 5, 5), rep(1 / 10, 10), matrix(runif(50), 5, 10))
 }

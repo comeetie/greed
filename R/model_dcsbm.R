@@ -12,7 +12,7 @@ NULL
 #' \deqn{ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)}
 #' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)}
 #' The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity.
-#' These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i:z_{ik}=1}\gamma_i^+=1}. 
+#' These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i:z_{ik}=1}\gamma_i^+=1}.
 #' These classes mainly store the prior parameters value \eqn{\alpha,p} of this generative model.
 #' The \code{DcSbm-class} must be used when fitting a simple Degree Corrected Stochastic Block Model whereas the \code{DcSbmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
 #' @slot p Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)
@@ -24,7 +24,7 @@ setClass("DcSbmPrior",
   prototype(p = NaN, type = "guess")
 )
 
-setValidity("DcSbmPrior",function(object){
+setValidity("DcSbmPrior", function(object) {
   if (length(object@p) > 1) {
     return("DcSbm model prior misspecification, p must be of length 1.")
   }
@@ -34,7 +34,7 @@ setValidity("DcSbmPrior",function(object){
   if (!(object@type %in% c("directed", "undirected", "guess"))) {
     return("DcSbm model prior misspecification, model type must directed, undirected or guess.")
   }
-  
+
   TRUE
 })
 
@@ -42,7 +42,7 @@ setValidity("DcSbmPrior",function(object){
 #' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @export
 setClass("DcSbm",
-         contains = c("DlvmPrior", "DcSbmPrior")
+  contains = c("DlvmPrior", "DcSbmPrior")
 )
 
 
@@ -159,8 +159,8 @@ setMethod(
   definition = function(x, type = "blocks") {
     switch(type,
       blocks = graph_blocks(x),
-      nodelink = nodelink(x),      
-      stop(paste0("No plot available with type :",type),call. = FALSE)
+      nodelink = nodelink(x),
+      stop(paste0("No plot available with type :", type), call. = FALSE)
     )
   }
 )
@@ -283,4 +283,3 @@ setMethod(
     obs_stats
   }
 )
-

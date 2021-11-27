@@ -21,8 +21,7 @@ setClass("MoMPrior",
 )
 
 
-setValidity("MoMPrior",function(object){
-  
+setValidity("MoMPrior", function(object) {
   if (length(object@beta) > 1) {
     return("MoM model prior misspecification, beta must be of length 1.")
   }
@@ -40,7 +39,7 @@ setValidity("MoMPrior",function(object){
 #' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @export
 setClass("MoM",
-         contains = c("DlvmPrior", "MoMPrior")
+  contains = c("DlvmPrior", "MoMPrior")
 )
 
 #' @describeIn MoMPrior-class MoMPrior class constructor
@@ -170,8 +169,8 @@ setMethod(
   f = "reorder",
   signature = signature("MoM", "list", "integer"),
   definition = function(model, obs_stats, order) {
-    obs_stats$counts=obs_stats$counts[order]
-    obs_stats$MoM$x_counts=obs_stats$MoM$x_counts[, order]
+    obs_stats$counts <- obs_stats$counts[order]
+    obs_stats$MoM$x_counts <- obs_stats$MoM$x_counts[, order]
     obs_stats
   }
 )
@@ -179,7 +178,7 @@ setMethod(
   f = "reorder",
   signature = signature("MoMPrior", "list", "integer"),
   definition = function(model, obs_stats, order) {
-    obs_stats$x_counts=obs_stats$x_counts[, order]
+    obs_stats$x_counts <- obs_stats$x_counts[, order]
     obs_stats
   }
 )

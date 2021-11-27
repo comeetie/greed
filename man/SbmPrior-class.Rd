@@ -33,7 +33,7 @@ Such model can be used to cluster graph vertex, and model a square adjacency mat
 \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 \deqn{ \theta_{kl} \sim Beta(a_0,b_0)}
 \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\theta_{kl})}
-These classes mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model. 
+These classes mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model.
 The \code{Sbm-class} must be used when fitting a simple Sbm whereas the \code{SbmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
 }
 \section{Functions}{

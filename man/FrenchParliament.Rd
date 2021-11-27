@@ -5,7 +5,7 @@
 \alias{FrenchParliament}
 \title{French Parliament votes dataset}
 \format{
-An object of class \code{list} with two fields; 
+An object of class \code{list} with two fields;
  \describe{
   \item{X}{matrix of deputy votes a \code{\link[Matrix]{sparseMatrix}} of size 593x570}
   \item{labels}{a data frame with deputy meta-data}

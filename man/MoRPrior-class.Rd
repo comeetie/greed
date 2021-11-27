@@ -8,9 +8,9 @@
 \alias{MoR}
 \title{Multivariate mixture of regression Prior model description class}
 \usage{
-MoRPrior(formula, tau = 0.01, N0 = NaN, epsilon = NaN)
+MoRPrior(formula, tau = 0.001, N0 = NaN, epsilon = as.matrix(NaN))
 
-MoR(formula, alpha = 1, tau = 0.01, N0 = NaN, epsilon = NaN)
+MoR(formula, alpha = 1, tau = 0.1, N0 = NaN, epsilon = as.matrix(NaN))
 }
 \arguments{
 \item{formula}{a \code{\link{formula}} that describe the linear model to use}
@@ -54,9 +54,9 @@ The \code{MoR-class} must be used when fitting a simple Mixture of Regression wh
 \describe{
 \item{\code{formula}}{a \code{\link{formula}} that describe the linear model to use}
 
-\item{\code{tau}}{Prior parameter (inverse variance) default 0.01}
+\item{\code{tau}}{Prior parameter (inverse variance) default 0.001}
 
-\item{\code{epsilon}}{Covariance matrix prior parameter (default to NaN, in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.)}
+\item{\code{epsilon}}{Covariance matrix prior parameter (default to as.matrix(NaN), in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.)}
 
 \item{\code{N0}}{Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)}
 
@@ -65,11 +65,11 @@ The \code{MoR-class} must be used when fitting a simple Mixture of Regression wh
 
 \examples{
 MoRPrior(y ~ x1 + x2)
-MoRPrior(y ~ x1 + x2, N0=100)
-MoRPrior(cbind(y1,y2) ~ x1 + x2, N0=100)
+MoRPrior(y ~ x1 + x2, N0 = 100)
+MoRPrior(cbind(y1, y2) ~ x1 + x2, N0 = 100)
 MoR(y ~ x1 + x2)
-MoR(y ~ x1 + x2, N0=100)
-MoR(cbind(y1,y2) ~ x1 + x2, N0=100)
+MoR(y ~ x1 + x2, N0 = 100)
+MoR(cbind(y1, y2) ~ x1 + x2, N0 = 100)
 }
 \seealso{
 Other DlvmModels: 

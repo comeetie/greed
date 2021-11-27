@@ -5,7 +5,7 @@
 \alias{Football}
 \title{American College football network dataset}
 \format{
-An object of class \code{list} with two fields; 
+An object of class \code{list} with two fields;
  \describe{
   \item{X}{network adjacency matrix as a \code{\link[Matrix]{sparseMatrix}} of size 115x115}
   \item{label}{vector of teams conferences of size 115 with the following encoding (0 = Atlantic Coast,

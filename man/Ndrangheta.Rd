@@ -5,7 +5,7 @@
 \alias{Ndrangheta}
 \title{Ndrangheta mafia covert network dataset}
 \format{
-An object of class \code{list} with two fields; 
+An object of class \code{list} with two fields;
  \describe{
   \item{X}{network adjacency matrix as a \code{matrix} of size 146x146}
   \item{node_meta}{data frame of nodes meta information with features :}
@@ -29,7 +29,7 @@ Network of co-attendance occurrence attendance of suspected members of the Ndran
 data(Ndrangheta)
 }
 \references{
-{Extended Stochastic Block Models with Application to Criminal Networks, Sirio Legramanti and Tommaso Rigon and Daniele Durante and David B. Dunson, 2021, 
+{Extended Stochastic Block Models with Application to Criminal Networks, Sirio Legramanti and Tommaso Rigon and Daniele Durante and David B. Dunson, 2021,
 (\href{https://arxiv.org/abs/2007.08569v2}{arXiv:2007.08569}).}
 }
 \keyword{datasets}

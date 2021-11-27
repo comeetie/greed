@@ -7,8 +7,8 @@
 \format{
 An object of class \code{list} with two fields; \describe{
   \item{bg_img}{a matrix containing raw pixel representation of an image of a football
-  field (usefull for plotting payers).} 
-  \item{positions}{An R data.frame with 36 rows and 3 columns describing position, x and y axis on the field respectively.} 
+  field (usefull for plotting payers).}
+  \item{positions}{An R data.frame with 36 rows and 3 columns describing position, x and y axis on the field respectively.}
   }
 }
 \source{
