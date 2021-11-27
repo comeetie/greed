@@ -14,6 +14,8 @@ class SimpleIclModel : public IclModel
 public:
   SimpleIclModel(IclModelEmission * emission_modeli, S4 model,arma::uvec cli,bool verb=false);
   void set_cl(arma::uvec cli);
+  double icl(const List & obs_stats);
+  double icl(const List & obs_stats,int oldcl,int newcl);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl);
   double icl_prop(arma::vec counts);

@@ -17,20 +17,8 @@ test_that("DcLBM hybrid", {
   newcl = sample(setdiff(1:mm$Kr,oldcl),1)
   cl = c(mm$clr,mm$clc+max(mm$clr))
   expect_lte(greed:::test_swap(model,data,cl,i,newcl),10^-6)
-  
   expect_lte(greed:::test_merge(model,data,cl,oldcl,newcl),10^-6)
-  
-  greed:::fit_greed(model,data,cl,"none")
-  
-  
-  expect_equal(sol@Krow, 4)
-  expect_equal(sol@Kcol, 8)
-  solc = cut(sol,8)
-  expect_true(is.ggplot(plot(solc,type='tree')))
-  expect_true(is.ggplot(plot(solc,type='path')))
-  expect_true(is.ggplot(plot(solc,type='front')))
-  expect_true(is.ggplot(plot(solc,type='blocks')))
-  expect_true(is.ggplot(plot(solc,type='nodelink')))
+
 })
 
 test_that("COSBM seed", {
@@ -38,6 +26,7 @@ test_that("COSBM seed", {
   mu[2,4]=0.21
   mu[3,5]=0.21
   mm=rlbm(200,400,rep(1/4,4),rep(1/8,8),mu)
+  model = DcLbm()
   sol=greed(mm$x)
   expect_gte(sol@K, 12-2)
   expect_lte(sol@K, 12+2)

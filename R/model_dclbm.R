@@ -28,7 +28,7 @@ setClass("DcLbmPrior",
 #' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @export
 setClass("DcLbm",
-         contains = c("DlvmPrior", "DcLbmPrior")
+         contains = c("DlvmCoPrior", "DcLbmPrior")
 )
 
 #' @describeIn DcLbmPrior-class DcLbmPrior class constructor

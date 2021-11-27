@@ -23,6 +23,7 @@
 #include "IclModelEmission.h"
 #include "CombinedIclModel.h"
 #include "SimpleIclModel.h"
+#include "SimpleIclCoModel.h"
 #include "Gmm.h"
 #include "DiagGmm.h"
 #include "Lca.h"
@@ -34,8 +35,7 @@
 #include "MultSbmUndirected.h"
 #include "Mm.h"
 #include "Mregs.h"
-#include "CoDcSbm.h"
-
+#include "DcLbm.h"
 using namespace Rcpp;
 
 
@@ -128,7 +128,7 @@ IclModelEmission * init_emission_model(S4 model,List data, arma::uvec clt, bool 
       arma::sp_mat xp = as<arma::sp_mat>(data["X"]);
       int Nr = static_cast<int>(data["Nrows"]);
       int Nc = static_cast<int>(data["Ncols"]);
-      Memission = new CoDcSbm(xp,Nr,Nc,model,verbose);
+      Memission = new DcLbm(xp,Nr,Nc,model,verbose);
     }
     
     // MoM
@@ -180,21 +180,30 @@ IclModel * init(S4 model,List data, arma::uvec clr, bool verbose){
   if(!model.is("DlvmPrior")){
     stop("Unsuported model");
   }
-  
-  if(model.is("MixedModels")){
-    List models = as<List>(model.slot("models"));
-    std::vector<IclModelEmission*> icl_models;
-    CharacterVector models_names = models.names();
-    for( int m=0;m<models.length();m++){
-      String name = models_names[m];
-      IclModelEmission * cm = init_emission_model(models[name],data[name], clt, verbose);
-      icl_models.push_back(cm);
-    }
-    M = new CombinedIclModel(icl_models,model,clt,verbose);
-  }else{
+  if(model.is("DlvmCoPrior")){
+    int Nr = static_cast<int>(data["Nrows"]);
+    int Nc = static_cast<int>(data["Ncols"]);
     IclModelEmission * m = init_emission_model(model,data, clt, verbose);
-    M = new SimpleIclModel(m,model,clt,verbose);
+    M = new SimpleIclCoModel(m,model,clt,Nr,Nc,verbose);
+  }else{
+    if(model.is("DlvmPrior")){
+      if(model.is("MixedModels")){
+        List models = as<List>(model.slot("models"));
+        std::vector<IclModelEmission*> icl_models;
+        CharacterVector models_names = models.names();
+        for( int m=0;m<models.length();m++){
+          String name = models_names[m];
+          IclModelEmission * cm = init_emission_model(models[name],data[name], clt, verbose);
+          icl_models.push_back(cm);
+        }
+        M = new CombinedIclModel(icl_models,model,clt,verbose);
+      }else{
+        IclModelEmission * m = init_emission_model(model,data, clt, verbose);
+        M = new SimpleIclModel(m,model,clt,verbose);
+      }
+    }
   }
+
   return M;
 }
 

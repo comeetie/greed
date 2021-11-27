@@ -1,5 +1,5 @@
-#ifndef CODCSBM
-#define CODCSBM
+#ifndef DCLBM
+#define DCLBM
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <Rcpp.h>
@@ -8,15 +8,13 @@ using namespace Rcpp;
 
 
 
-class CoDcSbm : public IclModelEmission
+class DcLbm : public IclModelEmission
 {
 public:
-  CoDcSbm(const arma::sp_mat& xp,int Nr, int Nc,S4 model,bool verb=false);
+  DcLbm(const arma::sp_mat& xp,int Nr, int Nc,S4 model,bool verb=false);
   void set_cl(arma::uvec clt);
   double icl_emiss(const List & obs_stats);
   double icl_emiss(const List & obs_stats,int oldcl,int newcl,bool dead_cluster);
-  double icl_prop_cor(const List & obs_stats);
-  double icl_prop_cor(const List & obs_stats,int oldcl,int newcl,bool dead_cluster);
   arma::vec delta_swap(const int i,arma::uvec & cl, bool almost_dead_cluster, arma::uvec iclust, int K);
   void swap_update(const int i,arma::uvec &  cl,bool dead_cluster,const int newcl);
   double delta_merge(int k, int l);

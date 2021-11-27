@@ -1,5 +1,5 @@
-#ifndef COMBINEDICLMODEL
-#define COMBINEDICLMODEL
+#ifndef SIMPLEICLCOMODEL
+#define SIMPLEICLCOMODEL
 
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
@@ -9,10 +9,10 @@
 
 using namespace Rcpp;
 
-class CombinedIclModel : public IclModel
+class SimpleIclCoModel : public IclModel
 {
 public:
-  CombinedIclModel(std::vector<IclModelEmission*> IclModelsi, S4 model,arma::uvec cli,bool verb=false);
+  SimpleIclCoModel(IclModelEmission * emission_modeli, S4 model,arma::uvec cli,int Nri, int Nci,bool verb=false);
   void set_cl(arma::uvec cli);
   double icl(const List & obs_stats);
   double icl(const List & obs_stats,int oldcl,int newcl);
@@ -26,16 +26,21 @@ public:
   double delta_merge(int k, int l);
   double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats);
   void merge_update(int k, int l);
+  S4 get_model(){return emission_model->get_model();};
   List get_obs_stats();
-  S4 get_model();
-  ~CombinedIclModel(){
-    for(int m=0;m<IclModels.size();m++){
-      delete IclModels[m];
-    }
+  List get_obs_stats_cst(){return emission_model->get_obs_stats_cst();};
+  ~SimpleIclCoModel(){
+    delete emission_model;
   };
 private:
-  std::vector<IclModelEmission*> IclModels;
-  CharacterVector components_names;
+  IclModelEmission * emission_model;
+  arma::uvec row_clusts;
+  arma::uvec col_clusts;
+  arma::vec clusttypes;
+  int Kr;
+  int Kc;
+  int Nr;
+  int Nc;
 };
 
 #endif

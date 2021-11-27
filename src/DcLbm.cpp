@@ -1,9 +1,9 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include "gicl_tools.h"
-#include "CoDcSbm.h"
+#include "DcLbm.h"
 using namespace Rcpp;
 
-CoDcSbm::CoDcSbm(const arma::sp_mat  & xp,int Nri, int Nci,S4 modeli,bool verb){
+DcLbm::DcLbm(const arma::sp_mat  & xp,int Nri, int Nci,S4 modeli,bool verb){
   model=modeli;
   
 
@@ -28,7 +28,7 @@ CoDcSbm::CoDcSbm(const arma::sp_mat  & xp,int Nri, int Nci,S4 modeli,bool verb){
 
 
 
-void CoDcSbm::set_cl(arma::uvec cl){
+void DcLbm::set_cl(arma::uvec cl){
 
   K =arma::max(cl)+1;
   arma::uvec clr = cl.subvec(0,Nr-1);
@@ -57,51 +57,12 @@ void CoDcSbm::set_cl(arma::uvec cl){
 
 
 
-// a checker !!
-double CoDcSbm::icl_prop_cor(const List & obs_stats){
-  // compute the first part p(Zr,Zc) from clusters counts
-  arma::vec counts =as<arma::vec>(obs_stats["counts"]);
-  // log(p(Z))
-  double icl_prop = lgamma(Kr*alpha)+lgamma(Kc*alpha)+arma::accu(lgamma(alpha+counts))-K*lgamma(alpha)-lgamma(Nr+alpha*Kr)-lgamma(Nc+alpha*Kc);
-  icl_prop -= lgamma(K*alpha)+arma::accu(lgamma(alpha+counts))-K*lgamma(alpha)-lgamma(arma::accu(counts+alpha));
-  // complete with log(p(X|X)) from derived class
-  return icl_prop;
-}
-
-
-double CoDcSbm::icl_prop_cor(const List & obs_stats,int oldcl,int newcl, bool dead){
-
-  // compute the first part p(Zr,Zc) from clusters counts
-  arma::vec counts =as<arma::vec>(obs_stats["counts"]);
-  double icl_prop = 0;
-  if(!dead){
-    // both clusters are healthy
-    icl_prop -= lgamma(K*alpha)+lgamma(alpha+counts(oldcl))+lgamma(alpha+counts(newcl))-K*lgamma(alpha)-lgamma(K*alpha+N);
-  }else{
-    // cluster oldclass is dead, count(oldcl)==0 chnage of dimension
-    icl_prop -= lgamma((K-1)*alpha)+lgamma(alpha+counts(newcl,0))-(K-1)*lgamma(alpha)-lgamma((K-1)*alpha+N);
-  }
-  if(!dead){
-    // both clusters are healthy
-    icl_prop += lgamma(Kr*alpha)+lgamma(Kc*alpha)+lgamma(alpha+counts(oldcl))+lgamma(alpha+counts(newcl))-K*lgamma(alpha)-lgamma(Nr+alpha*Kr)-lgamma(Nc+alpha*Kc);
-  }else{
-    // cluster oldclass is dead, count(oldcl)==0 chnage of dimension
-    if(clusttypes(oldcl)==1){
-      icl_prop += lgamma((Kr-1)*alpha)+lgamma(Kc*alpha)+lgamma(alpha+counts(newcl))-(K-1)*lgamma(alpha)-lgamma(Nr+alpha*(Kr-1))-lgamma(Nc+alpha*Kc);
-    }
-    if(clusttypes(oldcl)==2){
-      icl_prop += lgamma(Kr*alpha)+lgamma((Kc-1)*alpha)+lgamma(alpha+counts(newcl))-(K-1)*lgamma(alpha)-lgamma(Nr+alpha*Kr)-lgamma(Nc+alpha*(Kc-1));
-    }
-  }
-
-  return icl_prop;
-}
 
 
 
-double CoDcSbm::icl_emiss(const List & obs_stats){
+double DcLbm::icl_emiss(const List & obs_stats){
   
-  double icl_prop = icl_prop_cor(obs_stats);
+
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
   arma::vec dr =as<arma::vec>(obs_stats["dr"]);
   arma::vec dc =as<arma::vec>(obs_stats["dc"]);
@@ -118,14 +79,13 @@ double CoDcSbm::icl_emiss(const List & obs_stats){
   // gamma poisson
   icl_emiss=icl_emiss + arma::accu(lgamma(sub_edges+1)-(sub_edges+1) % log(p*sub_mc+1));
 
-  return icl_emiss+icl_prop;
+  return icl_emiss;
 }
 
-double CoDcSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl, bool dead){
+double DcLbm::icl_emiss(const List & obs_stats,int oldcl,int newcl, bool dead){
   if(clusttypes(oldcl)!=clusttypes(newcl)){
     return -std::numeric_limits<double>::infinity();
   }
-  double icl_prop = icl_prop_cor(obs_stats,oldcl,newcl,dead);
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
   arma::vec ncounts =as<arma::vec>(obs_stats["counts"]);  
   
@@ -168,24 +128,24 @@ double CoDcSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl, bool dead)
     }
   }
   
-  return icl_emiss+icl_prop;
+  return icl_emiss;
 }
 
 
 
 
 
-List CoDcSbm::get_obs_stats(){
+List DcLbm::get_obs_stats(){
   return List::create(Named("counts", counts), Named("dr", dr),Named("dc", dc),Named("x_counts", x_counts));
 }
 
-List CoDcSbm::get_obs_stats_cst(){
+List DcLbm::get_obs_stats_cst(){
   arma::sp_mat din_node = sum(x).t();
   arma::sp_mat dout_node = sum(x.t()).t();
   return List::create(Named("dcol", din_node),Named("drow", dout_node));
 }
 
-arma::vec CoDcSbm::delta_swap(const int i,arma::uvec & cl, bool almost_dead_cluster, arma::uvec iclust, int K){
+arma::vec DcLbm::delta_swap(const int i,arma::uvec & cl, bool almost_dead_cluster, arma::uvec iclust, int K){
   int oldcl = cl(i);
   int cd = 0;
   arma::sp_mat delta_counts;
@@ -235,7 +195,7 @@ arma::vec CoDcSbm::delta_swap(const int i,arma::uvec & cl, bool almost_dead_clus
 }
 
 
-void CoDcSbm::swap_update(const int i,arma::uvec &  cl,bool dead_cluster,const int newcl){
+void DcLbm::swap_update(const int i,arma::uvec &  cl,bool dead_cluster,const int newcl){
   
   int oldcl = cl(i);
   int cd = 0;
@@ -278,7 +238,7 @@ void CoDcSbm::swap_update(const int i,arma::uvec &  cl,bool dead_cluster,const i
 }
 
 
-double CoDcSbm::delta_merge(int k, int l){
+double DcLbm::delta_merge(int k, int l){
   if(clusttypes(k)!=clusttypes(l)){
     return -std::numeric_limits<double>::infinity();
   }
@@ -312,7 +272,7 @@ double CoDcSbm::delta_merge(int k, int l){
 }
 
 
-double CoDcSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats){
+double DcLbm::delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats){
   // here old refers to the stats before the fusion between obk and obl
   //Rcout << "Je calculs des corrections !!" << std::endl;
   //Rcout << obk << "---- " << obl << std::endl;
@@ -395,7 +355,7 @@ double CoDcSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & 
 
 
 
-void CoDcSbm::merge_update(int k,int l){
+void DcLbm::merge_update(int k,int l){
   
 
   counts(l) = counts(k)+counts(l);

@@ -16,9 +16,9 @@ class IclModel
 public:
   virtual void set_cl(arma::uvec clt){};
   // compute icl
-  double icl(const List & obs_stats);
+  virtual double icl(const List & obs_stats){return 0;};
   // compute icl optimized for deltas
-  double icl(const List & obs_stats,int oldcl,int newcl);
+  virtual double icl(const List & obs_stats,int oldcl,int newcl){return 0;};
   // virtual methods to be implemented by models to compute log(p(X|Z))
   virtual double icl_emiss(const List & obs_stats){return 0;};
   // virtual methods to be implemented by models to compute log(p(X|Z)) optimized for deltas

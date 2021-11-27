@@ -7,39 +7,6 @@
 using namespace Rcpp;
 
 
-// main function to compute ICL from observed stats
-double IclModel::icl(const List & obs_stats){
-  // compute the first part p(Z) from clusters counts
-  arma::vec counts =as<arma::vec>(obs_stats["counts"]);
-  // number of cluster
-  int K = counts.n_elem;
-  // log(p(Z))
-  double icl_prop = lgamma(K*alpha)+arma::accu(lgamma(alpha+counts))-K*lgamma(alpha)-lgamma(arma::accu(counts+alpha));
-  // complete with log(p(X|X)) from derived class
-  double icl_e = this->icl_emiss(obs_stats);
-  double icl = icl_prop+icl_e;
-  return icl;
-}
-
-// main function to compute ICL from observed stats optimized version for computing delta which only invlove change in 2 clusters
-double IclModel::icl(const List & obs_stats,int oldcl,int newcl){
-  // compute the first part p(Z) from clusters counts
-  arma::vec counts =as<arma::vec>(obs_stats["counts"]);
-  int K = counts.n_elem;
-  double icl_prop = 0;
-  if(counts(oldcl)!=0){
-    // both clusters are healthy
-    icl_prop = lgamma(K*alpha)+lgamma(alpha+counts(oldcl))+lgamma(alpha+counts(newcl))-K*lgamma(alpha)-lgamma(K*alpha+N);
-  }else{
-    // cluster oldclass is dead, count(oldcl)==0 chnage of dimension
-    icl_prop = lgamma((K-1)*alpha)+lgamma(alpha+counts(newcl,0))-(K-1)*lgamma(alpha)-lgamma((K-1)*alpha+N);
-  }
-  // complete with log(p(X|X)) from derived class
-  double icl_e = this->icl_emiss(obs_stats,oldcl,newcl);
-  double icl = icl_prop+icl_e;
-  return icl;
-}
-
 
 // main function for greedy swaping
 void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust){
