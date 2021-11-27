@@ -49,9 +49,7 @@ combination by optimizing the Integrated Classification Likelihood.
 Optimization is performed thanks to a combination of greedy local search and
 a genetic algorithm. The main entry point is the greed function
 to perform the clustering, which is documented below. The package also
-provides sampling functions for all the implemented DLVMs: Mixture of
-Multinomials (rmm), Latent Class Analysis (rlca), Stochastic Block Model (rsbm,
-rdcsbm) and Latent Block Model (rlbm)." />
+provides sampling functions for all the implemented DLVMs" />
 
 
 
@@ -112,10 +110,16 @@ rdcsbm) and Latent Block Model (rlbm)." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/graph-clustering-with-sbm.html">Graph clustering</a>
+      <a href="../articles/SBM.html">Graph clustering</a>
     </li>
     <li>
-      <a href="../articles/GMM.html">Gaussian Mixture Model Clustering</a>
+      <a href="../articles/GMM.html">Gaussian Mixture Models Clustering</a>
+    </li>
+    <li>
+      <a href="../articles/LCA.html">Latent Class Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/Mixed-Models.html">Mixed Models</a>
     </li>
   </ul>
 </li>
@@ -158,37 +162,29 @@ combination by optimizing the Integrated Classification Likelihood.
 Optimization is performed thanks to a combination of greedy local search and
 a genetic algorithm. The main entry point is the <code>greed</code> function
 to perform the clustering, which is documented below. The package also
-provides sampling functions for all the implemented DLVMs: Mixture of
-Multinomials (<code><a href='rmm.html'>rmm</a></code>), Latent Class Analysis (<code><a href='rlca.html'>rlca</a></code>), Stochastic Block Model (<code><a href='rsbm.html'>rsbm</a></code>,
-<code><a href='rdcsbm.html'>rdcsbm</a></code>) and Latent Block Model (<code><a href='rlbm.html'>rlbm</a></code>).</p>
+provides sampling functions for all the implemented DLVMs</p>
     </div>
 
-    <pre class="usage"><span class='fu'>greed</span><span class='op'>(</span>
-  <span class='va'>X</span>,
-  K <span class='op'>=</span> <span class='fl'>20</span>,
-  model <span class='op'>=</span> <span class='fu'>find_model</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>,
-  alg <span class='op'>=</span> <span class='fu'>methods</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/methods/new.html'>new</a></span><span class='op'>(</span><span class='st'>"hybrid"</span><span class='op'>)</span>,
-  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>greed</span><span class='op'>(</span><span class='va'>X</span>, model <span class='op'>=</span> <span class='fu'>find_model</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>, K <span class='op'>=</span> <span class='fl'>20</span>, alg <span class='op'>=</span> <span class='fu'><a href='Hybrid-class.html'>Hybrid</a></span><span class='op'>(</span><span class='op'>)</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>X</th>
-      <td><p>data to cluster either a matrix,an array or a <code>dgCMatrix-class</code></p></td>
+      <td><p>data to cluster either a data.frame, a matrix, an array or a <code>dgCMatrix-class</code></p></td>
+    </tr>
+    <tr>
+      <th>model</th>
+      <td><p>a generative model to fit <code><a href='DlvmPrior-class.html'>DlvmPrior-class</a></code></p></td>
     </tr>
     <tr>
       <th>K</th>
       <td><p>initial number of cluster</p></td>
     </tr>
     <tr>
-      <th>model</th>
-      <td><p>a generative model to fit <code><a href='sbm-class.html'>sbm-class</a></code>, <code><a href='dcsbm-class.html'>dcsbm-class</a></code>, <code><a href='co_dcsbm-class.html'>co_dcsbm-class</a></code>, <code><a href='mm-class.html'>mm-class</a></code>, <code><a href='lca-class.html'>lca-class</a></code>, <code><a href='gmm-class.html'>gmm-class</a></code>, <code><a href='diaggmm-class.html'>diaggmm-class</a></code> or <code><a href='mvmreg-class.html'>mvmreg-class</a></code></p></td>
-    </tr>
-    <tr>
       <th>alg</th>
-      <td><p>an optimization algorithm of class <code><a href='hybrid-class.html'>hybrid-class</a></code> (default), <code><a href='multistarts-class.html'>multistarts-class</a></code>, <code><a href='seed-class.html'>seed-class</a></code> or <code><a href='genetic-class.html'>genetic-class</a></code></p></td>
+      <td><p>an optimization algorithm of class <code><a href='Alg-class.html'>Alg-class</a></code> such as <code><a href='Hybrid-class.html'>Hybrid-class</a></code> (default), <code><a href='Multistarts-class.html'>Multistarts-class</a></code>, <code><a href='Seed-class.html'>Seed-class</a></code> or <code><a href='Genetic-class.html'>Genetic-class</a></code></p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -198,7 +194,21 @@ Multinomials (<code><a href='rmm.html'>rmm</a></code>), Latent Class Analysis (<
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an <code><a href='icl_path-class.html'>icl_path-class</a></code> object</p>
+    <p>an <code><a href='IclPath-class.html'>IclPath-class</a></code> object</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other DlvmModels: 
+<code><a href='DcLbmPrior-class.html'>DcLbmPrior-class</a></code>,
+<code><a href='DcSbmPrior-class.html'>DcSbmPrior-class</a></code>,
+<code><a href='DiagGmmPrior-class.html'>DiagGmmPrior-class</a></code>,
+<code><a href='DlvmPrior-class.html'>DlvmPrior-class</a></code>,
+<code><a href='GmmPrior-class.html'>GmmPrior-class</a></code>,
+<code><a href='LcaPrior-class.html'>LcaPrior-class</a></code>,
+<code><a href='MixedModels-class.html'>MixedModels-class</a></code>,
+<code><a href='MoMPrior-class.html'>MoMPrior-class</a></code>,
+<code><a href='MoRPrior-class.html'>MoRPrior-class</a></code>,
+<code><a href='MultSbmPrior-class.html'>MultSbmPrior-class</a></code>,
+<code><a href='SbmPrior-class.html'>SbmPrior-class</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

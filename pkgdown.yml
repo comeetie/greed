@@ -4,8 +4,8 @@ pkgdown_sha: ~
 articles:
   GMM: GMM.html
   LCA: LCA.html
-  Latent-class-analysis: Latent-class-analysis.html
-  Mixed-data-clustering: Mixed-data-clustering.html
-  graph-clustering-with-sbm: graph-clustering-with-sbm.html
-last_built: 2021-11-10T09:51Z
+  Mixed-Models: Mixed-Models.html
+  MoR: MoR.html
+  SBM: SBM.html
+last_built: 2021-11-27T16:04Z
 

@@ -100,10 +100,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/graph-clustering-with-sbm.html">Graph clustering</a>
+      <a href="../articles/SBM.html">Graph clustering</a>
     </li>
     <li>
-      <a href="../articles/GMM.html">Gaussian Mixture Model Clustering</a>
+      <a href="../articles/GMM.html">Gaussian Mixture Models Clustering</a>
+    </li>
+    <li>
+      <a href="../articles/LCA.html">Latent Class Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/Mixed-Models.html">Mixed Models</a>
     </li>
   </ul>
 </li>
@@ -146,7 +152,7 @@
       <tr>
         <th colspan="2">
           <h2 id="section-top-level-fitting-functions" class="hasAnchor"><a href="#section-top-level-fitting-functions" class="anchor"></a>Top-level fitting functions</h2>
-          <p class="section-desc"><p>Main clustering functions</p></p>
+          <p class="section-desc"><p>Main clustering function</p></p>
         </th>
       </tr>
       
@@ -160,12 +166,67 @@
           <p><code><a href="greed.html">greed()</a></code> </p>
         </td>
         <td><p>Model based hierarchical clustering</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-generic-methods-to-explore-a-fit" class="hasAnchor"><a href="#section-generic-methods-to-explore-a-fit" class="anchor"></a>Generic methods to explore a fit</h2>
+          <p class="section-desc"><p>Description of methods to extract coefficients and cut/plot a hierachical model fit.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="clustering-IclFit-method.html">clustering(<i>&lt;IclFit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Method to extract the clustering results from an <code>IclFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="greed_cond.html">greed_cond()</a></code> </p>
+          <p><code><a href="ICL-IclFit-method.html">ICL(<i>&lt;IclFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Conditional model based hierarchical clustering</p></td>
+        <td><p>Method to extract the ICL value from an <code>IclFit-class</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="K-IclFit-method.html">K(<i>&lt;IclFit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Method to extract the number of clusters found from an <code>IclFit-class</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef-IclFit-method.html">coef(<i>&lt;IclFit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract parameters from an <code>IclFit-class</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="show-IclFit-method.html">show(<i>&lt;IclFit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>show an IclPath object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cut-IclPath-method.html">cut(<i>&lt;IclPath&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Method to cut a path solution to a desired number of cluster</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot-IclPath-missing-method.html">plot(<i>&lt;IclPath&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>plot a <code>IclPath-class</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="extractSubModel-MixedModelsPath-character-method.html">extractSubModel(<i>&lt;MixedModelsPath&gt;</i>,<i>&lt;character&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>extract a part of a <code>MixedModelsPath-class</code> object</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -182,25 +243,31 @@
       <tr>
         
         <td>
-          <p><code><a href="hybrid-class.html">hybrid-class</a></code> </p>
+          <p><code><a href="Alg-class.html">Alg-class</a></code> </p>
+        </td>
+        <td><p>Abstract optimization algorithm class</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Hybrid-class.html">Hybrid()</a></code> </p>
         </td>
         <td><p>Hybrid optimization algorithm</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="multistarts-class.html">multistarts-class</a></code> </p>
+          <p><code><a href="Multistarts-class.html">Multistarts()</a></code> </p>
         </td>
         <td><p>Greedy algorithm with multiple start class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="genetic-class.html">genetic-class</a></code> </p>
+          <p><code><a href="Genetic-class.html">Genetic()</a></code> </p>
         </td>
         <td><p>Genetic optimization algorithm</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="seed-class.html">seed-class</a></code> </p>
+          <p><code><a href="Seed-class.html">Seed()</a></code> </p>
         </td>
         <td><p>Greedy algorithm with seeded initialization</p></td>
       </tr>
@@ -219,51 +286,57 @@
       <tr>
         
         <td>
-          <p><code><a href="sbm-class.html">sbm-class</a></code> </p>
+          <p><code><a href="SbmPrior-class.html">SbmPrior()</a></code> <code><a href="SbmPrior-class.html">Sbm()</a></code> </p>
         </td>
-        <td><p>Stochastic Block Model class</p></td>
+        <td><p>Stochastic Block Model Prior class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="dcsbm-class.html">dcsbm-class</a></code> </p>
+          <p><code><a href="DcSbmPrior-class.html">DcSbmPrior()</a></code> <code><a href="DcSbmPrior-class.html">DcSbm()</a></code> </p>
         </td>
-        <td><p>Degree Corrected Stochastic Block Model class</p></td>
+        <td><p>Degree Corrected Stochastic Block Model Prior class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="multsbm-class.html">multsbm-class</a></code> </p>
+          <p><code><a href="MultSbmPrior-class.html">MultSbmPrior()</a></code> <code><a href="MultSbmPrior-class.html">MultSbm()</a></code> </p>
         </td>
-        <td><p>Multinomial Stochastic Block Model class</p></td>
+        <td><p>Multinomial Stochastic Block Model Prior class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="co_dcsbm-class.html">co_dcsbm-class</a></code> </p>
+          <p><code><a href="LcaPrior-class.html">LcaPrior()</a></code> <code><a href="LcaPrior-class.html">Lca()</a></code> </p>
         </td>
-        <td><p>Degree Corrected Stochastic Block Model for bipartite graph class</p></td>
+        <td><p>Latent Class Analysis Model Prior class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="mm-class.html">mm-class</a></code> </p>
+          <p><code><a href="MoMPrior-class.html">MoMPrior()</a></code> <code><a href="MoMPrior-class.html">MoM()</a></code> </p>
         </td>
-        <td><p>Mixture of Multinomial model description class</p></td>
+        <td><p>Mixture of Multinomial Model Prior description class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="gmm-class.html">gmm-class</a></code> </p>
+          <p><code><a href="GmmPrior-class.html">GmmPrior()</a></code> <code><a href="GmmPrior-class.html">Gmm()</a></code> </p>
         </td>
-        <td><p>Gaussian mixture model description class</p></td>
+        <td><p>Gaussian Mixture Model Prior description class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="diaggmm-class.html">diaggmm-class</a></code> </p>
+          <p><code><a href="DiagGmmPrior-class.html">DiagGmmPrior()</a></code> <code><a href="DiagGmmPrior-class.html">DiagGmm()</a></code> </p>
         </td>
-        <td><p>Diagonal Gaussian mixture model description class</p></td>
+        <td><p>Diagonal Gaussian Mixture Model Prior description class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="mvmreg-class.html">mvmreg-class</a></code> </p>
+          <p><code><a href="MoRPrior-class.html">MoRPrior()</a></code> <code><a href="MoRPrior-class.html">MoR()</a></code> </p>
         </td>
-        <td><p>Multivariate mixture of regression model description class</p></td>
+        <td><p>Multivariate mixture of regression Prior model description class</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="MixedModels-class.html">MixedModels()</a></code> </p>
+        </td>
+        <td><p>Mixed Models classes</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -280,51 +353,69 @@
       <tr>
         
         <td>
-          <p><code><a href="sbm_fit-class.html">sbm_fit-class</a></code> </p>
+          <p><code><a href="IclFit-class.html">IclFit-class</a></code> </p>
+        </td>
+        <td><p>abstract class to represent a clustering result</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="IclPath-class.html">IclPath-class</a></code> </p>
+        </td>
+        <td><p>abstract class to represent a hierarchical clustering result</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="SbmFit-class.html">SbmFit-class</a></code> </p>
         </td>
         <td><p>Stochastic Block Model fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="dcsbm_fit-class.html">dcsbm_fit-class</a></code> </p>
+          <p><code><a href="DcSbmFit-class.html">DcSbmFit-class</a></code> </p>
         </td>
         <td><p>Degree Corrected Stochastic Block Model fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="multsbm_fit-class.html">multsbm_fit-class</a></code> </p>
+          <p><code><a href="MultSbmFit-class.html">MultSbmFit-class</a></code> </p>
         </td>
         <td><p>Multinomial Stochastic Block Model fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="co_dcsbm_fit-class.html">co_dcsbm_fit-class</a></code> </p>
+          <p><code><a href="LcaFit-class.html">LcaFit-class</a></code> </p>
         </td>
-        <td><p>Degree corrected stochastic block model for bipartite graph fit results class</p></td>
+        <td><p>Latent Class  Analysis fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="mm_fit-class.html">mm_fit-class</a></code> </p>
+          <p><code><a href="MoMFit-class.html">MoMFit-class</a></code> </p>
         </td>
         <td><p>Mixture of Multinomial fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="gmm_fit-class.html">gmm_fit-class</a></code> </p>
+          <p><code><a href="GmmFit-class.html">GmmFit-class</a></code> </p>
         </td>
         <td><p>Gaussian mixture model fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="diaggmm_fit-class.html">diaggmm_fit-class</a></code> </p>
+          <p><code><a href="DiagGmmFit-class.html">DiagGmmFit-class</a></code> </p>
         </td>
         <td><p>Diagonal Gaussian mixture model fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="mvmreg_fit-class.html">mvmreg_fit-class</a></code> </p>
+          <p><code><a href="MoRFit-class.html">MoRFit-class</a></code> </p>
         </td>
         <td><p>Clustering with a multivariate mixture of regression model fit results class</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="MixedModelsFit-class.html">MixedModelsFit-class</a></code> </p>
+        </td>
+        <td><p>Mixed Models fit results class</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -341,51 +432,57 @@
       <tr>
         
         <td>
-          <p><code><a href="sbm_path-class.html">sbm_path-class</a></code> </p>
+          <p><code><a href="SbmPath-class.html">SbmPath-class</a></code> </p>
         </td>
         <td><p>Stochastic Block Model hierarchical fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="dcsbm_path-class.html">dcsbm_path-class</a></code> </p>
+          <p><code><a href="DcSbmPath-class.html">DcSbmPath-class</a></code> </p>
         </td>
         <td><p>Degree Corrected Stochastic Block Model hierarchical fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="multsbm_path-class.html">multsbm_path-class</a></code> </p>
+          <p><code><a href="MultSbmPath-class.html">MultSbmPath-class</a></code> </p>
         </td>
         <td><p>Multinomial Stochastic Block Model hierachical fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="co_dcsbm_path-class.html">co_dcsbm_path-class</a></code> </p>
+          <p><code><a href="LcaPath-class.html">LcaPath-class</a></code> </p>
         </td>
-        <td><p>Degree corrected stochastic block model for bipartite graph hierarchical fit results class</p></td>
+        <td><p>Latent Class Analysis hierarchical fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="mm_path-class.html">mm_path-class</a></code> </p>
+          <p><code><a href="MoMPath-class.html">MoMPath-class</a></code> </p>
         </td>
         <td><p>Mixture of Multinomial hierarchical fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="gmm_path-class.html">gmm_path-class</a></code> </p>
+          <p><code><a href="GmmPath-class.html">GmmPath-class</a></code> </p>
         </td>
         <td><p>Gaussian mixture model hierarchical fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="diaggmm_path-class.html">diaggmm_path-class</a></code> </p>
+          <p><code><a href="DiagGmmPath-class.html">DiagGmmPath-class</a></code> </p>
         </td>
         <td><p>Diagonal Gaussian mixture model hierarchical fit results class</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="mvmreg_path-class.html">mvmreg_path-class</a></code> </p>
+          <p><code><a href="MoRPath-class.html">MoRPath-class</a></code> </p>
         </td>
         <td><p>Multivariate mixture of regression model hierarchical fit results class</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="MixedModelsPath-class.html">MixedModelsPath-class</a></code> </p>
+        </td>
+        <td><p>Mixed Models hierarchical fit results class</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -408,189 +505,129 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="coef-co_dcsbm_fit-method.html">coef(<i>&lt;co_dcsbm_fit&gt;</i>)</a></code> </p>
+          <p><code><a href="coef-DcLbmFit-method.html">coef(<i>&lt;DcLbmFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code>co_dcsbm_fit-class</code> object</p></td>
+        <td><p>Extract parameters from an <code>DcLbmFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="coef-dcsbm_fit-method.html">coef(<i>&lt;dcsbm_fit&gt;</i>)</a></code> </p>
+          <p><code><a href="coef-DcSbmFit-method.html">coef(<i>&lt;DcSbmFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code>dcsbm_fit-class</code> object</p></td>
+        <td><p>Extract parameters from an <code>DcSbmFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="coef-diaggmm_fit-method.html">coef(<i>&lt;diaggmm_fit&gt;</i>)</a></code> </p>
+          <p><code><a href="coef-DiagGmmFit-method.html">coef(<i>&lt;DiagGmmFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract mixture parameters from <code>diaggmm_fit-class</code> object</p></td>
+        <td><p>Extract mixture parameters from <code>DiagGmmFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="coef-gmm_fit-method.html">coef(<i>&lt;gmm_fit&gt;</i>)</a></code> </p>
+          <p><code><a href="coef-GmmFit-method.html">coef(<i>&lt;GmmFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract mixture parameters from <code>gmm_fit-class</code> object</p></td>
+        <td><p>Extract mixture parameters from <code>GmmFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="coef-lca_fit-method.html">coef(<i>&lt;lca_fit&gt;</i>)</a></code> </p>
+          <p><code><a href="coef-IclFit-method.html">coef(<i>&lt;IclFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code>lca_fit-class</code> object</p></td>
+        <td><p>Extract parameters from an <code>IclFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="coef-mm_fit-method.html">coef(<i>&lt;mm_fit&gt;</i>)</a></code> </p>
+          <p><code><a href="coef-LcaFit-method.html">coef(<i>&lt;LcaFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code>mm_fit-class</code> object</p></td>
+        <td><p>Extract parameters from an <code>LcaFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="coef-mmm_fit-method.html">coef(<i>&lt;mmm_fit&gt;</i>)</a></code> </p>
+          <p><code><a href="coef-MoMFit-method.html">coef(<i>&lt;MoMFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code>mmm_fit-class</code> object</p></td>
+        <td><p>Extract parameters from an <code>MoMFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="coef-multsbm_fit-method.html">coef(<i>&lt;multsbm_fit&gt;</i>)</a></code> </p>
+          <p><code><a href="coef-MoRFit-method.html">coef(<i>&lt;MoRFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code>multsbm_fit-class</code> object</p></td>
+        <td><p>Extract mixture parameters from <code>MoRFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="coef-mvmreg_fit-method.html">coef(<i>&lt;mvmreg_fit&gt;</i>)</a></code> </p>
+          <p><code><a href="coef-MultSbmFit-method.html">coef(<i>&lt;MultSbmFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract mixture parameters from <code>mvmreg_fit-class</code> object</p></td>
+        <td><p>Extract parameters from an <code>MultSbmFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="coef-sbm_fit-method.html">coef(<i>&lt;sbm_fit&gt;</i>)</a></code> </p>
+          <p><code><a href="coef-SbmFit-method.html">coef(<i>&lt;SbmFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code>sbm_fit-class</code> object</p></td>
+        <td><p>Extract parameters from an <code>SbmFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="cut-co_dcsbm_path-method.html">cut(<i>&lt;co_dcsbm_path&gt;</i>)</a></code> </p>
+          <p><code><a href="cut-DcLbmPath-method.html">cut(<i>&lt;DcLbmPath&gt;</i>)</a></code> </p>
         </td>
         <td><p>method to cut a path solution to a desired number of cluster</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="cut-icl_path-method.html">cut(<i>&lt;icl_path&gt;</i>)</a></code> </p>
+          <p><code><a href="cut-IclPath-method.html">cut(<i>&lt;IclPath&gt;</i>)</a></code> </p>
         </td>
         <td><p>Method to cut a path solution to a desired number of cluster</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plot-co_dcsbm_fit-missing-method.html">plot(<i>&lt;co_dcsbm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
+          <p><code><a href="plot-DcLbmPath-missing-method.html">plot(<i>&lt;DcLbmPath&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>co_dcsbm_fit-class</code></p></td>
+        <td><p>plot a <code>DcLbmFit-class</code></p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plot-co_dcsbm_path-missing-method.html">plot(<i>&lt;co_dcsbm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
+          <p><code><a href="plot-DcSbmFit-missing-method.html">plot(<i>&lt;DcSbmFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>co_dcsbm_path-class</code></p></td>
+        <td><p>plot a <code>DcSbmFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plot-dcsbm_fit-missing-method.html">plot(<i>&lt;dcsbm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
+          <p><code><a href="plot-DiagGmmFit-missing-method.html">plot(<i>&lt;DiagGmmFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>sbm_fit-class</code> object</p></td>
+        <td><p>plot a <code>DiagGmmFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plot-dcsbm_path-missing-method.html">plot(<i>&lt;dcsbm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
+          <p><code><a href="plot-GmmFit-missing-method.html">plot(<i>&lt;GmmFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>sbm_path-class</code> object</p></td>
+        <td><p>plot a <code>GmmFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plot-diaggmm_fit-missing-method.html">plot(<i>&lt;diaggmm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
+          <p><code><a href="plot-IclPath-missing-method.html">plot(<i>&lt;IclPath&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>diaggmm_fit-class</code> object</p></td>
+        <td><p>plot a <code>IclPath-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plot-diaggmm_path-missing-method.html">plot(<i>&lt;diaggmm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
+          <p><code><a href="plot-LcaFit-missing-method.html">plot(<i>&lt;LcaFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>diaggmm_path-class</code> object</p></td>
+        <td><p>plot a <code>LcaFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plot-gmm_fit-missing-method.html">plot(<i>&lt;gmm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
+          <p><code><a href="plot-MoMFit-missing-method.html">plot(<i>&lt;MoMFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>gmm_fit-class</code> object</p></td>
+        <td><p>plot a <code>MoMFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plot-gmm_path-missing-method.html">plot(<i>&lt;gmm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
+          <p><code><a href="plot-MultSbmFit-missing-method.html">plot(<i>&lt;MultSbmFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>gmm_path-class</code> object</p></td>
+        <td><p>plot a <code>MultSbmFit-class</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plot-lca_fit-missing-method.html">plot(<i>&lt;lca_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
+          <p><code><a href="plot-SbmFit-missing-method.html">plot(<i>&lt;SbmFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code>lca_fit-class</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot-lca_path-missing-method.html">plot(<i>&lt;lca_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>plot a <code>lca_path-class</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot-mm_fit-missing-method.html">plot(<i>&lt;mm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>plot a <code>mm_fit-class</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot-mm_path-missing-method.html">plot(<i>&lt;mm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>plot a <code>mm_path-class</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot-mmm_fit-missing-method.html">plot(<i>&lt;mmm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>plot a <code>mmm_fit-class</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot-mmm_path-missing-method.html">plot(<i>&lt;mmm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>plot a <code>mmm_path-class</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot-multsbm_fit-missing-method.html">plot(<i>&lt;multsbm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>plot a <code>multsbm_fit-class</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot-multsbm_path-missing-method.html">plot(<i>&lt;multsbm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>plot a <code>sbm_path-class</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot-mvmreg_path-missing-method.html">plot(<i>&lt;mvmreg_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>plot a <code>mvmreg_path-class</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot-sbm_fit.html">plot(<i>&lt;sbm_fit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>plot a <code>sbm_fit-class</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot-sbm_path-missing-method.html">plot(<i>&lt;sbm_path&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>plot a <code>sbm_path-class</code> object</p></td>
+        <td><p>plot a <code>SbmFit-class</code> object</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -628,6 +665,12 @@
           <p><code><a href="spectral.html">spectral()</a></code> </p>
         </td>
         <td><p>Regularized spectral clustering</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="to_multinomial.html">to_multinomial()</a></code> </p>
+        </td>
+        <td><p>Convert a binary adjacency matrix with missing value to a cube</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -671,6 +714,18 @@
           <p><code><a href="rmreg.html">rmreg()</a></code> </p>
         </td>
         <td><p>Generate data from a mixture of regression model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rlbm.html">rlbm()</a></code> </p>
+        </td>
+        <td><p>Generate a data matrix using a Latent Block Model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rlca.html">rlca()</a></code> </p>
+        </td>
+        <td><p>Generate data from lca model</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -726,6 +781,42 @@
           <p><code><a href="fashion.html">fashion</a></code> </p>
         </td>
         <td><p>Fashion mnist dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="mushroom.html">mushroom</a></code> </p>
+        </td>
+        <td><p>Mushroom data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Fifa.html">Fifa</a></code> </p>
+        </td>
+        <td><p>Fifa data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Fifa_positions.html">Fifa</a></code> </p>
+        </td>
+        <td><p>Fifa_positions data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="FrenchParliament.html">FrenchParliament</a></code> </p>
+        </td>
+        <td><p>French Parliament votes dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Ndrangheta.html">Ndrangheta</a></code> </p>
+        </td>
+        <td><p>Ndrangheta mafia covert network dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Youngpeoplesurvey.html">Youngpeoplesurvey</a></code> </p>
+        </td>
+        <td><p>Young People survey data</p></td>
       </tr>
     </tbody>
     </table>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Genetic optimization algorithm — genetic-class • greed</title>
+<title>Genetic optimization algorithm — Genetic-class • greed</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Genetic optimization algorithm — genetic-class" />
-<meta property="og:description" content="An S4 class to represent a genetic algorithm (extends alg-class class)." />
+<meta property="og:title" content="Genetic optimization algorithm — Genetic-class" />
+<meta property="og:description" content="An S4 class to represent a genetic algorithm (extends Alg-class class)." />
 
 
 
@@ -101,10 +101,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/graph-clustering-with-sbm.html">Graph clustering</a>
+      <a href="../articles/SBM.html">Graph clustering</a>
     </li>
     <li>
-      <a href="../articles/GMM.html">Gaussian Mixture Model Clustering</a>
+      <a href="../articles/GMM.html">Gaussian Mixture Models Clustering</a>
+    </li>
+    <li>
+      <a href="../articles/LCA.html">Latent Class Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/Mixed-Models.html">Mixed Models</a>
     </li>
   </ul>
 </li>
@@ -134,15 +140,45 @@
     <div class="page-header">
     <h1>Genetic optimization algorithm</h1>
     <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/alg_classes.R'><code>R/alg_classes.R</code></a></small>
-    <div class="hidden name"><code>genetic-class.Rd</code></div>
+    <div class="hidden name"><code>Genetic-class.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An S4 class to represent a genetic algorithm (extends <code><a href='alg-class.html'>alg-class</a></code> class).</p>
+    <p>An S4 class to represent a genetic algorithm (extends <code><a href='Alg-class.html'>Alg-class</a></code> class).</p>
     </div>
 
+    <pre class="usage"><span class='fu'>Genetic</span><span class='op'>(</span>pop_size <span class='op'>=</span> <span class='fl'>100</span>, nb_max_gen <span class='op'>=</span> <span class='fl'>20</span>, prob_mutation <span class='op'>=</span> <span class='fl'>0.25</span>, sel_frac <span class='op'>=</span> <span class='fl'>0.75</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>pop_size</th>
+      <td><p>size of the solutions populations (default to 10)</p></td>
+    </tr>
+    <tr>
+      <th>nb_max_gen</th>
+      <td><p>maximal number of generation to produce (default to 4)</p></td>
+    </tr>
+    <tr>
+      <th>prob_mutation</th>
+      <td><p>probability of mutation (default to 0.25)</p></td>
+    </tr>
+    <tr>
+      <th>sel_frac</th>
+      <td><p>fraction of best solutions selected for crossing  (default to 0.75)</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>a <code>Genetic-class</code> object</p>
+    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
+
+    
+<ul>
+<li><p><code>Genetic</code>: Genetic algorithm class constructor</p></li>
+</ul>
     <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
 
     
@@ -158,6 +194,36 @@
 
 </dl>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='r-in'><span class='fu'>Genetic</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "Genetic"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "pop_size":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 100</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "nb_max_gen":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 20</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "prob_mutation":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.25</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "sel_frac":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.75</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='fu'>Genetic</span><span class='op'>(</span>pop_size <span class='op'>=</span> <span class='fl'>500</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "Genetic"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "pop_size":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 500</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "nb_max_gen":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 20</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "prob_mutation":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.25</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "sel_frac":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.75</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
