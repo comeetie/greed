@@ -155,7 +155,7 @@ setMethod(
     A <- lapply(sol@obs_stats$MoR, function(reg) {
       reg$iS %*% reg$Xty / (sol@model@tau + 1)
     })
-    Sigmak <- lapply(sol@obs_stats$MoR, \(reg){
+    Sigmak <- lapply(sol@obs_stats$MoR, function(reg){
       (reg$Syx + diag(rep(sol@model@N0, nrow(reg$Syx)))) / (reg$n + sol@model@N0 + 1)
     })
     list(pi = pi, A = A, Sigmak = Sigmak)
