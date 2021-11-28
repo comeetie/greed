@@ -85,9 +85,11 @@ To clearly show, the alignment of the cluster with field position we will make a
 data("Fifa_positions")
 params=coef(extractSubModel(sol,"categorical"))
 
-pos_clust = data.frame(do.call(rbind,lapply(1:K(sol),\(k){
-  sapply(params$Thetak[2:length(params$Thetak)],\(x){1-x[k,1]})
-})))
+pos_clust = data.frame(do.call(rbind,lapply(1:K(sol),function(k){
+  sapply(params$Thetak[2:length(params$Thetak)],function(x){
+    1-x[k,1]
+    })
+  })))
 pos_clust$cluster=factor(1:K(sol))
 
 pos_clust_long = pos_clust %>% pivot_longer(cols = -ncol(pos_clust),names_to = "position",values_to = "p") %>% 

@@ -128,7 +128,7 @@ Xnum = Youngpeoplesurvey %>%
   filter(all_of(selected) )
 
 X = Xnum %>% 
-  mutate_all(\(x){
+  mutate_all(function(x){
     x[is.na(x)]="NA"
     factor(x,levels=c(1:5,"NA"))
     }) %>%
@@ -170,15 +170,19 @@ To show in another way the clusters structure we will use word clouds of feature
 
 ```{r posplot, fig.show='hold',fig.width=8,fig.height=7,out.width="100%"}
 params = coef(sol)
-means_scores = lapply(params$Thetak,\(x){apply(x[,1:5],1,\(r){sum(r*1:5)})})
+means_scores = lapply(params$Thetak,function(x){
+  apply(x[,1:5],1,function(r){
+    sum(r*1:5)
+    })
+  })
 means_scores_long = do.call(rbind,
-                            map2(means_scores,names(means_scores),\(x,y){
+                            map2(means_scores, names(means_scores),function(x,y){
                               tibble(cluster=1:K(sol),mean=x,var=y)
                               }))  %>% 
   mutate(var = gsub("\\."," ",var))
 
 means_scores_glob = Xnum %>% 
-  summarise_all(\(x){mean(x,na.rm=TRUE)}) %>% 
+  summarise_all(function(x){mean(x,na.rm=TRUE)}) %>% 
   tidyr::pivot_longer(all_of(1:nc),names_to = "var",) %>% 
   mutate(var = gsub("[,-/]"," ",var))
 
