@@ -160,20 +160,21 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mu_k,V_{k}^{-1})\\
 <code class="sourceCode R"><span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="../reference/GmmPrior-class.html">Gmm</a></span><span class="op">(</span>epsilon<span class="op">=</span><span class="fl">0.01</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, tau <span class="op">=</span><span class="fl">0.001</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- GMM model fitting ------</span>
 <span class="co">#&gt; ################# Generation  1: best solution with an ICL of -2489 and 10 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -2472 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -2442 and 5 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -2424 and 4 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -2470 and 7 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -2436 and 3 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -2434 and 5 clusters #################</span>
 <span class="co">#&gt; ################# Generation  5: best solution with an ICL of -2424 and 4 clusters #################</span>
 <span class="co">#&gt; ################# Generation  6: best solution with an ICL of -2424 and 4 clusters #################</span>
+<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -2424 and 4 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
 <span class="co">#&gt; ICL clustering with a GMM model, 4 clusters and an icl of -2424.</span>
 <span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">sol</span>,<span class="va">X</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;           </span>
 <span class="co">#&gt;             1  2  3  4</span>
-<span class="co">#&gt;   Chemical 11 23  1  1</span>
-<span class="co">#&gt;   Normal   74  2  0  0</span>
-<span class="co">#&gt;   Overt     0  6  0 27</span></code></pre></div>
+<span class="co">#&gt;   Chemical  1  1 23 11</span>
+<span class="co">#&gt;   Normal    0  0  2 74</span>
+<span class="co">#&gt;   Overt    27  0  6  0</span></code></pre></div>
 <p><img src="GMM_files/figure-html/diabetes-gmm-0.01-1.png" width="90%"></p>
 </div>
 <div id="diagonal-covariance-matrix" class="section level2">
@@ -183,7 +184,7 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mu_k,V_{k}^{-1})\\
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">soldiag</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="../reference/DiagGmmPrior-class.html">DiagGmm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- DIAGGMM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -2465 and 4 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -2475 and 6 clusters #################</span>
 <span class="co">#&gt; ################# Generation  2: best solution with an ICL of -2464 and 4 clusters #################</span>
 <span class="co">#&gt; ################# Generation  3: best solution with an ICL of -2464 and 4 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
@@ -236,7 +237,7 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mu_k,V_{k}^{-1})\\
 <span class="va">sol</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">fashion</span><span class="op">$</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="../reference/DiagGmmPrior-class.html">DiagGmm</a></span><span class="op">(</span><span class="op">)</span>,alg<span class="op">=</span><span class="fu"><a href="../reference/Seed-class.html">Seed</a></span><span class="op">(</span><span class="op">)</span>,K<span class="op">=</span><span class="fl">60</span><span class="op">)</span>
 <span class="co">#&gt; ------- DIAGGMM model fitting ------</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DIAGGMM model, 22 clusters and an icl of -3591342.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a DIAGGMM model, 23 clusters and an icl of -3596642.</span></code></pre></div>
 <p>On this more complex dataset, we may look at the dendrogram which is more interesting with the complex structure of these data.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>

@@ -239,14 +239,11 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <span class="co">#&gt; ------- LCA model fitting ------</span>
 <span class="co">#&gt; ################# Generation  1: best solution with an ICL of -27481 and 9 clusters #################</span>
 <span class="co">#&gt; ################# Generation  2: best solution with an ICL of -27478 and 10 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -27418 and 8 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -27416 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -27405 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -27405 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -27402 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -27402 and 7 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -27445 and 7 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -27425 and 7 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -27425 and 7 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a LCA model, 6 clusters and an icl of -27400.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a LCA model, 6 clusters and an icl of -27416.</span></code></pre></div>
 <p>The algorithm found <span class="math inline">\(K=6\)</span> clusters which are quite balanced. To explore the results, we plot the dendogram found.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
@@ -265,21 +262,21 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <span class="va">params</span><span class="op">$</span><span class="va">Thetak</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Country"</span>,<span class="st">"Latino"</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt; $Country</span>
 <span class="co">#&gt;                  1         2         3          4           5          NA</span>
-<span class="co">#&gt; cluster1 0.5581395 0.2930233 0.1162791 0.02790698 0.000000000 0.004651163</span>
-<span class="co">#&gt; cluster2 0.6168224 0.1962617 0.1214953 0.03738318 0.018691589 0.009345794</span>
-<span class="co">#&gt; cluster3 0.2675439 0.3245614 0.2412281 0.10964912 0.043859649 0.013157895</span>
-<span class="co">#&gt; cluster4 0.1833333 0.3666667 0.1833333 0.20000000 0.066666667 0.000000000</span>
-<span class="co">#&gt; cluster5 0.1777778 0.1333333 0.1333333 0.24444444 0.311111111 0.000000000</span>
-<span class="co">#&gt; cluster6 0.2132565 0.4582133 0.2449568 0.07780980 0.005763689 0.000000000</span>
+<span class="co">#&gt; cluster1 0.5809524 0.2809524 0.1142857 0.01904762 0.000000000 0.004761905</span>
+<span class="co">#&gt; cluster2 0.2166667 0.3666667 0.1666667 0.18333333 0.066666667 0.000000000</span>
+<span class="co">#&gt; cluster3 0.5582822 0.2453988 0.1165644 0.03067485 0.042944785 0.006134969</span>
+<span class="co">#&gt; cluster4 0.1931818 0.3352273 0.3068182 0.11931818 0.028409091 0.017045455</span>
+<span class="co">#&gt; cluster5 0.1509434 0.1509434 0.1320755 0.28301887 0.283018868 0.000000000</span>
+<span class="co">#&gt; cluster6 0.2117647 0.4617647 0.2382353 0.08529412 0.002941176 0.000000000</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $Latino</span>
-<span class="co">#&gt;                   1         2          3         4          5          NA</span>
-<span class="co">#&gt; cluster1 0.30697674 0.2558140 0.18139535 0.1116279 0.13023256 0.013953488</span>
-<span class="co">#&gt; cluster2 0.56074766 0.2523364 0.14953271 0.0000000 0.03738318 0.000000000</span>
-<span class="co">#&gt; cluster3 0.16228070 0.3245614 0.23245614 0.1798246 0.09649123 0.004385965</span>
-<span class="co">#&gt; cluster4 0.21666667 0.1500000 0.36666667 0.1500000 0.11666667 0.000000000</span>
-<span class="co">#&gt; cluster5 0.02222222 0.0000000 0.08888889 0.1111111 0.75555556 0.022222222</span>
-<span class="co">#&gt; cluster6 0.02593660 0.2449568 0.29394813 0.2680115 0.15850144 0.008645533</span></code></pre></div>
+<span class="co">#&gt;                   1          2         3          4          5          NA</span>
+<span class="co">#&gt; cluster1 0.31904762 0.25238095 0.1904762 0.10476190 0.11904762 0.014285714</span>
+<span class="co">#&gt; cluster2 0.25000000 0.15000000 0.3333333 0.15000000 0.11666667 0.000000000</span>
+<span class="co">#&gt; cluster3 0.50306748 0.31901840 0.1226994 0.01226994 0.04294479 0.000000000</span>
+<span class="co">#&gt; cluster4 0.06818182 0.30113636 0.3011364 0.24431818 0.07954545 0.005681818</span>
+<span class="co">#&gt; cluster5 0.01886792 0.01886792 0.1132075 0.11320755 0.71698113 0.018867925</span>
+<span class="co">#&gt; cluster6 0.02647059 0.24117647 0.2852941 0.26470588 0.17352941 0.008823529</span></code></pre></div>
 <p>To show in another way the clusters structure we will use word clouds of feature names with a color encoding that depict if the feature has an average score greater than the average score of the whole population. With this representation big blue feature correspond to music type that score higher than the mean in this cluster and big red feature to music type that have a smaller score than the mean in the corresponding group.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>

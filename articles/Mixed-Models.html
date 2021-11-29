@@ -202,10 +202,13 @@
 <span class="co">#&gt; ################# Generation  1: best solution with an ICL of -126356 and 17 clusters #################</span>
 <span class="co">#&gt; ################# Generation  2: best solution with an ICL of -125063 and 16 clusters #################</span>
 <span class="co">#&gt; ################# Generation  3: best solution with an ICL of -123837 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -123257 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -123257 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -123675 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -123596 and 14 clusters #################</span>
+<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -123389 and 15 clusters #################</span>
+<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -123238 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -123238 and 16 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a MIXEDMODELS model, 14 clusters and an icl of -123179.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a MIXEDMODELS model, 15 clusters and an icl of -123226.</span></code></pre></div>
 <p>When the model is fitted the <code><a href="../reference/extractSubModel.html">extractSubModel()</a></code> function allow to retrieve the fitted sub-models, and use the plotting capabilities of each of them. We may for example look at the categorical part of the model and make a <code>marginals</code> plot. We see with this figure that the clusters found agree quite strongly with the field positions features. The preferred foot feature has also an impact on cluster 2 and 3.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/extractSubModel.html">extractSubModel</a></span><span class="op">(</span><span class="va">sol</span>,<span class="st">"categorical"</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"marginals"</span><span class="op">)</span></code></pre></div>
@@ -257,12 +260,12 @@
 <span class="co"># cluster</span>
 <span class="va">sol</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">data</span>,model<span class="op">=</span><span class="va">mixmod</span><span class="op">)</span>
 <span class="co">#&gt; ------- MIXEDMODELS model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -2525 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -2403 and 20 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -2400 and 22 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -2400 and 22 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -2582 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -2412 and 22 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -2398 and 23 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -2398 and 23 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a MIXEDMODELS model, 21 clusters and an icl of -2375.</span>
+<span class="co">#&gt; ICL clustering with a MIXEDMODELS model, 22 clusters and an icl of -2367.</span>
 <span class="co"># analyse the results</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
 <p><img src="Mixed-Models_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
