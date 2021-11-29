@@ -35,7 +35,9 @@ Suggests:
     aricode,
     careless,
     ggwordcloud,
-    flexmix
+    flexmix,
+    igraph,
+    tidygraph
 Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2

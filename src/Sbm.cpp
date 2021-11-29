@@ -141,8 +141,7 @@ double Sbm::delta_merge(int k, int l){
 
 double Sbm::delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats){
   // here old refers to the stats before the fusion between obk and obl
-  //Rcout << "Je calculs des corrections !!" << std::endl;
-  //Rcout << obk << "---- " << obl << std::endl;
+
   int a,b,ao,bo,lo;
   double icl_cor = 0;
   int cc, cc_old;
@@ -210,7 +209,6 @@ double Sbm::delta_merge_correction(int k,int l,int obk,int obl,const List & old_
       
     }
   }
-  
   return icl_cor;
 }
 

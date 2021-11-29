@@ -41,6 +41,7 @@ test_that("MOR hybrid", {
   data <- greed:::preprocess(model, df)
   expect_lte(greed:::test_swap(model, data, cl, i, newcl), 10^-6)
   expect_lte(greed:::test_merge(model, data, cl, 1, 2), 10^-6)
+  expect_lte(max(abs(greed:::test_merge_correction(model, data, cl, 1, 2))), 10^-6)
 })
 
 

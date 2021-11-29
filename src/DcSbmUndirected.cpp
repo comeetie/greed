@@ -6,18 +6,30 @@
 using namespace Rcpp;
 
 
-
+void DcSbmUndirected::set_cl(arma::uvec clt){
+  K = arma::max(clt)+1;
+  x_counts = gsum_mat(clt,x,K);
+  counts = count(clt,K);
+  din = sum(x_counts).t();
+  dout = sum(x_counts.t()).t();
+  double cst_denom = 0;
+  int nlinks =0;
+  for (arma::sp_mat::const_iterator i = x.begin(); i != x.end(); ++i) {
+    cst_denom+=lgamma(*i+1);
+    nlinks += *i;
+  }
+  cst = arma::accu(lgamma(sum(x)+1))-cst_denom/2 + (nlinks/2)*log(p);
+}
 
 double DcSbmUndirected::icl_emiss(const List & obs_stats){
 
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
   arma::vec din =as<arma::vec>(obs_stats["din"]);
-  arma::vec dout =as<arma::vec>(obs_stats["dout"]);
   arma::mat edges_counts =as<arma::mat>(obs_stats["x_counts"]);
   arma::mat matcount = counts*counts.t();
   // lets go
 
-  double icl_emiss = accu(lgamma(counts)-lgamma(counts+din)+din % log(counts))+accu(lgamma(counts)-lgamma(counts+dout)+dout % log(counts));
+  double icl_emiss = accu(lgamma(counts)-lgamma(counts+din)+din % log(counts));
   edges_counts.diag()=edges_counts.diag()/2;
   matcount.diag() = (matcount.diag()-counts)/2;
   arma::mat cmat = lgamma(edges_counts+1)-(edges_counts+1) % log(p*matcount+1);
@@ -26,20 +38,17 @@ double DcSbmUndirected::icl_emiss(const List & obs_stats){
     cmat(lonely(i),lonely(i))=0;
   }
   icl_emiss=icl_emiss + arma::accu(arma::trimatl(cmat));
-  return icl_emiss;
+  return icl_emiss + cst;
 }
 
 double DcSbmUndirected::icl_emiss(const List & obs_stats,int oldcl,int newcl, bool dead){
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
   arma::vec din =as<arma::vec>(obs_stats["din"]);
-  arma::vec dout =as<arma::vec>(obs_stats["dout"]);
   arma::mat edges_counts =as<arma::mat>(obs_stats["x_counts"]);
   arma::umat si = submatcross(oldcl,newcl,counts.n_rows);
-  double icl_emiss = lgamma(counts(newcl))-lgamma(counts(newcl)+din(newcl))+din(newcl)*log(counts(newcl));
-  icl_emiss += lgamma(counts(newcl))-lgamma(counts(newcl)+dout(newcl))+dout(newcl)*log(counts(newcl));
+  double icl_emiss = (lgamma(counts(newcl))-lgamma(counts(newcl)+din(newcl))+din(newcl)*log(counts(newcl)));
   if(!dead){
-    icl_emiss += lgamma(counts(oldcl))-lgamma(counts(oldcl)+dout(oldcl))+dout(oldcl)*log(counts(oldcl));
-    icl_emiss += lgamma(counts(oldcl))-lgamma(counts(oldcl)+din(oldcl))+din(oldcl)*log(counts(oldcl));
+    icl_emiss += (lgamma(counts(oldcl))-lgamma(counts(oldcl)+din(oldcl))+din(oldcl)*log(counts(oldcl)));
   }
   int k = 0;
   int l = 0;
@@ -62,7 +71,7 @@ double DcSbmUndirected::icl_emiss(const List & obs_stats,int oldcl,int newcl, bo
     }
     
   }
-  return icl_emiss;
+  return icl_emiss+cst;
 }
 
 
@@ -132,9 +141,7 @@ double DcSbmUndirected::delta_merge_correction(int k,int l,int obk,int obl,const
       
     }
   }
-  if(l==obk){
-    icl_cor=0;
-  }
+
   return icl_cor;
   
   

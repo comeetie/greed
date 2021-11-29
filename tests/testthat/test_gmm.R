@@ -28,7 +28,7 @@ test_that("GMM marginal", {
 })
 
 
-test_that("GMM hybrid", {
+test_that("GMM moves", {
   N <- 150
   X <- rbind(MASS::mvrnorm(N / 3, c(-5, 0), diag(2)), MASS::mvrnorm(N / 3, c(0, 5), diag(2)), MASS::mvrnorm(N / 3, c(5, 0), diag(2)))
   i <- 25
@@ -36,6 +36,7 @@ test_that("GMM hybrid", {
   data <- greed:::preprocess(Gmm(), X)
   expect_lte(greed:::test_merge(Gmm(), data, c(rep(1, 50), rep(2, 50), rep(3, 50)), 1, 2), 10^-6)
   expect_lte(greed:::test_swap(Gmm(), data, c(rep(1, 50), rep(2, 50), rep(3, 50)), 25, 2), 10^-6)
+  expect_lte(max(abs(greed:::test_merge_correction(Gmm(), data, c(rep(1, 50), rep(2, 50), rep(3, 50)), 1, 2))), 10^-6)
 })
 
 test_that("GMM hybrid", {

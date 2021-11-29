@@ -140,7 +140,7 @@ rdcsbm <- function(N, pi, mu, betain, betaout) {
   betaout <- betaout / betaout_cl[cl]
   x <- matrix(stats::rpois(N * N, mu[cbind(rep(cl, N), rep(cl, each = N))] * rep(betain, N) * rep(betaout, each = N)), N, N)
   links <- Matrix::which(x > 0, arr.ind = TRUE)
-  list(cl = cl, x = Matrix::sparseMatrix(links[, 1], links[, 2], x = x[links]), K = K, N = N, pi = pi, mu = mu)
+  list(cl = cl, x = Matrix::sparseMatrix(links[, 1], links[, 2], x = x[links],dims = c(N,N)), K = K, N = N, pi = pi, mu = mu)
 }
 
 

@@ -22,6 +22,7 @@ DcSbm::DcSbm(const arma::sp_mat  & xp,S4 modeli,bool verb){
     p = model.slot("p");
   }
   verbose=verb;
+
 }
 
 
@@ -32,6 +33,13 @@ void DcSbm::set_cl(arma::uvec clt){
   counts = count(clt,K);
   din = sum(x_counts).t();
   dout = sum(x_counts.t()).t();
+  double cst_denom = 0;
+  int nlinks =0;
+  for (arma::sp_mat::const_iterator i = x.begin(); i != x.end(); ++i) {
+    cst_denom+=lgamma(*i+1);
+    nlinks += *i;
+  }
+  cst = arma::accu(lgamma(sum(x)+1))+arma::accu(lgamma(sum(xt)+1))-cst_denom + nlinks*log(p);
 }
 
 double DcSbm::icl_emiss(const List & obs_stats){
@@ -46,7 +54,7 @@ double DcSbm::icl_emiss(const List & obs_stats){
   
   double icl_emiss = arma::accu(lgamma(counts)-lgamma(counts+din)+din % log(counts))+accu(lgamma(counts)-lgamma(counts+dout)+dout % log(counts));
   icl_emiss=icl_emiss + arma::accu(lgamma(edges_counts+1)-(edges_counts+1) % log(p*matcount+1));
-  return icl_emiss;
+  return icl_emiss+cst;
 }
 
 double DcSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl, bool dead_cluster){
@@ -76,7 +84,7 @@ double DcSbm::icl_emiss(const List & obs_stats,int oldcl,int newcl, bool dead_cl
     
   }
   
-  return icl_emiss;
+  return icl_emiss+cst;
 }
 
 
@@ -88,7 +96,7 @@ List DcSbm::get_obs_stats(){
 
 List DcSbm::get_obs_stats_cst(){
   arma::sp_mat din_node = sum(x).t();
-  arma::sp_mat dout_node = sum(x.t()).t();
+  arma::sp_mat dout_node = sum(xt).t();
   return List::create(Named("din_node", din_node),Named("dout_node", dout_node));
 }
 
@@ -259,9 +267,7 @@ double DcSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & ol
       
     }
   }
-  if(l==obk){
-    icl_cor=0;
-  }
+
   return icl_cor;
   
   

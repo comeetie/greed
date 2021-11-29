@@ -22,6 +22,14 @@ test_that("DCSBM sim", {
   newcl <- sample(setdiff(1:K, oldcl), 1)
   expect_lte(greed:::test_swap(model, data, sbm$cl, i, newcl), 10^-6)
   expect_lte(greed:::test_merge(model, data, sbm$cl, oldcl, newcl), 10^-6)
+  expect_lte(max(abs(greed:::test_merge_correction(model, data, sbm$cl, oldcl, newcl))), 10^-6)
+  x <- tril(sbm$x) + t(tril(sbm$x))
+  diag(x) <- 0
+  model <- DcSbm(type="undirected")
+  data <- greed:::preprocess(model,x)
+  expect_lte(greed:::test_swap(model, data, sbm$cl, i, newcl), 10^-6)
+  expect_lte(greed:::test_merge(model, data, sbm$cl, oldcl, newcl), 10^-6)
+  expect_lte(max(abs(greed:::test_merge_correction(model, data, sbm$cl, oldcl, newcl))), 10^-6)
 })
 
 

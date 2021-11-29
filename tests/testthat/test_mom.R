@@ -21,6 +21,7 @@ test_that("MM sim", {
   newcl <- sample(setdiff(1:K, oldcl), 1)
   expect_lte(greed:::test_swap(model, data, mm$cl, i, newcl), 10^-6)
   expect_lte(greed:::test_merge(model, data, mm$cl, oldcl, newcl), 10^-6)
+  expect_lte(max(abs(greed:::test_merge_correction(model, data, mm$cl, oldcl, newcl))), 10^-6)
 })
 
 

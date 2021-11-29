@@ -423,3 +423,37 @@ double test_merge(S4 model,List data,arma::uvec& cl,int k, int l){
   return std::abs(dmerge-delta);
 }
 
+
+// test_merge_correction
+// @param model icl_model
+// @param data list with clustering data depends on model type
+// @param cl initital clustering
+// @return a 
+// [[Rcpp::export]]
+arma::mat test_merge_correction(S4 model,List data,arma::uvec& cl,int k, int l){
+  if(k<l){
+    int temp = k;
+    k=l;
+    l=temp;
+  }
+  IclModel * M = init(model,data,cl,FALSE);
+  
+  
+  MergeMat init_merge_mat = M->delta_merge();
+  List old_stats = M->get_obs_stats();
+  M->merge_update(k-1,l-1);
+  MergeMat fusopt_merge_mat = M->delta_merge(init_merge_mat.getMergeMat(),k-1,l-1,old_stats);
+  
+  
+  arma::uvec & clm = cl;
+  clm(arma::find(clm==k)).fill(l);
+  clm.elem(arma::find(clm>k))=cl.elem(arma::find(clm>k))-1;
+
+  
+  IclModel * Mmerge = init(model,data,clm,FALSE);
+  
+  MergeMat fusnoopt_merge_mat = Mmerge->delta_merge(); 
+  
+  return fusopt_merge_mat.getMergeMat()-fusnoopt_merge_mat.getMergeMat(); 
+}
+

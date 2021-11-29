@@ -15,7 +15,7 @@ test_that("DIAGGMM hybrid", {
   data <- greed:::preprocess(DiagGmm(), X)
   expect_lte(greed:::test_merge(DiagGmm(), data, c(rep(1, 50), rep(2, 50), rep(3, 50)), 1, 2), 10^-6)
   expect_lte(greed:::test_swap(DiagGmm(), data, c(rep(1, 50), rep(2, 50), rep(3, 50)), 25, 2), 10^-6)
-
+  expect_lte(max(abs(greed:::test_merge_correction(DiagGmm(), data, c(rep(1, 50), rep(2, 50), rep(3, 50)), 1, 2))), 10^-6)
   sol <- greed(X, model = DiagGmm())
   expect_equal(sol@K, 3)
 

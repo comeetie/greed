@@ -221,8 +221,15 @@ setMethod(
   f = "preprocess",
   signature = signature("DcSbmPrior"),
   definition = function(model, data) {
-    if (!(methods::is(data, "dgCMatrix") | methods::is(data, "matrix") | methods::is(data, "data.frame"))) {
+    if (!(methods::is(data, "dgCMatrix") | methods::is(data, "matrix") | methods::is(data, "data.frame") | methods::is(data, "igraph"))) {
       stop("A DcSbm model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.", call. = FALSE)
+    }
+    if (requireNamespace("igraph", quietly = TRUE) & methods::is(data, "igraph")) {
+      
+      if(length(igraph::graph_attr_names(data))){
+        warning("Sbm model used with an igraph object. Vertex and nodes attributes were removed, the clustering will only use the adjacency matrix.", call. = FALSE)
+      }
+      data <- igraph::as_adj(data,type = "both",names=TRUE,sparse=TRUE)
     }
     if (methods::is(data, "data.frame")) {
       data <- as.matrix(data)

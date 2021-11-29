@@ -27,6 +27,19 @@ test_that("MULTSBM sim", {
   newcl <- sample(setdiff(1:K, oldcl), 1)
   expect_lte(greed:::test_swap(model, data, multsbm$cl, i, newcl), 10^-6)
   expect_lte(greed:::test_merge(model, data, multsbm$cl, oldcl, newcl), 10^-6)
+  expect_lte(max(abs(greed:::test_merge_correction(model, data, multsbm$cl, oldcl, newcl))), 10^-6)
+  # undirected 
+  multsbm$x[, , 1] <- matrix(tril(multsbm$x[, , 1]) + t(tril(multsbm$x[, , 1])))
+  diag(multsbm$x[, , 1]) <- 0
+  multsbm$x[, , 2] <- matrix(tril(multsbm$x[, , 2]) + t(tril(multsbm$x[, , 2])))
+  diag(multsbm$x[, , 2]) <- 0
+  multsbm$x[, , 3] <- matrix(tril(multsbm$x[, , 3]) + t(tril(multsbm$x[, , 3])))
+  diag(multsbm$x[, , 3]) <- 0
+  model <- MultSbm(type="undirected")
+  data <- greed:::preprocess(model, multsbm$x)
+  expect_lte(greed:::test_swap(model, data, multsbm$cl, i, newcl), 10^-6)
+  expect_lte(greed:::test_merge(model, data, multsbm$cl, oldcl, newcl), 10^-6)
+  expect_lte(max(abs(greed:::test_merge_correction(model, data, multsbm$cl, oldcl, newcl))), 10^-6)
 })
 
 

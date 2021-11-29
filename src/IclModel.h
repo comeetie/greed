@@ -38,6 +38,7 @@ public:
   // compute correction if needed to merge matrix
   virtual double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats){return 0;};
   // methods  to compute merge matrix deltas 
+  virtual double delta_merge_correction_prop(const List & old_stats){return 0;};
   MergeMat delta_merge();
   // update version
   MergeMat delta_merge(arma::mat delta, int obk, int obl,const List & old_stats);

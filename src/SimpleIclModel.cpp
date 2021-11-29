@@ -49,7 +49,7 @@ double SimpleIclModel::icl(const List & obs_stats,int oldcl,int newcl){
     icl_prop = lgamma(K*alpha)+lgamma(alpha+counts(oldcl))+lgamma(alpha+counts(newcl))-K*lgamma(alpha)-lgamma(K*alpha+N);
   }else{
     // cluster oldclass is dead, count(oldcl)==0 chnage of dimension
-    icl_prop = lgamma((K-1)*alpha)+lgamma(alpha+counts(newcl,0))-(K-1)*lgamma(alpha)-lgamma((K-1)*alpha+N);
+    icl_prop = lgamma((K-1)*alpha)+lgamma(alpha+counts(newcl))-(K-1)*lgamma(alpha)-lgamma((K-1)*alpha+N);
   }
   // complete with log(p(X|X)) from derived class
   double icl_e = this->icl_emiss(obs_stats,oldcl,newcl);
@@ -186,4 +186,10 @@ double SimpleIclModel::delta_merge_correction(int k,int l,int obk,int obl,const 
   return(emission_model->delta_merge_correction(k,l,obk,obl,old_stats[1]));
 }
 
+
+double SimpleIclModel::delta_merge_correction_prop(const List & old_stats){
+  int Kold = K+1;
+  double cor_prop = lgamma((Kold-2)*alpha)-2*lgamma((Kold-1)*alpha)+lgamma(Kold*alpha)+2*lgamma((Kold-1)*alpha+N)-lgamma((Kold-2)*alpha+N)-lgamma(Kold*alpha+N);
+  return cor_prop;
+}
 

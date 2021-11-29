@@ -21,6 +21,7 @@ test_that("LCA icl opt", {
   newcl <- sample(setdiff(1:lca.data$K, cl[i]), 1)
   expect_lte(greed:::test_swap(model, data, cl, i, newcl), 10^-6)
   expect_lte(greed:::test_merge(model, data, cl, 1, 4), 10^-6)
+  expect_lte(max(abs(greed:::test_merge_correction(model, data, cl, 1, 4))), 10^-6)
 })
 
 

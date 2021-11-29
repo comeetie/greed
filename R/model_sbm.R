@@ -233,17 +233,25 @@ setMethod(
   definition = function(model, data) {
     methods::validObject(model)
 
-    if (!(methods::is(data, "dgCMatrix") | methods::is(data, "matrix") | methods::is(data, "data.frame"))) {
-      stop("An SBM model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.", call. = FALSE)
+    if (!(methods::is(data, "dgCMatrix") | methods::is(data, "matrix") | methods::is(data, "data.frame") | methods::is(data,"igraph"))) {
+      stop("An SBM model expect a matrix,  a sparse (dgCMatrix) matrix,  a data.frame, or an igraph/tidygraph object.", call. = FALSE)
     }
+    if (requireNamespace("igraph", quietly = TRUE) & methods::is(data, "igraph")) {
+      
+      if(length(igraph::graph_attr_names(data))){
+        warning("Sbm model used with an igraph object. Vertex and nodes attributes were removed, the clustering will only use the adjacency matrix.", call. = FALSE)
+      }
+      data <- igraph::as_adj(data,type = "both",names=TRUE,sparse=TRUE)
+    }
+    
     if (methods::is(data, "data.frame")) {
       data <- as.matrix(data)
     }
     if (nrow(data) != ncol(data)) {
-      stop("An SBM model expect a square matrix.", call. = FALSE)
+      stop("An SBM model expect a square adjacency matrix.", call. = FALSE)
     }
     if (!all(round(data) == data) || min(data) != 0 || max(data) != 1) {
-      stop("An SBM model expect a binary matrix.", call. = FALSE)
+      stop("An SBM model expect a binary adjacency matrix.", call. = FALSE)
     }
     if (model@type == "undirected" & !isSymmetric(data)) {
       stop("An undirected sbm model expect a symmetric matrix.", call. = FALSE)
