@@ -122,7 +122,7 @@ prior(sol_dcsbm)
 
 For this dataset the model without degree correction seem's to reach a better solution than its concurrent.
 
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
 bl_sbm = plot(sol_sbm,type='blocks')
 bl_dcsbm = plot(sol_dcsbm,type='blocks')
 ggarrange(bl_sbm,bl_dcsbm)
@@ -132,6 +132,21 @@ ggarrange(bl_sbm,bl_dcsbm)
 plot(sol_sbm,type='tree')
 ```
 
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+library(ggraph)
+library(tidygraph)
+
+graph <- igraph::graph_from_adjacency_matrix(Books$X) %>% as_tbl_graph() %>% 
+    mutate(Popularity = centrality_degree())  %>% 
+    activate(nodes) %>%
+    mutate(cluster=factor(clustering(sol_sbm),1:K(sol_sbm)))
+
+# plot using ggraph
+ggraph(graph, layout = 'kk') + 
+    geom_edge_link() + 
+    geom_node_point(aes(size = Popularity,color=cluster))
+
+```
 
 ```{r}
 sol_sbm_k3 = cut(sol_sbm,3)
@@ -150,8 +165,26 @@ dim(NewGuinea)
 sol_newguinea = greed(NewGuinea,model=MultSbm())
 ```
 
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
 plot(sol_newguinea,type='blocks')
+```
+
+
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+
+enemies = as.data.frame(which(NewGuinea[,,1]==1,arr.ind = TRUE)) %>% 
+  mutate(relation="enemy")
+friends = as.data.frame(which(NewGuinea[,,2]==1,arr.ind = TRUE)) %>%
+  mutate(relation="friend")
+
+edges = rbind(enemies,friends)
+graph = tbl_graph(edges=edges,nodes=data.frame(id=1:16,cluster=factor(clustering(sol_newguinea))))                          
+                          
+# plot using ggraph
+ggraph(graph, layout = 'kk') + 
+    geom_edge_link(aes(color=relation)) + 
+    geom_node_point(aes(shape=cluster,size=5))
+
 ```
 
 ```{r}
@@ -160,7 +193,7 @@ data <- list(pos = NewGuinea[, , 2], neg = NewGuinea[, , 1])
 sol_bidcsbm <- greed(data, model = mod, K = 5)
 ```
 
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
 bl_pos = plot(extractSubModel(sol_bidcsbm,"pos"),type="blocks")
 bl_neg = plot(extractSubModel(sol_bidcsbm,"neg"),type="blocks")
 ggarrange(bl_pos,bl_neg)

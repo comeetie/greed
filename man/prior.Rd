@@ -10,7 +10,7 @@ prior(fit)
 \item{fit}{an \code{IclFit} solution}
 }
 \value{
-
+An S4 object describing the prior parameters
 }
 \description{
 This method take a \code{\link{IclFit-class}} object and return the prior used.

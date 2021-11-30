@@ -334,3 +334,43 @@
 #' @examples
 #' data(Fifa_positions)
 "Fifa_positions"
+
+
+#' NewGuinea data
+#'
+#' \code{\link{NewGuinea}} a social network of 16 tribes, where two types of interactions were recorded, amounting to either friendship or enmity [read-cultures-1954]. 
+#'
+#' @docType data
+#'
+#' @usage data(NewGuinea)
+#'
+#' @format A binary array of size (16,16,3) the first layer encodes enmity, the second, the friendship relations. The third, no relations between the two tribes.
+#' @references Kenneth E. Read, “Cultures of the Central Highlands, New Guinea”, Southwestern J. of Anthropology, 10(1):1-43 (1954). DOI: 10.1086/soutjanth.10.1.3629074
+#'
+#' @keywords datasets
+#'
+#' @source \url{https://}
+#'
+#' @examples
+#' data(NewGuinea)
+"NewGuinea"
+
+#' SevenGraders data
+#'
+#' \code{\link{SevenGraders}} A small multiplex network of friendships among 29 seventh grade students in Victoria, Australia. Students nominated classmates for three different activities (who do you get on with in the class, who are your best friends, and who would you prefer to work with). Edge direction for each of these three types of edges indicates if node i nominated node j, and the edge weight gives the frequency of this nomination. Students 1-12 are boys and 13-29 are girls. The KONECT version of this network is the collapse of de Domenico's multiplex version.
+#' @docType data
+#'
+#' @usage data(SevenGraders)
+#'
+#' @format A binary array of size (29,29,3) the first layer encodes work relation, the second, the friendship relations. The third, no relations between the two tribes.
+#' @cite Kenneth E. Read, “Cultures of the Central Highlands, New Guinea”, Southwestern J. of Anthropology, 10(1):1-43 (1954). DOI: 10.1086/soutjanth.10.1.3629074
+#'
+#' @keywords datasets
+#'
+#' @source \url{https://networks.skewed.de/net/7th_graders}
+#' @references M. Vickers and S. Chan, "Representing Classroom Social Structure." Melbourne: Victoria Institute of Secondary Education, (1981).
+#' @examples
+#' data(SevenGraders)
+"SevenGraders"
+
+

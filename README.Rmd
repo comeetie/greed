@@ -29,7 +29,7 @@ Greed enables model based clustering of networks, matrices of count data and muc
 
 The following generative models are available currently : 
 
-* **Stochastic Block Models** (see ``?`Sbm-class` ),
+* **Stochastic Block Models** (see ``?`Sbm-class` ``),
 * **Degree Corrected Stochastic Block Models** (see ``?`DcSbm-class` ``),
 * **Multinomial Stochastic Block Models** (see ``?`MultSbm-class` ``),
 * **Mixture of Multinomials** (see ``?`MoR-class` ``), 
@@ -61,37 +61,68 @@ install.packages("greed")
 
 ## Usage
 
-The main entry point for using the package is simply the greed function (`?greed`). The generative model will be chosen automatically to fit with the data provided, but you may specify another choice with the model parameter. This is a basic example with the classical Jazz network:
+The main entry point for using the package is simply the greed function (`?greed`). The generative model will be chosen automatically to fit with the data provided, but you may specify another choice with the model parameter. This is a basic example with the classical Football network:
 
 ```{r example}
 library(greed)
-data(Jazz)
-sol=greed(Jazz)
+data(Books)
+sol <- greed(Books$X)
+```
+You may specify the model you want to use and set the priors paramaters with the (model argument), the optimization algorithm (alg argument) and the initial number of cluster K. Here football is a square sparse matrix and a graph clustering ``?`DcSbm-class` `` model will be used by default, and the Hybrid genetic algorithm greed used. 
+
+
+
+```{r sbm-example}
+sol <- greed(Books$X,model=Sbm(),alg=Seed(),K=10)
 ```
 
-Here Jazz is a square sparse matrix and a ``?`DcSbm-class` `` model will be used by default. Some plotting function enable the exploration of the clustering results:
+
+Some plotting function enable the exploration of the clustering results, the hierarchical structure between clusters:
 ```{r plot,message=FALSE,results="hide"}
 plot(sol)
 ```
 
-And the hierarchical structure between clusters:
+Or a summary représentation of the adjacency matrix:
 ```{r tree}
-plot(sol,type='tree')
+plot(sol,type='blocks')
 ```
+
+You may extract the model fitted parameters with the `?coef` function, the clustering with the `?clustering` function, the value of ICL with `?ICL`:
+
+```{r}
+ICL(sol)
+coef(sol)
+table(clustering(sol))
+```
+
 
 Eventually, one may explore some coarser clustering using the cut function:
 ```{r cut}
-plot(cut(sol,5))
+plot(cut(sol,3))
 ```
 
 
-For large datasets, it is possible to use parallelism to speed-up the computation thanks to the [future](https://github.com/HenrikBengtsson/future) package. You only need to specify the type of backend you want to use.
+For large datasets, it is possible to use parallelism to speed-up the computation thanks to the [future](https://github.com/HenrikBengtsson/future) package. You only need to specify the type of backend you want to use, before calling the `?greed` function:
 ```{r future}
 library(future)
 plan(multisession)
-data("Blogs")
-sol=greed(Blogs$X)
-plot(sol)
+```
+
+# Classical clustering, GMM
+
+```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
+data("diabetes",package = "mclust")
+X <- diabetes[,-1]
+sol <- greed(X,model=Gmm())
+table(diabetes$cl,clustering(sol))
+gmmpairs(sol,X)
 ```
 
 
+# Questionnary and item response theory datasets, LCA
+
+# Graphs, SBM like models
+
+# Mixture of Regression
+
+# Advanced models

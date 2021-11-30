@@ -24,7 +24,7 @@ Bouveyron (2021)
 
 The following generative models are available currently :
 
--   **Stochastic Block Models** (see \``?`Sbm-class\` ),
+-   **Stochastic Block Models** (see `` ?`Sbm-class` ``),
 -   **Degree Corrected Stochastic Block Models** (see
     `` ?`DcSbm-class` ``),
 -   **Multinomial Stochastic Block Models** (see
@@ -75,26 +75,36 @@ install.packages("greed")
 The main entry point for using the package is simply the greed function
 (`?greed`). The generative model will be chosen automatically to fit
 with the data provided, but you may specify another choice with the
-model parameter. This is a basic example with the classical Jazz
+model parameter. This is a basic example with the classical Football
 network:
 
 ``` r
 library(greed)
-data(Jazz)
-sol=greed(Jazz)
+data(Books)
+sol <- greed(Books$X)
 #> ------- guess DCSBM model fitting ------
-#> ################# Generation  1: best solution with an ICL of -5987 and 13 clusters #################
-#> ################# Generation  2: best solution with an ICL of -5960 and 13 clusters #################
-#> ################# Generation  3: best solution with an ICL of -5959 and 17 clusters #################
-#> ################# Generation  4: best solution with an ICL of -5949 and 14 clusters #################
-#> ################# Generation  5: best solution with an ICL of -5949 and 14 clusters #################
+#> ################# Generation  1: best solution with an ICL of -1356 and 5 clusters #################
+#> ################# Generation  2: best solution with an ICL of -1346 and 4 clusters #################
+#> ################# Generation  3: best solution with an ICL of -1346 and 4 clusters #################
 #> ------- Final clustering -------
-#> ICL clustering with a DCSBM model, 13 clusters and an icl of -5945.
+#> ICL clustering with a DCSBM model, 3 clusters and an icl of -1345.
 ```
 
-Here Jazz is a square sparse matrix and a `` ?`DcSbm-class` `` model
-will be used by default. Some plotting function enable the exploration
-of the clustering results:
+You may specify the model you want to use and set the priors paramaters
+with the (model argument), the optimization algorithm (alg argument) and
+the initial number of cluster K. Here football is a square sparse matrix
+and a graph clustering `` ?`DcSbm-class` `` model will be used by
+default, and the Hybrid genetic algorithm greed used.
+
+``` r
+sol <- greed(Books$X,model=Sbm(),alg=Seed(),K=10)
+#> ------- guess SBM model fitting ------
+#> ------- Final clustering -------
+#> ICL clustering with a SBM model, 5 clusters and an icl of -1255.
+```
+
+Some plotting function enable the exploration of the clustering results,
+the hierarchical structure between clusters:
 
 ``` r
 plot(sol)
@@ -102,19 +112,43 @@ plot(sol)
 
 <img src="man/figures/plot-1.png" width="60%" />
 
-And the hierarchical structure between clusters:
+Or a summary représentation of the adjacency matrix:
 
 ``` r
-plot(sol,type='tree')
+plot(sol,type='blocks')
 ```
 
 <img src="man/figures/tree-1.png" width="60%" />
+
+You may extract the model fitted parameters with the `?coef` function,
+the clustering with the `?clustering` function, the value of ICL with
+`?ICL`:
+
+``` r
+ICL(sol)
+#> [1] -1255.164
+coef(sol)
+#> $pi
+#> [1] 0.07619048 0.31428571 0.18095238 0.37142857 0.05714286
+#> 
+#> $thetakl
+#>             [,1]        [,2]        [,3]        [,4]       [,5]
+#> [1,] 0.821428571 0.367424242 0.065789474 0.003205128 0.00000000
+#> [2,] 0.367424242 0.106060606 0.006379585 0.003885004 0.00000000
+#> [3,] 0.065789474 0.006379585 0.251461988 0.016194332 0.04385965
+#> [4,] 0.003205128 0.003885004 0.016194332 0.099865047 0.42735043
+#> [5,] 0.000000000 0.000000000 0.043859649 0.427350427 0.73333333
+table(clustering(sol))
+#> 
+#>  1  2  3  4  5 
+#>  8 33 19 39  6
+```
 
 Eventually, one may explore some coarser clustering using the cut
 function:
 
 ``` r
-plot(cut(sol,5))
+plot(cut(sol,3))
 ```
 
 <img src="man/figures/cut-1.png" width="60%" />
@@ -122,25 +156,43 @@ plot(cut(sol,5))
 For large datasets, it is possible to use parallelism to speed-up the
 computation thanks to the
 [future](https://github.com/HenrikBengtsson/future) package. You only
-need to specify the type of backend you want to use.
+need to specify the type of backend you want to use, before calling the
+`?greed` function:
 
 ``` r
 library(future)
 plan(multisession)
-data("Blogs")
-sol=greed(Blogs$X)
-#> ------- guess DCSBM model fitting ------
-#> ################# Generation  1: best solution with an ICL of -61221 and 16 clusters #################
-#> ################# Generation  2: best solution with an ICL of -61078 and 17 clusters #################
-#> ################# Generation  3: best solution with an ICL of -61018 and 17 clusters #################
-#> ################# Generation  4: best solution with an ICL of -60950 and 18 clusters #################
-#> ################# Generation  5: best solution with an ICL of -60901 and 18 clusters #################
-#> ################# Generation  6: best solution with an ICL of -60883 and 18 clusters #################
-#> ################# Generation  7: best solution with an ICL of -60853 and 18 clusters #################
-#> ################# Generation  8: best solution with an ICL of -60853 and 18 clusters #################
-#> ------- Final clustering -------
-#> ICL clustering with a DCSBM model, 17 clusters and an icl of -60836.
-plot(sol)
 ```
 
-<img src="man/figures/future-1.png" width="60%" />
+# Classical clustering, GMM
+
+``` r
+data("diabetes",package = "mclust")
+X <- diabetes[,-1]
+sol <- greed(X,model=Gmm())
+#> ------- GMM model fitting ------
+#> ################# Generation  1: best solution with an ICL of -2419 and 6 clusters #################
+#> ################# Generation  2: best solution with an ICL of -2402 and 5 clusters #################
+#> ################# Generation  3: best solution with an ICL of -2401 and 4 clusters #################
+#> ################# Generation  4: best solution with an ICL of -2396 and 4 clusters #################
+#> ################# Generation  5: best solution with an ICL of -2396 and 4 clusters #################
+#> ------- Final clustering -------
+#> ICL clustering with a GMM model, 3 clusters and an icl of -2395.
+table(diabetes$cl,clustering(sol))
+#>           
+#>             1  2  3
+#>   Chemical  1 24 11
+#>   Normal    0  2 74
+#>   Overt    27  6  0
+gmmpairs(sol,X)
+```
+
+<img src="man/figures/diabetes-gmm-1.png" width="90%" />
+
+# Questionnary and item response theory datasets, LCA
+
+# Graphs, SBM like models
+
+# Mixture of Regression
+
+# Advanced models
