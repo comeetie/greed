@@ -63,7 +63,10 @@
       <a href="articles/SBM.html">Graph clustering</a>
     </li>
     <li>
-      <a href="articles/GMM.html">Gaussian Mixture Models Clustering</a>
+      <a href="articles/GMM.html">Gaussian Mixture Models</a>
+    </li>
+    <li>
+      <a href="articles/MoR.html">Mixture of Regressions</a>
     </li>
     <li>
       <a href="articles/LCA.html">Latent Class Analysis</a>
@@ -144,13 +147,13 @@
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Jazz</span><span class="op">)</span>
 <span class="va">sol</span><span class="op">=</span><span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Jazz</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess DCSBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -28614 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -28601 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -28588 and 13 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -28575 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -28575 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -5987 and 13 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -5960 and 13 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -5959 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -5949 and 14 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -5949 and 14 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 15 clusters and an icl of -28557.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 13 clusters and an icl of -5945.</span></code></pre></div>
 <p>Here Jazz is a square sparse matrix and a <code><a href="reference/DcSbmPrior-class.html">?`DcSbm-class`</a></code> model will be used by default. Some plotting function enable the exploration of the clustering results:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
@@ -170,14 +173,16 @@
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"Blogs"</span><span class="op">)</span>
 <span class="va">sol</span><span class="op">=</span><span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Blogs</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess DCSBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -84503 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -84413 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -84341 and 19 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -84293 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -84275 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -84275 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -61221 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -61078 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -61018 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -60950 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -60901 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -60883 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -60853 and 18 clusters #################</span>
+<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -60853 and 18 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 17 clusters and an icl of -84250.</span>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 17 clusters and an icl of -60836.</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/future-1.png" width="60%"></p>
 </div>
@@ -215,6 +220,7 @@
 <ul class="list-unstyled">
 <li><a href="https://github.com/comeetie/greed/actions"><img src="https://github.com/comeetie/greed/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://CRAN.R-project.org/package=greed"><img src="https://www.r-pkg.org/badges/version/greed" alt="CRAN status"></a></li>
+<li><a href="https://github.com/comeetie/greed/actions"><img src="https://github.com/comeetie/greed/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 </div>

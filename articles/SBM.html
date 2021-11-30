@@ -63,7 +63,10 @@
       <a href="../articles/SBM.html">Graph clustering</a>
     </li>
     <li>
-      <a href="../articles/GMM.html">Gaussian Mixture Models Clustering</a>
+      <a href="../articles/GMM.html">Gaussian Mixture Models</a>
+    </li>
+    <li>
+      <a href="../articles/MoR.html">Mixture of Regressions</a>
     </li>
     <li>
       <a href="../articles/LCA.html">Latent Class Analysis</a>
@@ -100,7 +103,7 @@
       <h1 data-toc-skip>SBM</h1>
                         <h4 class="author">Etienne Côme</h4>
             
-            <h4 class="date">2021-11-29</h4>
+            <h4 class="date">2021-11-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/comeetie/greed/blob/master/vignettes/SBM.Rmd"><code>vignettes/SBM.Rmd</code></a></small>
       <div class="hidden name"><code>SBM.Rmd</code></div>
@@ -114,7 +117,8 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://Matrix.R-forge.R-project.org/">Matrix</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/">greed</a></span><span class="op">)</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/">greed</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/ggpubr/">ggpubr</a></span><span class="op">)</span></code></pre></div>
 <div id="introduction-sbm-like-models" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction-sbm-like-models" class="anchor"></a>Introduction, Sbm like models</h2>
@@ -130,67 +134,198 @@
 <span class="va">lambda</span>  <span class="op">=</span> <span class="fl">0.1</span>
 <span class="va">lambda_o</span> <span class="op">=</span> <span class="fl">0.01</span>
 <span class="va">Ks</span><span class="op">=</span><span class="fl">3</span>
-<span class="va">mu</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/bdiag.html">bdiag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">K</span><span class="op">/</span><span class="va">Ks</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">k</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="va">lambda_o</span>,<span class="va">Ks</span>,<span class="va">Ks</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">lambda</span>,<span class="va">Ks</span><span class="op">)</span><span class="op">)</span><span class="op">}</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fl">0.001</span>
+<span class="va">mu</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/bdiag.html">bdiag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">K</span><span class="op">/</span><span class="va">Ks</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">k</span><span class="op">)</span><span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="va">lambda_o</span>,<span class="va">Ks</span>,<span class="va">Ks</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">lambda</span>,<span class="va">Ks</span><span class="op">)</span><span class="op">)</span><span class="op">}</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fl">0.001</span>
 <span class="va">sbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/rsbm.html">rsbm</a></span><span class="op">(</span><span class="va">N</span>,<span class="va">pi</span>,<span class="va">mu</span><span class="op">)</span></code></pre></div>
 <p>Perform the clustering with default algorithm. We specify to choose an sbm model since for squared sparse matrix the default is a DcSbm model. An hybrid algorithm is selected by default and the default value for the parameter K is 20.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">sbm</span><span class="op">$</span><span class="va">x</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/SbmPrior-class.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess SBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -14229 and 6 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -14229 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -14140 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -14140 and 6 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a SBM model, 6 clusters and an icl of -14229.</span></code></pre></div>
-<p>Plot the results using a block representation.</p>
+<span class="co">#&gt; ICL clustering with a SBM model, 6 clusters and an icl of -14140.</span></code></pre></div>
+<p>Look at the parameters estimate:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
-<p><img src="SBM_files/figure-html/unnamed-chunk-4-1.png" width="70%"></p>
-<p>Plot the results with a node link diagram.</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
+<span class="co">#&gt; $pi</span>
+<span class="co">#&gt; [1] 0.1725 0.1625 0.1425 0.1725 0.1600 0.1900</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $thetakl</span>
+<span class="co">#&gt;              [,1]         [,2]         [,3]         [,4]         [,5]</span>
+<span class="co">#&gt; [1,] 0.1165721487 0.0109253066 0.0114416476 0.0006301197 0.0011322464</span>
+<span class="co">#&gt; [2,] 0.0107023411 0.1095857988 0.0094466937 0.0011148272 0.0007211538</span>
+<span class="co">#&gt; [3,] 0.0106788711 0.0102564103 0.1184979994 0.0015255530 0.0005482456</span>
+<span class="co">#&gt; [4,] 0.0008401596 0.0013377926 0.0012712942 0.1161520689 0.0120018116</span>
+<span class="co">#&gt; [5,] 0.0015851449 0.0016826923 0.0008223684 0.0083786232 0.1137695312</span>
+<span class="co">#&gt; [6,] 0.0009534706 0.0004048583 0.0009233610 0.0080091533 0.0104851974</span>
+<span class="co">#&gt;              [,6]</span>
+<span class="co">#&gt; [1,] 0.0013348589</span>
+<span class="co">#&gt; [2,] 0.0008097166</span>
+<span class="co">#&gt; [3,] 0.0011542013</span>
+<span class="co">#&gt; [4,] 0.0099160946</span>
+<span class="co">#&gt; [5,] 0.0098684211</span>
+<span class="co">#&gt; [6,] 0.1114958449</span></code></pre></div>
+<p>Plot the results using a block representation.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'nodelink'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/unnamed-chunk-5-1.png" width="70%"></p>
-<p>Or a dendrogram for selecting a smaller value for K.</p>
+<p>Plot the results with a node link diagram.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'nodelink'</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/unnamed-chunk-6-1.png" width="70%"></p>
-<p>Eventually study the evolution of <span class="math inline">\(-log(\alpha)\)</span> with respect to <span class="math inline">\(K\)</span>.</p>
+<p>Or a dendrogram for selecting a smaller value for K.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'path'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/unnamed-chunk-7-1.png" width="70%"></p>
-<p>Or of ICL with respect to <span class="math inline">\(log(\alpha)\)</span></p>
+<p>Eventually study the evolution of <span class="math inline">\(-log(\alpha)\)</span> with respect to <span class="math inline">\(K\)</span>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'front'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'path'</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/unnamed-chunk-8-1.png" width="70%"></p>
-<p>And select a smaller value to extract a new solution.</p>
+<p>Or of ICL with respect to <span class="math inline">\(log(\alpha)\)</span></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'front'</span><span class="op">)</span></code></pre></div>
+<p><img src="SBM_files/figure-html/unnamed-chunk-9-1.png" width="70%"></p>
+<p>And select a smaller value to extract a new solution.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">sol</span>,<span class="fl">2</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol2</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
-<p><img src="SBM_files/figure-html/unnamed-chunk-9-1.png" width="70%"></p>
-</div>
-<div id="section" class="section level2">
-<h2></h2>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Blogs</span><span class="op">)</span>
-<span class="va">sol_dcsbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Blogs</span><span class="op">$</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<p><img src="SBM_files/figure-html/unnamed-chunk-10-1.png" width="70%"></p>
+<p>We may try with a dcsbm simulation and compare models with and without degree correction:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sim_dcsbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rdcsbm.html">rdcsbm</a></span><span class="op">(</span><span class="va">N</span>,<span class="va">pi</span>,<span class="va">mu</span>,<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html">rexp</a></span><span class="op">(</span><span class="va">N</span>,<span class="fl">1</span><span class="op">/</span><span class="fl">15</span><span class="op">)</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html">rexp</a></span><span class="op">(</span><span class="va">N</span>,<span class="fl">1</span><span class="op">/</span><span class="fl">15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">X</span> <span class="op">&lt;-</span> <span class="va">sim_dcsbm</span><span class="op">$</span><span class="va">x</span>
+<span class="va">X</span><span class="op">[</span><span class="va">X</span><span class="op">&gt;</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span>
+<span class="va">sol_dcsbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess DCSBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -61213 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -61008 and 19 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -60968 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -60897 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -60897 and 17 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -11825 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -11825 and 6 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 16 clusters and an icl of -60853.</span>
-<span class="va">sol_sbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Blogs</span><span class="op">$</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/SbmPrior-class.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 6 clusters and an icl of -11825.</span>
+<span class="va">sol_dcsbm</span>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 6 clusters and an icl of -11825.</span>
+<span class="va">sol_sbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/SbmPrior-class.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess SBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -65352 and 19 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -62542 and 25 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -61894 and 24 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -61648 and 25 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -61551 and 25 clusters #################</span>
-<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -61503 and 25 clusters #################</span>
-<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -61439 and 25 clusters #################</span>
-<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -61439 and 25 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -13109 and 14 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -12894 and 12 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -12826 and 12 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -12826 and 12 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a SBM model, 24 clusters and an icl of -61396.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a SBM model, 11 clusters and an icl of -12802.</span>
+<span class="va">sol_sbm</span>
+<span class="co">#&gt; ICL clustering with a SBM model, 11 clusters and an icl of -12802.</span></code></pre></div>
+<p>As expected the degree corrected version did a better job as the ICL’s suggest. Without degree correction the model has to use more groups to fit the degree heterogeneity.</p>
+</div>
+<div id="some-simple-real-data-the-books-dataset" class="section level2">
+<h2 class="hasAnchor">
+<a href="#some-simple-real-data-the-books-dataset" class="anchor"></a>Some simple real data, the books dataset</h2>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Books</span><span class="op">)</span>
+<span class="va">sol_dcsbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; ------- guess DCSBM model fitting ------</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -1355 and 5 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -1346 and 4 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -1346 and 4 clusters #################</span>
+<span class="co">#&gt; ------- Final clustering -------</span>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 3 clusters and an icl of -1345.</span>
+<span class="va">sol_dcsbm</span>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 3 clusters and an icl of -1345.</span>
+<span class="va">sol_sbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/SbmPrior-class.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; ------- guess SBM model fitting ------</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -1273 and 8 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -1251 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -1251 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -1251 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -1251 and 6 clusters #################</span>
+<span class="co">#&gt; ------- Final clustering -------</span>
+<span class="co">#&gt; ICL clustering with a SBM model, 5 clusters and an icl of -1249.</span>
+<span class="va">sol_sbm</span>
+<span class="co">#&gt; ICL clustering with a SBM model, 5 clusters and an icl of -1249.</span></code></pre></div>
+<p>The network as been well recognized as an undirected graph. We may look at the fitted model prior to check:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/prior.html">prior</a></span><span class="op">(</span><span class="va">sol_dcsbm</span><span class="op">)</span>
+<span class="co">#&gt; An object of class "DcSbm"</span>
+<span class="co">#&gt; Slot "alpha":</span>
+<span class="co">#&gt; [1] 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Slot "type":</span>
+<span class="co">#&gt; [1] "undirected"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Slot "p":</span>
+<span class="co">#&gt; [1] 0.08</span></code></pre></div>
+<p>For this dataset the model without degree correction seem’s to reach a better solution than its concurrent.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">bl_sbm</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol_sbm</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span>
+<span class="va">bl_dcsbm</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol_dcsbm</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span>
+<span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html">ggarrange</a></span><span class="op">(</span><span class="va">bl_sbm</span>,<span class="va">bl_dcsbm</span><span class="op">)</span></code></pre></div>
+<p><img src="SBM_files/figure-html/unnamed-chunk-14-1.png" width="70%"></p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol_sbm</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
+<p><img src="SBM_files/figure-html/unnamed-chunk-15-1.png" width="70%"></p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sol_sbm_k3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">sol_sbm</span>,<span class="fl">3</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol_sbm_k3</span><span class="op">)</span>,<span class="va">Books</span><span class="op">$</span><span class="va">label</span><span class="op">)</span>
+<span class="co">#&gt;    </span>
+<span class="co">#&gt;      c  l  n</span>
+<span class="co">#&gt;   1  9  0  0</span>
+<span class="co">#&gt;   2 39  5 11</span>
+<span class="co">#&gt;   3  1 38  2</span></code></pre></div>
+</div>
+<div id="multinomial-sbm-layered-networks" class="section level2">
+<h2 class="hasAnchor">
+<a href="#multinomial-sbm-layered-networks" class="anchor"></a>Multinomial SBM, layered networks</h2>
+<div id="newguinea-dataset" class="section level4">
+<h4 class="hasAnchor">
+<a href="#newguinea-dataset" class="anchor"></a>Newguinea dataset</h4>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"NewGuinea"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">NewGuinea</span><span class="op">)</span>
+<span class="co">#&gt; [1] 16 16  3</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sol_newguinea</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">NewGuinea</span>,model<span class="op">=</span><span class="fu"><a href="../reference/MultSbmPrior-class.html">MultSbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; ------- guess MULTSBM model fitting ------</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -125 and 2 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -125 and 2 clusters #################</span>
+<span class="co">#&gt; ------- Final clustering -------</span>
+<span class="co">#&gt; ICL clustering with a MULTSBM model, 2 clusters and an icl of -125.</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol_newguinea</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
+<p><img src="SBM_files/figure-html/unnamed-chunk-19-1.png" width="70%"></p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MixedModels-class.html">MixedModels</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>pos <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, neg <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>pos <span class="op">=</span> <span class="va">NewGuinea</span><span class="op">[</span>, , <span class="fl">2</span><span class="op">]</span>, neg <span class="op">=</span> <span class="va">NewGuinea</span><span class="op">[</span>, , <span class="fl">1</span><span class="op">]</span><span class="op">)</span>
+<span class="va">sol_bidcsbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">data</span>, model <span class="op">=</span> <span class="va">mod</span>, K <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
+<span class="co">#&gt; ------- MIXEDMODELS model fitting ------</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -151 and 2 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -151 and 2 clusters #################</span>
+<span class="co">#&gt; ------- Final clustering -------</span>
+<span class="co">#&gt; ICL clustering with a MIXEDMODELS model, 2 clusters and an icl of -151.</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">bl_pos</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/extractSubModel.html">extractSubModel</a></span><span class="op">(</span><span class="va">sol_bidcsbm</span>,<span class="st">"pos"</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"blocks"</span><span class="op">)</span>
+<span class="va">bl_neg</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/extractSubModel.html">extractSubModel</a></span><span class="op">(</span><span class="va">sol_bidcsbm</span>,<span class="st">"neg"</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"blocks"</span><span class="op">)</span>
+<span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html">ggarrange</a></span><span class="op">(</span><span class="va">bl_pos</span>,<span class="va">bl_neg</span><span class="op">)</span></code></pre></div>
+<p><img src="SBM_files/figure-html/unnamed-chunk-21-1.png" width="70%"></p>
+</div>
+<div id="th-grade-dataset" class="section level4">
+<h4 class="hasAnchor">
+<a href="#th-grade-dataset" class="anchor"></a>7th grade dataset</h4>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"SevenGraders"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">SevenGraders</span><span class="op">)</span>
+<span class="co">#&gt; [1] 29 29  3</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MixedModels-class.html">MixedModels</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>class <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, friends <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, work <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>class <span class="op">=</span> <span class="va">SevenGraders</span><span class="op">[</span>, , <span class="fl">1</span><span class="op">]</span>, friends <span class="op">=</span> <span class="va">SevenGraders</span><span class="op">[</span>, , <span class="fl">2</span><span class="op">]</span>, work <span class="op">=</span> <span class="va">SevenGraders</span><span class="op">[</span>, , <span class="fl">3</span><span class="op">]</span><span class="op">)</span>
+<span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">data</span>, model <span class="op">=</span> <span class="va">mod</span>, K <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
+<span class="co">#&gt; ------- MIXEDMODELS model fitting ------</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -1514 and 4 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -1514 and 4 clusters #################</span>
+<span class="co">#&gt; ------- Final clustering -------</span>
+<span class="co">#&gt; ICL clustering with a MIXEDMODELS model, 4 clusters and an icl of -1514.</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/extractSubModel.html">extractSubModel</a></span><span class="op">(</span><span class="va">sol</span>, <span class="st">"work"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"blocks"</span><span class="op">)</span></code></pre></div>
+<p><img src="SBM_files/figure-html/unnamed-chunk-24-1.png" width="70%"></p>
+</div>
 </div>
   </div>
 
