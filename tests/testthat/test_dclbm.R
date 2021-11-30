@@ -12,12 +12,16 @@ test_that("DcLBM hybrid", {
   mm <- rlbm(1000, 800, rep(1 / 4, 4), rep(1 / 8, 8), mu)
   model <- DcLbm()
   data <- greed:::preprocess(model, mm$x)
-  i <- sample(200, 1)
-  oldcl <- mm$clr[i]
-  newcl <- sample(setdiff(1:mm$Kr, oldcl), 1)
+  i <- sample(800, 1)
+  oldcl <- mm$clc[i]+mm$Kr
+  oldcl
+  newcl <- sample(setdiff(mm$Kr+(1:mm$Kc), oldcl), 1)
+  newcl
   cl <- c(mm$clr, mm$clc + max(mm$clr))
-  expect_lte(greed:::test_swap(model, data, cl, i, newcl), 10^-6)
+  expect_lte(greed:::test_swap(model, data, cl, 1000+i, newcl), 10^-6)
   expect_lte(greed:::test_merge(model, data, cl, oldcl, newcl), 10^-6)
+  cor_dif_mat = greed:::test_merge_correction(model, data, cl, oldcl, newcl)
+  expect_lte(max(abs(cor_dif_mat[!is.nan(cor_dif_mat)])),10^-3)
 })
 
 test_that("COSBM seed", {

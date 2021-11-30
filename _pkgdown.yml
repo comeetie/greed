@@ -19,8 +19,10 @@ navbar:
       menu:
       - text: "Graph clustering"
         href: articles/SBM.html
-      - text: "Gaussian Mixture Models Clustering"
+      - text: "Gaussian Mixture Models"
         href: articles/GMM.html
+      - text: "Mixture of Regressions"
+        href: articles/MoR.html
       - text: "Latent Class Analysis"
         href: articles/LCA.html
       - text: "Mixed Models"

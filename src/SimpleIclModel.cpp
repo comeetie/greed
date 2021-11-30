@@ -187,7 +187,7 @@ double SimpleIclModel::delta_merge_correction(int k,int l,int obk,int obl,const 
 }
 
 
-double SimpleIclModel::delta_merge_correction_prop(const List & old_stats){
+double SimpleIclModel::delta_merge_correction_prop(int k,int l,int obk,int obl,const List & old_stats){
   int Kold = K+1;
   double cor_prop = lgamma((Kold-2)*alpha)-2*lgamma((Kold-1)*alpha)+lgamma(Kold*alpha)+2*lgamma((Kold-1)*alpha+N)-lgamma((Kold-2)*alpha+N)-lgamma(Kold*alpha+N);
   return cor_prop;

@@ -37,6 +37,8 @@ public:
   virtual void merge_update(const int k,const int l){};
   // compute correction if needed to merge matrix
   virtual double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats){return 0;};
+  // compute correction if needed to merge matrix
+  virtual double delta_merge_correction_prop(int k,int l,int obk,int obl,const List & old_stats){return 0;};
   // methods  to compute merge matrix deltas 
   virtual double delta_merge_correction_prop(const List & old_stats){return 0;};
   MergeMat delta_merge();

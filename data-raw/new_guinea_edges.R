@@ -13,6 +13,9 @@ net[cbind(edges_pos$source, edges_pos$target, 2)] <- 1
 net[cbind(edges_pos$target, edges_pos$source, 2)] <- 1
 net[, , 3] <- 1 - colSums(aperm(net, c(3, 1, 2)), 1)
 
+
+NewGuinea = net
+
 library(greed)
 
 sol <- greed(net, K = 5)

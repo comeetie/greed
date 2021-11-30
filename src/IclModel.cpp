@@ -226,7 +226,6 @@ MergeMat IclModel::delta_merge(arma::mat delta, int obk, int obl, const List & o
   delta = delta(arma::find(arma::linspace(0,K,K+1)!=obk),arma::find(arma::linspace(0,K,K+1)!=obk));
   int bk = 0;
   int bl = 0;
-  double cor_prop = this->delta_merge_correction_prop(old_stats);
   double bv = -std::numeric_limits<double>::infinity();
   for(int k = 1; k < K; ++k) {
     for (int l = 0;l<k;++l){
@@ -235,7 +234,7 @@ MergeMat IclModel::delta_merge(arma::mat delta, int obk, int obl, const List & o
       }else{
         //Rcout << k <<" : " <<l << " - " << obk <<" : " << obl <<std::endl;
         //Rcout << delta(k,l) << std::endl;
-        delta(k,l)=delta(k,l)+cor_prop+this->delta_merge_correction(k,l,obk,obl,old_stats);
+        delta(k,l)=delta(k,l)+this->delta_merge_correction_prop(k,l,obk,obl,old_stats)+this->delta_merge_correction(k,l,obk,obl,old_stats);
         //Rcout << delta(k,l) << std::endl;
       }
       if(delta(k,l)>bv){
@@ -291,7 +290,6 @@ SpMergeMat IclModel::delta_merge(arma::sp_mat & merge_graph, int obk, int obl,co
   int bk = 0;
   int bl = 0;
   int k,l;
-  double cor_prop = this->delta_merge_correction_prop(old_stats);
   double bv = -std::numeric_limits<double>::infinity();
   arma::sp_mat::iterator i = delta.begin();
   arma::sp_mat::iterator end = delta.end();
@@ -302,7 +300,7 @@ SpMergeMat IclModel::delta_merge(arma::sp_mat & merge_graph, int obk, int obl,co
       if((k == obl) | (l == obl)){
         delta(k,l)=this->delta_merge(k,l);
       }else{
-        delta(k,l)=delta(k,l)+cor_prop+this->delta_merge_correction(k,l,obk,obl,old_stats);
+        delta(k,l)=delta(k,l)+this->delta_merge_correction_prop(k,l,obk,obl,old_stats)+this->delta_merge_correction(k,l,obk,obl,old_stats);
       }
       delta(l,k)=delta(k,l);
 

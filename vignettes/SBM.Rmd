@@ -24,6 +24,7 @@ library(future)
 library(Matrix)
 library(ggplot2)
 library(greed)
+library(ggpubr)
 ```
 
 ## Introduction, Sbm like models
@@ -38,7 +39,8 @@ pi=rep(1/K,K)
 lambda  = 0.1
 lambda_o = 0.01
 Ks=3
-mu = bdiag(lapply(1:(K/Ks), function(k){matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
+mu = bdiag(lapply(1:(K/Ks), function(k){
+  matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
 sbm = rsbm(N,pi,mu)
 ```
 
@@ -47,6 +49,13 @@ Perform the clustering with default  algorithm. We specify to choose an sbm mode
 ```{r}
 sol = greed(sbm$x,model = Sbm())
 ```
+
+Look at the parameters estimate:
+
+```{r}
+coef(sol)
+```
+
 Plot the results using a block representation.
 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
@@ -81,15 +90,97 @@ sol2 = cut(sol,2)
 plot(sol2,type='blocks')
 ```
 
-##
-
+We may try with a dcsbm simulation and compare models with and without degree correction:
 
 ```{r}
-data(Blogs)
-sol_dcsbm = greed(Blogs$X,model = DcSbm())
-sol_sbm = greed(Blogs$X,model = Sbm())
+sim_dcsbm <- rdcsbm(N,pi,mu,round(rexp(N,1/15)),round(rexp(N,1/15)))
+X <- sim_dcsbm$x
+X[X>1] <- 1
+sol_dcsbm <- greed(X,model = DcSbm())
+sol_dcsbm
+sol_sbm <- greed(X,model = Sbm())
+sol_sbm
+```
+
+As expected the degree corrected version did a better job as the ICL's suggest. Without degree correction the model has to use more groups to fit the degree heterogeneity. 
+
+## Some simple real data, the books dataset
+
+```{r}
+data(Books)
+sol_dcsbm = greed(Books$X,model = DcSbm())
+sol_dcsbm
+sol_sbm = greed(Books$X,model = Sbm())
+sol_sbm
+```
+
+The network as been well recognized as an undirected graph. We may look at the fitted model prior to check:
+
+```{r}
+prior(sol_dcsbm)
+```
+
+For this dataset the model without degree correction seem's to reach a better solution than its concurrent.
+
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+bl_sbm = plot(sol_sbm,type='blocks')
+bl_dcsbm = plot(sol_dcsbm,type='blocks')
+ggarrange(bl_sbm,bl_dcsbm)
+```
+
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+plot(sol_sbm,type='tree')
 ```
 
 
+```{r}
+sol_sbm_k3 = cut(sol_sbm,3)
+table(clustering(sol_sbm_k3),Books$label)
+```
+
+## Multinomial SBM, layered networks 
+
+#### Newguinea dataset
+```{r}
+data("NewGuinea")
+dim(NewGuinea)
+```
+
+```{r}
+sol_newguinea = greed(NewGuinea,model=MultSbm())
+```
+
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+plot(sol_newguinea,type='blocks')
+```
+
+```{r}
+mod <- MixedModels(list(pos = DcSbmPrior(), neg = DcSbmPrior()))
+data <- list(pos = NewGuinea[, , 2], neg = NewGuinea[, , 1])
+sol_bidcsbm <- greed(data, model = mod, K = 5)
+```
+
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+bl_pos = plot(extractSubModel(sol_bidcsbm,"pos"),type="blocks")
+bl_neg = plot(extractSubModel(sol_bidcsbm,"neg"),type="blocks")
+ggarrange(bl_pos,bl_neg)
+```
 
 
+#### 7th grade dataset
+
+
+```{r}
+data("SevenGraders")
+dim(SevenGraders)
+```
+
+```{r}
+mod <- MixedModels(list(class = DcSbmPrior(), friends = DcSbmPrior(), work = DcSbmPrior()))
+data <- list(class = SevenGraders[, , 1], friends = SevenGraders[, , 2], work = SevenGraders[, , 3])
+sol <- greed(data, model = mod, K = 5)
+```
+
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+plot(extractSubModel(sol, "work"), type = "blocks")
+```

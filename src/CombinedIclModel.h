@@ -25,7 +25,7 @@ public:
   void swap_update(int i, int newcl);
   double delta_merge(int k, int l);
   double delta_merge_correction(int k,int l,int obk,int obl,const List & old_stats);
-  double delta_merge_correction_prop(const List & old_stats);
+  double delta_merge_correction_prop(int k,int l,int obk,int obl,const List & old_stats);
   void merge_update(int k, int l);
   List get_obs_stats();
   S4 get_model();
