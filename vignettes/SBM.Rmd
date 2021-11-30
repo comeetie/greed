@@ -181,9 +181,10 @@ edges = rbind(enemies,friends)
 graph = tbl_graph(edges=edges,nodes=data.frame(id=1:16,cluster=factor(clustering(sol_newguinea))))                          
                           
 # plot using ggraph
-ggraph(graph, layout = 'kk') + 
-    geom_edge_link(aes(color=relation)) + 
-    geom_node_point(aes(shape=cluster,size=5))
+ggraph(graph, layout = 'kk', weights = if_else(relation=="friends",1,0)) + 
+    geom_edge_link(aes(color=relation),width=1.2) + 
+    scale_edge_color_manual(values = c("friend"="#229922","enemy"="#992222"))+
+    geom_node_point(aes(shape=cluster),size=5)
 
 ```
 

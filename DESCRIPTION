@@ -37,7 +37,8 @@ Suggests:
     ggwordcloud,
     flexmix,
     igraph,
-    tidygraph
+    tidygraph,
+    ggraph
 Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
