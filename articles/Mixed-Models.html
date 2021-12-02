@@ -143,8 +143,8 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Fifa</span><span class="op">)</span>
 <span class="va">X</span> <span class="op">&lt;-</span> <span class="va">Fifa</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">value_eur</span><span class="op">&gt;</span><span class="fl">3000000</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">value_eur</span>,<span class="op">-</span><span class="va">GK</span><span class="op">)</span></code></pre></div>
-<p>This leave us with a dataset of <span class="math inline">\(n=3345\)</span> rows and <span class="math inline">\(p=26\)</span> columns. The features correspond to players characteristics (age,height,weight), skills scores (pace,shooting,…) and a set of binary factors that describe the field position were the players may be aligned.</p>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">value_eur</span>,<span class="op">-</span><span class="va">GK</span>,<span class="op">-</span><span class="va">pos_x</span>,<span class="op">-</span><span class="va">pos_y</span><span class="op">)</span></code></pre></div>
+<p>This leave us with a dataset of <span class="math inline">\(n=3345\)</span> rows and <span class="math inline">\(p=24\)</span> columns. The features correspond to players characteristics (age,height,weight), skills scores (pace,shooting,…) and a set of binary factors that describe the field position were the players may be aligned.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>
 <span class="co">#&gt;  preferred_foot      age          height_cm       weight_kg     </span>
@@ -181,14 +181,7 @@
 <span class="co">#&gt;                                                                  </span>
 <span class="co">#&gt;                                                                  </span>
 <span class="co">#&gt;                                                                  </span>
-<span class="co">#&gt;                                                                  </span>
-<span class="co">#&gt;      pos_y            pos_x       </span>
-<span class="co">#&gt;  Min.   : 9.235   Min.   : 53.60  </span>
-<span class="co">#&gt;  1st Qu.:38.889   1st Qu.: 61.02  </span>
-<span class="co">#&gt;  Median :52.670   Median :102.08  </span>
-<span class="co">#&gt;  Mean   :50.279   Mean   : 99.51  </span>
-<span class="co">#&gt;  3rd Qu.:57.708   3rd Qu.:115.10  </span>
-<span class="co">#&gt;  Max.   :89.262   Max.   :161.20</span></code></pre></div>
+<span class="co">#&gt; </span></code></pre></div>
 <p>Preparing the data and the model is a little bit complicated than for the other models since we must specify the different models we want to use:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span>
@@ -202,16 +195,16 @@
 <span class="co"># perform the clustering</span>
 <span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">data</span>,model <span class="op">=</span> <span class="va">mixmod</span><span class="op">)</span>
 <span class="co">#&gt; ------- MIXEDMODELS model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -126356 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -125063 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -123837 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -123675 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -123596 and 14 clusters #################</span>
-<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -123389 and 15 clusters #################</span>
-<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -123238 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -123238 and 16 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -107151 and 9 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -107109 and 9 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -107081 and 8 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -107038 and 7 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -107036 and 7 clusters #################</span>
+<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -107034 and 7 clusters #################</span>
+<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -107033 and 7 clusters #################</span>
+<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -107033 and 7 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a MIXEDMODELS model, 15 clusters and an icl of -123226.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a MIXEDMODELS model, 7 clusters and an icl of -107033.</span></code></pre></div>
 <p>When the model is fitted the <code><a href="../reference/extractSubModel.html">extractSubModel()</a></code> function allow to retrieve the fitted sub-models, and use the plotting capabilities of each of them. We may for example look at the categorical part of the model and make a <code>marginals</code> plot. We see with this figure that the clusters found agree quite strongly with the field positions features. The preferred foot feature has also an impact on cluster 2 and 3.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/extractSubModel.html">extractSubModel</a></span><span class="op">(</span><span class="va">sol</span>,<span class="st">"categorical"</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"marginals"</span><span class="op">)</span></code></pre></div>

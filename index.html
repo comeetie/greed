@@ -99,6 +99,7 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+
 <div id="greed--bayesian-greedy-clustering" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#greed--bayesian-greedy-clustering" class="anchor"></a>GREED : Bayesian greedy clustering</h1></div>
@@ -109,7 +110,7 @@
 <p>The following generative models are available currently :</p>
 <ul>
 <li>
-<strong>Stochastic Block Models</strong> (see `<code>?</code>Sbm-class` ),</li>
+<strong>Stochastic Block Models</strong> (see <code><a href="reference/SbmPrior-class.html">?`Sbm-class`</a></code>),</li>
 <li>
 <strong>Degree Corrected Stochastic Block Models</strong> (see <code><a href="reference/DcSbmPrior-class.html">?`DcSbm-class`</a></code>),</li>
 <li>
@@ -141,52 +142,101 @@
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p>The main entry point for using the package is simply the greed function (<code><a href="reference/greed.html">?greed</a></code>). The generative model will be chosen automatically to fit with the data provided, but you may specify another choice with the model parameter. This is a basic example with the classical Jazz network:</p>
+<p>The main entry point for using the package is simply the greed function (<code><a href="reference/greed.html">?greed</a></code>). The generative model will be chosen automatically to fit with the data provided, but you may specify another choice with the model parameter. This is a basic example with the classical Football network:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/">greed</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Jazz</span><span class="op">)</span>
-<span class="va">sol</span><span class="op">=</span><span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Jazz</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Books</span><span class="op">)</span>
+<span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess DCSBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -5987 and 13 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -5960 and 13 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -5959 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -5949 and 14 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -5949 and 14 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -1356 and 5 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -1346 and 4 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -1346 and 4 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 13 clusters and an icl of -5945.</span></code></pre></div>
-<p>Here Jazz is a square sparse matrix and a <code><a href="reference/DcSbmPrior-class.html">?`DcSbm-class`</a></code> model will be used by default. Some plotting function enable the exploration of the clustering results:</p>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 3 clusters and an icl of -1345.</span></code></pre></div>
+<p>You may specify the model you want to use and set the priors paramaters with the (model argument), the optimization algorithm (alg argument) and the initial number of cluster K. Here football is a square sparse matrix and a graph clustering <code><a href="reference/DcSbmPrior-class.html">?`DcSbm-class`</a></code> model will be used by default, and the Hybrid genetic algorithm greed used.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="reference/SbmPrior-class.html">Sbm</a></span><span class="op">(</span><span class="op">)</span>,alg<span class="op">=</span><span class="fu"><a href="reference/Seed-class.html">Seed</a></span><span class="op">(</span><span class="op">)</span>,K<span class="op">=</span><span class="fl">10</span><span class="op">)</span>
+<span class="co">#&gt; ------- guess SBM model fitting ------</span>
+<span class="co">#&gt; ------- Final clustering -------</span>
+<span class="co">#&gt; ICL clustering with a SBM model, 5 clusters and an icl of -1255.</span></code></pre></div>
+<p>Some plotting function enable the exploration of the clustering results, the hierarchical structure between clusters:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/plot-1.png" width="60%"></p>
-<p>And the hierarchical structure between clusters:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/tree-1.png" width="60%"></p>
-<p>Eventually, one may explore some coarser clustering using the cut function:</p>
+<p>Or a summary représentation of the adjacency matrix:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">sol</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/cut-1.png" width="60%"></p>
-<p>For large datasets, it is possible to use parallelism to speed-up the computation thanks to the <a href="https://github.com/HenrikBengtsson/future">future</a> package. You only need to specify the type of backend you want to use.</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/tree-1.png" width="60%"></p>
+<p>You may extract the model fitted parameters with the <code><a href="https://rdrr.io/r/stats/coef.html">?coef</a></code> function, the clustering with the <code><a href="reference/clustering.html">?clustering</a></code> function, the value of ICL with <code><a href="reference/ICL.html">?ICL</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/ICL.html">ICL</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
+<span class="co">#&gt; [1] -1255.164</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
+<span class="co">#&gt; $pi</span>
+<span class="co">#&gt; [1] 0.07619048 0.31428571 0.18095238 0.37142857 0.05714286</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $thetakl</span>
+<span class="co">#&gt;             [,1]        [,2]        [,3]        [,4]       [,5]</span>
+<span class="co">#&gt; [1,] 0.821428571 0.367424242 0.065789474 0.003205128 0.00000000</span>
+<span class="co">#&gt; [2,] 0.367424242 0.106060606 0.006379585 0.003885004 0.00000000</span>
+<span class="co">#&gt; [3,] 0.065789474 0.006379585 0.251461988 0.016194332 0.04385965</span>
+<span class="co">#&gt; [4,] 0.003205128 0.003885004 0.016194332 0.099865047 0.42735043</span>
+<span class="co">#&gt; [5,] 0.000000000 0.000000000 0.043859649 0.427350427 0.73333333</span>
+<span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  1  2  3  4  5 </span>
+<span class="co">#&gt;  8 33 19 39  6</span></code></pre></div>
+<p>Eventually, one may explore some coarser clustering using the cut function:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">sol</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/cut-1.png" width="60%"></p>
+<p>For large datasets, it is possible to use parallelism to speed-up the computation thanks to the <a href="https://github.com/HenrikBengtsson/future">future</a> package. You only need to specify the type of backend you want to use, before calling the <code><a href="reference/greed.html">?greed</a></code> function:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span>
-<span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"Blogs"</span><span class="op">)</span>
-<span class="va">sol</span><span class="op">=</span><span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Blogs</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>
-<span class="co">#&gt; ------- guess DCSBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -61221 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -61078 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -61018 and 17 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -60950 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -60901 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -60883 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -60853 and 18 clusters #################</span>
-<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -60853 and 18 clusters #################</span>
+<span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+<div id="classical-clustering-gmm" class="section level1">
+<h1 class="hasAnchor">
+<a href="#classical-clustering-gmm" class="anchor"></a>Classical clustering, GMM</h1>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"diabetes"</span>,package <span class="op">=</span> <span class="st">"mclust"</span><span class="op">)</span>
+<span class="va">X</span> <span class="op">&lt;-</span> <span class="va">diabetes</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>
+<span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="reference/GmmPrior-class.html">Gmm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; ------- GMM model fitting ------</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -2419 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -2402 and 5 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -2401 and 4 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -2396 and 4 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -2396 and 4 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 17 clusters and an icl of -60836.</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/future-1.png" width="60%"></p>
+<span class="co">#&gt; ICL clustering with a GMM model, 3 clusters and an icl of -2395.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt;           </span>
+<span class="co">#&gt;             1  2  3</span>
+<span class="co">#&gt;   Chemical  1 24 11</span>
+<span class="co">#&gt;   Normal    0  2 74</span>
+<span class="co">#&gt;   Overt    27  6  0</span>
+<span class="fu"><a href="reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">sol</span>,<span class="va">X</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/diabetes-gmm-1.png" width="90%"></p>
 </div>
+<div id="questionnary-and-item-response-theory-datasets-lca" class="section level1">
+<h1 class="hasAnchor">
+<a href="#questionnary-and-item-response-theory-datasets-lca" class="anchor"></a>Questionnary and item response theory datasets, LCA</h1>
 </div>
+<div id="graphs-sbm-like-models" class="section level1">
+<h1 class="hasAnchor">
+<a href="#graphs-sbm-like-models" class="anchor"></a>Graphs, SBM like models</h1>
+</div>
+<div id="mixture-of-regression" class="section level1">
+<h1 class="hasAnchor">
+<a href="#mixture-of-regression" class="anchor"></a>Mixture of Regression</h1>
+</div>
+<div id="advanced-models" class="section level1">
+<h1 class="hasAnchor">
+<a href="#advanced-models" class="anchor"></a>Advanced models</h1>
+</div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

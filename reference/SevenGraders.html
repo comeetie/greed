@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generic method to extract the prior used to fit IclFit-class object — prior • greed</title>
+<title>SevenGraders data — SevenGraders • greed</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Generic method to extract the prior used to fit IclFit-class object — prior" />
-<meta property="og:description" content="This method take a IclFit-class object and return the prior used." />
+<meta property="og:title" content="SevenGraders data — SevenGraders" />
+<meta property="og:description" content="SevenGraders A small multiplex network of friendships among 29 seventh grade students in Victoria, Australia. Students nominated classmates for three different activities (who do you get on with in the class, who are your best friends, and who would you prefer to work with). Edge direction for each of these three types of edges indicates if node i nominated node j, and the edge weight gives the frequency of this nomination. Students 1-12 are boys and 13-29 are girls. The KONECT version of this network is the collapse of de Domenico's multiplex version." />
 
 
 
@@ -141,30 +141,31 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generic method to extract the prior used to fit <code><a href='IclFit-class.html'>IclFit-class</a></code> object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/alg_classes.R'><code>R/alg_classes.R</code></a></small>
-    <div class="hidden name"><code>prior.Rd</code></div>
+    <h1>SevenGraders data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>SevenGraders.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This method take a <code><a href='IclFit-class.html'>IclFit-class</a></code> object and return the prior used.</p>
+    <p><code>SevenGraders</code> A small multiplex network of friendships among 29 seventh grade students in Victoria, Australia. Students nominated classmates for three different activities (who do you get on with in the class, who are your best friends, and who would you prefer to work with). Edge direction for each of these three types of edges indicates if node i nominated node j, and the edge weight gives the frequency of this nomination. Students 1-12 are boys and 13-29 are girls. The KONECT version of this network is the collapse of de Domenico's multiplex version.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prior</span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>SevenGraders</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>fit</th>
-      <td><p>an <code>IclFit</code> solution</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>An S4 object describing the prior parameters</p>
+    <p>A binary array of size (29,29,3) the first layer encodes work relation, the second, the friendship relations. The third, no relations between the two tribes.</p>
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
+    <p><a href='https://networks.skewed.de/net/7th_graders'>https://networks.skewed.de/net/7th_graders</a></p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>M. Vickers and S. Chan, "Representing Classroom Social Structure." Melbourne: Victoria Institute of Secondary Education, (1981).</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>SevenGraders</span><span class='op'>)</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
