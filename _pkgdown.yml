@@ -45,6 +45,7 @@ reference:
     - '`clustering,IclFit-method`'
     - '`ICL,IclFit-method`'
     - '`K,IclFit-method`'
+    - '`prior,IclFit-method`'    
     - '`coef,IclFit-method`'
     - '`show,IclFit-method`'
     - '`cut,IclPath-method`'

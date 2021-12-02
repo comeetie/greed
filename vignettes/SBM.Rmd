@@ -19,11 +19,12 @@ knitr::opts_chunk$set(
 
 
 Loads packages and set a future plan for parallel processing if you want.
-```{r}
+```{r,message=FALSE}
 library(future)
 library(Matrix)
 library(ggplot2)
 library(greed)
+library(dplyr)
 library(ggpubr)
 ```
 
@@ -188,6 +189,8 @@ ggraph(graph, layout = 'kk', weights = if_else(relation=="friends",1,0)) +
 
 ```
 
+
+
 ```{r}
 mod <- MixedModels(list(pos = DcSbmPrior(), neg = DcSbmPrior()))
 data <- list(pos = NewGuinea[, , 2], neg = NewGuinea[, , 1])
@@ -218,3 +221,8 @@ sol <- greed(data, model = mod, K = 5)
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(extractSubModel(sol, "work"), type = "blocks")
 ```
+
+## bi-partite graph
+
+
+

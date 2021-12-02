@@ -349,7 +349,7 @@
 #'
 #' @keywords datasets
 #'
-#' @source \url{https://}
+#' @source \urlhttps://networks.skewed.de/net/new_guinea_tribes}
 #'
 #' @examples
 #' data(NewGuinea)
@@ -363,7 +363,6 @@
 #' @usage data(SevenGraders)
 #'
 #' @format A binary array of size (29,29,3) the first layer encodes work relation, the second, the friendship relations. The third, no relations between the two tribes.
-#' @cite Kenneth E. Read, “Cultures of the Central Highlands, New Guinea”, Southwestern J. of Anthropology, 10(1):1-43 (1954). DOI: 10.1086/soutjanth.10.1.3629074
 #'
 #' @keywords datasets
 #'

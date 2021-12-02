@@ -30,7 +30,7 @@ a \code{MoR-class} object
 }
 \description{
 An S4 class to represent a multivariate mixture of regression model.
-The model follows \href{https://tminka.github.io/papers/minka-linear.pdf}{minka-linear} .
+The model follows [minka-linear](https://tminka.github.io/papers/minka-linear.pdf) .
 The model corresponds to the following generative model:
 \deqn{ \pi \sim Dirichlet(\alpha)}
 \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}

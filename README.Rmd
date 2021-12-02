@@ -121,6 +121,8 @@ gmmpairs(sol,X)
 
 # Questionnary and item response theory datasets, LCA
 
+
+
 # Graphs, SBM like models
 
 # Mixture of Regression

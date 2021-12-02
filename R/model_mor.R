@@ -20,7 +20,6 @@ NULL
 #' @slot epsilon Covariance matrix prior parameter (default to as.matrix(NaN), in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.)
 #' @slot N0 Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)
 #' @family DlvmModels
-#' @md
 #' @export
 setClass("MoRPrior",
   representation = list(formula = "formula", tau = "numeric", N0 = "numeric", epsilon = "matrix"),

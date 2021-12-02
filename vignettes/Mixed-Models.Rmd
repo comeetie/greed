@@ -38,7 +38,7 @@ We first load the Fifa dataset that correspond to several feature of Soccer play
 data(Fifa)
 X <- Fifa[,-c(1,2)] %>% 
   filter(value_eur>3000000) %>% 
-  select(-value_eur,-GK)
+  select(-value_eur,-GK,-pos_x,-pos_y)
 ```
 
 This leave us with a dataset of $n=`r nrow(X)`$ rows and $p=`r ncol(X)`$ columns. The features correspond to players characteristics (age,height,weight), skills scores (pace,shooting,...) and a set of binary factors that describe the field position were the players may be aligned.
