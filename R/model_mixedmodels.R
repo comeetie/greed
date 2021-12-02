@@ -162,7 +162,9 @@ setGeneric("extractSubModel", function(sol, sub_model_name) standardGeneric("ext
 #' @title extract a part of a \code{\link{MixedModelsPath-class}} object
 #'
 #' @param sol an \code{\link{MixedModelsPath-class}} object
-#' @param sub_model_name a string which specify the part of the model to extract
+#' @param sub_model_name a string which specify the part of the model to
+#'   extract. Note that the name must correspond to the one of the names used in
+#'   the list of models during the origin call to \code{\link{greed}}.
 #' @return a \code{\link{IclFit-class}} object of the relevant class
 #' @export
 setMethod(
