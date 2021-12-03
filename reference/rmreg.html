@@ -153,9 +153,9 @@
     <pre class="usage"><span class='fu'>rmreg</span><span class='op'>(</span>
   <span class='va'>N</span>,
   <span class='va'>pi</span>,
-  <span class='va'>mu</span>,
+  <span class='va'>A</span>,
   <span class='va'>sigma</span>,
-  X <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'>stats</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>N</span> <span class='op'>*</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>mu</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>N</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>mu</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='va'>N</span><span class='op'>)</span><span class='op'>)</span>
+  X <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='va'>N</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'>stats</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>N</span> <span class='op'>*</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>A</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>N</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>A</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -170,8 +170,8 @@
       <td><p>A numeric vector of length K with clusters proportions (must sum up to 1)</p></td>
     </tr>
     <tr>
-      <th>mu</th>
-      <td><p>A numeric matrix of dim K x d with the regression parameters</p></td>
+      <th>A</th>
+      <td><p>A numeric matrix of dim K x d with the regression coefficient</p></td>
     </tr>
     <tr>
       <th>sigma</th>
@@ -192,7 +192,7 @@
 <li><p>N: sample size</p></li>
 <li><p>cl: vector of clusters labels</p></li>
 <li><p>pi: clusters proportions</p></li>
-<li><p>mu: regression parameters</p></li>
+<li><p>A: regression coefficients used in the simulation</p></li>
 <li><p>sigma: conditional variance</p></li>
 </ul>
 
