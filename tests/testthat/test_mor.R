@@ -22,9 +22,9 @@ test_that("MoR simulation", {
 })
 
 
-test_that("MOR hybrid", {
-  regs <- rmreg(500, rep(1 / 3, 3), A = cbind(c(5, 1, -125), c(1, 20, 1), c(15, 100, 200)), sigma = 1)
-  df <- data.frame(x1 = regs$X[, 1], x2 = regs$X[, 2], y = regs$y)
+test_that("MOR internal function", {
+  regs <- rmreg(500, rep(1 / 3, 3), A = t(cbind(c(5, 1, -125), c(1, 20, 1), c(15, 100, 200))), sigma = 1)
+  df <- data.frame(x1 = regs$X[, 2], x2 = regs$X[, 3], y = regs$y)
   model <- MoR(y ~ x1 + x2)
   data <- greed:::preprocess(model, df)
   sol <- greed:::fit_greed(model, data, sample(1:3, 500, replace = TRUE), type = "none")
@@ -44,7 +44,7 @@ test_that("MOR hybrid", {
 
 test_that("MOR hybrid", {
   regs <- rmreg(500, rep(1 / 3, 3), A = cbind(c(5, 1, -125), c(1, 20, 1), c(15, 100, 200)), sigma = 1)
-  df <- data.frame(x1 = regs$X[, 1], x2 = regs$X[, 2], y = regs$y)
+  df <- data.frame(x1 = regs$X[, 2], x2 = regs$X[, 3], y = regs$y)
   model <- MoR(y ~ x1 + x2)
   sol <- greed(df, model)
   expect_equal(sol@K, 3)
@@ -63,7 +63,7 @@ test_that("MOR hybrid", {
 
 test_that("MOR seed", {
   regs <- rmreg(500, rep(1 / 3, 3), A = cbind(c(5, 1, -125), c(1, 20, 1), c(15, 100, 200)), sigma = 1)
-  df <- data.frame(x1 = regs$X[, 1], x2 = regs$X[, 2], y = regs$y)
+  df <- data.frame(x1 = regs$X[, 2], x2 = regs$X[, 3], y = regs$y)
   model <- MoR(y ~ x1 + x2)
   sol <- greed(df, model, alg = Seed())
   expect_equal(sol@K, 3)

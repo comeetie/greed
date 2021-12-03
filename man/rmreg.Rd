@@ -7,9 +7,9 @@
 rmreg(
   N,
   pi,
-  mu,
+  A,
   sigma,
-  X = cbind(matrix(stats::rnorm(N * (nrow(mu) - 1)), N, nrow(mu) - 1), rep(1, N))
+  X = cbind(rep(1, N), matrix(stats::rnorm(N * (ncol(A) - 1)), N, ncol(A) - 1))
 )
 }
 \arguments{
@@ -17,7 +17,7 @@ rmreg(
 
 \item{pi}{A numeric vector of length K with clusters proportions (must sum up to 1)}
 
-\item{mu}{A numeric matrix of dim K x d with the regression parameters}
+\item{A}{A numeric matrix of dim K x d with the regression coefficient}
 
 \item{sigma}{A numeric of length 1 with the target conditional variance}
 
@@ -32,7 +32,7 @@ A list with fields:
 \item N: sample size
 \item cl: vector of clusters labels
 \item pi: clusters proportions
-\item mu: regression parameters
+\item A: regression coefficients used in the simulation
 \item sigma: conditional variance
 }
 }
