@@ -152,7 +152,7 @@ rdcsbm <- function(N, pi, mu, betain, betaout) {
 #'
 #' @param N A numeric value the size of the graph to generate
 #' @param pi A numeric vector of length K with clusters proportions (must sum up to 1)
-#' @param mu A numeric matrix of dim K x d with the regression parameters
+#' @param A A numeric matrix of dim K x d with the regression coefficient
 #' @param sigma A numeric of length 1 with the target conditional variance
 #' @param X A matrix of covariate
 #' @return A list with fields:
@@ -163,16 +163,16 @@ rdcsbm <- function(N, pi, mu, betain, betaout) {
 #' \item N: sample size
 #' \item cl: vector of clusters labels
 #' \item pi: clusters proportions
-#' \item mu: regression parameters
+#' \item A: regression coefficients used in the simulation
 #' \item sigma: conditional variance
 #' }
 #' @export
-rmreg <- function(N, pi, mu, sigma, X = cbind(matrix(stats::rnorm(N * (nrow(mu) - 1)), N, nrow(mu) - 1), rep(1, N))) {
+rmreg <- function(N, pi, A, sigma, X = cbind(rep(1, N), matrix(stats::rnorm(N * (ncol(A) - 1)), N, ncol(A) - 1))) {
   K <- length(pi)
   cl <- sample(1:K, N, replace = TRUE, prob = pi)
-  yt <- X %*% mu + stats::rnorm(N, 0, sigma)
+  yt <- X %*% t(A) + stats::rnorm(N, 0, sigma)
   y <- yt[cbind(1:N, cl)]
-  list(cl = cl, X = X, y = y, K = K, N = N, pi = pi, mu = mu, sigma = sigma)
+  list(cl = cl, X = X, y = y, K = K, N = N, pi = pi, A = A, sigma = sigma)
 }
 
 #' Generate a graph adjacency matrix using a Stochastic Block Model

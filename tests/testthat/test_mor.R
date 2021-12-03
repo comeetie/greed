@@ -5,10 +5,26 @@ library(ggplot2)
 set.seed(1234)
 
 
+test_that("MoR simulation", {
+  # test with K != m (4!=3)
+  N=500
+  K=4
+  pi=rep(1 / K, K)
+  A = cbind(c(5, 1, -125, -10), c(1, 20, 1, 120), c(15, 100, 200, 1e3))
+  sigma = 1
+  X = cbind(rep(1, N), matrix(stats::rnorm(N * (ncol(A) - 1)), N, ncol(A) - 1))
+  
+  regs <- rmreg(N=N, pi=pi, A = A, sigma=sigma, X=X)
+  expect_equal(length(regs$y), N)
+  
+  regs_defaultX <- rmreg(N=N, pi=pi, A = A, sigma=sigma)
+  expect_equal(length(regs$y), N)
+})
 
-test_that("MOR hybrid", {
-  regs <- rmreg(500, rep(1 / 3, 3), mu = cbind(c(5, 1, -125), c(1, 20, 1), c(15, 100, 200)), sigma = 1)
-  df <- data.frame(x1 = regs$X[, 1], x2 = regs$X[, 2], y = regs$y)
+
+test_that("MOR internal function", {
+  regs <- rmreg(500, rep(1 / 3, 3), A = t(cbind(c(5, 1, -125), c(1, 20, 1), c(15, 100, 200))), sigma = 1)
+  df <- data.frame(x1 = regs$X[, 2], x2 = regs$X[, 3], y = regs$y)
   model <- MoR(y ~ x1 + x2)
   data <- greed:::preprocess(model, df)
   sol <- greed:::fit_greed(model, data, sample(1:3, 500, replace = TRUE), type = "none")
@@ -27,8 +43,8 @@ test_that("MOR hybrid", {
 })
 
 test_that("MOR hybrid", {
-  regs <- rmreg(500, rep(1 / 3, 3), mu = cbind(c(5, 1, -125), c(1, 20, 1), c(15, 100, 200)), sigma = 1)
-  df <- data.frame(x1 = regs$X[, 1], x2 = regs$X[, 2], y = regs$y)
+  regs <- rmreg(500, rep(1 / 3, 3), A = cbind(c(5, 1, -125), c(1, 20, 1), c(15, 100, 200)), sigma = 1)
+  df <- data.frame(x1 = regs$X[, 2], x2 = regs$X[, 3], y = regs$y)
   model <- MoR(y ~ x1 + x2)
   sol <- greed(df, model)
   expect_equal(sol@K, 3)
@@ -46,8 +62,8 @@ test_that("MOR hybrid", {
 
 
 test_that("MOR seed", {
-  regs <- rmreg(500, rep(1 / 3, 3), mu = cbind(c(5, 1, -125), c(1, 20, 1), c(15, 100, 200)), sigma = 1)
-  df <- data.frame(x1 = regs$X[, 1], x2 = regs$X[, 2], y = regs$y)
+  regs <- rmreg(500, rep(1 / 3, 3), A = cbind(c(5, 1, -125), c(1, 20, 1), c(15, 100, 200)), sigma = 1)
+  df <- data.frame(x1 = regs$X[, 2], x2 = regs$X[, 3], y = regs$y)
   model <- MoR(y ~ x1 + x2)
   sol <- greed(df, model, alg = Seed())
   expect_equal(sol@K, 3)

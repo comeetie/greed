@@ -9,7 +9,9 @@
 \arguments{
 \item{sol}{an \code{\link{MixedModelsPath-class}} object}
 
-\item{sub_model_name}{a string which specify the part of the model to extract}
+\item{sub_model_name}{a string which specify the part of the model to
+extract. Note that the name must correspond to the one of the names used in
+the list of models during the origin call to \code{\link{greed}}.}
 }
 \value{
 a \code{\link{IclFit-class}} object of the relevant class
