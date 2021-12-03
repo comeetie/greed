@@ -16,7 +16,11 @@ NULL
 #' These parameters have uniform priors over simplex \eqn{S_k}.
 #' These classes mainly store the prior parameters value \eqn{\alpha,p} of this generative model.
 #' The \code{DcLbm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DcLbmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
-#' @slot p Exponential prior parameter (default to Nan, in this case p will be estimated from data as the average intensities of X)
+#' @name DcLbm
+NULL
+#> NULL
+
+#' @rdname DcLbm
 #' @family DlvmModels
 #' @export
 setClass("DcLbmPrior",
@@ -24,16 +28,16 @@ setClass("DcLbmPrior",
   prototype(p = NaN)
 )
 
-#' @describeIn DcLbmPrior-class DcLbm class constructor
-#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @rdname DcLbm
 #' @export
 setClass("DcLbm",
   contains = c("DlvmCoPrior", "DcLbmPrior")
 )
 
-#' @describeIn DcLbmPrior-class DcLbmPrior class constructor
+#' @rdname DcLbm
 #' @param p Exponential prior parameter (default to Nan, in this case p will be estimated from data as the average intensities of X)
 #' @return a \code{DcLbmPrior-class}
+#' @seealso \code{\link{DcLbmFit-class}}, \code{\link{DcLbmPath-class}}
 #' @examples
 #' DcLbmPrior()
 #' DcLbmPrior(p = 0.7)
@@ -44,7 +48,7 @@ DcLbmPrior <- function(p = NaN) {
 
 
 
-#' @describeIn DcLbmPrior-class DcLbm class constructor
+#' @rdname DcLbm
 #' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @return a \code{DcLbm-class} object
 #' @examples
@@ -80,6 +84,7 @@ DcLbm <- function(alpha = 1, p = NaN) {
 #' @slot Ncol number of columns
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{coef,DcLbmFit-method}}
 #' @export
 setClass("DcLbmFit", slots = list(model = "DcLbm", clrow = "numeric", clcol = "numeric", Krow = "numeric", Kcol = "numeric", Nrow = "numeric", Ncol = "numeric"), contains = "IclFit")
 
@@ -132,6 +137,7 @@ setClass("DcLbmFit", slots = list(model = "DcLbm", clrow = "numeric", clcol = "n
 #' @slot ggtreerow data.frame with complete merge tree of row clusters for easy plotting with \code{ggplot2}
 #' @slot ggtreecol data.frame with complete merge tree of column clusters for easy plotting with \code{ggplot2}
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{plot,DcLbmPath,missing-method}}
 #' @export
 setClass("DcLbmPath", slots = list(ggtreerow = "data.frame", ggtreecol = "data.frame"), contains = c("IclPath", "DcLbmFit"))
 

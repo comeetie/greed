@@ -31,3 +31,6 @@ An S4 class to represent a fit of a Stochastic Block Model, extend \code{\link{I
 \item{\code{train_hist}}{data.frame with training history information (details depends on the training procedure)}
 }}
 
+\seealso{
+\code{\link{coef,SbmFit-method}}
+}

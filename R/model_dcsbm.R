@@ -15,8 +15,11 @@ NULL
 #' These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i:z_{ik}=1}\gamma_i^+=1}.
 #' These classes mainly store the prior parameters value \eqn{\alpha,p} of this generative model.
 #' The \code{DcSbm-class} must be used when fitting a simple Degree Corrected Stochastic Block Model whereas the \code{DcSbmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
-#' @slot p Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)
-#' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
+#' @name DcSbm
+NULL
+#> NULL
+
+#' @rdname DcSbm
 #' @family DlvmModels
 #' @export
 setClass("DcSbmPrior",
@@ -38,18 +41,18 @@ setValidity("DcSbmPrior", function(object) {
   TRUE
 })
 
-#' @describeIn DcSbmPrior-class DcSbm class constructor
-#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @rdname DcSbm
 #' @export
 setClass("DcSbm",
   contains = c("DlvmPrior", "DcSbmPrior")
 )
 
 
-#' @describeIn DcSbmPrior-class DcSbmPrior class constructor
+#' @rdname DcSbm
 #' @param p Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)
 #' @param type define the type of networks (either "directed", "undirected" or "guess", default to "guess")
 #' @return a \code{DcSbmPrior-class} object
+#' @seealso \code{\link{DcSbmFit-class}}, \code{\link{DcSbmPath-class}}
 #' @examples
 #' DcSbmPrior()
 #' DcSbmPrior(type = "undirected")
@@ -59,7 +62,7 @@ DcSbmPrior <- function(p = NaN, type = "guess") {
 }
 
 
-#' @describeIn DcSbmPrior-class DcSbm class constructor
+#' @rdname DcSbm
 #' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @return a \code{DcSbm-class} object
 #' @examples
@@ -95,6 +98,7 @@ DcSbm <- function(alpha = 1, p = NaN, type = "guess") {
 #' }
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{coef,DcSbmFit-method}}
 #' @export
 setClass("DcSbmFit", slots = list(model = "DcSbm"), contains = "IclFit")
 
@@ -138,6 +142,7 @@ setClass("DcSbmFit", slots = list(model = "DcSbm"), contains = "IclFit")
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{plot,DcSbmFit,missing-method}}
 #' @export
 setClass("DcSbmPath", contains = c("IclPath", "DcSbmFit"))
 

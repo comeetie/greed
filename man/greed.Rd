@@ -34,16 +34,16 @@ provides sampling functions for all the implemented DLVMs
 }
 \seealso{
 Other DlvmModels: 
-\code{\link{DcLbmPrior-class}},
-\code{\link{DcSbmPrior-class}},
-\code{\link{DiagGmmPrior-class}},
+\code{\link{DcLbm}},
+\code{\link{DcSbm}},
+\code{\link{DiagGmm}},
 \code{\link{DlvmPrior-class}},
-\code{\link{GmmPrior-class}},
-\code{\link{LcaPrior-class}},
-\code{\link{MixedModels-class}},
-\code{\link{MoMPrior-class}},
-\code{\link{MoRPrior-class}},
-\code{\link{MultSbmPrior-class}},
-\code{\link{SbmPrior-class}}
+\code{\link{Gmm}},
+\code{\link{Lca}},
+\code{\link{MixedModels}},
+\code{\link{MoM}},
+\code{\link{MoR}},
+\code{\link{MultSbm}},
+\code{\link{Sbm}}
 }
 \concept{DlvmModels}

@@ -15,10 +15,11 @@ NULL
 #' \deqn{ Y_{i.}|X_{i.}, A_k, Z_{ik}=1 \sim \mathcal{N}(A_k x_{i.},V_{k}^{-1})}
 #' with \eqn{\mathcal{W}(\epsilon^{-1},n_0)} the Whishart distribution and \eqn{\mathcal{MN}} the matrix-normal distribution.
 #' The \code{MoR-class} must be used when fitting a simple Mixture of Regression whereas the \code{MoRPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
-#' @slot formula a \code{\link{formula}} that describe the linear model to use
-#' @slot tau Prior parameter (inverse variance) default 0.001
-#' @slot epsilon Covariance matrix prior parameter (default to as.matrix(NaN), in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.)
-#' @slot N0 Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)
+#' @name MoR
+NULL
+#> NULL
+
+#' @rdname MoR
 #' @family DlvmModels
 #' @export
 setClass("MoRPrior",
@@ -42,20 +43,20 @@ setValidity("MoRPrior", function(object) {
   TRUE
 })
 
-#' @describeIn MoRPrior-class MoR class constructor
-#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @rdname MoR
 #' @export
 setClass("MoR",
   contains = c("MoRPrior", "DlvmPrior")
 )
 
 
-#' @describeIn MoRPrior-class MoRPrior class constructor
+#' @rdname MoR
 #' @param formula a \code{\link{formula}} that describe the linear model to use
 #' @param tau Prior parameter (inverse variance) default 0.001
 #' @param epsilon Covariance matrix prior parameter (default to NaN, in this case epsilon will be fixed to a diagonal variance matrix equal to 0.1 time the variance of the regression residuals with only one cluster.)
 #' @param N0 Prior parameter (default to NaN, in this case N0 will be fixed equal to the number of columns of Y.)
 #' @return a \code{MoRPrior-class} object
+#' @seealso \code{\link{MoRFit-class}}, \code{\link{MoRPath-class}}
 #' @examples
 #' MoRPrior(y ~ x1 + x2)
 #' MoRPrior(y ~ x1 + x2, N0 = 100)
@@ -66,7 +67,7 @@ MoRPrior <- function(formula, tau = 0.001, N0 = NaN, epsilon = as.matrix(NaN)) {
 }
 
 
-#' @describeIn MoRPrior-class MoR class constructor
+#' @rdname MoR
 #' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @return a \code{MoR-class} object
 #' @examples
@@ -93,6 +94,7 @@ MoR <- function(formula, alpha = 1, tau = 0.1, N0 = NaN, epsilon = as.matrix(NaN
 #' }
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{coef,MoRFit-method}}
 #' @export
 setClass("MoRFit", slots = list(model = "MoR"), contains = "IclFit")
 
@@ -128,6 +130,7 @@ setClass("MoRFit", slots = list(model = "MoR"), contains = "IclFit")
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
+# not implemented yet: @seealso \code{\link{plot,MoRFit,missing-method}}
 #' @export
 setClass("MoRPath", contains = c("IclPath", "MoRFit"))
 
@@ -135,7 +138,7 @@ setClass("MoRPath", contains = c("IclPath", "MoRFit"))
 
 
 
-#' @title Extract mixture parameters from \code{\link{MoRFit-class}} object
+#' @title Extract mixture parameters from \code{\link{MoRFit-class}} object using MAP estimation
 #'
 #' @param object a \code{\link{MoRFit-class}}
 #' @return a list with the mixture parameters estimates (MAP), the fields are:

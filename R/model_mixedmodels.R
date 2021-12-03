@@ -7,9 +7,13 @@ NULL
 #'
 #' @description
 #' An S4 class to represent a mixed clustering models, where sevral models are used to model different datasets. A conditional independence assumption between the view knowing the cluster is made.
-#' @slot models a named list of DlvmModels Emission prior such as (\code{\link{GmmPrior}},\code{\link{LcaPrior}},\code{\link{SbmPrior}},...)
 #' @details
 #' The filed name in the models list must match the name of the list use to provide the datasets to cluster together.
+#' @name MixedModels
+NULL
+#> NULL
+
+#' @rdname MixedModels
 #' @family DlvmModels
 #' @export
 setClass("MixedModels",
@@ -27,10 +31,11 @@ setValidity("MixedModels", function(object) {
   TRUE
 })
 
-#' @describeIn MixedModels-class MixedModels class constructor
+#' @rdname MixedModels
 #' @param models a named list of DlvmPrior's object
 #' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @return a \code{MixedModels-class} object
+#' @seealso \code{\link{MixedModelsFit-class}}, \code{\link{MixedModelsPath-class}}
 #' @examples
 #' MixedModels(models = list(continuous = GmmPrior(), discrete = LcaPrior()))
 #' @export
@@ -52,6 +57,7 @@ MixedModels <- function(models, alpha = 1) {
 #' @slot obs_stats a list with the following elements:
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{extractSubModel,MixedModelsPath,character-method}}
 #' @export
 setClass("MixedModelsFit", slots = list(model = "MixedModels"), contains = "IclFit")
 
@@ -83,6 +89,7 @@ setClass("MixedModelsFit", slots = list(model = "MixedModels"), contains = "IclF
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{extractSubModel,MixedModelsPath,character-method}}
 #' @export
 setClass("MixedModelsPath", contains = c("IclPath", "MixedModelsFit"))
 

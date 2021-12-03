@@ -31,3 +31,6 @@ An S4 class to represent a fit of a Multinomial Stochastic Block Model, extend \
 \item{\code{train_hist}}{data.frame with training history information (details depends on the training procedure)}
 }}
 
+\seealso{
+\code{\link{coef,MultSbmFit-method}}
+}
