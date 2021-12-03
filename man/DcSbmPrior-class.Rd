@@ -67,7 +67,7 @@ Other DlvmModels:
 \code{\link{DcLbmPrior-class}},
 \code{\link{DiagGmmPrior-class}},
 \code{\link{DlvmPrior-class}},
-\code{\link{GmmPrior-class}},
+\code{\link{Gmm}},
 \code{\link{LcaPrior-class}},
 \code{\link{MixedModels-class}},
 \code{\link{MoMPrior-class}},

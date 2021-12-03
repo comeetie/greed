@@ -17,14 +17,14 @@ navbar:
       href: "news/index.html"
     - text: "Articles"
       menu:
-      - text: "Graph clustering"
-        href: articles/SBM.html
       - text: "Gaussian Mixture Models"
         href: articles/GMM.html
-      - text: "Mixture of Regressions"
-        href: articles/MoR.html
       - text: "Latent Class Analysis"
         href: articles/LCA.html
+      - text: "Mixture of Regressions"
+        href: articles/MoR.html
+      - text: "Graph clustering"
+        href: articles/SBM.html
       - text: "Mixed Models"
         href: articles/Mixed-Models.html
   right:
@@ -73,6 +73,7 @@ reference:
     - '`Gmm-class`'
     - '`DiagGmm-class`'
     - '`MoR-class`'
+    - '`DcLbm-class`'
     - '`MixedModels-class`'
 - title: 'Models fit classes'
   desc: >
@@ -88,6 +89,7 @@ reference:
     - '`GmmFit-class`'
     - '`DiagGmmFit-class`'
     - '`MoRFit-class`'
+    - '`DcLbmFit-class`'
     - '`MixedModelsFit-class`'
 
 - title: 'Hierarchical models fit classes'
@@ -102,6 +104,7 @@ reference:
     - '`GmmPath-class`'
     - '`DiagGmmPath-class`'
     - '`MoRPath-class`'
+    - '`DcLbmPath-class`'
     - '`MixedModelsPath-class`'
     
 - title: 'Methods to explore a hierarchical fit'
@@ -151,3 +154,5 @@ reference:
     - '`FrenchParliament`'
     - '`Ndrangheta`'
     - '`Youngpeoplesurvey`'
+    - '`NewGuinea`'
+    - '`SevenGraders`'

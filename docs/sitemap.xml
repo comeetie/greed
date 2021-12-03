@@ -10,10 +10,16 @@
     <loc>/articles/LCA.html</loc>
   </url>
   <url>
-    <loc>/articles/Latent-class-analysis.html</loc>
+    <loc>/articles/Mixed-Models.html</loc>
   </url>
   <url>
     <loc>/articles/Mixed-data-clustering.html</loc>
+  </url>
+  <url>
+    <loc>/articles/MoR.html</loc>
+  </url>
+  <url>
+    <loc>/articles/SBM.html</loc>
   </url>
   <url>
     <loc>/articles/graph-clustering-with-sbm.html</loc>
@@ -70,6 +76,9 @@
     <loc>/reference/DiagGmmPrior-class.html</loc>
   </url>
   <url>
+    <loc>/reference/DlvmCoPrior-class.html</loc>
+  </url>
+  <url>
     <loc>/reference/DlvmPrior-class.html</loc>
   </url>
   <url>
@@ -86,6 +95,9 @@
   </url>
   <url>
     <loc>/reference/Genetic-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Gmm.html</loc>
   </url>
   <url>
     <loc>/reference/GmmFit-class.html</loc>
@@ -184,6 +196,9 @@
     <loc>/reference/Ndrangheta.html</loc>
   </url>
   <url>
+    <loc>/reference/NewGuinea.html</loc>
+  </url>
+  <url>
     <loc>/reference/SbmFit-class.html</loc>
   </url>
   <url>
@@ -194,6 +209,9 @@
   </url>
   <url>
     <loc>/reference/Seed-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SevenGraders.html</loc>
   </url>
   <url>
     <loc>/reference/Xvlegislature.html</loc>
@@ -230,6 +248,9 @@
   </url>
   <url>
     <loc>/reference/coef-GmmFit-method.html</loc>
+  </url>
+  <url>
+    <loc>/reference/coef-IclFit-method.html</loc>
   </url>
   <url>
     <loc>/reference/coef-LcaFit-method.html</loc>
@@ -421,6 +442,9 @@
     <loc>/reference/plot-GmmPath-missing-method.html</loc>
   </url>
   <url>
+    <loc>/reference/plot-IclPath-missing-method.html</loc>
+  </url>
+  <url>
     <loc>/reference/plot-LcaFit-missing-method.html</loc>
   </url>
   <url>
@@ -443,6 +467,9 @@
   </url>
   <url>
     <loc>/reference/plot-MultSbmPath-missing-method.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot-SbmFit-missing-method.html</loc>
   </url>
   <url>
     <loc>/reference/plot-SbmPath-missing-method.html</loc>
@@ -497,6 +524,12 @@
   </url>
   <url>
     <loc>/reference/print-icl_path-method.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prior-IclFit-method.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prior.html</loc>
   </url>
   <url>
     <loc>/reference/rdcsbm.html</loc>

@@ -42,7 +42,7 @@ Other DlvmModels:
 \code{\link{DcSbmPrior-class}},
 \code{\link{DiagGmmPrior-class}},
 \code{\link{DlvmPrior-class}},
-\code{\link{GmmPrior-class}},
+\code{\link{Gmm}},
 \code{\link{LcaPrior-class}},
 \code{\link{MoMPrior-class}},
 \code{\link{MoRPrior-class}},

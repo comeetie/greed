@@ -44,10 +44,19 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/graph-clustering-with-sbm.html">Graph clustering</a>
+      <a href="../articles/GMM.html">Gaussian Mixture Models</a>
     </li>
     <li>
-      <a href="../articles/GMM.html">Gaussian Mixture Model Clustering</a>
+      <a href="../articles/LCA.html">Latent Class Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/MoR.html">Mixture of Regressions</a>
+    </li>
+    <li>
+      <a href="../articles/SBM.html">Graph clustering</a>
+    </li>
+    <li>
+      <a href="../articles/Mixed-Models.html">Mixed Models</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -80,9 +89,9 @@
     <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">rmreg</span><span class="op">(</span>
   <span class="va">N</span>,
   <span class="va">pi</span>,
-  <span class="va">mu</span>,
+  <span class="va">A</span>,
   <span class="va">sigma</span>,
-  X <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">N</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">mu</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, <span class="va">N</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">mu</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">N</span><span class="op">)</span><span class="op">)</span>
+  X <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">N</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">N</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">A</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, <span class="va">N</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">A</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 
     <div id="ref-sections">
@@ -92,8 +101,8 @@
 <dd><p>A numeric value the size of the graph to generate</p></dd>
 <dt>pi</dt>
 <dd><p>A numeric vector of length K with clusters proportions (must sum up to 1)</p></dd>
-<dt>mu</dt>
-<dd><p>A numeric matrix of dim K x d with the regression parameters</p></dd>
+<dt>A</dt>
+<dd><p>A numeric matrix of dim K x d with the regression coefficient</p></dd>
 <dt>sigma</dt>
 <dd><p>A numeric of length 1 with the target conditional variance</p></dd>
 <dt>X</dt>
@@ -107,7 +116,7 @@
 <li><p>N: sample size</p></li>
 <li><p>cl: vector of clusters labels</p></li>
 <li><p>pi: clusters proportions</p></li>
-<li><p>mu: regression parameters</p></li>
+<li><p>A: regression coefficients used in the simulation</p></li>
 <li><p>sigma: conditional variance</p></li>
 </ul></div>
     <div id="details">

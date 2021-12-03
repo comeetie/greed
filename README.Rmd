@@ -20,7 +20,6 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R build status](https://github.com/comeetie/greed/workflows/R-CMD-check/badge.svg)](https://github.com/comeetie/greed/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/greed)](https://CRAN.R-project.org/package=greed)
-[![R-CMD-check](https://github.com/comeetie/greed/workflows/R-CMD-check/badge.svg)](https://github.com/comeetie/greed/actions)
 <!-- badges: end -->
 
 Greed enables model based clustering of networks, matrices of count data and much more with different types of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details of the algorithms and methods proposed by this package can be found in Côme, Jouvin, Latouche, and Bouveyron (2021) [10.1007/s11634-021-00440-z](https://doi.org/10.1007/s11634-021-00440-z).
@@ -35,7 +34,9 @@ The following generative models are available currently :
 * **Mixture of Multinomials** (see ``?`MoR-class` ``), 
 * **Latent Class Analysis** (see ``?`Lca-class` ``), 
 * **Gaussian Mixture Model** (see ``?`Gmm-class` `` and ``?`DiagGmm-class` ``),
-* **Multivariate Mixture of Gaussian Regression Model** (see ``?`MoR-class` ``).
+* **Multivariate Mixture of Gaussian Regression Model** (see ``?`MoR-class` ``),
+* **Degree Corrected Latent Block Model** (see ``?`DcLbm-class` ``).
+* **Mixed Dlvm's** (see ``?`MixedModels-class` ``).
 
 
 With the Integrated Classification Likelihood, the parameters of the models are integrated out. This allows a natural regularization for complex models. Since the Integrated Classification Likelihood penalizes complex models it allows to automatically find a "natural" value for the number of clusters $K^*$, the user only needs to provide an initial guess as well as values for the prior parameters (sensible default values are used if no prior information is available). The optimization is performed by default thanks to a combination of a greedy local search and a genetic algorithm. Several optimization algorithms are available.
@@ -110,6 +111,8 @@ plan(multisession)
 
 # Classical clustering, GMM
 
+See the [GMM vignette](articles/GMM.html) for details.
+
 ```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 data("diabetes",package = "mclust")
 X <- diabetes[,-1]
@@ -121,10 +124,16 @@ gmmpairs(sol,X)
 
 # Questionnary and item response theory datasets, LCA
 
-
+See the [LCA vignette](articles/LCA.html) for details.
 
 # Graphs, SBM like models
 
+See the [SBM vignette](articles/SBM.html) for details.
+
 # Mixture of Regression
 
+See the [MoR vignette](articles/MoR.html) for details.
+
 # Advanced models
+
+See the [Mixed Models](articles/Mixed-Models.html) for details.

@@ -8,7 +8,7 @@
 A binary array of size (16,16,3) the first layer encodes enmity, the second, the friendship relations. The third, no relations between the two tribes.
 }
 \source{
-\url{https://}
+
 }
 \usage{
 data(NewGuinea)

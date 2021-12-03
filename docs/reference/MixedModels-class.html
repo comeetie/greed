@@ -44,10 +44,19 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/graph-clustering-with-sbm.html">Graph clustering</a>
+      <a href="../articles/GMM.html">Gaussian Mixture Models</a>
     </li>
     <li>
-      <a href="../articles/GMM.html">Gaussian Mixture Model Clustering</a>
+      <a href="../articles/LCA.html">Latent Class Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/MoR.html">Mixture of Regressions</a>
+    </li>
+    <li>
+      <a href="../articles/SBM.html">Graph clustering</a>
+    </li>
+    <li>
+      <a href="../articles/Mixed-Models.html">Mixed Models</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -77,15 +86,15 @@
     <p>An S4 class to represent a mixed clustering models, where sevral models are used to model different datasets. A conditional independence assumption between the view knowing the cluster is made.</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">MixedModels</span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span>, <span class="va">models</span><span class="op">)</span></code></pre></div>
+    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">MixedModels</span><span class="op">(</span><span class="va">models</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
 
     <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>alpha</dt>
-<dd><p>Dirichlet prior parameter over the cluster proportions (default to 1)</p></dd>
-<dt>models</dt>
+    <dl><dt>models</dt>
 <dd><p>a named list of DlvmPrior's object</p></dd>
+<dt>alpha</dt>
+<dd><p>Dirichlet prior parameter over the cluster proportions (default to 1)</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -105,7 +114,7 @@
     
 
 <dl><dt><code>models</code></dt>
-<dd><p>a named list of DlvmModels Emission prior such as (<code><a href="GmmPrior-class.html">GmmPrior</a></code>,<code><a href="LcaPrior-class.html">LcaPrior</a></code>,<code><a href="SbmPrior-class.html">SbmPrior</a></code>,...)</p></dd>
+<dd><p>a named list of DlvmModels Emission prior such as (<code><a href="Gmm.html">GmmPrior</a></code>,<code><a href="LcaPrior-class.html">LcaPrior</a></code>,<code><a href="SbmPrior-class.html">SbmPrior</a></code>,...)</p></dd>
 
 
 </dl></div>
@@ -116,7 +125,7 @@
 <code><a href="DcSbmPrior-class.html">DcSbmPrior-class</a></code>,
 <code><a href="DiagGmmPrior-class.html">DiagGmmPrior-class</a></code>,
 <code><a href="DlvmPrior-class.html">DlvmPrior-class</a></code>,
-<code><a href="GmmPrior-class.html">GmmPrior-class</a></code>,
+<code><a href="Gmm.html">Gmm</a></code>,
 <code><a href="LcaPrior-class.html">LcaPrior-class</a></code>,
 <code><a href="MoMPrior-class.html">MoMPrior-class</a></code>,
 <code><a href="MoRPrior-class.html">MoRPrior-class</a></code>,
@@ -128,7 +137,7 @@
 
     <div id="examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">MixedModels</span><span class="op">(</span>models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>continuous<span class="op">=</span><span class="fu"><a href="GmmPrior-class.html">GmmPrior</a></span><span class="op">(</span><span class="op">)</span>,discrete<span class="op">=</span><span class="fu"><a href="LcaPrior-class.html">LcaPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">MixedModels</span><span class="op">(</span>models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>continuous <span class="op">=</span> <span class="fu"><a href="Gmm.html">GmmPrior</a></span><span class="op">(</span><span class="op">)</span>, discrete <span class="op">=</span> <span class="fu"><a href="LcaPrior-class.html">LcaPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> An object of class "MixedModels"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Slot "models":</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $continuous</span>
