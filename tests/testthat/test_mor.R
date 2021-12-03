@@ -43,11 +43,8 @@ test_that("MOR internal function", {
 })
 
 test_that("MOR hybrid", {
-<<<<<<< HEAD
   m=3
   K=3
-=======
->>>>>>> upstream/master
   regs <- rmreg(500, rep(1 / 3, 3), A = cbind(c(5, 1, -125), c(1, 20, 1), c(15, 100, 200)), sigma = 1)
   df <- data.frame(x1 = regs$X[, 2], x2 = regs$X[, 3], y = regs$y)
   model <- MoR(y ~ x1 + x2)
