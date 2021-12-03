@@ -36,7 +36,7 @@ Z_i  &\sim \mathcal{M}(1,\pi)\\
  Y_{i.}|X_{i.},Z_{ik}=1 &\sim \mathcal{N}(A_kx_{i.},V_{k}^{-1})
  \end{align}
 $$
-with $\mathcal{MN}()$ the matrix normal distribution and $\mathcal{W}()$ the Whishart distribution. The prior parameters may therefore have an impact on the results and they can't be non-informative. The main prior parameters to look at are $\tau$ and $\epsilon$. $\tau$ define the strength of the regularization applied on the regression problem, by default it equals $0.01$, $\epsilon$ and $n_0$ define the prior for the noise co-variance matrix. By default, it will be  equal to 0.1 time the variance of the regression residuals with only one cluster and $n_0$ is fixed by default to $d$ the dimension of $y$ for the prior to be as uninformative as possible.
+with $\mathcal{MN}()$ the matrix normal distribution and $\mathcal{W}()$ the Whishart distribution. The prior parameters may therefore have an impact on the results and they can't be non-informative. The main prior parameters to look at are $\tau$ and $\varepsilon$. $\tau$ define the strength of the regularization applied on the regression problem, by default it equals $0.01$, $\varepsilon$ and $n_0$ define the prior for the noise co-variance matrix. By default, it will be  equal to 0.1 time the variance of the regression residuals with only one cluster and $n_0$ is fixed by default to $d$ the dimension of $y$ for the prior to be as uninformative as possible.
 
 
 #### An introductory example
