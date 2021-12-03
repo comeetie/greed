@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gaussian Mixture Model Prior description class — Gmm • greed</title>
+<title>Diagonal Gaussian Mixture Model Prior description class — DiagGmm • greed</title>
 
 
 <!-- jquery -->
@@ -39,16 +39,17 @@
 
 
 
-<meta property="og:title" content="Gaussian Mixture Model Prior description class — Gmm" />
-<meta property="og:description" content="An S4 class to represent a multivariate Gaussian mixture model.
+<meta property="og:title" content="Diagonal Gaussian Mixture Model Prior description class — DiagGmm" />
+<meta property="og:description" content="An S4 class to represent a multivariate diagonal Gaussian mixture model.
 The model corresponds to the following generative model:
 $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
-$$ V_k \sim \mathcal{W}(\varepsilon^{-1},n_0)$$
-$$ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})$$
-$$ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})$$
-with \(\mathcal{W}(\varepsilon^{-1},n_0)\) the Wishart distribution.
-The Gmm-class must be used when fitting a simple Gaussian Mixture Model whereas the GmmPrior-class must be used when fitting a MixedModels-class." />
+$$ \lambda_k^{(d)} \sim \mathcal{G}(\kappa,\beta)$$
+$$ \mu_k^{(d)} \sim \mathcal{N}(\mu,(\tau \lambda_k)^{-1})$$
+$$ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,\lambda_{k}^{-1})$$
+with \(\mathcal{G}(\kappa,\beta)\) the Gamma distribution with shape parameter \(\kappa\) and rate parameter \(\beta\).
+These classes mainly store the prior parameters value (\(\alpha,\tau,\kappa\beta,\mu\)) of this generative model.
+The DiagGmm-class must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the DiagGmmPrior-class must be sued when fitting a MixedModels-class." />
 
 
 
@@ -149,45 +150,46 @@ The Gmm-class must be used when fitting a simple Gaussian Mixture Model whereas 
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Gaussian Mixture Model Prior description class</h1>
-    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/model_gmm.R'><code>R/model_gmm.R</code></a></small>
-    <div class="hidden name"><code>Gmm.Rd</code></div>
+    <h1>Diagonal Gaussian Mixture Model Prior description class</h1>
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/model_diaggmm.R'><code>R/model_diaggmm.R</code></a></small>
+    <div class="hidden name"><code>DiagGmm.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An S4 class to represent a multivariate Gaussian mixture model.
+    <p>An S4 class to represent a multivariate diagonal Gaussian mixture model.
 The model corresponds to the following generative model:
 $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
-$$ V_k \sim \mathcal{W}(\varepsilon^{-1},n_0)$$
-$$ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})$$
-$$ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})$$
-with \(\mathcal{W}(\varepsilon^{-1},n_0)\) the Wishart distribution.
-The <code>Gmm-class</code> must be used when fitting a simple Gaussian Mixture Model whereas the <code>GmmPrior-class</code> must be used when fitting a <code><a href='MixedModels.html'>MixedModels-class</a></code>.</p>
+$$ \lambda_k^{(d)} \sim \mathcal{G}(\kappa,\beta)$$
+$$ \mu_k^{(d)} \sim \mathcal{N}(\mu,(\tau \lambda_k)^{-1})$$
+$$ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,\lambda_{k}^{-1})$$
+with \(\mathcal{G}(\kappa,\beta)\) the Gamma distribution with shape parameter \(\kappa\) and rate parameter \(\beta\).
+These classes mainly store the prior parameters value (\(\alpha,\tau,\kappa\beta,\mu\)) of this generative model.
+The <code>DiagGmm-class</code> must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the <code>DiagGmmPrior-class</code> must be sued when fitting a <code><a href='MixedModels.html'>MixedModels-class</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>GmmPrior</span><span class='op'>(</span>tau <span class='op'>=</span> <span class='fl'>0.01</span>, N0 <span class='op'>=</span> <span class='cn'>NaN</span>, mu <span class='op'>=</span> <span class='cn'>NaN</span>, epsilon <span class='op'>=</span> <span class='cn'>NaN</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>DiagGmmPrior</span><span class='op'>(</span>tau <span class='op'>=</span> <span class='fl'>0.01</span>, kappa <span class='op'>=</span> <span class='fl'>1</span>, beta <span class='op'>=</span> <span class='cn'>NaN</span>, mu <span class='op'>=</span> <span class='cn'>NaN</span><span class='op'>)</span>
 
-<span class='fu'>Gmm</span><span class='op'>(</span>tau <span class='op'>=</span> <span class='fl'>0.01</span>, N0 <span class='op'>=</span> <span class='cn'>NaN</span>, mu <span class='op'>=</span> <span class='cn'>NaN</span>, epsilon <span class='op'>=</span> <span class='cn'>NaN</span>, alpha <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
+<span class='fu'>DiagGmm</span><span class='op'>(</span>alpha <span class='op'>=</span> <span class='fl'>1</span>, tau <span class='op'>=</span> <span class='fl'>0.01</span>, kappa <span class='op'>=</span> <span class='fl'>1</span>, beta <span class='op'>=</span> <span class='cn'>NaN</span>, mu <span class='op'>=</span> <span class='cn'>NaN</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>tau</th>
-      <td><p>Prior parameter (inverse variance) default 0.01</p></td>
+      <td><p>Prior parameter (inverse variance), (default 0.01)</p></td>
     </tr>
     <tr>
-      <th>N0</th>
-      <td><p>Prior parameter (pseudo count) should be &gt; number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)</p></td>
+      <th>kappa</th>
+      <td><p>Prior parameter (gamma shape), (default to 1)</p></td>
+    </tr>
+    <tr>
+      <th>beta</th>
+      <td><p>Prior parameter (gamma rate), (default to NaN, in this case beta will be estimated from data as 0.1 time the mean of X columns variances)</p></td>
     </tr>
     <tr>
       <th>mu</th>
-      <td><p>Prior parameters for the means (vector of size D), (default to NaN, in this case mu will be estimated from the data and will be equal to the mean of X)</p></td>
-    </tr>
-    <tr>
-      <th>epsilon</th>
-      <td><p>Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)</p></td>
+      <td><p>Prior for the means (vector of size D), (default to NaN, in this case mu will be estimated from data as the mean of X)</p></td>
     </tr>
     <tr>
       <th>alpha</th>
@@ -197,19 +199,19 @@ The <code>Gmm-class</code> must be used when fitting a simple Gaussian Mixture M
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>GmmPrior-class</code> object</p>
-<p>a <code>Gmm-class</code> object</p>
+    <p>a <code>DiagGmmPrior-class</code> object</p>
+<p>a <code>DiagGmm-class</code> object</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Bertoletti, Marco &amp; Friel, Nial &amp; Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5.</p>
+    <p>Bertoletti, Marco &amp; Friel, Nial &amp; Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5. #'</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='GmmFit-class.html'>GmmFit-class</a></code>, <code><a href='GmmPath-class.html'>GmmPath-class</a></code></p>
+    <div class='dont-index'><p><code><a href='DiagGmmFit-class.html'>DiagGmmFit-class</a></code>, <code><a href='DiagGmmPath-class.html'>DiagGmmPath-class</a></code></p>
 <p>Other DlvmModels: 
 <code><a href='DcLbm.html'>DcLbm</a></code>,
 <code><a href='DcSbm.html'>DcSbm</a></code>,
-<code><a href='DiagGmm.html'>DiagGmm</a></code>,
 <code><a href='DlvmPrior-class.html'>DlvmPrior-class</a></code>,
+<code><a href='Gmm.html'>Gmm</a></code>,
 <code><a href='Lca.html'>Lca</a></code>,
 <code><a href='MixedModels.html'>MixedModels</a></code>,
 <code><a href='MoM.html'>MoM</a></code>,
@@ -219,75 +221,71 @@ The <code>Gmm-class</code> must be used when fitting a simple Gaussian Mixture M
 <code><a href='greed.html'>greed</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='r-in'><span class='fu'>GmmPrior</span><span class='op'>(</span><span class='op'>)</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "GmmPrior"</span>
+    <pre class="examples"><span class='r-in'><span class='fu'>DiagGmmPrior</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "DiagGmmPrior"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.01</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "kappa":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "beta":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "mu":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "epsilon":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "N0":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-in'><span class='fu'>GmmPrior</span><span class='op'>(</span>tau <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "GmmPrior"</span>
+<span class='r-in'><span class='fu'>DiagGmmPrior</span><span class='op'>(</span>tau <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "DiagGmmPrior"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.1</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "mu":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "kappa":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 1</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "epsilon":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "N0":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "beta":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-in'><span class='fu'>Gmm</span><span class='op'>(</span><span class='op'>)</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "Gmm"</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.01</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "mu":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "epsilon":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "N0":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='fu'>DiagGmm</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "DiagGmm"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "alpha":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 1</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-in'><span class='fu'>Gmm</span><span class='op'>(</span>tau <span class='op'>=</span> <span class='fl'>0.1</span>, alpha <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "Gmm"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.01</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "kappa":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "beta":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "mu":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "epsilon":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
+<span class='r-in'><span class='fu'>DiagGmm</span><span class='op'>(</span>tau <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "DiagGmm"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "alpha":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 1</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "N0":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "kappa":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "beta":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "alpha":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "mu":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 </pre>
   </div>

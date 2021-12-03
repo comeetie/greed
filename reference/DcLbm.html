@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Model based hierarchical clustering — greed • greed</title>
+<title>Degree Corrected Latent Block Model for bipartite graph class — DcLbm • greed</title>
 
 
 <!-- jquery -->
@@ -39,17 +39,20 @@
 
 
 
-<meta property="og:title" content="Model based hierarchical clustering — greed" />
-<meta property="og:description" content="
-
-
-Greed enables the clustering of networks and count data such as document-term
-matrix with different models. Model selection and clustering are performed in
-combination by optimizing the Integrated Classification Likelihood.
-Optimization is performed thanks to a combination of greedy local search and
-a genetic algorithm. The main entry point is the greed function
-to perform the clustering, which is documented below. The package also
-provides sampling functions for all the implemented DLVMs" />
+<meta property="og:title" content="Degree Corrected Latent Block Model for bipartite graph class — DcLbm" />
+<meta property="og:description" content="An S4 class to represent a degree corrected stochastic block model for co_clustering of bipartite graph.
+Such model can be used to cluster graph vertex, and model a bipartite graph adjacency matrix \(X\) with the following generative model :
+$$ \pi \sim Dirichlet(\alpha)$$
+$$ Z_i^r  \sim \mathcal{M}(1,\pi^r)$$
+$$ Z_j^c  \sim \mathcal{M}(1,\pi^c)$$
+$$ \theta_{kl} \sim Exponential(p)$$
+$$ \gamma_i^r\sim \mathcal{U}(S_k)$$
+$$ \gamma_i^c\sim \mathcal{U}(S_l)$$
+$$ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)$$
+The individuals parameters \(\gamma_i^r,\gamma_j^c\) allow to take into account the node degree heterogeneity.
+These parameters have uniform priors over simplex \(S_k\).
+These classes mainly store the prior parameters value \(\alpha,p\) of this generative model.
+The DcLbm-class must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the DcLbmPrior-class must be sued when fitting a MixedModels-class." />
 
 
 
@@ -150,58 +153,52 @@ provides sampling functions for all the implemented DLVMs" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Model based hierarchical clustering</h1>
-    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/alg_classes.R'><code>R/alg_classes.R</code></a>, <a href='https://github.com/comeetie/greed/blob/master/R/greed.R'><code>R/greed.R</code></a></small>
-    <div class="hidden name"><code>greed.Rd</code></div>
+    <h1>Degree Corrected Latent Block Model for bipartite graph class</h1>
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/model_dclbm.R'><code>R/model_dclbm.R</code></a></small>
+    <div class="hidden name"><code>DcLbm.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    
-
-
-<p>Greed enables the clustering of networks and count data such as document-term
-matrix with different models. Model selection and clustering are performed in
-combination by optimizing the Integrated Classification Likelihood.
-Optimization is performed thanks to a combination of greedy local search and
-a genetic algorithm. The main entry point is the <code>greed</code> function
-to perform the clustering, which is documented below. The package also
-provides sampling functions for all the implemented DLVMs</p>
+    <p>An S4 class to represent a degree corrected stochastic block model for co_clustering of bipartite graph.
+Such model can be used to cluster graph vertex, and model a bipartite graph adjacency matrix \(X\) with the following generative model :
+$$ \pi \sim Dirichlet(\alpha)$$
+$$ Z_i^r  \sim \mathcal{M}(1,\pi^r)$$
+$$ Z_j^c  \sim \mathcal{M}(1,\pi^c)$$
+$$ \theta_{kl} \sim Exponential(p)$$
+$$ \gamma_i^r\sim \mathcal{U}(S_k)$$
+$$ \gamma_i^c\sim \mathcal{U}(S_l)$$
+$$ X_{ij}|Z_{ik}^cZ_{jl}^r=1 \sim \mathcal{P}(\gamma_i^r\theta_{kl}\gamma_j^c)$$
+The individuals parameters \(\gamma_i^r,\gamma_j^c\) allow to take into account the node degree heterogeneity.
+These parameters have uniform priors over simplex \(S_k\).
+These classes mainly store the prior parameters value \(\alpha,p\) of this generative model.
+The <code>DcLbm-class</code> must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the <code>DcLbmPrior-class</code> must be sued when fitting a <code><a href='MixedModels.html'>MixedModels-class</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>greed</span><span class='op'>(</span><span class='va'>X</span>, model <span class='op'>=</span> <span class='fu'>find_model</span><span class='op'>(</span><span class='va'>X</span><span class='op'>)</span>, K <span class='op'>=</span> <span class='fl'>20</span>, alg <span class='op'>=</span> <span class='fu'><a href='Hybrid-class.html'>Hybrid</a></span><span class='op'>(</span><span class='op'>)</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>DcLbmPrior</span><span class='op'>(</span>p <span class='op'>=</span> <span class='cn'>NaN</span><span class='op'>)</span>
+
+<span class='fu'>DcLbm</span><span class='op'>(</span>alpha <span class='op'>=</span> <span class='fl'>1</span>, p <span class='op'>=</span> <span class='cn'>NaN</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>X</th>
-      <td><p>data to cluster either a data.frame, a matrix, an array or a <code>dgCMatrix-class</code></p></td>
+      <th>p</th>
+      <td><p>Exponential prior parameter (default to Nan, in this case p will be estimated from data as the average intensities of X)</p></td>
     </tr>
     <tr>
-      <th>model</th>
-      <td><p>a generative model to fit <code><a href='DlvmPrior-class.html'>DlvmPrior-class</a></code></p></td>
-    </tr>
-    <tr>
-      <th>K</th>
-      <td><p>initial number of cluster</p></td>
-    </tr>
-    <tr>
-      <th>alg</th>
-      <td><p>an optimization algorithm of class <code><a href='Alg-class.html'>Alg-class</a></code> such as <code><a href='Hybrid-class.html'>Hybrid-class</a></code> (default), <code><a href='Multistarts-class.html'>Multistarts-class</a></code>, <code><a href='Seed-class.html'>Seed-class</a></code> or <code><a href='Genetic-class.html'>Genetic-class</a></code></p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>Boolean for verbose mode</p></td>
+      <th>alpha</th>
+      <td><p>Dirichlet prior parameter over the cluster proportions (default to 1)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an <code><a href='IclPath-class.html'>IclPath-class</a></code> object</p>
+    <p>a <code>DcLbmPrior-class</code></p>
+<p>a <code>DcLbm-class</code> object</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other DlvmModels: 
-<code><a href='DcLbm.html'>DcLbm</a></code>,
+    <div class='dont-index'><p><code><a href='DcLbmFit-class.html'>DcLbmFit-class</a></code>, <code><a href='DcLbmPath-class.html'>DcLbmPath-class</a></code></p>
+<p>Other DlvmModels: 
 <code><a href='DcSbm.html'>DcSbm</a></code>,
 <code><a href='DiagGmm.html'>DiagGmm</a></code>,
 <code><a href='DlvmPrior-class.html'>DlvmPrior-class</a></code>,
@@ -211,8 +208,37 @@ provides sampling functions for all the implemented DLVMs</p>
 <code><a href='MoM.html'>MoM</a></code>,
 <code><a href='MoR.html'>MoR</a></code>,
 <code><a href='MultSbm.html'>MultSbm</a></code>,
-<code><a href='Sbm.html'>Sbm</a></code></p></div>
+<code><a href='Sbm.html'>Sbm</a></code>,
+<code><a href='greed.html'>greed</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='r-in'><span class='fu'>DcLbmPrior</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "DcLbmPrior"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "p":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='fu'>DcLbmPrior</span><span class='op'>(</span>p <span class='op'>=</span> <span class='fl'>0.7</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "DcLbmPrior"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "p":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.7</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='fu'>DcLbm</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "DcLbm"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "alpha":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "p":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='fu'>DcLbm</span><span class='op'>(</span>p <span class='op'>=</span> <span class='fl'>0.7</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "DcLbm"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "alpha":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "p":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.7</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -110,23 +110,23 @@
 <p>The following generative models are available currently :</p>
 <ul>
 <li>
-<strong>Stochastic Block Models</strong> (see <code><a href="reference/SbmPrior-class.html">?`Sbm-class`</a></code>),</li>
+<strong>Stochastic Block Models</strong> (see <code><a href="reference/Sbm.html">?`Sbm-class`</a></code>),</li>
 <li>
-<strong>Degree Corrected Stochastic Block Models</strong> (see <code><a href="reference/DcSbmPrior-class.html">?`DcSbm-class`</a></code>),</li>
+<strong>Degree Corrected Stochastic Block Models</strong> (see <code><a href="reference/DcSbm.html">?`DcSbm-class`</a></code>),</li>
 <li>
-<strong>Multinomial Stochastic Block Models</strong> (see <code><a href="reference/MultSbmPrior-class.html">?`MultSbm-class`</a></code>),</li>
+<strong>Multinomial Stochastic Block Models</strong> (see <code><a href="reference/MultSbm.html">?`MultSbm-class`</a></code>),</li>
 <li>
-<strong>Mixture of Multinomials</strong> (see <code><a href="reference/MoRPrior-class.html">?`MoR-class`</a></code>),</li>
+<strong>Mixture of Multinomials</strong> (see <code><a href="reference/MoR.html">?`MoR-class`</a></code>),</li>
 <li>
-<strong>Latent Class Analysis</strong> (see <code><a href="reference/LcaPrior-class.html">?`Lca-class`</a></code>),</li>
+<strong>Latent Class Analysis</strong> (see <code><a href="reference/Lca.html">?`Lca-class`</a></code>),</li>
 <li>
-<strong>Gaussian Mixture Model</strong> (see <code><a href="reference/Gmm.html">?`Gmm-class`</a></code> and <code><a href="reference/DiagGmmPrior-class.html">?`DiagGmm-class`</a></code>),</li>
+<strong>Gaussian Mixture Model</strong> (see <code><a href="reference/Gmm.html">?`Gmm-class`</a></code> and <code><a href="reference/DiagGmm.html">?`DiagGmm-class`</a></code>),</li>
 <li>
-<strong>Multivariate Mixture of Gaussian Regression Model</strong> (see <code><a href="reference/MoRPrior-class.html">?`MoR-class`</a></code>),</li>
+<strong>Multivariate Mixture of Gaussian Regression Model</strong> (see <code><a href="reference/MoR.html">?`MoR-class`</a></code>),</li>
 <li>
-<strong>Degree Corrected Latent Block Model</strong> (see <code><a href="reference/DcLbmPrior-class.html">?`DcLbm-class`</a></code>).</li>
+<strong>Degree Corrected Latent Block Model</strong> (see <code><a href="reference/DcLbm.html">?`DcLbm-class`</a></code>).</li>
 <li>
-<strong>Mixed Dlvm’s</strong> (see <code><a href="reference/MixedModels-class.html">?`MixedModels-class`</a></code>).</li>
+<strong>Mixed Dlvm’s</strong> (see <code><a href="reference/MixedModels.html">?`MixedModels-class`</a></code>).</li>
 </ul>
 <p>With the Integrated Classification Likelihood, the parameters of the models are integrated out. This allows a natural regularization for complex models. Since the Integrated Classification Likelihood penalizes complex models it allows to automatically find a “natural” value for the number of clusters <em>K</em><sup>*</sup>, the user only needs to provide an initial guess as well as values for the prior parameters (sensible default values are used if no prior information is available). The optimization is performed by default thanks to a combination of a greedy local search and a genetic algorithm. Several optimization algorithms are available.</p>
 <p>Eventually, the whole path of solutions from <em>K</em><sup>*</sup> to 1 cluster is extracted. This enables a partial ordering of the clusters, and the evaluation of simpler clustering. The package also provides some plotting functionality.</p>
@@ -157,9 +157,9 @@
 <span class="co">#&gt; ################# Generation  3: best solution with an ICL of -1346 and 4 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
 <span class="co">#&gt; ICL clustering with a DCSBM model, 3 clusters and an icl of -1345.</span></code></pre></div>
-<p>You may specify the model you want to use and set the priors paramaters with the (model argument), the optimization algorithm (alg argument) and the initial number of cluster K. Here football is a square sparse matrix and a graph clustering <code><a href="reference/DcSbmPrior-class.html">?`DcSbm-class`</a></code> model will be used by default, and the Hybrid genetic algorithm greed used.</p>
+<p>You may specify the model you want to use and set the priors paramaters with the (model argument), the optimization algorithm (alg argument) and the initial number of cluster K. Here football is a square sparse matrix and a graph clustering <code><a href="reference/DcSbm.html">?`DcSbm-class`</a></code> model will be used by default, and the Hybrid genetic algorithm greed used.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="reference/SbmPrior-class.html">Sbm</a></span><span class="op">(</span><span class="op">)</span>,alg<span class="op">=</span><span class="fu"><a href="reference/Seed-class.html">Seed</a></span><span class="op">(</span><span class="op">)</span>,K<span class="op">=</span><span class="fl">10</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="reference/Sbm.html">Sbm</a></span><span class="op">(</span><span class="op">)</span>,alg<span class="op">=</span><span class="fu"><a href="reference/Seed-class.html">Seed</a></span><span class="op">(</span><span class="op">)</span>,K<span class="op">=</span><span class="fl">10</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess SBM model fitting ------</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
 <span class="co">#&gt; ICL clustering with a SBM model, 5 clusters and an icl of -1254.</span></code></pre></div>
