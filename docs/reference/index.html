@@ -44,10 +44,19 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/graph-clustering-with-sbm.html">Graph clustering</a>
+      <a href="../articles/GMM.html">Gaussian Mixture Models</a>
     </li>
     <li>
-      <a href="../articles/GMM.html">Gaussian Mixture Model Clustering</a>
+      <a href="../articles/LCA.html">Latent Class Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/MoR.html">Mixture of Regressions</a>
+    </li>
+    <li>
+      <a href="../articles/SBM.html">Graph clustering</a>
+    </li>
+    <li>
+      <a href="../articles/Mixed-Models.html">Mixed Models</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -86,19 +95,23 @@
       </tr></tbody><tbody><tr><td>
           <p><code><a href="clustering-IclFit-method.html">clustering(<i>&lt;IclFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Method to extract the clustering results from an <code><a href="https://comeetie.github.io/greed/reference/IclFit-class.html" class="external-link">IclFit-class</a></code> object</p></td>
+        <td><p>Method to extract the clustering results from an <code>IclFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="ICL-IclFit-method.html">ICL(<i>&lt;IclFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Method to extract the ICL value from an <code><a href="https://comeetie.github.io/greed/reference/IclFit-class.html" class="external-link">IclFit-class</a></code> object</p></td>
+        <td><p>Method to extract the ICL value from an <code>IclFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="K-IclFit-method.html">K(<i>&lt;IclFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Method to extract the number of clusters found from an <code><a href="https://comeetie.github.io/greed/reference/IclFit-class.html" class="external-link">IclFit-class</a></code> object</p></td>
+        <td><p>Method to extract the number of clusters found from an <code>IclFit-class</code> object</p></td>
+      </tr><tr><td>
+          <p><code><a href="prior-IclFit-method.html">prior(<i>&lt;IclFit&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Method to extract the prior used to fit  <code>IclFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="coef-IclFit-method.html">coef(<i>&lt;IclFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code><a href="https://comeetie.github.io/greed/reference/IclFit-class.html" class="external-link">IclFit-class</a></code> object</p></td>
+        <td><p>Extract parameters from an <code>IclFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="show-IclFit-method.html">show(<i>&lt;IclFit&gt;</i>)</a></code> </p>
         </td>
@@ -110,11 +123,11 @@
       </tr><tr><td>
           <p><code><a href="plot-IclPath-missing-method.html">plot(<i>&lt;IclPath&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code><a href="https://comeetie.github.io/greed/reference/IclPath-class.html" class="external-link">IclPath-class</a></code> object</p></td>
+        <td><p>plot a <code>IclPath-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="extractSubModel-MixedModelsPath-character-method.html">extractSubModel(<i>&lt;MixedModelsPath&gt;</i>,<i>&lt;character&gt;</i>)</a></code> </p>
         </td>
-        <td><p>extract a part of a <code><a href="https://comeetie.github.io/greed/reference/MixedModelsPath-class.html" class="external-link">MixedModelsPath-class</a></code> object</p></td>
+        <td><p>extract a part of a <code>MixedModelsPath-class</code> object</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="fitting-algorithms-classes">Fitting algorithms classes <a href="#fitting-algorithms-classes" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Description of classes that describe the possible fitting algorithms.</p>
@@ -164,7 +177,7 @@
         </td>
         <td><p>Mixture of Multinomial Model Prior description class</p></td>
       </tr><tr><td>
-          <p><code><a href="GmmPrior-class.html">GmmPrior()</a></code> <code><a href="GmmPrior-class.html">Gmm()</a></code> </p>
+          <p><code><a href="Gmm.html">GmmPrior()</a></code> <code><a href="Gmm.html">Gmm()</a></code> </p>
         </td>
         <td><p>Gaussian Mixture Model Prior description class</p></td>
       </tr><tr><td>
@@ -175,6 +188,10 @@
           <p><code><a href="MoRPrior-class.html">MoRPrior()</a></code> <code><a href="MoRPrior-class.html">MoR()</a></code> </p>
         </td>
         <td><p>Multivariate mixture of regression Prior model description class</p></td>
+      </tr><tr><td>
+          <p><code><a href="DcLbmPrior-class.html">DcLbmPrior()</a></code> <code><a href="DcLbmPrior-class.html">DcLbm()</a></code> </p>
+        </td>
+        <td><p>Degree Corrected Latent Block Model for bipartite graph class</p></td>
       </tr><tr><td>
           <p><code><a href="MixedModels-class.html">MixedModels()</a></code> </p>
         </td>
@@ -224,6 +241,10 @@
         </td>
         <td><p>Clustering with a multivariate mixture of regression model fit results class</p></td>
       </tr><tr><td>
+          <p><code><a href="DcLbmFit-class.html">DcLbmFit-class</a></code> </p>
+        </td>
+        <td><p>Degree corrected stochastic block model for bipartite graph fit results class</p></td>
+      </tr><tr><td>
           <p><code><a href="MixedModelsFit-class.html">MixedModelsFit-class</a></code> </p>
         </td>
         <td><p>Mixed Models fit results class</p></td>
@@ -264,6 +285,10 @@
         </td>
         <td><p>Multivariate mixture of regression model hierarchical fit results class</p></td>
       </tr><tr><td>
+          <p><code><a href="DcLbmPath-class.html">DcLbmPath-class</a></code> </p>
+        </td>
+        <td><p>Degree corrected stochastic block model for bipartite graph hierarchical fit results class</p></td>
+      </tr><tr><td>
           <p><code><a href="MixedModelsPath-class.html">MixedModelsPath-class</a></code> </p>
         </td>
         <td><p>Mixed Models hierarchical fit results class</p></td>
@@ -278,43 +303,43 @@
       </tr><tr><td>
           <p><code><a href="coef-DcLbmFit-method.html">coef(<i>&lt;DcLbmFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code><a href="https://comeetie.github.io/greed/reference/DcLbmFit-class.html" class="external-link">DcLbmFit-class</a></code> object</p></td>
+        <td><p>Extract parameters from an <code>DcLbmFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="coef-DcSbmFit-method.html">coef(<i>&lt;DcSbmFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code><a href="https://comeetie.github.io/greed/reference/DcSbmFit-class.html" class="external-link">DcSbmFit-class</a></code> object</p></td>
+        <td><p>Extract parameters from an <code>DcSbmFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="coef-DiagGmmFit-method.html">coef(<i>&lt;DiagGmmFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract mixture parameters from <code><a href="https://comeetie.github.io/greed/reference/DiagGmmFit-class.html" class="external-link">DiagGmmFit-class</a></code> object</p></td>
+        <td><p>Extract mixture parameters from <code>DiagGmmFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="coef-GmmFit-method.html">coef(<i>&lt;GmmFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract mixture parameters from <code><a href="https://comeetie.github.io/greed/reference/GmmFit-class.html" class="external-link">GmmFit-class</a></code> object</p></td>
+        <td><p>Extract mixture parameters from <code>GmmFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="coef-IclFit-method.html">coef(<i>&lt;IclFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code><a href="https://comeetie.github.io/greed/reference/IclFit-class.html" class="external-link">IclFit-class</a></code> object</p></td>
+        <td><p>Extract parameters from an <code>IclFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="coef-LcaFit-method.html">coef(<i>&lt;LcaFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code><a href="https://comeetie.github.io/greed/reference/LcaFit-class.html" class="external-link">LcaFit-class</a></code> object</p></td>
+        <td><p>Extract parameters from an <code>LcaFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="coef-MoMFit-method.html">coef(<i>&lt;MoMFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code><a href="https://comeetie.github.io/greed/reference/MoMFit-class.html" class="external-link">MoMFit-class</a></code> object</p></td>
+        <td><p>Extract parameters from an <code>MoMFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="coef-MoRFit-method.html">coef(<i>&lt;MoRFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract mixture parameters from <code><a href="https://comeetie.github.io/greed/reference/MoRFit-class.html" class="external-link">MoRFit-class</a></code> object</p></td>
+        <td><p>Extract mixture parameters from <code>MoRFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="coef-MultSbmFit-method.html">coef(<i>&lt;MultSbmFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code><a href="https://comeetie.github.io/greed/reference/MultSbmFit-class.html" class="external-link">MultSbmFit-class</a></code> object</p></td>
+        <td><p>Extract parameters from an <code>MultSbmFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="coef-SbmFit-method.html">coef(<i>&lt;SbmFit&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Extract parameters from an <code><a href="https://comeetie.github.io/greed/reference/SbmFit-class.html" class="external-link">SbmFit-class</a></code> object</p></td>
+        <td><p>Extract parameters from an <code>SbmFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="cut-DcLbmPath-method.html">cut(<i>&lt;DcLbmPath&gt;</i>)</a></code> </p>
         </td>
@@ -324,41 +349,41 @@
         </td>
         <td><p>Method to cut a path solution to a desired number of cluster</p></td>
       </tr><tr><td>
-          <p><code><a href="plot-DcLbmFit-missing-method.html">plot(<i>&lt;DcLbmFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
+          <p><code><a href="plot-DcLbmPath-missing-method.html">plot(<i>&lt;DcLbmPath&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code><a href="https://comeetie.github.io/greed/reference/DcLbmFit-class.html" class="external-link">DcLbmFit-class</a></code></p></td>
+        <td><p>plot a <code>DcLbmFit-class</code></p></td>
       </tr><tr><td>
           <p><code><a href="plot-DcSbmFit-missing-method.html">plot(<i>&lt;DcSbmFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code><a href="https://comeetie.github.io/greed/reference/DcSbmFit-class.html" class="external-link">DcSbmFit-class</a></code> object</p></td>
+        <td><p>plot a <code>DcSbmFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="plot-DiagGmmFit-missing-method.html">plot(<i>&lt;DiagGmmFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code><a href="https://comeetie.github.io/greed/reference/DiagGmmFit-class.html" class="external-link">DiagGmmFit-class</a></code> object</p></td>
+        <td><p>plot a <code>DiagGmmFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="plot-GmmFit-missing-method.html">plot(<i>&lt;GmmFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code><a href="https://comeetie.github.io/greed/reference/GmmFit-class.html" class="external-link">GmmFit-class</a></code> object</p></td>
+        <td><p>plot a <code>GmmFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="plot-IclPath-missing-method.html">plot(<i>&lt;IclPath&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code><a href="https://comeetie.github.io/greed/reference/IclPath-class.html" class="external-link">IclPath-class</a></code> object</p></td>
+        <td><p>plot a <code>IclPath-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="plot-LcaFit-missing-method.html">plot(<i>&lt;LcaFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code><a href="https://comeetie.github.io/greed/reference/LcaFit-class.html" class="external-link">LcaFit-class</a></code> object</p></td>
+        <td><p>plot a <code>LcaFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="plot-MoMFit-missing-method.html">plot(<i>&lt;MoMFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code><a href="https://comeetie.github.io/greed/reference/MoMFit-class.html" class="external-link">MoMFit-class</a></code> object</p></td>
+        <td><p>plot a <code>MoMFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="plot-MultSbmFit-missing-method.html">plot(<i>&lt;MultSbmFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code><a href="https://comeetie.github.io/greed/reference/MultSbmFit-class.html" class="external-link">MultSbmFit-class</a></code> object</p></td>
+        <td><p>plot a <code>MultSbmFit-class</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="plot-SbmFit-missing-method.html">plot(<i>&lt;SbmFit&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> </p>
         </td>
-        <td><p>plot a <code><a href="https://comeetie.github.io/greed/reference/SbmFit-class.html" class="external-link">SbmFit-class</a></code> object</p></td>
+        <td><p>plot a <code>SbmFit-class</code> object</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="misc-tools">Misc tools <a href="#misc-tools" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Miscaelenous utility functions.</p>
@@ -471,6 +496,14 @@
           <p><code><a href="Youngpeoplesurvey.html">Youngpeoplesurvey</a></code> </p>
         </td>
         <td><p>Young People survey data</p></td>
+      </tr><tr><td>
+          <p><code><a href="NewGuinea.html">NewGuinea</a></code> </p>
+        </td>
+        <td><p>NewGuinea data</p></td>
+      </tr><tr><td>
+          <p><code><a href="SevenGraders.html">SevenGraders</a></code> </p>
+        </td>
+        <td><p>SevenGraders data</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
