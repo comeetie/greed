@@ -12,16 +12,16 @@ NULL
 #' \deqn{ V_k \sim \mathcal{W}(\varepsilon^{-1},n_0)}
 #' \deqn{ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})}
 #' \deqn{ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})}
-#' with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Whishart distribution.
+#' with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Wishart distribution.
 #' The \code{Gmm-class} must be used when fitting a simple Gaussian Mixture Model whereas the \code{GmmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
-#'
-#' @slot tau Prior parameter (inverse variance) default 0.01
-#' @slot N0 Prior parameter (pseudo count) should be > number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)
-#' @slot epsilon Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)
-#' @slot mu Prior parameters for the means (vector of size D), (default to NaN, in this case mu will be estimated from the data and will be equal to the mean of X)
+#' @name Gmm
+NULL
+#> NULL
+
+#' @rdname Gmm
 #' @family DlvmModels
 #' @md
-#' @references Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5. #'
+#' @references Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5. 
 #' @export
 setClass("GmmPrior",
   representation = list(tau = "numeric", mu = "matrix", epsilon = "matrix", N0 = "numeric"),
@@ -44,14 +44,13 @@ setValidity("GmmPrior", function(object) {
   TRUE
 })
 
-#' @describeIn GmmPrior-class Gmm class
-#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @rdname Gmm
 #' @export
 setClass("Gmm",
   contains = c("GmmPrior", "DlvmPrior")
 )
 
-#' @describeIn GmmPrior-class GmmPrior class constructor
+#' @rdname Gmm
 #' @param tau Prior parameter (inverse variance) default 0.01
 #' @param N0 Prior parameter (pseudo count) should be > number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)
 #' @param epsilon Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)
@@ -65,12 +64,12 @@ GmmPrior <- function(tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN) {
   methods::new("GmmPrior", tau = tau, N0 = N0, mu = as.matrix(mu), epsilon = as.matrix(epsilon))
 }
 
-#' @describeIn GmmPrior-class Gmm class constructor
+#' @rdname Gmm
 #' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @return a \code{Gmm-class} object
 #' @examples
 #' Gmm()
-#' Gmm(N0 = 100)
+#' Gmm(tau = 0.1, alpha = 0.5)
 #' @export
 Gmm <- function(tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN, alpha = 1) {
   methods::new("Gmm", alpha = alpha, tau = tau, N0 = N0, mu = as.matrix(mu), epsilon = as.matrix(epsilon))
