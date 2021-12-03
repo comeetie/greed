@@ -19,16 +19,16 @@ An S4 class to represent an abstract generative model
 
 \seealso{
 Other DlvmModels: 
-\code{\link{DcLbmPrior-class}},
-\code{\link{DcSbmPrior-class}},
-\code{\link{DiagGmmPrior-class}},
+\code{\link{DcLbm}},
+\code{\link{DcSbm}},
+\code{\link{DiagGmm}},
 \code{\link{Gmm}},
-\code{\link{LcaPrior-class}},
-\code{\link{MixedModels-class}},
-\code{\link{MoMPrior-class}},
-\code{\link{MoRPrior-class}},
-\code{\link{MultSbmPrior-class}},
-\code{\link{SbmPrior-class}},
+\code{\link{Lca}},
+\code{\link{MixedModels}},
+\code{\link{MoM}},
+\code{\link{MoR}},
+\code{\link{MultSbm}},
+\code{\link{Sbm}},
 \code{\link{greed}()}
 }
 \concept{DlvmModels}

@@ -12,12 +12,12 @@ NULL
 #' \deqn{ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{B}(\theta_{kl})}
 #' These classes mainly store the prior parameters value \eqn{\alpha,a_0,b_0} of this generative model.
 #' The \code{Sbm-class} must be used when fitting a simple Sbm whereas the \code{SbmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
-#'
-#' @slot a0 Beta prior parameter over links (default to 1)
-#' @slot b0 Beta prior parameter over no-links (default to 1)
-#' @slot type define the type of networks (either "directed", "undirected" or "guess", default to "guess"), for undirected graphs the adjacency matrix is supposed to be symmetric.
-#' @seealso \code{\link{SbmFit-class}},\code{\link{SbmPath-class}}
 #' @seealso \code{\link{greed}}
+#' @name Sbm
+NULL
+#> NULL
+
+#' @rdname Sbm
 #' @family DlvmModels
 #' @examples
 #' Sbm()
@@ -49,18 +49,18 @@ setValidity("SbmPrior", function(object) {
   TRUE
 })
 
-#' @describeIn SbmPrior-class Sbm class constructor
-#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @rdname Sbm
 #' @export
 setClass("Sbm",
   contains = c("DlvmPrior", "SbmPrior")
 )
 
-#' @describeIn SbmPrior-class SbmPrior class constructor
+#' @rdname Sbm
 #' @param a0 Beta prior parameter over links (default to 1)
 #' @param b0 Beta prior parameter over no-links (default to 1)
 #' @param type define the type of networks (either "directed", "undirected" or "guess", default to "guess"), for undirected graphs the adjacency matrix is supposed to be symmetric.
 #' @return a \code{SbmPrior-class} object
+#' @seealso \code{\link{SbmFit-class}},\code{\link{SbmPath-class}}
 #' @examples
 #' SbmPrior()
 #' SbmPrior(type = "undirected")
@@ -71,7 +71,7 @@ SbmPrior <- function(a0 = 1, b0 = 1, type = "guess") {
 
 
 
-#' @describeIn SbmPrior-class Sbm class constructor
+#' @rdname Sbm
 #' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @return a \code{Sbm-class} object
 #' @examples
@@ -97,6 +97,7 @@ Sbm <- function(alpha = 1, a0 = 1, b0 = 1, type = "guess") {
 #' }
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{coef,SbmFit-method}}
 #' @export
 setClass("SbmFit", slots = list(model = "Sbm"), contains = "IclFit")
 
@@ -132,6 +133,7 @@ setClass("SbmFit", slots = list(model = "Sbm"), contains = "IclFit")
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{plot,SbmFit,missing-method}}
 #' @export
 setClass("SbmPath", contains = c("IclPath", "SbmFit"))
 

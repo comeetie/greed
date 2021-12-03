@@ -54,3 +54,6 @@ An S4 class to represent a hierarchical fit of a degree corrected stochastic blo
 \item{\code{train_hist}}{data.frame with training history information (details depends on the training procedure)}
 }}
 
+\seealso{
+\code{\link{plot,DcSbmFit,missing-method}}
+}

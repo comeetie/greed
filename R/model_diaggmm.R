@@ -15,10 +15,11 @@ NULL
 #' with \eqn{\mathcal{G}(\kappa,\beta)} the Gamma distribution with shape parameter \eqn{\kappa} and rate parameter \eqn{\beta}.
 #' These classes mainly store the prior parameters value (\eqn{\alpha,\tau,\kappa\beta,\mu}) of this generative model.
 #' The \code{DiagGmm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DiagGmmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
-#' @slot tau Prior parameter (inverse variance), (default 0.01)
-#' @slot kappa Prior parameter (gamma shape), (default to 1)
-#' @slot beta Prior parameter (gamma rate), (default to NaN, in this case beta will be estimated from data as 0.1 time the mean of X columns variances)
-#' @slot mu Prior for the means (vector of size D), (default to NaN, in this case mu will be estimated from data as the mean of X)
+#' @name DiagGmm
+NULL  
+#> NULL
+
+#' @rdname DiagGmm
 #' @family DlvmModels
 #' @md
 #' @references Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5. #'
@@ -59,20 +60,20 @@ setValidity("DiagGmmPrior", function(object) {
   TRUE
 })
 
-#' @describeIn DiagGmmPrior-class DiagGmm class constructor
-#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @rdname DiagGmm
 #' @export
 setClass("DiagGmm",
   contains = c("DlvmPrior", "DiagGmmPrior")
 )
 
 
-#' @describeIn DiagGmmPrior-class DiagGmmPrior class constructor
+#' @rdname DiagGmm
 #' @param tau Prior parameter (inverse variance), (default 0.01)
 #' @param kappa Prior parameter (gamma shape), (default to 1)
 #' @param beta Prior parameter (gamma rate), (default to NaN, in this case beta will be estimated from data as 0.1 time the mean of X columns variances)
 #' @param mu Prior for the means (vector of size D), (default to NaN, in this case mu will be estimated from data as the mean of X)
 #' @return a \code{DiagGmmPrior-class} object
+#' @seealso \code{\link{DiagGmmFit-class}}, \code{\link{DiagGmmPath-class}}
 #' @examples
 #' DiagGmmPrior()
 #' DiagGmmPrior(tau = 0.1)
@@ -82,7 +83,7 @@ DiagGmmPrior <- function(tau = 0.01, kappa = 1, beta = NaN, mu = NaN) {
 }
 
 
-#' @describeIn DiagGmmPrior-class DiagGmm class constructor
+#' @rdname DiagGmm
 #' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @return a \code{DiagGmm-class} object
 #' @export
@@ -110,6 +111,7 @@ DiagGmm <- function(alpha = 1, tau = 0.01, kappa = 1, beta = NaN, mu = NaN) {
 #' }
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{coef,DiagGmmFit-method}}
 #' @export
 setClass("DiagGmmFit", slots = list(model = "DiagGmm"), contains = "IclFit")
 
@@ -146,6 +148,7 @@ setClass("DiagGmmFit", slots = list(model = "DiagGmm"), contains = "IclFit")
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{plot,DiagGmmFit,missing-method}}
 #' @export
 setClass("DiagGmmPath", contains = c("IclPath", "DiagGmmFit"))
 

@@ -34,3 +34,6 @@ modality for each clusters }}
 depends on the training procedure)}
 }}
 
+\seealso{
+\code{\link{coef,LcaFit-method}}
+}

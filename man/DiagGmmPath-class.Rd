@@ -50,3 +50,6 @@ An S4 class to represent a hierarchical fit of a diagonal gaussian mixture model
 \item{\code{train_hist}}{data.frame with training history information (details depends on the training procedure)}
 }}
 
+\seealso{
+\code{\link{plot,DiagGmmFit,missing-method}}
+}

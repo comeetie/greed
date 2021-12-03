@@ -49,17 +49,19 @@ Gmm(tau = 0.1, alpha = 0.5)
 Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5.
 }
 \seealso{
+\code{\link{GmmFit-class}}, \code{\link{GmmPath-class}}
+
 Other DlvmModels: 
-\code{\link{DcLbmPrior-class}},
-\code{\link{DcSbmPrior-class}},
-\code{\link{DiagGmmPrior-class}},
+\code{\link{DcLbm}},
+\code{\link{DcSbm}},
+\code{\link{DiagGmm}},
 \code{\link{DlvmPrior-class}},
-\code{\link{LcaPrior-class}},
-\code{\link{MixedModels-class}},
-\code{\link{MoMPrior-class}},
-\code{\link{MoRPrior-class}},
-\code{\link{MultSbmPrior-class}},
-\code{\link{SbmPrior-class}},
+\code{\link{Lca}},
+\code{\link{MixedModels}},
+\code{\link{MoM}},
+\code{\link{MoR}},
+\code{\link{MultSbm}},
+\code{\link{Sbm}},
 \code{\link{greed}()}
 }
 \concept{DlvmModels}

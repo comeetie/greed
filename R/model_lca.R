@@ -12,7 +12,11 @@ NULL
 #' \deqn{\forall j=1, \ldots, p, \quad X_{ij}|Z_{ik}=1 \sim \mathcal{M}_{d_j}(1, \theta_{kj}),}
 #' These classes mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model.
 #' The \code{Lca-class} must be used when fitting a simple Latent Class Analysis whereas the \code{LcaPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
-#' @slot beta Dirichlet prior parameter for all the categorical feature (default to 1)
+#' @name Lca
+NULL
+#> NULL
+
+#' @rdname Lca
 #' @family DlvmModels
 #' @export
 setClass("LcaPrior",
@@ -33,17 +37,17 @@ setValidity("LcaPrior", function(object) {
   TRUE
 })
 
-#' @describeIn LcaPrior-class Lca class constructor
-#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @rdname Lca
 #' @export
 setClass("Lca",
   contains = c("DlvmPrior", "LcaPrior")
 )
 
 
-#' @describeIn LcaPrior-class LcaPrior class constructor
+#' @rdname Lca
 #' @param beta Dirichlet prior parameter for all the categorical feature (default to 1)
 #' @return a \code{LcaPrior-class} object
+#' @seealso \code{\link{LcaFit-class}}, \code{\link{LcaPath-class}}
 #' @examples
 #' LcaPrior()
 #' LcaPrior(beta = 0.5)
@@ -53,7 +57,7 @@ LcaPrior <- function(beta = 1) {
 }
 
 
-#' @describeIn LcaPrior-class Lca class constructor
+#' @rdname Lca
 #' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @return a \code{Lca-class} object
 #' @examples
@@ -83,6 +87,7 @@ Lca <- function(alpha = 1, beta = 1) {
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details
 #'   depends on the training procedure)
+#' @seealso \code{\link{coef,LcaFit-method}}
 #' @export
 setClass("LcaFit", slots = list(model = "Lca"), contains = "IclFit")
 
@@ -119,6 +124,7 @@ setClass("LcaFit", slots = list(model = "Lca"), contains = "IclFit")
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{plot,LcaFit,missing-method}}
 #' @export
 setClass("LcaPath", contains = c("IclPath", "LcaFit"))
 

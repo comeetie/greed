@@ -56,6 +56,7 @@ setClass("Gmm",
 #' @param epsilon Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)
 #' @param mu Prior parameters for the means (vector of size D), (default to NaN, in this case mu will be estimated from the data and will be equal to the mean of X)
 #' @return a \code{GmmPrior-class} object
+#' @seealso \code{\link{GmmFit-class}}, \code{\link{GmmPath-class}}
 #' @examples
 #' GmmPrior()
 #' GmmPrior(tau = 0.1)
@@ -91,6 +92,7 @@ Gmm <- function(tau = 0.01, N0 = NaN, mu = NaN, epsilon = NaN, alpha = 1) {
 #' }
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{coef,GmmFit-method}}
 #' @export
 setClass("GmmFit", slots = list(model = "Gmm"), contains = "IclFit")
 
@@ -126,6 +128,7 @@ setClass("GmmFit", slots = list(model = "Gmm"), contains = "IclFit")
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{plot,GmmFit,missing-method}}
 #' @export
 setClass("GmmPath", contains = c("IclPath", "GmmFit"))
 

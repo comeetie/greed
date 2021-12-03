@@ -12,7 +12,11 @@ NULL
 #' \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{M}(L_i,\theta_{k})}
 #' With \eqn{L_i=\sum_d=1^DX_{id}}. These classes mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model.
 #' The \code{MoM-class} must be used when fitting a simple Mixture of Multinomials whereas the \code{MoMPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
-#' @slot beta Dirichlet over vocabulary prior parameter (default to 1)
+#' @name MoM 
+NULL
+#> NULL
+
+#' @rdname MoM 
 #' @family DlvmModels
 #' @export
 setClass("MoMPrior",
@@ -35,16 +39,16 @@ setValidity("MoMPrior", function(object) {
 })
 
 
-#' @describeIn MoMPrior-class MoM class constructor
-#' @slot alpha Dirichlet prior parameter over the cluster proportions (default to 1)
+#' @rdname MoM 
 #' @export
 setClass("MoM",
   contains = c("DlvmPrior", "MoMPrior")
 )
 
-#' @describeIn MoMPrior-class MoMPrior class constructor
+#' @rdname MoM 
 #' @param beta Dirichlet over vocabulary prior parameter (default to 1)
 #' @return a \code{MoMPrior-class} object
+#' @seealso \code{\link{MoMFit-class}}, \code{\link{MoMPath-class}}
 #' @examples
 #' MoMPrior()
 #' MoMPrior(beta = 0.5)
@@ -53,7 +57,7 @@ MoMPrior <- function(beta = 1) {
   methods::new("MoMPrior", beta = 1)
 }
 
-#' @describeIn MoMPrior-class MoM class constructor
+#' @rdname MoM 
 #' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
 #' @return a \code{MoM-class} object
 #' @examples
@@ -82,6 +86,7 @@ MoM <- function(alpha = 1, beta = 1) {
 #' }
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{coef,LcaFit-method}}
 #' @export
 setClass("MoMFit", slots = list(model = "MoM"), contains = "IclFit")
 
@@ -118,6 +123,7 @@ setClass("MoMFit", slots = list(model = "MoM"), contains = "IclFit")
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
+#' @seealso \code{\link{plot,LcaFit,missing-method}}
 #' @export
 setClass("MoMPath", contains = c("IclPath", "MoMFit"))
 

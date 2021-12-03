@@ -31,3 +31,6 @@ An S4 class to represent a fit of a degree corrected stochastic block model for 
 \item{\code{train_hist}}{data.frame with training history information (details depends on the training procedure)}
 }}
 
+\seealso{
+\code{\link{coef,LcaFit-method}}
+}

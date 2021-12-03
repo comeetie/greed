@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_mor.R
 \name{coef,MoRFit-method}
 \alias{coef,MoRFit-method}
-\title{Extract mixture parameters from \code{\link{MoRFit-class}} object}
+\title{Extract mixture parameters from \code{\link{MoRFit-class}} object using MAP estimation}
 \usage{
 \S4method{coef}{MoRFit}(object)
 }
@@ -18,5 +18,5 @@ a list with the mixture parameters estimates (MAP), the fields are:
 }
 }
 \description{
-Extract mixture parameters from \code{\link{MoRFit-class}} object
+Extract mixture parameters from \code{\link{MoRFit-class}} object using MAP estimation
 }
