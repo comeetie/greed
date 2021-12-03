@@ -43,6 +43,8 @@ test_that("MOR internal function", {
 })
 
 test_that("MOR hybrid", {
+  m=3
+  K=3
   regs <- rmreg(500, rep(1 / 3, 3), A = cbind(c(5, 1, -125), c(1, 20, 1), c(15, 100, 200)), sigma = 1)
   df <- data.frame(x1 = regs$X[, 2], x2 = regs$X[, 3], y = regs$y)
   model <- MoR(y ~ x1 + x2)
@@ -51,6 +53,14 @@ test_that("MOR hybrid", {
   expect_true(is.ggplot(plot(sol, type = "tree")))
   expect_true(is.ggplot(plot(sol, type = "path")))
   expect_true(is.ggplot(plot(sol, type = "front")))
+  
+  param <- coef(sol)
+  expect_equal(sum(param$pi), 1, tolerance = 1e-8)
+  expect_length(param$A, K(sol))
+  expect_length(param$Sigmak, K(sol))
+  lapply(param$A, function(mat) expect_true(all.equal(dim(mat), c(m, 1))))
+  lapply(param$Sigmak, function(mat) expect_true(all.equal(dim(mat), c(1, 1)))) # scalar variance
+  
   i <- sample(500, 1)
   cl <- sol@cl
   newcl <- sample(setdiff(1:3, cl[i]), 1)
@@ -59,6 +69,7 @@ test_that("MOR hybrid", {
   expect_lte(greed:::test_merge(model, data, cl, 1, 2), 10^-6)
   expect_lte(max(abs(greed:::test_merge_correction(model, data, cl, 1, 2))), 10^-6)
 })
+
 
 
 test_that("MOR seed", {
