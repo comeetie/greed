@@ -101,16 +101,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/SBM.html">Graph clustering</a>
+      <a href="../articles/GMM.html">Gaussian Mixture Models</a>
     </li>
     <li>
-      <a href="../articles/GMM.html">Gaussian Mixture Models</a>
+      <a href="../articles/LCA.html">Latent Class Analysis</a>
     </li>
     <li>
       <a href="../articles/MoR.html">Mixture of Regressions</a>
     </li>
     <li>
-      <a href="../articles/LCA.html">Latent Class Analysis</a>
+      <a href="../articles/SBM.html">Graph clustering</a>
     </li>
     <li>
       <a href="../articles/Mixed-Models.html">Mixed Models</a>
@@ -182,7 +182,7 @@
     
 
 <dl>
-<dt><code>models</code></dt><dd><p>a named list of DlvmModels Emission prior such as (<code><a href='GmmPrior-class.html'>GmmPrior</a></code>,<code><a href='LcaPrior-class.html'>LcaPrior</a></code>,<code><a href='SbmPrior-class.html'>SbmPrior</a></code>,...)</p></dd>
+<dt><code>models</code></dt><dd><p>a named list of DlvmModels Emission prior such as (<code><a href='Gmm.html'>GmmPrior</a></code>,<code><a href='LcaPrior-class.html'>LcaPrior</a></code>,<code><a href='SbmPrior-class.html'>SbmPrior</a></code>,...)</p></dd>
 
 </dl>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -192,7 +192,7 @@
 <code><a href='DcSbmPrior-class.html'>DcSbmPrior-class</a></code>,
 <code><a href='DiagGmmPrior-class.html'>DiagGmmPrior-class</a></code>,
 <code><a href='DlvmPrior-class.html'>DlvmPrior-class</a></code>,
-<code><a href='GmmPrior-class.html'>GmmPrior-class</a></code>,
+<code><a href='Gmm.html'>Gmm</a></code>,
 <code><a href='LcaPrior-class.html'>LcaPrior-class</a></code>,
 <code><a href='MoMPrior-class.html'>MoMPrior-class</a></code>,
 <code><a href='MoRPrior-class.html'>MoRPrior-class</a></code>,
@@ -201,7 +201,7 @@
 <code><a href='greed.html'>greed</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='r-in'><span class='fu'>MixedModels</span><span class='op'>(</span>models <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>continuous <span class='op'>=</span> <span class='fu'><a href='GmmPrior-class.html'>GmmPrior</a></span><span class='op'>(</span><span class='op'>)</span>, discrete <span class='op'>=</span> <span class='fu'><a href='LcaPrior-class.html'>LcaPrior</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+    <pre class="examples"><span class='r-in'><span class='fu'>MixedModels</span><span class='op'>(</span>models <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>continuous <span class='op'>=</span> <span class='fu'><a href='Gmm.html'>GmmPrior</a></span><span class='op'>(</span><span class='op'>)</span>, discrete <span class='op'>=</span> <span class='fu'><a href='LcaPrior-class.html'>LcaPrior</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "MixedModels"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "models":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> $continuous</span>

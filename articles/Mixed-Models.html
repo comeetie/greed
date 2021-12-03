@@ -60,16 +60,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/SBM.html">Graph clustering</a>
+      <a href="../articles/GMM.html">Gaussian Mixture Models</a>
     </li>
     <li>
-      <a href="../articles/GMM.html">Gaussian Mixture Models</a>
+      <a href="../articles/LCA.html">Latent Class Analysis</a>
     </li>
     <li>
       <a href="../articles/MoR.html">Mixture of Regressions</a>
     </li>
     <li>
-      <a href="../articles/LCA.html">Latent Class Analysis</a>
+      <a href="../articles/SBM.html">Graph clustering</a>
     </li>
     <li>
       <a href="../articles/Mixed-Models.html">Mixed Models</a>
@@ -191,7 +191,7 @@
             cont <span class="op">=</span> <span class="va">X</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html">select_if</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">{</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">is.factor</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">}</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># create the MixedModels, as expected we will use an LcaPrior for the factors and a GmmPrior for the numeric columns.</span>
 <span class="co"># !be carefull names in the models list and in the data list must match</span>
-<span class="va">mixmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MixedModels-class.html">MixedModels</a></span><span class="op">(</span>models<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>categorical<span class="op">=</span><span class="fu"><a href="../reference/LcaPrior-class.html">LcaPrior</a></span><span class="op">(</span><span class="op">)</span>,cont<span class="op">=</span><span class="fu"><a href="../reference/GmmPrior-class.html">GmmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">mixmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MixedModels-class.html">MixedModels</a></span><span class="op">(</span>models<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>categorical<span class="op">=</span><span class="fu"><a href="../reference/LcaPrior-class.html">LcaPrior</a></span><span class="op">(</span><span class="op">)</span>,cont<span class="op">=</span><span class="fu"><a href="../reference/Gmm.html">GmmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># perform the clustering</span>
 <span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">data</span>,model <span class="op">=</span> <span class="va">mixmod</span><span class="op">)</span>
 <span class="co">#&gt; ------- MIXEDMODELS model fitting ------</span>

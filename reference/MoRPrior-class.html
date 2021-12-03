@@ -110,16 +110,16 @@ The MoR-class must be used when fitting a simple Mixture of Regression whereas t
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/SBM.html">Graph clustering</a>
+      <a href="../articles/GMM.html">Gaussian Mixture Models</a>
     </li>
     <li>
-      <a href="../articles/GMM.html">Gaussian Mixture Models</a>
+      <a href="../articles/LCA.html">Latent Class Analysis</a>
     </li>
     <li>
       <a href="../articles/MoR.html">Mixture of Regressions</a>
     </li>
     <li>
-      <a href="../articles/LCA.html">Latent Class Analysis</a>
+      <a href="../articles/SBM.html">Graph clustering</a>
     </li>
     <li>
       <a href="../articles/Mixed-Models.html">Mixed Models</a>
@@ -232,7 +232,7 @@ The <code>MoR-class</code> must be used when fitting a simple Mixture of Regress
 <code><a href='DcSbmPrior-class.html'>DcSbmPrior-class</a></code>,
 <code><a href='DiagGmmPrior-class.html'>DiagGmmPrior-class</a></code>,
 <code><a href='DlvmPrior-class.html'>DlvmPrior-class</a></code>,
-<code><a href='GmmPrior-class.html'>GmmPrior-class</a></code>,
+<code><a href='Gmm.html'>Gmm</a></code>,
 <code><a href='LcaPrior-class.html'>LcaPrior-class</a></code>,
 <code><a href='MixedModels-class.html'>MixedModels-class</a></code>,
 <code><a href='MoMPrior-class.html'>MoMPrior-class</a></code>,
@@ -245,7 +245,7 @@ The <code>MoR-class</code> must be used when fitting a simple Mixture of Regress
 <span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "MoRPrior"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "formula":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> y ~ x1 + x2</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x7fb14770e160&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x7fb6ec570558&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.001</span>
@@ -261,7 +261,7 @@ The <code>MoR-class</code> must be used when fitting a simple Mixture of Regress
 <span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "MoRPrior"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "formula":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> y ~ x1 + x2</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x7fb14770e160&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x7fb6ec570558&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.001</span>
@@ -277,7 +277,7 @@ The <code>MoR-class</code> must be used when fitting a simple Mixture of Regress
 <span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "MoRPrior"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "formula":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> cbind(y1, y2) ~ x1 + x2</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x7fb14770e160&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x7fb6ec570558&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.001</span>
@@ -293,7 +293,7 @@ The <code>MoR-class</code> must be used when fitting a simple Mixture of Regress
 <span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "MoR"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "formula":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> y ~ x1 + x2</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x7fb14770e160&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x7fb6ec570558&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.1</span>
@@ -312,7 +312,7 @@ The <code>MoR-class</code> must be used when fitting a simple Mixture of Regress
 <span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "MoR"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "formula":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> y ~ x1 + x2</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x7fb14770e160&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x7fb6ec570558&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.1</span>
@@ -331,7 +331,7 @@ The <code>MoR-class</code> must be used when fitting a simple Mixture of Regress
 <span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "MoR"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "formula":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> cbind(y1, y2) ~ x1 + x2</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x7fb14770e160&gt;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> &lt;environment: 0x7fb6ec570558&gt;</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.1</span>

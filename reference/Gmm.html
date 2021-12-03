@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Degree Corrected Stochastic Block Model Prior class — DcSbmPrior-class • greed</title>
+<title>Gaussian Mixture Model Prior description class — Gmm • greed</title>
 
 
 <!-- jquery -->
@@ -39,18 +39,16 @@
 
 
 
-<meta property="og:title" content="Degree Corrected Stochastic Block Model Prior class — DcSbmPrior-class" />
-<meta property="og:description" content="An S4 class to represent a Degree Corrected Stochastic Block Model.
-Such model can be used to cluster graph vertex, and model a square adjacency matrix \(X\) with the following generative model :
+<meta property="og:title" content="Gaussian Mixture Model Prior description class — Gmm" />
+<meta property="og:description" content="An S4 class to represent a multivariate Gaussian mixture model.
+The model corresponds to the following generative model:
 $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
-$$ \theta_{kl} \sim Exponential(p)$$
-$$ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)$$
-$$ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)$$
-The individuals parameters \(\gamma_i^+,\gamma_i^-\) allow to take into account the node degree heterogeneity.
-These parameters have uniform priors over the simplex \(S_k\) ie. \(\sum_{i:z_{ik}=1}\gamma_i^+=1\).
-These classes mainly store the prior parameters value \(\alpha,p\) of this generative model.
-The DcSbm-class must be used when fitting a simple Degree Corrected Stochastic Block Model whereas the DcSbmPrior-class must be used when fitting a MixedModels-class." />
+$$ V_k \sim \mathcal{W}(\varepsilon^{-1},n_0)$$
+$$ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})$$
+$$ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})$$
+with \(\mathcal{W}(\varepsilon^{-1},n_0)\) the Wishart distribution.
+The Gmm-class must be used when fitting a simple Gaussian Mixture Model whereas the GmmPrior-class must be used when fitting a MixedModels-class." />
 
 
 
@@ -151,39 +149,45 @@ The DcSbm-class must be used when fitting a simple Degree Corrected Stochastic B
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Degree Corrected Stochastic Block Model Prior class</h1>
-    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/model_dcsbm.R'><code>R/model_dcsbm.R</code></a></small>
-    <div class="hidden name"><code>DcSbmPrior-class.Rd</code></div>
+    <h1>Gaussian Mixture Model Prior description class</h1>
+    <small class="dont-index">Source: <a href='https://github.com/comeetie/greed/blob/master/R/model_gmm.R'><code>R/model_gmm.R</code></a></small>
+    <div class="hidden name"><code>Gmm.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An S4 class to represent a Degree Corrected Stochastic Block Model.
-Such model can be used to cluster graph vertex, and model a square adjacency matrix \(X\) with the following generative model :
+    <p>An S4 class to represent a multivariate Gaussian mixture model.
+The model corresponds to the following generative model:
 $$ \pi \sim Dirichlet(\alpha)$$
 $$ Z_i  \sim \mathcal{M}(1,\pi)$$
-$$ \theta_{kl} \sim Exponential(p)$$
-$$ \gamma_i^+,\gamma_i^- \sim \mathcal{U}(S_k)$$
-$$ X_{ij}|Z_{ik}Z_{jl}=1 \sim \mathcal{P}(\gamma_i^+\theta_{kl}\gamma_j^-)$$
-The individuals parameters \(\gamma_i^+,\gamma_i^-\) allow to take into account the node degree heterogeneity.
-These parameters have uniform priors over the simplex \(S_k\) ie. \(\sum_{i:z_{ik}=1}\gamma_i^+=1\).
-These classes mainly store the prior parameters value \(\alpha,p\) of this generative model.
-The <code>DcSbm-class</code> must be used when fitting a simple Degree Corrected Stochastic Block Model whereas the <code>DcSbmPrior-class</code> must be used when fitting a <code><a href='MixedModels-class.html'>MixedModels-class</a></code>.</p>
+$$ V_k \sim \mathcal{W}(\varepsilon^{-1},n_0)$$
+$$ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})$$
+$$ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})$$
+with \(\mathcal{W}(\varepsilon^{-1},n_0)\) the Wishart distribution.
+The <code>Gmm-class</code> must be used when fitting a simple Gaussian Mixture Model whereas the <code>GmmPrior-class</code> must be used when fitting a <code><a href='MixedModels-class.html'>MixedModels-class</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>DcSbmPrior</span><span class='op'>(</span>p <span class='op'>=</span> <span class='cn'>NaN</span>, type <span class='op'>=</span> <span class='st'>"guess"</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>GmmPrior</span><span class='op'>(</span>tau <span class='op'>=</span> <span class='fl'>0.01</span>, N0 <span class='op'>=</span> <span class='cn'>NaN</span>, mu <span class='op'>=</span> <span class='cn'>NaN</span>, epsilon <span class='op'>=</span> <span class='cn'>NaN</span><span class='op'>)</span>
 
-<span class='fu'>DcSbm</span><span class='op'>(</span>alpha <span class='op'>=</span> <span class='fl'>1</span>, p <span class='op'>=</span> <span class='cn'>NaN</span>, type <span class='op'>=</span> <span class='st'>"guess"</span><span class='op'>)</span></pre>
+<span class='fu'>Gmm</span><span class='op'>(</span>tau <span class='op'>=</span> <span class='fl'>0.01</span>, N0 <span class='op'>=</span> <span class='cn'>NaN</span>, mu <span class='op'>=</span> <span class='cn'>NaN</span>, epsilon <span class='op'>=</span> <span class='cn'>NaN</span>, alpha <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>p</th>
-      <td><p>Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)</p></td>
+      <th>tau</th>
+      <td><p>Prior parameter (inverse variance) default 0.01</p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>define the type of networks (either "directed", "undirected" or "guess", default to "guess")</p></td>
+      <th>N0</th>
+      <td><p>Prior parameter (pseudo count) should be &gt; number of features (default to NaN, in this case it will be estimated from data as the number of columns of X)</p></td>
+    </tr>
+    <tr>
+      <th>mu</th>
+      <td><p>Prior parameters for the means (vector of size D), (default to NaN, in this case mu will be estimated from the data and will be equal to the mean of X)</p></td>
+    </tr>
+    <tr>
+      <th>epsilon</th>
+      <td><p>Prior parameter co-variance matrix prior (matrix of size D x D), (default to a matrix of NaN, in this case epsilon will be estimated from data and will corresponds to 0.1 times a diagonal matrix with the variances of the X columns)</p></td>
     </tr>
     <tr>
       <th>alpha</th>
@@ -193,35 +197,18 @@ The <code>DcSbm-class</code> must be used when fitting a simple Degree Corrected
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>DcSbmPrior-class</code> object</p>
-<p>a <code>DcSbm-class</code> object</p>
-    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
+    <p>a <code>GmmPrior-class</code> object</p>
+<p>a <code>Gmm-class</code> object</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    
-<ul>
-<li><p><code>DcSbm-class</code>: DcSbm class constructor</p></li>
-<li><p><code>DcSbmPrior</code>: DcSbmPrior class constructor</p></li>
-<li><p><code>DcSbm</code>: DcSbm class constructor</p></li>
-</ul>
-    <h2 class="hasAnchor" id="slots"><a class="anchor" href="#slots"></a>Slots</h2>
-
-    
-
-<dl>
-<dt><code>p</code></dt><dd><p>Exponential prior parameter (default to NaN, in this case p will be estimated from data as the mean connection probability)</p></dd>
-
-<dt><code>type</code></dt><dd><p>define the type of networks (either "directed", "undirected" or "guess", default to "guess")</p></dd>
-
-<dt><code>alpha</code></dt><dd><p>Dirichlet prior parameter over the cluster proportions (default to 1)</p></dd>
-
-</dl>
+    <p>Bertoletti, Marco &amp; Friel, Nial &amp; Rastelli, Riccardo. (2014). Choosing the number of clusters in a finite mixture model using an exact Integrated Completed Likelihood criterion. METRON. 73. 10.1007/s40300-015-0064-5.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other DlvmModels: 
 <code><a href='DcLbmPrior-class.html'>DcLbmPrior-class</a></code>,
+<code><a href='DcSbmPrior-class.html'>DcSbmPrior-class</a></code>,
 <code><a href='DiagGmmPrior-class.html'>DiagGmmPrior-class</a></code>,
 <code><a href='DlvmPrior-class.html'>DlvmPrior-class</a></code>,
-<code><a href='Gmm.html'>Gmm</a></code>,
 <code><a href='LcaPrior-class.html'>LcaPrior-class</a></code>,
 <code><a href='MixedModels-class.html'>MixedModels-class</a></code>,
 <code><a href='MoMPrior-class.html'>MoMPrior-class</a></code>,
@@ -231,43 +218,75 @@ The <code>DcSbm-class</code> must be used when fitting a simple Degree Corrected
 <code><a href='greed.html'>greed</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='r-in'><span class='fu'>DcSbmPrior</span><span class='op'>(</span><span class='op'>)</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "DcSbmPrior"</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "type":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "guess"</span>
+    <pre class="examples"><span class='r-in'><span class='fu'>GmmPrior</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "GmmPrior"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.01</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "p":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "mu":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "epsilon":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "N0":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-in'><span class='fu'>DcSbmPrior</span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"undirected"</span><span class='op'>)</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "DcSbmPrior"</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "type":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "undirected"</span>
+<span class='r-in'><span class='fu'>GmmPrior</span><span class='op'>(</span>tau <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "GmmPrior"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.1</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "p":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "mu":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "epsilon":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "N0":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-in'><span class='fu'>DcSbm</span><span class='op'>(</span><span class='op'>)</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "DcSbm"</span>
+<span class='r-in'><span class='fu'>Gmm</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "Gmm"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.01</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "mu":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "epsilon":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "N0":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "alpha":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 1</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "type":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "guess"</span>
+<span class='r-in'><span class='fu'>Gmm</span><span class='op'>(</span>tau <span class='op'>=</span> <span class='fl'>0.1</span>, alpha <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "Gmm"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "tau":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.1</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "p":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "mu":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "epsilon":</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      [,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1,]  NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "N0":</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-in'><span class='fu'>DcSbm</span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"undirected"</span><span class='op'>)</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> An object of class "DcSbm"</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "alpha":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 1</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "type":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "undirected"</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> Slot "p":</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NaN</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.5</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
 </pre>
   </div>
