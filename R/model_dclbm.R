@@ -186,12 +186,13 @@ setMethod(
 )
 
 
-#' @title plot a \code{\link{DcLbmFit-class}}
+#' @title plot a \code{\link{DcLbmPath-class}}
 #'
 #'
-#' @param x a \code{\link{DcLbmFit-class}}
+#' @param x a \code{\link{DcLbmPath-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
+#' \item \code{'tree'}: plot a co-dendogram of rows and colums clusters
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between row and column clusters
 #' \item \code{'biplot'}: plot a block matrix with summarizing connections between row and column clusters aligned with row and clusters drendograms
 #' \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between row and column clusters
@@ -201,12 +202,35 @@ setMethod(
 setMethod(
   f = "plot",
   signature = signature("DcLbmPath", "missing"),
-  definition = function(x, type = "blocks") {
+  definition = function(x, type = "tree") {
     switch(type,
+      tree = co_dendo(x),
       blocks = co_blocks(x),
       biplot = bi_plot(x),
       nodelink = co_nodelink(x),
-      methods::callNextMethod(x, type)
+      methods::callNextMethod(x, type=type)
+    )
+  }
+)
+
+#' @title plot a \code{\link{DcLbmFit-class}}
+#'
+#'
+#' @param x a \code{\link{DcLbmFit-class}}
+#' @param type a string which specify plot type:
+#' \itemize{
+#' \item \code{'blocks'}: plot a block matrix with summarizing connections between row and column clusters
+#' \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between row and column clusters
+#' }
+#' @return a \code{\link{ggplot2}} graphic
+#' @export
+setMethod(
+  f = "plot",
+  signature = signature("DcLbmFit", "missing"),
+  definition = function(x, type = "blocks") {
+    switch(type,
+           blocks = co_blocks(x),
+           nodelink = co_nodelink(x)
     )
   }
 )
