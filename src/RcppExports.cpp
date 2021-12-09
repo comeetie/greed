@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // post_probs
 arma::mat post_probs(S4 model, List data, arma::uvec& clt);
 RcppExport SEXP _greed_post_probs(SEXP modelSEXP, SEXP dataSEXP, SEXP cltSEXP) {

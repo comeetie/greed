@@ -62,14 +62,14 @@ install.packages("greed")
 
 ## Usage
 
-The main entry point for using the package is simply the greed function (`?greed`). The generative model will be chosen automatically to fit with the data provided, but you may specify another choice with the model parameter. This is a basic example with the classical Football network:
+The main entry point for using the package is simply the greed function (`?greed`). The generative model will be chosen automatically to fit with the data provided, but you may specify another choice with the model parameter. This is a basic example with the classical Books network `?Books`:
 
 ```{r example}
 library(greed)
 data(Books)
 sol <- greed(Books$X)
 ```
-You may specify the model you want to use and set the priors paramaters with the (model argument), the optimization algorithm (alg argument) and the initial number of cluster K. Here football is a square sparse matrix and a graph clustering ``?`DcSbm-class` `` model will be used by default, and the Hybrid genetic algorithm greed used. 
+You may specify the model you want to use and set the priors parameters with the (model argument), the optimization algorithm (alg argument) and the initial number of cluster K. Here football is a square sparse matrix and a graph clustering ``?`DcSbm-class` `` model will be used by default, and the Hybrid genetic algorithm greed used. 
 
 
 
@@ -109,7 +109,9 @@ library(future)
 plan(multisession)
 ```
 
-# Classical clustering, GMM
+## Typical use cases
+
+### Classical clustering, GMM
 
 See the [GMM vignette](articles/GMM.html) for details.
 
@@ -122,15 +124,15 @@ gmmpairs(sol,X)
 ```
 
 
-# Questionnary and item response theory datasets, LCA
+### Questionnary and item response theory datasets, LCA
 
 See the [LCA vignette](articles/LCA.html) for details.
 
-# Graphs, SBM like models
+### Graphs, SBM like models
 
 See the [SBM vignette](articles/SBM.html) for details.
 
-# Mixture of Regression
+### Mixture of Regression
 
 See the [MoR vignette](articles/MoR.html) for details.
 
