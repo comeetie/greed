@@ -1,5 +1,5 @@
 ---
-title: "GMM"
+title: "Continuous data clustering with Gaussian mixtures"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{GMM}
@@ -21,26 +21,57 @@ library(ggplot2)
 set.seed(2134)
 ```
 
+```{r, include=FALSE, echo=FALSE}
+# set ggplot2's theme options globally
+th = theme_classic(base_size = 14, base_family = base_family) %+replace%
+  ggplot2::theme(
+      # L'ensemble de la figure
+      plot.title = element_text(size = rel(1), face = "bold", margin = margin(0,0,5,0), hjust = 0),
+      # Zone où se situe le graphique
+      # panel.grid.minor = element_blank(),
+      # panel.border = element_blank(),
+      # Les axes
+      axis.title = element_text(size = rel(0.85), face = "bold"),
+      axis.text = element_text(size = rel(0.70), face = "bold"),
+      axis.line = element_line(color = "black", arrow = arrow(length = unit(0.3, "lines"), type = "closed")),
+      # La légende
+      legend.title = element_text(size = rel(0.85), face = "bold"),
+      legend.text = element_text(size = rel(0.70), face = "bold"),
+      legend.key = element_rect(fill = "transparent", colour = NA),
+      legend.key.size = unit(1.5, "lines"),
+      legend.background = element_rect(fill = "transparent", colour = NA)
+      )
+ggplot2::theme_set(th)
+```
+
+
+Gaussian Mixture Models (GMMs) count among the most widely used [DLVMs](https://arxiv.org/abs/2002.11577) for continuous data clustering. 
+
 ## Full covariance matrix
-Gaussian Mixture Models (GMMs) are treated in greed in a Bayesian fashion with typical conjugate priors.
-$$
-\begin{align}
-\pi&\sim Dirichlet(\alpha)\\
+
+Without any constraints, the Bayesian formulation of GMMs leading to a tractable exact ICL expression uses a Normal and inverse-Wishart conjugate prior on the mean and covariances $\param = (\mathbf{\mu}_k, \mathbf{\Sigma}_k)_k$. This prior is defined with hyperparameters $\bBeta = (\mathbf{\mu}, \tau, n_0, \mathbf{\varepsilon})$ and the hierarchical model is written as follows:
+```{=tex}
+\begin{equation}
+\label{eq:gmm}
+\begin{aligned}
+\pi&\sim \textrm{Dirichlet}_K(\alpha)\\
 Z_i&\sim \mathcal{M}(1,\pi)\\
-V_k&\sim \mathcal{W}(\varepsilon^{-1},n_0)\\
-\mu_k&\sim \mathcal{N}(\mu,(\tau V_k)^{-1})\\
-X_{i}|Z_{ik}=1 &\sim \mathcal{N}(\mu_k,V_{k}^{-1})\\
-\end{align}
-$$
+\mathbf{\Sigma}_k^{-1} & \sim \textrm{Wishart}(\mathbf{\varepsilon}^{-1},n_0)\\
+\mathbf{\mu}_k&\sim \mathcal{N}(\mathbf{\mu},\frac{1}{\tau} \mathbf{\Sigma}_k)\\
+X_{i}|Z_{ik}=1 &\sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_{k})\\
+\end{aligned}
+\end{equation}
+```
+
 Contrary to other models, these priors are informative and may therefore have a sensible impact on the obtained results. By default, the priors parameters are set as follow:
 
 - $\alpha=1$
 - $\mu=\bar{X}$
 - $\tau=0.01$
 - $n_0=d$ 
-- $\varepsilon=0.1diag(var(X))$
+- $\mathbf{\varepsilon}=0.1\,\textrm{diag}(\mathbf{\hat{\Sigma}}_{\mathbf{X}})$
 
-See ``?`gmm-class` `` for more details. These values were chosen to accommodate a variety of situation. Lets look at the results with the diabetes dataset:
+For more details, we refer to the class documentation ``?Gmm``. These values were chosen to accommodate a variety of situation. Lets look at the results with the diabetes dataset:
 
 ```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 data(diabetes)
@@ -52,11 +83,11 @@ table(diabetes$cl,clustering(sol))
 
 To get an overview of the clustering results, you may use the `gmmpairs` plot function:
 ```{r diabetes-gmm-FIG, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
-gmmpairs(sol,X)
+gmmpairs(sol,X) 
 ```
 
 
-The obtained results are those expected and correspond to the known groups. If you want to experiments with other values for the prior parameters, the most important is $\varepsilon$, which control the covariance matrix Whishart prior. You may try smaller values for example. In this case, you may also decrease $\tau$ to keep a flat priors on clusters means. For the diabetes data such choices leads to an interesting solution where one cluster is then used to fit one outlier.
+The obtained results are those expected and correspond to the known groups. If you want to experiments with other values for the prior parameters, the most important is $\mathbf{\varepsilon}$, which control the covariance matrix Whishart prior. You may try smaller values for example. In this case, you may also decrease $\tau$ to keep a flat priors on clusters means. For the diabetes data such choices leads to an interesting solution where one cluster is then used to fit one outlier.
 
 ```{r diabetes-gmm-0.01, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 sol = greed(X,model=Gmm(epsilon=0.01*diag(diag(cov(X))), tau =0.001))
