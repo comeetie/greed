@@ -23,7 +23,7 @@ set.seed(2134)
 
 ```{r, include=FALSE, echo=FALSE}
 # set ggplot2's theme options globally
-th = theme_classic(base_size = 14, base_family = base_family) %+replace%
+th = theme_classic(base_size = 20) %+replace%
   ggplot2::theme(
       # L'ensemble de la figure
       plot.title = element_text(size = rel(1), face = "bold", margin = margin(0,0,5,0), hjust = 0),
@@ -31,12 +31,12 @@ th = theme_classic(base_size = 14, base_family = base_family) %+replace%
       # panel.grid.minor = element_blank(),
       # panel.border = element_blank(),
       # Les axes
-      axis.title = element_text(size = rel(0.85), face = "bold"),
-      axis.text = element_text(size = rel(0.70), face = "bold"),
+      axis.title = element_text(size = rel(0.7), face = "bold"),
+      axis.text = element_text(size = rel(0.55), face = "bold"),
       axis.line = element_line(color = "black", arrow = arrow(length = unit(0.3, "lines"), type = "closed")),
       # La légende
-      legend.title = element_text(size = rel(0.85), face = "bold"),
-      legend.text = element_text(size = rel(0.70), face = "bold"),
+      legend.title = element_text(size = rel(0.6), face = "bold"),
+      legend.text = element_text(size = rel(0.6), face = "bold"),
       legend.key = element_rect(fill = "transparent", colour = NA),
       legend.key.size = unit(1.5, "lines"),
       legend.background = element_rect(fill = "transparent", colour = NA)
@@ -44,12 +44,17 @@ th = theme_classic(base_size = 14, base_family = base_family) %+replace%
 ggplot2::theme_set(th)
 ```
 
+```{r test-plot}
+# gg = ggplot(cars) + geom_point(aes(x=speed, y=dist)) + ggtitle('cars')
+# gg
+```
 
-Gaussian Mixture Models (GMMs) count among the most widely used [DLVMs](https://arxiv.org/abs/2002.11577) for continuous data clustering. 
+# The model
 
-## Full covariance matrix
+Gaussian Mixture Models (GMMs) count among the most widely used [DLVMs](https://arxiv.org/abs/2002.11577) for continuous data clustering. The **greed** package handles this family of models and implements efficient visualization tools for the clustering results that we detail below.
 
-Without any constraints, the Bayesian formulation of GMMs leading to a tractable exact ICL expression uses a Normal and inverse-Wishart conjugate prior on the mean and covariances $\param = (\mathbf{\mu}_k, \mathbf{\Sigma}_k)_k$. This prior is defined with hyperparameters $\bBeta = (\mathbf{\mu}, \tau, n_0, \mathbf{\varepsilon})$ and the hierarchical model is written as follows:
+
+Without any constraints, the Bayesian formulation of GMMs leading to a tractable exact ICL expression uses a Normal and inverse-Wishart conjugate prior on the mean and covariances $\mathbf{\theta} = (\mathbf{\mu}_k, \mathbf{\Sigma}_k)_k$. This prior is defined with hyperparameters $\mathbf{Beta} = (\mathbf{\mu}, \tau, n_0, \mathbf{\varepsilon})$ and the hierarchical model is written as follows:
 ```{=tex}
 \begin{equation}
 \label{eq:gmm}
@@ -71,34 +76,53 @@ Contrary to other models, these priors are informative and may therefore have a 
 - $n_0=d$ 
 - $\mathbf{\varepsilon}=0.1\,\textrm{diag}(\mathbf{\hat{\Sigma}}_{\mathbf{X}})$
 
-For more details, we refer to the class documentation ``?Gmm``. These values were chosen to accommodate a variety of situation. Lets look at the results with the diabetes dataset:
+These default values were chosen to accommodate a variety of situation but may be modified easily. For more details, we refer to the class documentation `?Gmm`. Finally, it is possible to specify constraints on the covariance matrix as discussed below. 
 
-```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
+
+# An introductory example : the diabetes dataset
+
+Let us describe a first use case on the `diabetes` dataset from the **mclust** package. The data describes $p=3$ biological variables for $n=145$ patients with $K=3$ different types of diabetes: normal, overt and chemical. We are interested in the clustering of this dataset to see if the three biological variables can discriminate between the three diabetes type. 
+
+```{r load-data}
 data(diabetes)
 X=diabetes[,-1]
-sol = greed(X,model=Gmm())
-table(diabetes$cl,clustering(sol))
+X = data.frame(scale(X)) # centering and scaling
 ```
 
 
-To get an overview of the clustering results, you may use the `gmmpairs` plot function:
+
+## Clustering with greed and GMM 
+
+We apply the `greed()` function with a `Gmm` object with default hyperparameters. The optimization algorithm used by default is the hybrid genetic algorithm of [Come et. al (2021)](https://arxiv.org/abs/2002.11577).
+
+
+```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
+sol = greed(X,model=Gmm())
+cat('\n Confusion table')
+print(knitr::kable(table(diabetes$cl,clustering(sol))), format='html')
+# cat('An ARI of ', aricode::ARI(diabetes$class, clustering(sol)))
+```
+The optimal clustering found by the hybrid GA has $K^\star=3$ clusters and  roughly corresponds to the known groups with cluster 1,2 and 3 recovering overt, chemical and normal diabetes respectively, with some missclassifications that are expected with GMM clustering on this dataset. 
+
+To get an overview of the clustering results, you may use the `gmmpairs()` plot function which displays the scatter plot matrix, colored by cluster membership, with estimated Gaussian ellipses in each cluster via maximum a posteriori:
 ```{r diabetes-gmm-FIG, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 gmmpairs(sol,X) 
 ```
 
-
-The obtained results are those expected and correspond to the known groups. If you want to experiments with other values for the prior parameters, the most important is $\mathbf{\varepsilon}$, which control the covariance matrix Whishart prior. You may try smaller values for example. In this case, you may also decrease $\tau$ to keep a flat priors on clusters means. For the diabetes data such choices leads to an interesting solution where one cluster is then used to fit one outlier.
+If a user wants to experiment with other values of the prior hyperparameters, the most important is $\mathbf{\varepsilon}$, which control the clusters' covariance matrices Wishart prior. This amounts to specify the prior on the dispersion inside each class. For instance, one may specify a priori belief that the variance is small inside clusters, which amounts to diminish the $0.1$ coefficient in front of $\hat{\mathbf{\Sigma}}_{\mathbf{X}}$. In this case, it makes sense to decrease $\tau$ in the same proportions to keep a flat priors on the clusters means. For the diabetes data such a choice leads to an interesting solution, where the strong prior constraint leads to one cluster being created to fit one outlier in the "chemical" diabetes.
 
 ```{r diabetes-gmm-0.01, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
-sol = greed(X,model=Gmm(epsilon=0.01*diag(diag(cov(X))), tau =0.001))
-gmmpairs(sol,X)
-table(diabetes$cl,clustering(sol))
+sol_dense = greed(X,model=Gmm(epsilon=0.01*diag(diag(cov(X))), tau =0.001))
+gmmpairs(sol_dense,X)
+table(diabetes$cl,clustering(sol_dense))
 ``` 
 
 
 ## Diagonal covariance matrix
 
-You may also used diagonal covariance matrix. The ``?`diaggmm-class` `` allow to use such GMM type model. If you try such model on the previous diabetes dataset, greed this time found a 4 components GMM.
+When the number of variables $p$ becomes large, it can be of interest to reduce the flexibility of a GMM by adding a specific set of constraints. The diagonal covariance model, with constraint $\mathbf{\Sigma}_k = \textnormal{diag}(\sigma_{k1}, \ldots, \sigma_{kp})$, is implemented in the **greed** package through its `?DiagGmm` S4 class. Its hierarchical formulation is similar to unconstrained GMM, except the Wishart prior on $\mathbf{\Sigma}_k$ is now replaced by a Gamma prior on each $\sigma_{kj}$ with shape $\kappa$ and rate $\beta$ hyperparameters defaulted to $1$ and mean of the empirical columns variances respectively.
+
+Fitting this model on the diabetes dataset, `greed()` with an hybrid GA finds a $4$-components diagonal GMM.
 
 ```{r diabetes-diaggmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
 soldiag = greed(X,model=DiagGmm())
@@ -106,10 +130,10 @@ gmmpairs(soldiag,X)
 table(diabetes$cl,clustering(soldiag))
 ```
 
-You may still look at coarser clustering and inspect the clustering dendrogram:
+Moreover, we may investigate coarser partitions when inspecting the hierarchical clustering dendrogram and using the `cut()` method at any level of the hierarchy. Here is the solution at $K=3$:
 ```{r diabetes-diaggmm-cut, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
 plot(soldiag,type='tree')
-solK3 = cut(soldiag,3)
+solK3 = cut(soldiag, K=3)
 table(diabetes$cl,clustering(solK3))
 ```
 
@@ -118,50 +142,64 @@ table(diabetes$cl,clustering(solK3))
 gmmpairs(solK3,X)
 ```
 
-The clusters corresponds to the known group and if we compare the ICL of the, between the full model:
-```{r icl-comp}
-ICL(sol)
-ICL(soldiag)
-```
+Again, the clusters are relevant compared to the known groups. 
 
-The full model seems preferable on this dataset. If you want to look at the mixture component parameters you may access their Maximum a posteriori estimate with the generic `coef` function.
+<!-- **Pas sûr du tout de cette section** -->
+<!-- Furthermore, we may compare the ICL values between the full and diagonal models: -->
+<!-- ```{r icl-comp} -->
+<!-- cat('Full GMM has an ICL = ', ICL(sol), '.\n') -->
+<!-- cat('Diagonal GMM has an ICL = ', ICL(soldiag), '.\n') -->
+<!-- ``` -->
+
+<!-- The full model seems preferable on this dataset.  -->
+
+Furthermore, users may use the generic `coef()` function to get the mixture component parameters, or rather their maximum a posteriori estimated conditionally on the partition. Here is an example for the $3$-component diagonal GMM we just extracted from the hierarchy.
 ```{r diabetes-diaggmm-cut-params}
 params = coef(solK3)
 params$Sigmak[[2]]
 ```
 
 
-## The fashion MNIST dataset
+# High-dimensional example : the fashion MNIST dataset
 
-Such simpler diagonal model may be of interest in particular for high dimensional settings for two reasons. First, the number of parameters (even if they are integrated out in the clustering phase) is reduced and this can be interesting when $d$ is important, but also because the prior maybe defined such that it will be less informative. You may try with a subset of the fashion mnist data provided with the package which contains 784 dimensional vectors (28x28 flattened images). In such settings, you may also want to switch the optimization algorithm to `` ?`seed-class` ``, this algorithm is less efficient than the hybrid algorithm used by default by greed. But, since it relied on a seeded initialization it is also a little bit less costly. In this case, you may increase the initial value for $K$ since, this algorithm is not able to find an clustering with a number of cluster bigger than the value of $K$ provided by the user. Still, it may simplify the clustering and return an optimal clustering with less clusters.    
+As explained above, diagonal models are attractive when working in high-dimensional settings. Their interest is twofold. First, the number of free parameters in the generative model is reduced, which is useful to reduce computational time even though they are integrated out in the ICL. Second, the prior maybe defined such that it will be less informative. We illustrate this with a subset of the `fashion-mnist` data provided with the package which contains $p=784$ dimensional vectors (corresponding to 28x28 flattened images of clothing). In this setting, the optimization algorithm is switched to ``?`seed-class` ``, which, while a bit less efficient than the hybrid algorithm used by default in `greed()`, has a lowest computational burden since it relies on a single and carefully chosen seeded initialization. In addition, we also increase the initial value for $K$ in order to compensate for the `seed` method's inability to find a value of $K$ bigger than its initialization.     
 
 ```{r fashion-diaggmm}
 data("fashion")
 dim(fashion$X)
-sol=greed(fashion$X,model=DiagGmm(),alg=Seed(),K=60)
+sol_fashion=greed(fashion$X,model=DiagGmm(),alg=Seed(),K=60)
 ```
 
-On this more complex dataset, we may look at the dendrogram which is more interesting with the complex structure of these data.
+On this more complex dataset, the clustering found by the algorithm has $K=23$ clusters and the dendrogram proves very informative, highlighting the complex structure of these data.
 
 ```{r fashion-tree, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
-plot(sol,type='tree')
+plot(sol_fashion,type='tree')
 ```
 
-Finally if we look at the clusters centers, they look coherent and thanks to the hierarchical ordering performed by greed are also well organized.
+Finally, the clusters centers look coherent and the hierarchical ordering underlines a form of "geometric proximities" between clusters.
 
 ```{r fashion-means, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
+plot_clust_centers <- function(sol) {
+  clust_centers = coef(sol)$muk
+  im_list=lapply(1:sol@K,function(k){
+      data.frame(i=rep(28:1,each=28),j=rep(1:28,28),v=t(clust_centers[[k]]),k=k)
+      })
+  
+  ims = do.call(rbind,im_list)
+  gg = ggplot(ims)+
+      geom_tile(aes(y=i,x=j,fill=v))+
+      scale_fill_gradientn(colors=c("#ffffff","#000000"),guide="none")+
+      scale_x_continuous(breaks=c())+scale_y_continuous(breaks=c())+facet_wrap(~k)+
+      coord_equal()+theme_minimal()+
+      theme(axis.title.x = element_blank(),axis.title.y = element_blank())
+  return(gg)
+} 
+plot_clust_centers(sol_fashion)
+```
 
-clust_centers = coef(sol)$muk
-im_list=lapply(1:sol@K,function(k){
-    data.frame(i=rep(28:1,each=28),j=rep(1:28,28),v=t(clust_centers[[k]]),k=k)
-    })
 
-ims = do.call(rbind,im_list)
-ggplot(ims)+
-  geom_tile(aes(y=i,x=j,fill=v))+
-  scale_fill_gradientn(colors=c("#ffffff","#000000"),guide="none")+
-  scale_x_continuous(breaks=c())+scale_y_continuous(breaks=c())+facet_wrap(~k)+
-  coord_equal()+theme_minimal()+
-  theme(axis.title.x = element_blank(),axis.title.y = element_blank())
+```{r fashion-K7}
+sol_fashion_K7 = cut(sol_fashion, K=7)
+plot_clust_centers(sol_fashion_K7)
 ```
 
