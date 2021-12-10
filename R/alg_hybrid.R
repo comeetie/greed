@@ -54,9 +54,9 @@ hybrid <- function(model, alg, data, K, verbose = FALSE) {
   # while maximum number of generation // all solutions are equals // no improvements
   pmut <- alg@prob_mutation
   Kmax <- alg@Kmax
-  cat("################# ")
+  cat("###### ")
   cat(paste0("Generation ", sprintf("%2i", nbgen), ": best solution with an ICL of ", round(solutions[[which.max(icls)]]@icl), " and ", solutions[[which.max(icls)]]@K, " clusters "))
-  cat("#################\n")
+  cat("######\n")
 
   while ((max(icls) - min(icls)) > 1 & nbgen < alg@nb_max_gen & best_icl > old_best & cK < Kmax) {
     train.hist <- rbind(train.hist, data.frame(generation = nbgen, icl = icls, K = sapply(solutions, function(s) {
@@ -94,9 +94,9 @@ hybrid <- function(model, alg, data, K, verbose = FALSE) {
     cK <- solutions[[order(icls, decreasing = TRUE)[1]]]@K
     nbgen <- nbgen + 1
 
-    cat("################# ")
+    cat("###### ")
     cat(paste0("Generation ", sprintf("%2i", nbgen), ": best solution with an ICL of ", round(solutions[[which.max(icls)]]@icl), " and ", solutions[[which.max(icls)]]@K, " clusters "))
-    cat("#################\n")
+    cat("######\n")
   }
   if (cK > Kmax) {
     warning("The number of clusters has reached the upper limit.\n Increase Kmax (see ?hybrid-class) if you want to explore clusterings with more clusters.")

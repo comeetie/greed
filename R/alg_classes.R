@@ -322,7 +322,7 @@ greed <- function(X, model = find_model(X), K = 20, alg = Hybrid(), verbose = FA
   if ("sampling" %in% methods::slotNames(model)) {
     modelname <- paste(modelname, "with", model@sampling, "sampling")
   }
-  cat(paste0("------- ", modelname, " model fitting ------\n"))
+  cat(paste0("--- ", modelname, " model fitting ---\n"))
   sol <- fit(model, alg, data, K, verbose)
   sol@obs_stats <- cleanObsStats(model, sol@obs_stats, data)
 
@@ -334,7 +334,7 @@ greed <- function(X, model = find_model(X), K = 20, alg = Hybrid(), verbose = FA
 
 
   sol <- postprocess(sol, data)
-  cat("------- Final clustering -------\n")
+  cat("--- Final clustering ---\n")
   print(sol)
   cat("\n")
   sol
