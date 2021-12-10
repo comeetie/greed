@@ -2,7 +2,7 @@
 % Please edit documentation in R/tools_ploting.R
 \name{show,IclFit-method}
 \alias{show,IclFit-method}
-\title{show an IclPath object}
+\title{Show an IclPath object}
 \usage{
 \S4method{show}{IclFit}(object)
 }

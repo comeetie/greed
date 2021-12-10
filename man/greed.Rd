@@ -8,21 +8,24 @@
 greed(X, model = find_model(X), K = 20, alg = Hybrid(), verbose = FALSE)
 }
 \arguments{
-\item{X}{data to cluster either a data.frame, a matrix, an array or a \code{\link{dgCMatrix-class}}}
+\item{X}{data to cluster either a data.frame, a matrix, an array, ... depending on the used generative model}
 
-\item{model}{a generative model to fit \code{\link{DlvmPrior-class}}}
+\item{model}{a generative model to fit such as \code{\link{Gmm}},\code{\link{Sbm}},..}
 
 \item{K}{initial number of cluster}
 
 \item{alg}{an optimization algorithm of class \code{\link{Alg-class}} such as \code{\link{Hybrid-class}} (default), \code{\link{Multistarts-class}}, \code{\link{Seed-class}} or \code{\link{Genetic-class}}}
 
-\item{verbose}{Boolean for verbose mode}
+\item{verbose}{boolean value for verbose mode}
 }
 \value{
 an \code{\link{IclPath-class}} object
 }
 \description{
-
+This function is the main function for fitting Dlvms with greed. 
+In the simplest case you may only provide a datset and greed will find a suitable one. 
+The accepted classes for \code{X}  depends on the generative used wich can be specified with the \code{model} argument. 
+See the \code{\link{DlvmPrior-class}} and the derived classes for details.
 
 Greed enables the clustering of networks and count data such as document-term
 matrix with different models. Model selection and clustering are performed in

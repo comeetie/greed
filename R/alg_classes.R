@@ -122,7 +122,8 @@ Genetic <- function(pop_size = 100, nb_max_gen = 20, prob_mutation = 0.25, sel_f
 }
 
 
-#' @title Generic method to extract the clustering results from an \code{\link{IclFit-class}} object
+
+#' @title Method to extract the clustering results from an \code{\link{IclFit-class}} object
 #'
 #' @description This method take a \code{\link{IclFit-class}} object and return an integer vector with the cluster assignments that were found.
 #' @param fit an \code{IclFit} solution
@@ -130,11 +131,7 @@ Genetic <- function(pop_size = 100, nb_max_gen = 20, prob_mutation = 0.25, sel_f
 #' @export
 setGeneric("clustering", function(fit) standardGeneric("clustering"))
 
-#' @title Method to extract the clustering results from an \code{\link{IclFit-class}} object
-#'
-#' @description This method take a \code{\link{IclFit-class}} object and return an integer vector with the cluster assignments that were found.
-#' @param fit an \code{IclFit} solution
-#' @return an integer vector with cluster assignments. Zero indicates noise points.
+#' @describeIn clustering IclFit-class method
 #' @export
 setMethod(
   f = "clustering",
@@ -144,7 +141,7 @@ setMethod(
   }
 )
 
-#' @title Genric method to extract the ICL value from an \code{\link{IclFit-class}} object
+#' @title Generic method to extract the ICL value from an \code{\link{IclFit-class}} object
 #'
 #' @description This method take a \code{\link{IclFit-class}} object and return its ICL score.
 #' @param fit an \code{IclFit} solution
@@ -152,11 +149,7 @@ setMethod(
 #' @export
 setGeneric("ICL", function(fit) standardGeneric("ICL"))
 
-#' @title Method to extract the ICL value from an \code{\link{IclFit-class}} object
-#'
-#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score.
-#' @param fit an \code{IclFit} solution
-#' @return The ICL value achieved
+#' @describeIn ICL IclFit method
 #' @export
 setMethod(
   f = "ICL",
@@ -166,18 +159,14 @@ setMethod(
   }
 )
 
-#' @title Generic method to extract the number of clusters found from an \code{\link{IclFit-class}} object
+#' @title Generic method to get the number of clusters from an \code{\link{IclFit-class}} object
 #' @description This method take a \code{\link{IclFit-class}} object and return its ICL score.
 #' @param fit an \code{IclFit} solution
 #' @return The number of clusters
 #' @export
 setGeneric("K", function(fit) standardGeneric("K"))
 
-#' @title Method to extract the number of clusters found from an \code{\link{IclFit-class}} object
-#'
-#' @description This method take a \code{\link{IclFit-class}} object and return its ICL score.
-#' @param fit an \code{IclFit} solution
-#' @return The number of clusters
+#' @describeIn K IclFit method
 #' @export
 setMethod(
   f = "K",
@@ -195,12 +184,7 @@ setMethod(
 #' @export
 setGeneric("prior", function(fit) standardGeneric("prior"))
 
-#' @title Method to extract the prior used to fit  \code{\link{IclFit-class}} object
-#'
-#' @description This method take a \code{\link{IclFit-class}} object and return the prior used.
-#' @param fit an \code{IclFit} solution
-#' @return The prior an S4 object of the relevant class with the prior parameters
-#' @seealso \code{\link{Sbm-class}},\code{\link{Gmm-class}},...
+#' @describeIn prior IclFit method
 #' @export
 setMethod(
   f = "prior",
@@ -212,7 +196,7 @@ setMethod(
 
 
 
-#' @title Method to cut a path solution to a desired number of cluster
+#' @title Generic method to cut a path solution to a desired number of cluster
 #'
 #' @description This method take a \code{\link{IclPath-class}} object and an integer K and return the solution from the path with K clusters
 #' @param x A an \code{IclPath} solution
@@ -255,7 +239,7 @@ setMethod(
   }
 )
 
-#' @title plot a \code{\link{IclPath-class}} object
+#' @title Plot an \code{\link{IclPath-class}} object
 #'
 #'
 #' @param x a \code{\link{IclPath-class}}
@@ -304,13 +288,17 @@ setMethod(
 
 #' @title Model based hierarchical clustering
 #'
-#' @description
+#' @description This function is the main function for fitting Dlvms with greed. 
+#' In the simplest case you may only provide a datset and greed will find a suitable one. 
+#' The accepted classes for \code{X}  depends on the generative used wich can be specified with the \code{model} argument. 
+#' See the \code{\link{DlvmPrior-class}} and the derived classes for details.
+#' 
 #'
-#' @param X data to cluster either a data.frame, a matrix, an array or a \code{\link{dgCMatrix-class}}
+#' @param X data to cluster either a data.frame, a matrix, an array, ... depending on the used generative model
 #' @param K initial number of cluster
-#' @param model a generative model to fit \code{\link{DlvmPrior-class}}
+#' @param model a generative model to fit such as \code{\link{Gmm}},\code{\link{Sbm}},.. 
 #' @param alg an optimization algorithm of class \code{\link{Alg-class}} such as \code{\link{Hybrid-class}} (default), \code{\link{Multistarts-class}}, \code{\link{Seed-class}} or \code{\link{Genetic-class}}
-#' @param verbose Boolean for verbose mode
+#' @param verbose boolean value for verbose mode
 #' @return an \code{\link{IclPath-class}} object
 #' @export
 greed <- function(X, model = find_model(X), K = 20, alg = Hybrid(), verbose = FALSE) {

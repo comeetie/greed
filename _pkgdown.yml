@@ -75,6 +75,8 @@ reference:
     - '`MoR-class`'
     - '`DcLbm-class`'
     - '`MixedModels-class`'
+    - '`DlvmPrior-class`'
+    - '`DlvmCoPrior-class`'
 - title: 'Models fit classes'
   desc: >
     Description of classes that describe a model fit.

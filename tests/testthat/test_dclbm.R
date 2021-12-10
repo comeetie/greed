@@ -5,7 +5,7 @@ set.seed(1234)
 
 
 
-test_that("DcLBM hybrid", {
+test_that("DcLBM", {
   mu <- cbind(lower.tri(matrix(1, 4, 4)), upper.tri(matrix(1, 4, 4))) * 0.2 + 0.01
   mu[2, 4] <- 0.21
   mu[3, 5] <- 0.21
@@ -24,7 +24,7 @@ test_that("DcLBM hybrid", {
   expect_lte(max(abs(cor_dif_mat[!is.nan(cor_dif_mat)])),10^-3)
 })
 
-test_that("COSBM seed", {
+test_that("DcLbm hybrid", {
   mu <- cbind(lower.tri(matrix(1, 4, 4)), upper.tri(matrix(1, 4, 4))) * 0.2 + 0.01
   mu[2, 4] <- 0.21
   mu[3, 5] <- 0.21
@@ -34,7 +34,7 @@ test_that("COSBM seed", {
   expect_gte(sol@K, 12 - 2)
   expect_lte(sol@K, 12 + 2)
   solc <- cut(sol, 8)
-  expect_true(is.ggplot(plot(solc, type = "tree")))
+  expect_true(is(plot(sol, type = "tree"),"gtable"))
   expect_true(is.ggplot(plot(solc, type = "path")))
   expect_true(is.ggplot(plot(solc, type = "front")))
   expect_true(is.ggplot(plot(solc, type = "blocks")))
@@ -42,16 +42,16 @@ test_that("COSBM seed", {
 })
 
 
-test_that("COSBM multistart", {
+test_that("DcLbm seed", {
   mu <- cbind(lower.tri(matrix(1, 4, 4)), upper.tri(matrix(1, 4, 4))) * 0.2 + 0.01
   mu[2, 4] <- 0.21
   mu[3, 5] <- 0.21
   mm <- rlbm(200, 400, rep(1 / 4, 4), rep(1 / 8, 8), mu)
-  sol <- greed(mm$x, model = DcLbm(), alg = Multistarts(), K = 40)
+  sol <- greed(mm$x, model = DcLbm(), alg = Seed(), K = 40)
   expect_gte(sol@K, 12 - 2)
   expect_lte(sol@K, 12 + 2)
   solc <- cut(sol, 8)
-  expect_true(is.ggplot(plot(sol, type = "tree")))
+  expect_true(is(plot(sol, type = "tree"),"gtable"))
   expect_true(is.ggplot(plot(sol, type = "path")))
   expect_true(is.ggplot(plot(sol, type = "front")))
   expect_true(is.ggplot(plot(sol, type = "blocks")))

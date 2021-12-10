@@ -100,7 +100,7 @@ default, and the Hybrid genetic algorithm greed used.
 sol <- greed(Books$X,model=Sbm(),alg=Seed(),K=10)
 #> ------- guess SBM model fitting ------
 #> ------- Final clustering -------
-#> ICL clustering with a SBM model, 5 clusters and an icl of -1266.
+#> ICL clustering with a SBM model, 5 clusters and an icl of -1257.
 ```
 
 Some plotting function enable the exploration of the clustering results,
@@ -126,22 +126,22 @@ the clustering with the `?clustering` function, the value of ICL with
 
 ``` r
 ICL(sol)
-#> [1] -1266.316
+#> [1] -1256.988
 coef(sol)
 #> $pi
-#> [1] 0.07619048 0.31428571 0.10476190 0.42857143 0.07619048
+#> [1] 0.09523810 0.29523810 0.19047619 0.36190476 0.05714286
 #> 
 #> $thetakl
-#>            [,1]        [,2]        [,3]        [,4]       [,5]
-#> [1,] 0.82142857 0.367424242 0.079545455 0.011111111 0.00000000
-#> [2,] 0.36742424 0.106060606 0.005509642 0.004713805 0.00000000
-#> [3,] 0.07954545 0.005509642 0.436363636 0.012121212 0.02272727
-#> [4,] 0.01111111 0.004713805 0.012121212 0.081818182 0.30555556
-#> [5,] 0.00000000 0.000000000 0.022727273 0.305555556 0.78571429
+#>             [,1]        [,2]        [,3]        [,4]       [,5]
+#> [1,] 0.711111111 0.329032258 0.060000000 0.002631579 0.00000000
+#> [2,] 0.329032258 0.090322581 0.008064516 0.001697793 0.00000000
+#> [3,] 0.060000000 0.008064516 0.231578947 0.019736842 0.04166667
+#> [4,] 0.002631579 0.001697793 0.019736842 0.099573257 0.43859649
+#> [5,] 0.000000000 0.000000000 0.041666667 0.438596491 0.73333333
 table(clustering(sol))
 #> 
 #>  1  2  3  4  5 
-#>  8 33 11 45  8
+#> 10 31 20 38  6
 ```
 
 Eventually, one may explore some coarser clustering using the cut
@@ -168,25 +168,27 @@ plan(multisession)
 
 ### Classical clustering, GMM
 
-See the [GMM vignette](articles/GMM.html) for details.
+See the `vignette("GMM")` for details.
 
 ``` r
 data("diabetes",package = "mclust")
 X <- diabetes[,-1]
 sol <- greed(X,model=Gmm())
 #> ------- GMM model fitting ------
-#> ################# Generation  1: best solution with an ICL of -2411 and 5 clusters #################
-#> ################# Generation  2: best solution with an ICL of -2405 and 5 clusters #################
-#> ################# Generation  3: best solution with an ICL of -2401 and 4 clusters #################
-#> ################# Generation  4: best solution with an ICL of -2401 and 4 clusters #################
+#> ################# Generation  1: best solution with an ICL of -2421 and 6 clusters #################
+#> ################# Generation  2: best solution with an ICL of -2416 and 5 clusters #################
+#> ################# Generation  3: best solution with an ICL of -2406 and 3 clusters #################
+#> ################# Generation  4: best solution with an ICL of -2396 and 3 clusters #################
+#> ################# Generation  5: best solution with an ICL of -2396 and 3 clusters #################
+#> ################# Generation  6: best solution with an ICL of -2396 and 3 clusters #################
 #> ------- Final clustering -------
-#> ICL clustering with a GMM model, 3 clusters and an icl of -2401.
+#> ICL clustering with a GMM model, 3 clusters and an icl of -2396.
 table(diabetes$cl,clustering(sol))
 #>           
 #>             1  2  3
-#>   Chemical  5 19 12
-#>   Normal    0  3 73
-#>   Overt    29  4  0
+#>   Chemical 11 24  1
+#>   Normal   73  3  0
+#>   Overt     0  6 27
 gmmpairs(sol,X)
 ```
 
@@ -194,16 +196,16 @@ gmmpairs(sol,X)
 
 ### Questionnary and item response theory datasets, LCA
 
-See the [LCA vignette](articles/LCA.html) for details.
+See the `vignette("LCA")` for details.
 
 ### Graphs, SBM like models
 
-See the [SBM vignette](articles/SBM.html) for details.
+See the `vignette("SBM")` for details.
 
 ### Mixture of Regression
 
-See the [MoR vignette](articles/MoR.html) for details.
+See the`vignette("MoR")` for details.
 
-# Advanced models
+### Advanced models
 
-See the [Mixed Models](articles/Mixed-Models.html) for details.
+See the `vignette("Mixed Models")`for details.

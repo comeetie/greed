@@ -2,9 +2,12 @@
 % Please edit documentation in R/alg_classes.R
 \name{clustering}
 \alias{clustering}
-\title{Generic method to extract the clustering results from an \code{\link{IclFit-class}} object}
+\alias{clustering,IclFit-method}
+\title{Method to extract the clustering results from an \code{\link{IclFit-class}} object}
 \usage{
 clustering(fit)
+
+\S4method{clustering}{IclFit}(fit)
 }
 \arguments{
 \item{fit}{an \code{IclFit} solution}
@@ -15,3 +18,8 @@ an integer vector with cluster assignments. Zero indicates noise points.
 \description{
 This method take a \code{\link{IclFit-class}} object and return an integer vector with the cluster assignments that were found.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{IclFit}: IclFit-class method
+}}
+

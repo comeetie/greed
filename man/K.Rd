@@ -2,9 +2,12 @@
 % Please edit documentation in R/alg_classes.R
 \name{K}
 \alias{K}
-\title{Generic method to extract the number of clusters found from an \code{\link{IclFit-class}} object}
+\alias{K,IclFit-method}
+\title{Generic method to get the number of clusters from an \code{\link{IclFit-class}} object}
 \usage{
 K(fit)
+
+\S4method{K}{IclFit}(fit)
 }
 \arguments{
 \item{fit}{an \code{IclFit} solution}
@@ -15,3 +18,8 @@ The number of clusters
 \description{
 This method take a \code{\link{IclFit-class}} object and return its ICL score.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{IclFit}: IclFit method
+}}
+

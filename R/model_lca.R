@@ -129,7 +129,7 @@ setClass("LcaFit", slots = list(model = "Lca"), contains = "IclFit")
 setClass("LcaPath", contains = c("IclPath", "LcaFit"))
 
 
-#' @title plot a \code{\link{LcaFit-class}} object
+#' @title Plot a \code{\link{LcaFit-class}} object
 #'
 #'
 #' @param x a \code{\link{LcaFit-class}}

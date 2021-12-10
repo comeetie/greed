@@ -41,7 +41,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a>
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -82,7 +82,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a>
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -105,7 +105,7 @@
       <h1 data-toc-skip>SBM</h1>
                         <h4 data-toc-skip class="author">Etienne Côme</h4>
             
-            <h4 data-toc-skip class="date">2021-12-03</h4>
+            <h4 data-toc-skip class="date">2021-12-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/comeetie/greed/blob/HEAD/vignettes/SBM.Rmd" class="external-link"><code>vignettes/SBM.Rmd</code></a></small>
       <div class="hidden name"><code>SBM.Rmd</code></div>
@@ -116,7 +116,7 @@
     
 <p>Loads packages and set a future plan for parallel processing if you want.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://Matrix.R-forge.R-project.org/" class="external-link">Matrix</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/" class="external-link">greed</a></span><span class="op">)</span>
@@ -142,33 +142,33 @@
 <span class="va">sbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/rsbm.html">rsbm</a></span><span class="op">(</span><span class="va">N</span>,<span class="va">pi</span>,<span class="va">mu</span><span class="op">)</span></code></pre></div>
 <p>Perform the clustering with default algorithm. We specify to choose an sbm model since for squared sparse matrix the default is a DcSbm model. An hybrid algorithm is selected by default and the default value for the parameter K is 20.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">sbm</span><span class="op">$</span><span class="va">x</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/SbmPrior-class.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">sbm</span><span class="op">$</span><span class="va">x</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/Sbm.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess SBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -14219 and 6 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -14219 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -13779 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -13779 and 6 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a SBM model, 6 clusters and an icl of -14219.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a SBM model, 6 clusters and an icl of -13779.</span></code></pre></div>
 <p>Look at the parameters estimate:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
 <span class="co">#&gt; $pi</span>
-<span class="co">#&gt; [1] 0.1725 0.1800 0.1575 0.1425 0.1675 0.1800</span>
+<span class="co">#&gt; [1] 0.1950 0.1525 0.1575 0.1600 0.1650 0.1700</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $thetakl</span>
-<span class="co">#&gt;             [,1]         [,2]         [,3]         [,4]         [,5]</span>
-<span class="co">#&gt; [1,] 0.119722747 0.0090579710 0.0110420980 0.0005085177 0.0012978585</span>
-<span class="co">#&gt; [2,] 0.013486312 0.1082175926 0.0134479718 0.0017056530 0.0006218905</span>
-<span class="co">#&gt; [3,] 0.011502185 0.0127865961 0.1083396321 0.0016708438 0.0014214641</span>
-<span class="co">#&gt; [4,] 0.001017035 0.0004873294 0.0008354219 0.1089566020 0.0096884001</span>
-<span class="co">#&gt; [5,] 0.001081549 0.0010364842 0.0011845534 0.0107357947 0.1171753174</span>
-<span class="co">#&gt; [6,] 0.001610306 0.0005787037 0.0015432099 0.0116959064 0.0107794362</span>
+<span class="co">#&gt;              [,1]         [,2]         [,3]         [,4]         [,5]</span>
+<span class="co">#&gt; [1,] 0.1063445102 0.0086170660 0.0075295075 0.0016025641 0.0003885004</span>
+<span class="co">#&gt; [2,] 0.0105086171 0.1152915883 0.0109289617 0.0005122951 0.0012419275</span>
+<span class="co">#&gt; [3,] 0.0081400081 0.0096278949 0.1098513479 0.0017361111 0.0009620010</span>
+<span class="co">#&gt; [4,] 0.0012019231 0.0007684426 0.0004960317 0.1062011719 0.0127840909</span>
+<span class="co">#&gt; [5,] 0.0009712510 0.0007451565 0.0004810005 0.0104166667 0.1021579431</span>
+<span class="co">#&gt; [6,] 0.0009426848 0.0002410800 0.0018674136 0.0121783088 0.0111408200</span>
 <span class="co">#&gt;              [,6]</span>
-<span class="co">#&gt; [1,] 0.0008051530</span>
-<span class="co">#&gt; [2,] 0.0009645062</span>
-<span class="co">#&gt; [3,] 0.0002204586</span>
-<span class="co">#&gt; [4,] 0.0090155945</span>
-<span class="co">#&gt; [5,] 0.0095356551</span>
-<span class="co">#&gt; [6,] 0.1084104938</span></code></pre></div>
+<span class="co">#&gt; [1,] 0.0005656109</span>
+<span class="co">#&gt; [2,] 0.0014464802</span>
+<span class="co">#&gt; [3,] 0.0007002801</span>
+<span class="co">#&gt; [4,] 0.0110294118</span>
+<span class="co">#&gt; [5,] 0.0122549020</span>
+<span class="co">#&gt; [6,] 0.1098615917</span></code></pre></div>
 <p>Plot the results using a block representation.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
@@ -199,29 +199,29 @@
 <code class="sourceCode R"><span class="va">sim_dcsbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rdcsbm.html">rdcsbm</a></span><span class="op">(</span><span class="va">N</span>,<span class="va">pi</span>,<span class="va">mu</span>,<span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="va">N</span>,<span class="fl">1</span><span class="op">/</span><span class="fl">15</span><span class="op">)</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="va">N</span>,<span class="fl">1</span><span class="op">/</span><span class="fl">15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="va">X</span> <span class="op">&lt;-</span> <span class="va">sim_dcsbm</span><span class="op">$</span><span class="va">x</span>
 <span class="va">X</span><span class="op">[</span><span class="va">X</span><span class="op">&gt;</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span>
-<span class="va">sol_dcsbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">sol_dcsbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess DCSBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -11569 and 6 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -11569 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -11358 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -11358 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -11358 and 6 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 6 clusters and an icl of -11569.</span>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 6 clusters and an icl of -11358.</span>
 <span class="va">sol_dcsbm</span>
-<span class="co">#&gt; ICL clustering with a DCSBM model, 6 clusters and an icl of -11569.</span>
-<span class="va">sol_sbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/SbmPrior-class.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; ICL clustering with a DCSBM model, 6 clusters and an icl of -11358.</span>
+<span class="va">sol_sbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/Sbm.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess SBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -12785 and 12 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -12696 and 11 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -12652 and 11 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -12625 and 11 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -12616 and 12 clusters #################</span>
-<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -12610 and 12 clusters #################</span>
-<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -12609 and 12 clusters #################</span>
-<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -12609 and 12 clusters #################</span>
-<span class="co">#&gt; ################# Generation  9: best solution with an ICL of -12609 and 12 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -12487 and 14 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -12364 and 14 clusters #################</span>
+<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -12282 and 13 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -12273 and 11 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -12269 and 11 clusters #################</span>
+<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -12266 and 11 clusters #################</span>
+<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -12266 and 11 clusters #################</span>
+<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -12266 and 11 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a SBM model, 11 clusters and an icl of -12604.</span>
+<span class="co">#&gt; ICL clustering with a SBM model, 11 clusters and an icl of -12266.</span>
 <span class="va">sol_sbm</span>
-<span class="co">#&gt; ICL clustering with a SBM model, 11 clusters and an icl of -12604.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a SBM model, 11 clusters and an icl of -12266.</span></code></pre></div>
 <p>As expected the degree corrected version did a better job as the ICL’s suggest. Without degree correction the model has to use more groups to fit the degree heterogeneity.</p>
 </div>
 <div class="section level2">
@@ -229,7 +229,7 @@
 </h2>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Books</span><span class="op">)</span>
-<span class="va">sol_dcsbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">sol_dcsbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess DCSBM model fitting ------</span>
 <span class="co">#&gt; ################# Generation  1: best solution with an ICL of -1346 and 4 clusters #################</span>
 <span class="co">#&gt; ################# Generation  2: best solution with an ICL of -1346 and 4 clusters #################</span>
@@ -237,17 +237,17 @@
 <span class="co">#&gt; ICL clustering with a DCSBM model, 3 clusters and an icl of -1345.</span>
 <span class="va">sol_dcsbm</span>
 <span class="co">#&gt; ICL clustering with a DCSBM model, 3 clusters and an icl of -1345.</span>
-<span class="va">sol_sbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/SbmPrior-class.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">sol_sbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/Sbm.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess SBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -1274 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -1255 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -1267 and 7 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -1253 and 6 clusters #################</span>
 <span class="co">#&gt; ################# Generation  3: best solution with an ICL of -1252 and 6 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -1251 and 6 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -1251 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -1252 and 6 clusters #################</span>
+<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -1252 and 6 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a SBM model, 5 clusters and an icl of -1249.</span>
+<span class="co">#&gt; ICL clustering with a SBM model, 5 clusters and an icl of -1252.</span>
 <span class="va">sol_sbm</span>
-<span class="co">#&gt; ICL clustering with a SBM model, 5 clusters and an icl of -1249.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a SBM model, 5 clusters and an icl of -1252.</span></code></pre></div>
 <p>The network as been well recognized as an undirected graph. We may look at the fitted model prior to check:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/prior.html">prior</a></span><span class="op">(</span><span class="va">sol_dcsbm</span><span class="op">)</span>
@@ -294,8 +294,8 @@
 <span class="co">#&gt;    </span>
 <span class="co">#&gt;      c  l  n</span>
 <span class="co">#&gt;   1  1 38  2</span>
-<span class="co">#&gt;   2 39  5 11</span>
-<span class="co">#&gt;   3  9  0  0</span></code></pre></div>
+<span class="co">#&gt;   2  7  5  8</span>
+<span class="co">#&gt;   3 41  0  3</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="multinomial-sbm-layered-networks">Multinomial SBM, layered networks<a class="anchor" aria-label="anchor" href="#multinomial-sbm-layered-networks"></a>
@@ -308,12 +308,12 @@
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">NewGuinea</span><span class="op">)</span>
 <span class="co">#&gt; [1] 16 16  3</span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sol_newguinea</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">NewGuinea</span>,model<span class="op">=</span><span class="fu"><a href="../reference/MultSbmPrior-class.html">MultSbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">sol_newguinea</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">NewGuinea</span>,model<span class="op">=</span><span class="fu"><a href="../reference/MultSbm.html">MultSbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- guess MULTSBM model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -125 and 2 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -125 and 2 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -127 and 3 clusters #################</span>
+<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -127 and 3 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a MULTSBM model, 2 clusters and an icl of -125.</span></code></pre></div>
+<span class="co">#&gt; ICL clustering with a MULTSBM model, 2 clusters and an icl of -123.</span></code></pre></div>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol_newguinea</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/unnamed-chunk-20-1.png" width="100%"></p>
@@ -334,7 +334,7 @@
     <span class="fu"><a href="https://ggraph.data-imaginist.com/reference/geom_node_point.html" class="external-link">geom_node_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>shape<span class="op">=</span><span class="va">cluster</span><span class="op">)</span>,size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/unnamed-chunk-21-1.png" width="70%"></p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MixedModels-class.html">MixedModels</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pos <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, neg <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MixedModels.html">MixedModels</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pos <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, neg <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pos <span class="op">=</span> <span class="va">NewGuinea</span><span class="op">[</span>, , <span class="fl">2</span><span class="op">]</span>, neg <span class="op">=</span> <span class="va">NewGuinea</span><span class="op">[</span>, , <span class="fl">1</span><span class="op">]</span><span class="op">)</span>
 <span class="va">sol_bidcsbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">data</span>, model <span class="op">=</span> <span class="va">mod</span>, K <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="co">#&gt; ------- MIXEDMODELS model fitting ------</span>
@@ -356,13 +356,12 @@
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">SevenGraders</span><span class="op">)</span>
 <span class="co">#&gt; [1] 29 29  3</span></code></pre></div>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MixedModels-class.html">MixedModels</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>class <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, friends <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, work <span class="op">=</span> <span class="fu"><a href="../reference/DcSbmPrior-class.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MixedModels.html">MixedModels</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>class <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, friends <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, work <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>class <span class="op">=</span> <span class="va">SevenGraders</span><span class="op">[</span>, , <span class="fl">1</span><span class="op">]</span>, friends <span class="op">=</span> <span class="va">SevenGraders</span><span class="op">[</span>, , <span class="fl">2</span><span class="op">]</span>, work <span class="op">=</span> <span class="va">SevenGraders</span><span class="op">[</span>, , <span class="fl">3</span><span class="op">]</span><span class="op">)</span>
 <span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">data</span>, model <span class="op">=</span> <span class="va">mod</span>, K <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="co">#&gt; ------- MIXEDMODELS model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -1516 and 3 clusters #################</span>
+<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -1514 and 4 clusters #################</span>
 <span class="co">#&gt; ################# Generation  2: best solution with an ICL of -1514 and 4 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -1514 and 4 clusters #################</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
 <span class="co">#&gt; ICL clustering with a MIXEDMODELS model, 4 clusters and an icl of -1514.</span></code></pre></div>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
@@ -393,7 +392,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>

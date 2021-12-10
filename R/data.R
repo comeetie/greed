@@ -349,7 +349,7 @@
 #'
 #' @keywords datasets
 #'
-#' @source \urlhttps://networks.skewed.de/net/new_guinea_tribes}
+#' @source \url{https://networks.skewed.de/net/new_guinea_tribes}
 #'
 #' @examples
 #' data(NewGuinea)

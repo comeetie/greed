@@ -2,7 +2,7 @@
 % Please edit documentation in R/alg_classes.R
 \name{plot,IclPath,missing-method}
 \alias{plot,IclPath,missing-method}
-\title{plot a \code{\link{IclPath-class}} object}
+\title{Plot an \code{\link{IclPath-class}} object}
 \usage{
 \S4method{plot}{IclPath,missing}(x, type = "tree")
 }
@@ -20,5 +20,5 @@
 a \code{\link{ggplot2}} graphic
 }
 \description{
-plot a \code{\link{IclPath-class}} object
+Plot an \code{\link{IclPath-class}} object
 }

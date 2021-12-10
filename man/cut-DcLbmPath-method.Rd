@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_dclbm.R
 \name{cut,DcLbmPath-method}
 \alias{cut,DcLbmPath-method}
-\title{method to cut a path solution to a desired number of cluster}
+\title{Method to cut a DcLbmPath solution to a desired number of cluster}
 \usage{
 \S4method{cut}{DcLbmPath}(x, K)
 }
@@ -15,5 +15,5 @@
 an \code{\link{IclPath-class}} object with the desired number of cluster
 }
 \description{
-this method take a \code{\link{DcLbmPath-class}} and an integer K and return the solution from the path with K clusters
+This method take a \code{\link{DcLbmPath-class}} and an integer K and return the solution from the path with K clusters
 }

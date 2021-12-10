@@ -3,12 +3,8 @@
 \docType{class}
 \name{DlvmCoPrior-class}
 \alias{DlvmCoPrior-class}
-\title{abstract class to represent a generative model for co-clustering
-
-An S4 class to represent an abstract generative model}
+\title{Abstract class to represent a generative model for co-clustering}
 \description{
-abstract class to represent a generative model for co-clustering
-
 An S4 class to represent an abstract generative model
 }
 \section{Slots}{

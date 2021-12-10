@@ -132,7 +132,7 @@ setClass("GmmFit", slots = list(model = "Gmm"), contains = "IclFit")
 #' @export
 setClass("GmmPath", contains = c("IclPath", "GmmFit"))
 
-#' @title plot a \code{\link{GmmFit-class}} object
+#' @title Plot a \code{\link{GmmFit-class}} object
 #'
 #'
 #' @param x a \code{\link{GmmFit-class}}

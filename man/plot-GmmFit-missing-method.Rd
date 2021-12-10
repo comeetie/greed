@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_gmm.R
 \name{plot,GmmFit,missing-method}
 \alias{plot,GmmFit,missing-method}
-\title{plot a \code{\link{GmmFit-class}} object}
+\title{Plot a \code{\link{GmmFit-class}} object}
 \usage{
 \S4method{plot}{GmmFit,missing}(x, type = "marginals")
 }
@@ -19,5 +19,5 @@
 a \code{\link{ggplot2}} graphic
 }
 \description{
-plot a \code{\link{GmmFit-class}} object
+Plot a \code{\link{GmmFit-class}} object
 }

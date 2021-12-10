@@ -2,9 +2,12 @@
 % Please edit documentation in R/alg_classes.R
 \name{ICL}
 \alias{ICL}
-\title{Genric method to extract the ICL value from an \code{\link{IclFit-class}} object}
+\alias{ICL,IclFit-method}
+\title{Generic method to extract the ICL value from an \code{\link{IclFit-class}} object}
 \usage{
 ICL(fit)
+
+\S4method{ICL}{IclFit}(fit)
 }
 \arguments{
 \item{fit}{an \code{IclFit} solution}
@@ -15,3 +18,8 @@ The ICL value achieved
 \description{
 This method take a \code{\link{IclFit-class}} object and return its ICL score.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{IclFit}: IclFit method
+}}
+

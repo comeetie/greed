@@ -60,7 +60,7 @@ DcLbm <- function(alpha = 1, p = NaN) {
 }
 
 
-#' @title Degree corrected stochastic block model for bipartite graph fit results class
+#' @title Degree corrected Latent Block Model fit results class
 #'
 #' @description An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{IclFit-class}}.
 #' @slot model a \code{\link{DcLbm-class}} object to store the model fitted
@@ -91,7 +91,7 @@ setClass("DcLbmFit", slots = list(model = "DcLbm", clrow = "numeric", clcol = "n
 
 
 
-#' @title Degree corrected stochastic block model for bipartite graph hierarchical fit results class
+#' @title Degree corrected Latent Block Model hierarchical fit results class
 #'
 #'
 #' @description An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{IclPath-class}}.
@@ -144,9 +144,9 @@ setClass("DcLbmPath", slots = list(ggtreerow = "data.frame", ggtreecol = "data.f
 
 
 
-#' @title method to cut a path solution to a desired number of cluster
+#' @title Method to cut a DcLbmPath solution to a desired number of cluster
 #'
-#' @description this method take a \code{\link{DcLbmPath-class}} and an integer K and return the solution from the path with K clusters
+#' @description This method take a \code{\link{DcLbmPath-class}} and an integer K and return the solution from the path with K clusters
 #' @param x A an \code{\link{DcLbmPath-class}} solution
 #' @param K Desired number of cluster
 #' @return an \code{\link{IclPath-class}} object with the desired number of cluster
@@ -186,7 +186,7 @@ setMethod(
 )
 
 
-#' @title plot a \code{\link{DcLbmPath-class}}
+#' @title Plot a \code{\link{DcLbmPath-class}}
 #'
 #'
 #' @param x a \code{\link{DcLbmPath-class}}
@@ -213,7 +213,7 @@ setMethod(
   }
 )
 
-#' @title plot a \code{\link{DcLbmFit-class}}
+#' @title Plot a \code{\link{DcLbmFit-class}}
 #'
 #'
 #' @param x a \code{\link{DcLbmFit-class}}

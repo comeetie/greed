@@ -32,7 +32,7 @@ The Gmm-class must be used when fitting a simple Gaussian Mixture Model whereas 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
   <a>
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -69,7 +69,7 @@ The Gmm-class must be used when fitting a simple Gaussian Mixture Model whereas 
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a>
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -99,14 +99,15 @@ $$ V_k \sim \mathcal{W}(\varepsilon^{-1},n_0)$$
 $$ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})$$
 $$ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})$$
 with \(\mathcal{W}(\varepsilon^{-1},n_0)\) the Wishart distribution.
-The <code>Gmm-class</code> must be used when fitting a simple Gaussian Mixture Model whereas the <code>GmmPrior-class</code> must be used when fitting a <code><a href="MixedModels-class.html">MixedModels-class</a></code>.</p>
+The <code>Gmm-class</code> must be used when fitting a simple Gaussian Mixture Model whereas the <code>GmmPrior-class</code> must be used when fitting a <code><a href="MixedModels.html">MixedModels-class</a></code>.</p>
     </div>
 
-    <div class="ref-usage sourceCode"><pre class="sourceCode r"><code><span class="fu">GmmPrior</span><span class="op">(</span>tau <span class="op">=</span> <span class="fl">0.01</span>, N0 <span class="op">=</span> <span class="cn">NaN</span>, mu <span class="op">=</span> <span class="cn">NaN</span>, epsilon <span class="op">=</span> <span class="cn">NaN</span><span class="op">)</span>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">GmmPrior</span><span class="op">(</span>tau <span class="op">=</span> <span class="fl">0.01</span>, N0 <span class="op">=</span> <span class="cn">NaN</span>, mu <span class="op">=</span> <span class="cn">NaN</span>, epsilon <span class="op">=</span> <span class="cn">NaN</span><span class="op">)</span>
 
 <span class="fu">Gmm</span><span class="op">(</span>tau <span class="op">=</span> <span class="fl">0.01</span>, N0 <span class="op">=</span> <span class="cn">NaN</span>, mu <span class="op">=</span> <span class="cn">NaN</span>, epsilon <span class="op">=</span> <span class="cn">NaN</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+    </div>
 
-    <div id="ref-sections">
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>tau</dt>
@@ -131,24 +132,24 @@ a <code>Gmm-class</code> object</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p>Other DlvmModels: 
-<code><a href="DcLbmPrior-class.html">DcLbmPrior-class</a></code>,
-<code><a href="DcSbmPrior-class.html">DcSbmPrior-class</a></code>,
-<code><a href="DiagGmmPrior-class.html">DiagGmmPrior-class</a></code>,
+    <div class="dont-index"><p><code><a href="GmmFit-class.html">GmmFit-class</a></code>, <code><a href="GmmPath-class.html">GmmPath-class</a></code></p>
+<p>Other DlvmModels: 
+<code><a href="DcLbm.html">DcLbm</a></code>,
+<code><a href="DcSbm.html">DcSbm</a></code>,
+<code><a href="DiagGmm.html">DiagGmm</a></code>,
 <code><a href="DlvmPrior-class.html">DlvmPrior-class</a></code>,
-<code><a href="LcaPrior-class.html">LcaPrior-class</a></code>,
-<code><a href="MixedModels-class.html">MixedModels-class</a></code>,
-<code><a href="MoMPrior-class.html">MoMPrior-class</a></code>,
-<code><a href="MoRPrior-class.html">MoRPrior-class</a></code>,
-<code><a href="MultSbmPrior-class.html">MultSbmPrior-class</a></code>,
-<code><a href="SbmPrior-class.html">SbmPrior-class</a></code>,
+<code><a href="Lca.html">Lca</a></code>,
+<code><a href="MixedModels.html">MixedModels</a></code>,
+<code><a href="MoM.html">MoM</a></code>,
+<code><a href="MoR.html">MoR</a></code>,
+<code><a href="MultSbm.html">MultSbm</a></code>,
+<code><a href="Sbm.html">Sbm</a></code>,
 <code><a href="greed.html">greed</a>()</code></p></div>
     </div>
-    </div>
 
-    <div id="examples">
+    <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">GmmPrior</span><span class="op">(</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">GmmPrior</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> An object of class "GmmPrior"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Slot "tau":</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01</span>
@@ -232,7 +233,7 @@ a <code>Gmm-class</code> object</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer></div>

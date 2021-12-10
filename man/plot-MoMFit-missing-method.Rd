@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_mom.R
 \name{plot,MoMFit,missing-method}
 \alias{plot,MoMFit,missing-method}
-\title{plot a \code{\link{MoMFit-class}} object}
+\title{Plot a \code{\link{MoMFit-class}} object}
 \usage{
 \S4method{plot}{MoMFit,missing}(x, type = "blocks")
 }
@@ -18,5 +18,5 @@
 a \code{\link{ggplot2}} graphic
 }
 \description{
-plot a \code{\link{MoMFit-class}} object
+Plot a \code{\link{MoMFit-class}} object
 }

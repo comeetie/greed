@@ -16,6 +16,9 @@
     <loc>/articles/Mixed-data-clustering.html</loc>
   </url>
   <url>
+    <loc>/articles/MoM.html</loc>
+  </url>
+  <url>
     <loc>/articles/MoR.html</loc>
   </url>
   <url>
@@ -49,6 +52,9 @@
     <loc>/reference/Books.html</loc>
   </url>
   <url>
+    <loc>/reference/DcLbm.html</loc>
+  </url>
+  <url>
     <loc>/reference/DcLbmFit-class.html</loc>
   </url>
   <url>
@@ -58,6 +64,9 @@
     <loc>/reference/DcLbmPrior-class.html</loc>
   </url>
   <url>
+    <loc>/reference/DcSbm.html</loc>
+  </url>
+  <url>
     <loc>/reference/DcSbmFit-class.html</loc>
   </url>
   <url>
@@ -65,6 +74,9 @@
   </url>
   <url>
     <loc>/reference/DcSbmPrior-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/DiagGmm.html</loc>
   </url>
   <url>
     <loc>/reference/DiagGmmFit-class.html</loc>
@@ -139,6 +151,9 @@
     <loc>/reference/K.html</loc>
   </url>
   <url>
+    <loc>/reference/Lca.html</loc>
+  </url>
+  <url>
     <loc>/reference/LcaFit-class.html</loc>
   </url>
   <url>
@@ -154,10 +169,16 @@
     <loc>/reference/MixedModels-class.html</loc>
   </url>
   <url>
+    <loc>/reference/MixedModels.html</loc>
+  </url>
+  <url>
     <loc>/reference/MixedModelsFit-class.html</loc>
   </url>
   <url>
     <loc>/reference/MixedModelsPath-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/MoM.html</loc>
   </url>
   <url>
     <loc>/reference/MoMFit-class.html</loc>
@@ -169,6 +190,9 @@
     <loc>/reference/MoMPrior-class.html</loc>
   </url>
   <url>
+    <loc>/reference/MoR.html</loc>
+  </url>
+  <url>
     <loc>/reference/MoRFit-class.html</loc>
   </url>
   <url>
@@ -176,6 +200,9 @@
   </url>
   <url>
     <loc>/reference/MoRPrior-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/MultSbm.html</loc>
   </url>
   <url>
     <loc>/reference/MultSbmFit-class.html</loc>
@@ -197,6 +224,9 @@
   </url>
   <url>
     <loc>/reference/NewGuinea.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Sbm.html</loc>
   </url>
   <url>
     <loc>/reference/SbmFit-class.html</loc>

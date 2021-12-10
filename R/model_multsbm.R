@@ -130,7 +130,7 @@ setClass("MultSbmFit", slots = list(model = "MultSbm"), contains = "IclFit")
 #' @export
 setClass("MultSbmPath", contains = c("IclPath", "MultSbmFit"))
 
-#' @title plot a \code{\link{MultSbmFit-class}} object
+#' @title Plot a \code{\link{MultSbmFit-class}} object
 #'
 #'
 #' @param x a \code{\link{MultSbmFit-class}}

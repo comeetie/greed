@@ -5,7 +5,7 @@
 
 
 
-#' @title show an IclPath object
+#' @title Show an IclPath object
 #'
 #' @description
 #' Print an \code{\link{IclPath-class}} object, model type and number of found clusters are provided.
@@ -155,12 +155,7 @@ nodelink <- function(sol) {
 
 
 
-#' nodelinklab
-#' @param sol \code{\link{MoMPath-class}} object to be plot
-#' @param labels a vector of cluster labels
-#' @param s threshold for links
-#' @return a ggplot2 graph
-#' @export
+# nodelinklab
 nodelinklab <- function(sol, labels, s = 0) {
   ij <- Matrix::which(sol@obs_stats$x_counts > 0, arr.ind = TRUE)
   ld <- sol@obs_stats$x_counts
@@ -348,10 +343,7 @@ mat_blocks <- function(x) {
 
 
 
-#' graph_balance
-#' @param x a \code{\link{SbmFit-class}} object to be plot
-#' @return a ggplot2 graph
-#' @export
+# graph_balance
 graph_balance <- function(x) {
   K <- length(x@obs_stats$counts)
   B <- x@obs_stats$x_counts - t(x@obs_stats$x_counts)

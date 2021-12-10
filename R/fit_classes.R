@@ -2,7 +2,7 @@
 NULL
 
 
-#' @title abstract class to represent a clustering result
+#' @title Abstract class to represent a clustering result
 #'
 #' @description
 #' An S4 abstract class to represent an icl fit of a clustering model.
@@ -21,7 +21,7 @@ setClass("IclFit", slots = list(name = "character", K = "numeric", obs_stats = "
 
 
 
-#' @title  abstract class to represent a hierarchical clustering result
+#' @title  Abstract class to represent a hierarchical clustering result
 #'
 #' @description
 #' An S4 class to represent a hierarchical path of solution.

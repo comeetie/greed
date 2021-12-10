@@ -3,7 +3,7 @@
 \docType{class}
 \name{IclFit-class}
 \alias{IclFit-class}
-\title{abstract class to represent a clustering result}
+\title{Abstract class to represent a clustering result}
 \description{
 An S4 abstract class to represent an icl fit of a clustering model.
 }
