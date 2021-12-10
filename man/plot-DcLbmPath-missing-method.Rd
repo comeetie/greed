@@ -2,15 +2,16 @@
 % Please edit documentation in R/model_dclbm.R
 \name{plot,DcLbmPath,missing-method}
 \alias{plot,DcLbmPath,missing-method}
-\title{plot a \code{\link{DcLbmFit-class}}}
+\title{plot a \code{\link{DcLbmPath-class}}}
 \usage{
-\S4method{plot}{DcLbmPath,missing}(x, type = "blocks")
+\S4method{plot}{DcLbmPath,missing}(x, type = "tree")
 }
 \arguments{
-\item{x}{a \code{\link{DcLbmFit-class}}}
+\item{x}{a \code{\link{DcLbmPath-class}}}
 
 \item{type}{a string which specify plot type:
 \itemize{
+\item \code{'tree'}: plot a co-dendogram of rows and colums clusters
 \item \code{'blocks'}: plot a block matrix with summarizing connections between row and column clusters
 \item \code{'biplot'}: plot a block matrix with summarizing connections between row and column clusters aligned with row and clusters drendograms
 \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between row and column clusters
@@ -20,5 +21,5 @@
 a \code{\link{ggplot2}} graphic
 }
 \description{
-plot a \code{\link{DcLbmFit-class}}
+plot a \code{\link{DcLbmPath-class}}
 }
