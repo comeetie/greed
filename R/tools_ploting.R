@@ -16,7 +16,11 @@ setMethod(
   f = "show",
   signature = signature("IclFit"),
   definition = function(object) {
-    cat(paste0("ICL clustering with a ", toupper(class(object@model)), " model, ", length(object@obs_stats$counts), " clusters and an icl of ", round(object@icl), "."))
+    cli::cli_h2("Clustering with a {toupper(class(object@model))} model {length(object@obs_stats$counts)} clusters and an ICL of {round(object@icl)}")
+    cli::cli_alert_info("Generic methods to explore a fit:")
+    cli::cli_ul()
+    cli::cli_li("?clustering, ?K, ?ICL, ?prior, ?plot, ?cut, ?coef")
+    cli::cli_ul()
   }
 )
 

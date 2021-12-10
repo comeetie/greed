@@ -17,20 +17,17 @@ Loads packages.
 ```{r setup,message=FALSE}
 library(greed)
 library(dplyr)
-library(tidyr)
-library(ggpubr)
-library(mclust)
-
 library(ggplot2)
+library(ggpubr)
 set.seed(2134)
 ```
 
 ## Mixed Models clustering
 
-One of distinctive feature of greed is that you may mix several model together. Using such an approach one may perform a clustering of several view of the same individuals with different generative models. In all case this approach suppose that the different views are generated in an independent way when the clustering assignment is known. To explore this capability we will begin with the Fifa dataset and cluster simultaneously the categorical features with an Lca and the continuous one with a Gmm.
+One of distinctive feature of greed is that you may mix several model together. Using such an approach one may perform a clustering of several view of the same individuals with different generative models. In all case this approach suppose that the different views are generated in an independent way when the clustering assignment is known. To explore this capability we will begin with the Fifa dataset and cluster simultaneously the categorical features with an `LcaPrior()` and the continuous one with a `GmmPrior()`.
 
 
-### The Fifa data-set Lca + GMM
+### Lca + Gmm, the Fifa data-set 
 
 We first load the `?Fifa` dataset (several features of Soccer players in the Fifa 2020 videogame). We remove the first two columns that give the players names and nationality, and we kept only the players which earn more than  3000000 euros.
 
@@ -47,11 +44,13 @@ Preparing the data and the model is a little bit more complicated than for the o
 ```{r fifa-mmm}
 library(future)
 plan(multisession)
-# prepare the dataset create a list with the factor colums in one slot and the numeric columns in another slot
+# prepare the dataset create a list with the factor columns in one slot 
+# and the numeric columns in another slot
 data <- list(categorical = X %>% select_if(is.factor),
             cont = X %>% select_if(function(v){!is.factor(v)}))
-# create the MixedModels, as expected we will use an LcaPrior for the factors and a GmmPrior for the numeric columns.
-# !be carefull names in the models list and in the data list must match
+# create the MixedModels, as expected we will use an LcaPrior for the factors 
+# and a GmmPrior for the numeric columns.
+# Be careful names in the models list and in the data list must match !
 mixmod <- MixedModels(models=list(categorical=LcaPrior(),cont=GmmPrior()))
 # perform the clustering
 sol = greed(data,model = mixmod)
@@ -79,23 +78,16 @@ To clearly show, the alignment of the cluster with field position we will make a
 
 ```{r posplot, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5,fig.cap="Field position map of the clusters."}
 data("Fifa_positions")
-params=coef(extractSubModel(sol,"categorical"))
 
-pos_clust = data.frame(do.call(rbind,lapply(1:K(sol),function(k){
-  sapply(params$Thetak[2:length(params$Thetak)],function(x){
-    1-x[k,1]
-    })
-  })))
-pos_clust$cluster=factor(1:K(sol))
+clust_positions = Fifa[,-c(1,2)] %>% 
+  filter(value_eur>3000000) %>%
+  select(pos_x,pos_y) %>%
+  mutate(cluster=clustering(sol)) %>%
+  group_by(cluster) %>%
+  summarize(pos_x=mean(pos_x),pos_y=mean(pos_y))
 
-pos_clust_long = pos_clust %>% pivot_longer(cols = -ncol(pos_clust),names_to = "position",values_to = "p") %>% 
-  mutate(position=tolower(position)) %>% 
-  left_join(Fifa_positions$positions,by=c("position"="team_position"))
-
-pos_clust_mean = pos_clust_long %>% group_by(cluster) %>% summarise(x=weighted.mean(x,p),y=weighted.mean(y,p))
-
-library(ggpubr)
-ggplot(pos_clust_mean)+background_image(Fifa_positions$bg_img)+geom_text(aes(x=x,y=y,label=cluster),size=5,col="red")+
+ggplot(clust_positions)+ background_image(Fifa_positions$bg_img)+
+  geom_text(aes(x=pos_x,y=pos_y,label=cluster),size=5,col="red")+
   coord_fixed(ratio=1)+
   scale_x_continuous(limits=c(0,203.2),expand = c(0,1))+
   scale_y_continuous(limits=c(0,101.6),expand = c(0,1))+theme_void()
@@ -105,7 +97,7 @@ ggplot(pos_clust_mean)+background_image(Fifa_positions$bg_img)+geom_text(aes(x=x
 The organisation of the clusters clearly appears, cluster 1 correspond to central defensive players, cluster 2 and 3 to lateral defensive players (recall that the preferred foot of this player were quite different between this two clusters with almost only right footed players in cluster 2 and left footed players in cluster 3).
 
 
-### The Ndrangheta data-set Sbm + Lca 
+### Sbm + Lca, the Ndrangheta data-set 
 
 Mixed models may also be used to analyse graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangeta dataset. This dataset contains relationship information between members of the Ndrangheta mafia together with some information on their group affiliation and their role. We wil use an Sbm model to fit the adjacency matrix and an Lca model for the facotr describing the roles. 
 

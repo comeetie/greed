@@ -33,6 +33,8 @@ hybrid <- function(model, alg, data, K, verbose = FALSE) {
   # first generation of solutions
   pop_size <- alg@pop_size
 
+  sb <- cli::cli_status("{cli::symbol$info} Initializing a population of {pop_size} solutions.")
+  
   for (i in 1:pop_size) {
     cli <- sample_cl(model, data, K)
     cli <- as.numeric(factor(cli))
@@ -54,9 +56,8 @@ hybrid <- function(model, alg, data, K, verbose = FALSE) {
   # while maximum number of generation // all solutions are equals // no improvements
   pmut <- alg@prob_mutation
   Kmax <- alg@Kmax
-  cat("################# ")
-  cat(paste0("Generation ", sprintf("%2i", nbgen), ": best solution with an ICL of ", round(solutions[[which.max(icls)]]@icl), " and ", solutions[[which.max(icls)]]@K, " clusters "))
-  cat("#################\n")
+  
+  cli::cli_status_update(sb,"{cli::symbol$info} Generation {nbgen} : best solution with an ICL of {round(solutions[[which.max(icls)]]@icl)} and {solutions[[which.max(icls)]]@K} clusters.")
 
   while ((max(icls) - min(icls)) > 1 & nbgen < alg@nb_max_gen & best_icl > old_best & cK < Kmax) {
     train.hist <- rbind(train.hist, data.frame(generation = nbgen, icl = icls, K = sapply(solutions, function(s) {
@@ -93,13 +94,11 @@ hybrid <- function(model, alg, data, K, verbose = FALSE) {
     best_icl <- max(icls)
     cK <- solutions[[order(icls, decreasing = TRUE)[1]]]@K
     nbgen <- nbgen + 1
-
-    cat("################# ")
-    cat(paste0("Generation ", sprintf("%2i", nbgen), ": best solution with an ICL of ", round(solutions[[which.max(icls)]]@icl), " and ", solutions[[which.max(icls)]]@K, " clusters "))
-    cat("#################\n")
+    cli::cli_status_update(sb,"{cli::symbol$info} Generation {nbgen} : best solution with an ICL of {round(solutions[[which.max(icls)]]@icl)} and {solutions[[which.max(icls)]]@K} clusters.")
+    
   }
   if (cK > Kmax) {
-    warning("The number of clusters has reached the upper limit.\n Increase Kmax (see ?hybrid-class) if you want to explore clusterings with more clusters.")
+    warning("The number of clusters has reached the upper limit.\n Increase Kmax (see ?Hybrid-class) if you want to explore clusterings with more clusters.")
   }
 
   train.hist <- rbind(train.hist, data.frame(generation = nbgen, icl = icls, K = sapply(solutions, function(s) {
