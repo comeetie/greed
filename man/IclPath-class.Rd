@@ -3,7 +3,7 @@
 \docType{class}
 \name{IclPath-class}
 \alias{IclPath-class}
-\title{abstract class to represent a hierarchical clustering result}
+\title{Abstract class to represent a hierarchical clustering result}
 \description{
 An S4 class to represent a hierarchical path of solution.
 }

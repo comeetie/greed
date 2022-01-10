@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_diaggmm.R
 \name{plot,DiagGmmFit,missing-method}
 \alias{plot,DiagGmmFit,missing-method}
-\title{plot a \code{\link{DiagGmmFit-class}} object}
+\title{Plot a \code{\link{DiagGmmFit-class}} object}
 \usage{
 \S4method{plot}{DiagGmmFit,missing}(x, type = "marginals")
 }
@@ -19,5 +19,5 @@
 a \code{\link{ggplot2}} graphic
 }
 \description{
-plot a \code{\link{DiagGmmFit-class}} object
+Plot a \code{\link{DiagGmmFit-class}} object
 }

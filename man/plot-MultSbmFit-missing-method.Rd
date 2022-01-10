@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_multsbm.R
 \name{plot,MultSbmFit,missing-method}
 \alias{plot,MultSbmFit,missing-method}
-\title{plot a \code{\link{MultSbmFit-class}} object}
+\title{Plot a \code{\link{MultSbmFit-class}} object}
 \usage{
 \S4method{plot}{MultSbmFit,missing}(x, type = "blocks")
 }
@@ -19,5 +19,5 @@
 a \code{\link{ggplot2}} graphic
 }
 \description{
-plot a \code{\link{MultSbmFit-class}} object
+Plot a \code{\link{MultSbmFit-class}} object
 }

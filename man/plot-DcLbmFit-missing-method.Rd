@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_dclbm.R
 \name{plot,DcLbmFit,missing-method}
 \alias{plot,DcLbmFit,missing-method}
-\title{plot a \code{\link{DcLbmFit-class}}}
+\title{Plot a \code{\link{DcLbmFit-class}}}
 \usage{
 \S4method{plot}{DcLbmFit,missing}(x, type = "blocks")
 }
@@ -19,5 +19,5 @@
 a \code{\link{ggplot2}} graphic
 }
 \description{
-plot a \code{\link{DcLbmFit-class}}
+Plot a \code{\link{DcLbmFit-class}}
 }

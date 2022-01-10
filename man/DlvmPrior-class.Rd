@@ -3,12 +3,8 @@
 \docType{class}
 \name{DlvmPrior-class}
 \alias{DlvmPrior-class}
-\title{abstract class to represent a generative model for clustering
-
-An S4 class to represent an abstract generative model}
+\title{Abstract class to represent a generative model for clustering}
 \description{
-abstract class to represent a generative model for clustering
-
 An S4 class to represent an abstract generative model
 }
 \section{Slots}{

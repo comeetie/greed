@@ -128,7 +128,7 @@ setClass("MoMFit", slots = list(model = "MoM"), contains = "IclFit")
 setClass("MoMPath", contains = c("IclPath", "MoMFit"))
 
 
-#' @title plot a \code{\link{MoMFit-class}} object
+#' @title Plot a \code{\link{MoMFit-class}} object
 #'
 #'
 #' @param x a \code{\link{MoMFit-class}}

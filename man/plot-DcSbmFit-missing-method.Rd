@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_dcsbm.R
 \name{plot,DcSbmFit,missing-method}
 \alias{plot,DcSbmFit,missing-method}
-\title{plot a \code{\link{DcSbmFit-class}} object}
+\title{Plot a \code{\link{DcSbmFit-class}} object}
 \usage{
 \S4method{plot}{DcSbmFit,missing}(x, type = "blocks")
 }
@@ -19,7 +19,7 @@
 a \code{\link{ggplot2}} graphic
 }
 \description{
-plot a \code{\link{DcSbmFit-class}} object
+Plot a \code{\link{DcSbmFit-class}} object
 }
 \seealso{
 \code{\link{plot,IclPath,missing-method}}

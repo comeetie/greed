@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_lca.R
 \name{plot,LcaFit,missing-method}
 \alias{plot,LcaFit,missing-method}
-\title{plot a \code{\link{LcaFit-class}} object}
+\title{Plot a \code{\link{LcaFit-class}} object}
 \usage{
 \S4method{plot}{LcaFit,missing}(x, type = "marginals")
 }
@@ -18,5 +18,5 @@
 a \code{\link{ggplot2}} graphic
 }
 \description{
-plot a \code{\link{LcaFit-class}} object
+Plot a \code{\link{LcaFit-class}} object
 }

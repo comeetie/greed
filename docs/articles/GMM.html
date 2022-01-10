@@ -41,7 +41,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a>
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -82,7 +82,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a>
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -187,7 +187,7 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mu_k,V_{k}^{-1})\\
 </h2>
 <p>You may also used diagonal covariance matrix. The <code>?`diaggmm-class`</code> allow to use such GMM type model. If you try such model on the previous diabetes dataset, greed this time found a 4 components GMM.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">soldiag</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="../reference/DiagGmmPrior-class.html">DiagGmm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">soldiag</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="../reference/DiagGmm.html">DiagGmm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; ------- DIAGGMM model fitting ------</span>
 <span class="co">#&gt; ################# Generation  1: best solution with an ICL of -2475 and 6 clusters #################</span>
 <span class="co">#&gt; ################# Generation  2: best solution with an ICL of -2464 and 4 clusters #################</span>
@@ -239,7 +239,7 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mu_k,V_{k}^{-1})\\
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"fashion"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">fashion</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>
 <span class="co">#&gt; [1] 1000  784</span>
-<span class="va">sol</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">fashion</span><span class="op">$</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="../reference/DiagGmmPrior-class.html">DiagGmm</a></span><span class="op">(</span><span class="op">)</span>,alg<span class="op">=</span><span class="fu"><a href="../reference/Seed-class.html">Seed</a></span><span class="op">(</span><span class="op">)</span>,K<span class="op">=</span><span class="fl">60</span><span class="op">)</span>
+<span class="va">sol</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">fashion</span><span class="op">$</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="../reference/DiagGmm.html">DiagGmm</a></span><span class="op">(</span><span class="op">)</span>,alg<span class="op">=</span><span class="fu"><a href="../reference/Seed-class.html">Seed</a></span><span class="op">(</span><span class="op">)</span>,K<span class="op">=</span><span class="fl">60</span><span class="op">)</span>
 <span class="co">#&gt; ------- DIAGGMM model fitting ------</span>
 <span class="co">#&gt; ------- Final clustering -------</span>
 <span class="co">#&gt; ICL clustering with a DIAGGMM model, 23 clusters and an icl of -3596642.</span></code></pre></div>
@@ -283,7 +283,7 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mu_k,V_{k}^{-1})\\
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>

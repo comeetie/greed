@@ -147,7 +147,7 @@ setClass("DcSbmFit", slots = list(model = "DcSbm"), contains = "IclFit")
 setClass("DcSbmPath", contains = c("IclPath", "DcSbmFit"))
 
 
-#' @title plot a \code{\link{DcSbmFit-class}} object
+#' @title Plot a \code{\link{DcSbmFit-class}} object
 #'
 #' @param x a \code{\link{DcSbmFit-class}}
 #' @param type a string which specify plot type:

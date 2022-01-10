@@ -5,7 +5,7 @@
 
 
 
-#' @title show an IclPath object
+#' @title Show an IclPath object
 #'
 #' @description
 #' Print an \code{\link{IclPath-class}} object, model type and number of found clusters are provided.
@@ -16,7 +16,11 @@ setMethod(
   f = "show",
   signature = signature("IclFit"),
   definition = function(object) {
-    cat(paste0("ICL clustering with a ", toupper(class(object@model)), " model, ", length(object@obs_stats$counts), " clusters and an icl of ", round(object@icl), "."))
+    cli::cli_h2("Clustering with a {toupper(class(object@model))} model {length(object@obs_stats$counts)} clusters and an ICL of {round(object@icl)}")
+    cli::cli_alert_info("Generic methods to explore a fit:")
+    cli::cli_ul()
+    cli::cli_li("?clustering, ?K, ?ICL, ?prior, ?plot, ?cut, ?coef")
+    cli::cli_ul()
   }
 )
 
@@ -155,12 +159,7 @@ nodelink <- function(sol) {
 
 
 
-#' nodelinklab
-#' @param sol \code{\link{MoMPath-class}} object to be plot
-#' @param labels a vector of cluster labels
-#' @param s threshold for links
-#' @return a ggplot2 graph
-#' @export
+# nodelinklab
 nodelinklab <- function(sol, labels, s = 0) {
   ij <- Matrix::which(sol@obs_stats$x_counts > 0, arr.ind = TRUE)
   ld <- sol@obs_stats$x_counts
@@ -348,10 +347,7 @@ mat_blocks <- function(x) {
 
 
 
-#' graph_balance
-#' @param x a \code{\link{SbmFit-class}} object to be plot
-#' @return a ggplot2 graph
-#' @export
+# graph_balance
 graph_balance <- function(x) {
   K <- length(x@obs_stats$counts)
   B <- x@obs_stats$x_counts - t(x@obs_stats$x_counts)

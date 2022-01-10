@@ -152,7 +152,7 @@ setClass("DiagGmmFit", slots = list(model = "DiagGmm"), contains = "IclFit")
 #' @export
 setClass("DiagGmmPath", contains = c("IclPath", "DiagGmmFit"))
 
-#' @title plot a \code{\link{DiagGmmFit-class}} object
+#' @title Plot a \code{\link{DiagGmmFit-class}} object
 #'
 #'
 #' @param x a \code{\link{DiagGmmFit-class}}

@@ -137,7 +137,7 @@ setClass("SbmFit", slots = list(model = "Sbm"), contains = "IclFit")
 #' @export
 setClass("SbmPath", contains = c("IclPath", "SbmFit"))
 
-#' @title plot a \code{\link{SbmFit-class}} object
+#' @title Plot a \code{\link{SbmFit-class}} object
 #'
 #' @param x a \code{\link{SbmFit-class}}
 #' @param type a string which specify plot type:

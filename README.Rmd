@@ -113,7 +113,7 @@ plan(multisession)
 
 ### Classical clustering, GMM
 
-See the [GMM vignette](articles/GMM.html) for details.
+See the `vignette("GMM")` for details.
 
 ```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 data("diabetes",package = "mclust")
@@ -126,16 +126,16 @@ gmmpairs(sol,X)
 
 ### Questionnary and item response theory datasets, LCA
 
-See the [LCA vignette](articles/LCA.html) for details.
+See the `vignette("LCA")` for details.
 
 ### Graphs, SBM like models
 
-See the [SBM vignette](articles/SBM.html) for details.
+See the `vignette("SBM")` for details.
 
 ### Mixture of Regression
 
-See the [MoR vignette](articles/MoR.html) for details.
+See the`vignette("MoR")` for details.
 
-# Advanced models
+### Advanced models`
 
-See the [Mixed Models](articles/Mixed-Models.html) for details.
+See the `vignette("Mixed Models")`for details.

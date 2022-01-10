@@ -1,0 +1,13 @@
+citHeader("To cite greed in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "Hierarchical clustering with discrete latent variable models and the integrated classification likelihood",
+  author   = "Côme, E. and Jouvin, N. and Latouche, P. and Bouveyron, C.",
+  journal  = "Advances in Data Analysis and Classification",
+  year     = "2021",
+  volume   = "15",
+  pages    = "957–986",
+  url      = "https://doi.org/10.1007/s11634-021-00440-z",
+  textVersion = "Côme, E., Jouvin, N., Latouche, P. et al. Hierarchical clustering with discrete latent variable models and the integrated classification likelihood. Adv Data Anal Classif 15, 957–986 (2021). https://doi.org/10.1007/s11634-021-00440-z"
+)

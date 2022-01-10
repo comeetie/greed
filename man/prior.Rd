@@ -2,9 +2,12 @@
 % Please edit documentation in R/alg_classes.R
 \name{prior}
 \alias{prior}
+\alias{prior,IclFit-method}
 \title{Generic method to extract the prior used to fit \code{\link{IclFit-class}} object}
 \usage{
 prior(fit)
+
+\S4method{prior}{IclFit}(fit)
 }
 \arguments{
 \item{fit}{an \code{IclFit} solution}
@@ -15,3 +18,8 @@ An S4 object describing the prior parameters
 \description{
 This method take a \code{\link{IclFit-class}} object and return the prior used.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{IclFit}: IclFit method
+}}
+

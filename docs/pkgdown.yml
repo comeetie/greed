@@ -1,11 +1,12 @@
 pandoc: 2.11.4
-pkgdown: 1.9000.9000.9000
-pkgdown_sha: e72fc30f333dc4f50f3f9d1f274fc29d67e34974
+pkgdown: 2.0.1
+pkgdown_sha: ~
 articles:
   GMM: GMM.html
   LCA: LCA.html
   Mixed-Models: Mixed-Models.html
+  MoM: MoM.html
   MoR: MoR.html
   SBM: SBM.html
-last_built: 2021-12-03T10:32Z
+last_built: 2021-12-10T12:36Z
 

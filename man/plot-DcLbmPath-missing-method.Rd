@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_dclbm.R
 \name{plot,DcLbmPath,missing-method}
 \alias{plot,DcLbmPath,missing-method}
-\title{plot a \code{\link{DcLbmPath-class}}}
+\title{Plot a \code{\link{DcLbmPath-class}}}
 \usage{
 \S4method{plot}{DcLbmPath,missing}(x, type = "tree")
 }
@@ -21,5 +21,5 @@
 a \code{\link{ggplot2}} graphic
 }
 \description{
-plot a \code{\link{DcLbmPath-class}}
+Plot a \code{\link{DcLbmPath-class}}
 }

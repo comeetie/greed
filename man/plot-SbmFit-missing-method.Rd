@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_sbm.R
 \name{plot,SbmFit,missing-method}
 \alias{plot,SbmFit,missing-method}
-\title{plot a \code{\link{SbmFit-class}} object}
+\title{Plot a \code{\link{SbmFit-class}} object}
 \usage{
 \S4method{plot}{SbmFit,missing}(x, type = "blocks")
 }
@@ -19,7 +19,7 @@
 a \code{\link{ggplot2}} graphic
 }
 \description{
-plot a \code{\link{SbmFit-class}} object
+Plot a \code{\link{SbmFit-class}} object
 }
 \seealso{
 \code{\link{plot,IclPath,missing-method}}

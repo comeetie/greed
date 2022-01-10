@@ -3,7 +3,7 @@
 \docType{class}
 \name{DcLbmPath-class}
 \alias{DcLbmPath-class}
-\title{Degree corrected stochastic block model for bipartite graph hierarchical fit results class}
+\title{Degree corrected Latent Block Model hierarchical fit results class}
 \description{
 An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{IclPath-class}}.
 }
