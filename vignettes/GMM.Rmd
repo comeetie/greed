@@ -120,7 +120,7 @@ table(diabetes$cl,clustering(sol_dense))
 
 ## Diagonal covariance matrix
 
-When the number of variables $p$ becomes large, it can be of interest to reduce the flexibility of a GMM by adding a specific set of constraints. The diagonal covariance model, with constraint $\mathbf{\Sigma}_k = \textnormal{diag}(\sigma_{k1}, \ldots, \sigma_{kp})$, is implemented in the **greed** package through its `?DiagGmm` S4 class. Its hierarchical formulation is similar to unconstrained GMM, except the Wishart prior on $\mathbf{\Sigma}_k$ is now replaced by a Gamma prior on each $\sigma_{kj}$ with shape $\kappa$ and rate $\beta$ hyperparameters defaulted to $1$ and mean of the empirical columns variances respectively.
+When the number of variables $p$ becomes large, it can be of interest to reduce the flexibility of a GMM by adding a specific set of constraints. The diagonal covariance model, with constraint $\mathbf{\Sigma}_k = \textrm{diag}(\sigma_{k1}, \ldots, \sigma_{kp})$, is implemented in the **greed** package through its `DiagGmm` S4 class. Its hierarchical formulation is similar to unconstrained GMM, except the Wishart prior on $\mathbf{\Sigma}_k$ is now replaced by a Gamma prior on each $\sigma_{kj}$ with shape $\kappa$ and rate $\beta$ hyperparameters defaulted to $1$ and mean of the empirical columns variances respectively.
 
 Fitting this model on the diabetes dataset, `greed()` with an hybrid GA finds a $4$-components diagonal GMM.
 
@@ -176,7 +176,7 @@ On this more complex dataset, the clustering found by the algorithm has $K=23$ c
 plot(sol_fashion,type='tree')
 ```
 
-Finally, the clusters centers look coherent and the hierarchical ordering underlines a form of "geometric proximities" between clusters.
+Finally, the clusters centers look coherent and the hierarchical ordering underlines a form of "geometric proximities" between cluster objects.
 
 ```{r fashion-means, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
 plot_clust_centers <- function(sol) {
