@@ -105,7 +105,7 @@
       <h1 data-toc-skip>SBM</h1>
                         <h4 data-toc-skip class="author">Etienne Côme</h4>
             
-            <h4 data-toc-skip class="date">2021-12-10</h4>
+            <h4 data-toc-skip class="date">2022-01-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/comeetie/greed/blob/HEAD/vignettes/SBM.Rmd" class="external-link"><code>vignettes/SBM.Rmd</code></a></small>
       <div class="hidden name"><code>SBM.Rmd</code></div>
@@ -147,33 +147,32 @@
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a guess SBM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -14292 and 7 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -14238 and 6 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -14238 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -14588 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -14588 and 6 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a SBM model 6 clusters and an ICL of -14238</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a SBM model 6 clusters and an ICL of -14588</span></code></pre></div>
 <p>Look at the parameters estimate:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
 <span class="co">#&gt; $pi</span>
-<span class="co">#&gt; [1] 0.1775 0.1625 0.1450 0.1475 0.1775 0.1900</span>
+<span class="co">#&gt; [1] 0.1825 0.1575 0.1375 0.1475 0.1875 0.1875</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $thetakl</span>
-<span class="co">#&gt;              [,1]         [,2]         [,3]        [,4]         [,5]</span>
-<span class="co">#&gt; [1,] 0.1087085896 0.0084507042 0.0109276348 0.001193602 0.0009918667</span>
-<span class="co">#&gt; [2,] 0.0104008667 0.1065088757 0.0103448276 0.001043025 0.0006500542</span>
-<span class="co">#&gt; [3,] 0.0094706168 0.0098143236 0.1162306778 0.001461134 0.0016998543</span>
-<span class="co">#&gt; [4,] 0.0014323228 0.0010430248 0.0017533606 0.121804079 0.0090713774</span>
-<span class="co">#&gt; [5,] 0.0009918667 0.0002166847 0.0009713453 0.012413464 0.1118825630</span>
-<span class="co">#&gt; [6,] 0.0022238695 0.0012145749 0.0006805808 0.011373773 0.0096367680</span>
-<span class="co">#&gt;             [,6]</span>
-<span class="co">#&gt; [1,] 0.001853225</span>
-<span class="co">#&gt; [2,] 0.002024291</span>
-<span class="co">#&gt; [3,] 0.001361162</span>
-<span class="co">#&gt; [4,] 0.009812667</span>
-<span class="co">#&gt; [5,] 0.010934025</span>
-<span class="co">#&gt; [6,] 0.115650970</span></code></pre></div>
+<span class="co">#&gt;              [,1]        [,2]         [,3]         [,4]         [,5]</span>
+<span class="co">#&gt; [1,] 0.1133420904 0.010654490 0.0119551681 0.0004643603 0.0005479452</span>
+<span class="co">#&gt; [2,] 0.0147858230 0.117157974 0.0121212121 0.0010761367 0.0004232804</span>
+<span class="co">#&gt; [3,] 0.0127023661 0.011832612 0.1057851240 0.0006163328 0.0016969697</span>
+<span class="co">#&gt; [4,] 0.0006965405 0.000000000 0.0006163328 0.1195058891 0.0135593220</span>
+<span class="co">#&gt; [5,] 0.0009132420 0.001058201 0.0014545455 0.0083615819 0.1226666667</span>
+<span class="co">#&gt; [6,] 0.0009132420 0.002116402 0.0009696970 0.0090395480 0.0115555556</span>
+<span class="co">#&gt;              [,6]</span>
+<span class="co">#&gt; [1,] 0.0003652968</span>
+<span class="co">#&gt; [2,] 0.0002116402</span>
+<span class="co">#&gt; [3,] 0.0007272727</span>
+<span class="co">#&gt; [4,] 0.0090395480</span>
+<span class="co">#&gt; [5,] 0.0140444444</span>
+<span class="co">#&gt; [6,] 0.1189333333</span></code></pre></div>
 <p>Plot the results using a block representation.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
@@ -209,14 +208,14 @@
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a guess DCSBM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -11695 and 6 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -11695 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -11528 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -11528 and 6 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a DCSBM model 6 clusters and an ICL of -11695</span>
+<span class="co">#&gt; ── Clustering with a DCSBM model 6 clusters and an ICL of -11528</span>
 <span class="va">sol_dcsbm</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── <span style="font-weight: bold;">Clustering with a DCSBM model 6 clusters and an ICL of -11695</span> ──</span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Clustering with a DCSBM model 6 clusters and an ICL of -11528</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Generic methods to explore a fit:</span>
 <span class="co">#&gt; • ?clustering, ?K, ?ICL, ?prior, ?plot, ?cut, ?coef</span>
@@ -225,17 +224,18 @@
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a guess SBM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -12814 and 14 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -12661 and 11 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -12632 and 12 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -12602 and 11 clusters.</span>
-<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -12602 and 11 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -12775 and 14 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -12566 and 13 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -12516 and 12 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -12482 and 11 clusters.</span>
+<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -12481 and 12 clusters.</span>
+<span class="co">#&gt; ℹ Generation 6 : best solution with an ICL of -12481 and 12 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a SBM model 10 clusters and an ICL of -12601</span>
+<span class="co">#&gt; ── Clustering with a SBM model 11 clusters and an ICL of -12474</span>
 <span class="va">sol_sbm</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── <span style="font-weight: bold;">Clustering with a SBM model 10 clusters and an ICL of -12601</span> ──</span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Clustering with a SBM model 11 clusters and an ICL of -12474</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Generic methods to explore a fit:</span>
 <span class="co">#&gt; • ?clustering, ?K, ?ICL, ?prior, ?plot, ?cut, ?coef</span></code></pre></div>
@@ -267,16 +267,14 @@
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a guess SBM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1267 and 7 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1257 and 6 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -1253 and 6 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -1253 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1253 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1253 and 6 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a SBM model 5 clusters and an ICL of -1250</span>
+<span class="co">#&gt; ── Clustering with a SBM model 6 clusters and an ICL of -1253</span>
 <span class="va">sol_sbm</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── <span style="font-weight: bold;">Clustering with a SBM model 5 clusters and an ICL of -1250</span> ──</span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Clustering with a SBM model 6 clusters and an ICL of -1253</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Generic methods to explore a fit:</span>
 <span class="co">#&gt; • ?clustering, ?K, ?ICL, ?prior, ?plot, ?cut, ?coef</span></code></pre></div>
@@ -326,8 +324,8 @@
 <span class="co">#&gt;    </span>
 <span class="co">#&gt;      c  l  n</span>
 <span class="co">#&gt;   1  1 38  2</span>
-<span class="co">#&gt;   2 39  5 11</span>
-<span class="co">#&gt;   3  9  0  0</span></code></pre></div>
+<span class="co">#&gt;   2 41  5 11</span>
+<span class="co">#&gt;   3  7  0  0</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="multinomial-sbm-layered-networks">Multinomial SBM, layered networks<a class="anchor" aria-label="anchor" href="#multinomial-sbm-layered-networks"></a>
@@ -404,10 +402,11 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
 <span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1516 and 3 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1516 and 3 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1514 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -1514 and 4 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a MIXEDMODELS model 3 clusters and an ICL of -1516</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a MIXEDMODELS model 4 clusters and an ICL of -1514</span></code></pre></div>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/extractSubModel.html">extractSubModel</a></span><span class="op">(</span><span class="va">sol</span>, <span class="st">"work"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"blocks"</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/unnamed-chunk-26-1.png" width="70%"></p>
