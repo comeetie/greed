@@ -310,6 +310,7 @@ greed <- function(X, model = find_model(X), K = 20, alg = Hybrid(), verbose = FA
   if ("sampling" %in% methods::slotNames(model)) {
     modelname <- paste(modelname, "with", model@sampling, "sampling")
   }
+
   cli::cli_h2("Fitting a {modelname} model")
   sol <- fit(model, alg, data, K, verbose)
   sol@obs_stats <- cleanObsStats(model, sol@obs_stats, data)
@@ -322,6 +323,7 @@ greed <- function(X, model = find_model(X), K = 20, alg = Hybrid(), verbose = FA
 
 
   sol <- postprocess(sol, data)
+
   cli::cli_h2("Final clustering")
   cli::cli_h3("Clustering with a {toupper(class(sol@model))} model {length(sol@obs_stats$counts)} clusters and an ICL of {round(sol@icl)}")
   sol

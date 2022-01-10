@@ -56,6 +56,7 @@ hybrid <- function(model, alg, data, K, verbose = FALSE) {
   # while maximum number of generation // all solutions are equals // no improvements
   pmut <- alg@prob_mutation
   Kmax <- alg@Kmax
+
   
   cli::cli_status_update(sb,"{cli::symbol$info} Generation {nbgen} : best solution with an ICL of {round(solutions[[which.max(icls)]]@icl)} and {solutions[[which.max(icls)]]@K} clusters.")
 
@@ -94,6 +95,7 @@ hybrid <- function(model, alg, data, K, verbose = FALSE) {
     best_icl <- max(icls)
     cK <- solutions[[order(icls, decreasing = TRUE)[1]]]@K
     nbgen <- nbgen + 1
+
     cli::cli_status_update(sb,"{cli::symbol$info} Generation {nbgen} : best solution with an ICL of {round(solutions[[which.max(icls)]]@icl)} and {solutions[[which.max(icls)]]@K} clusters.")
     
   }

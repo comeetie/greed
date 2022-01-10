@@ -626,6 +626,10 @@ gmmpairs <- function(sol, X) {
   if (nrow(X) != length(sol@cl) | ncol(X) != length(coef(sol)$muk[[1]])) {
     stop("Dimension mismatch between the fitted model and the data.", call. = FALSE)
   }
+  
+  # get current ggplot's theme options (size, etc.)
+  curr_t = ggplot2::theme_get()
+  
   vnames <- names(X)
   plts.df <- list()
   ii <- 1
@@ -687,7 +691,9 @@ gmmpairs <- function(sol, X) {
       ii <- ii + 1
     }
   }
-
+  
+  g_title = grid::textGrob(paste0(class(sol@model), " clustering with ", max(sol@cl), " clusters.\n"),
+                     gp=grid::gpar(fontsize=curr_t$text$size,font=4))
   grob.mat <- matrix(lapply(plts.df, function(x) {
     ggplot2::ggplotGrob(x + ggplot2::theme(legend.position = "hidden"))
   }), nrow = (ncol(X) - 1))
@@ -697,7 +703,7 @@ gmmpairs <- function(sol, X) {
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white")) +
     ggplot2::annotation_custom(legend))
   gtl <- gridExtra::arrangeGrob(grobs = list(gt, glegend), nrow = 2, heights = c(10, 1))
-  finished_plot <- gridExtra::grid.arrange(top = paste0(class(sol@model), " clustering with ", max(sol@cl), " clusters.\n"), gtl)
+  finished_plot <- gridExtra::grid.arrange(top = g_title, gtl)
   invisible(finished_plot)
 }
 
