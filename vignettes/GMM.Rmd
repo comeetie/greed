@@ -23,7 +23,7 @@ set.seed(2134)
 
 ```{r ggplot-theme, include=FALSE, echo=FALSE, message=FALSE}
 # set ggplot2's theme options globally
-th = theme_classic(base_size = 14) %+replace%
+th = theme_classic(base_size = 14) +
   ggplot2::theme(
       # L'ensemble de la figure
       plot.title = element_text(size = rel(1), face = "bold", margin = margin(0,0,5,0), hjust = 0),
@@ -33,8 +33,7 @@ th = theme_classic(base_size = 14) %+replace%
       # Les axes
       axis.title = element_text(size = rel(0.7), face = "bold"),
       axis.text = element_text(size = rel(0.55), face = "bold"),
-      # axis.line = element_line(color = "black", arrow = arrow(length = unit(0.3, "lines"), type = "closed")),
-      # axis.line=element_blank(),
+      axis.line=element_blank(),
       # La légende
       legend.title = element_text(size = rel(0.6), face = "bold"),
       legend.text = element_text(size = rel(0.6), face = "bold"),
@@ -45,10 +44,6 @@ th = theme_classic(base_size = 14) %+replace%
 ggplot2::theme_set(th)
 ```
 
-```{r test-plot}
-# gg = ggplot(cars) + geom_point(aes(x=speed, y=dist)) + ggtitle('cars')
-# gg
-```
 
 # The model
 
