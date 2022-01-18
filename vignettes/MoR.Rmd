@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include = FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 
-```{r setup,message=FALSE}
+```{r setup,include=TRUE, message=FALSE}
 library(greed)
 library(dplyr)
 library(tidyr)

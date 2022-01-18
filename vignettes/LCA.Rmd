@@ -7,14 +7,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include = FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 Loads the necessary packages for the vignettes.
-```{r setup, include=T}
+```{r setup, include=T, message=FALSE}
 library(future) # allows parralel processing in greed()
 plan(multisession)
 library(greed)

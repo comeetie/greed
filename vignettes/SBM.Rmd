@@ -1,16 +1,16 @@
 ---
-title: "SBM"
+title: "Graph clustering with the Stochastic block model"
 author: "Etienne Côme"
 date: "`r Sys.Date()`"
 fig_caption: yes
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SBM}
+  %\VignetteIndexEntry{Graph clustering with the Stochastic block model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
+```{r setup-knitr, include = FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -18,8 +18,8 @@ knitr::opts_chunk$set(
 ```
 
 
-Loads packages and set a future plan for parallel processing if you want.
-```{r,message=FALSE}
+Loads packages and set a future plan for parallel processing.
+```{r setup-packages,message=FALSE, include=TRUE}
 library(future)
 library(Matrix)
 library(ggplot2)
@@ -28,11 +28,16 @@ library(dplyr)
 library(ggpubr)
 ```
 
-## Introduction, Sbm like models
 
-## Basic example
+```{r ggplot-theme, include=FALSE, echo=FALSE, message=FALSE}
+source("./vignettes_ggtheme.R")
+```
 
-Simulation of an SBM graph with a hierarchical structure.
+# The model
+
+# An introductory example: SBM with hierarchicaltructure
+
+We begin by simulating from a hierarchically structured SBM model, with 3 large clusters, each composed of 5 smaller clusters with higher connection probabilities.
 ```{r, fig.show='hold'}
 N=400
 K=6
@@ -44,6 +49,30 @@ mu = bdiag(lapply(1:(K/Ks), function(k){
   matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
 sbm = rsbm(N,pi,mu)
 ```
+
+```{r}
+df = expand.grid(x=1:K,y=1:K)
+df$Theta=c(t(matrix(mu)))
+leg_title = TeX(r'($\theta_{kl}$)')
+leg_breaks = c(1e-3, 0.03, 0.13)
+gg = ggplot(df, aes(x = x, y = y, fill=Theta, alpha=Theta)) +
+  geom_tile() +
+  xlab('l') +
+  ylab('k') +
+  ggplot2::scale_fill_distiller(leg_title, breaks = leg_breaks, palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(0,max(leg_breaks))) +
+  ggplot2::scale_alpha(leg_title,range=c(0,1),limits=c(0,max(leg_breaks)), breaks = leg_breaks) +
+  ggplot2::coord_fixed()+ggplot2::theme_bw() +
+  theme(
+    panel.background = element_rect(fill = "transparent"), # bg of the panel
+    plot.background = element_rect(fill = "transparent", color = NA), # bg of the plot
+    panel.grid.major = element_blank(), # get rid of major grid
+    panel.grid.minor = element_blank(), # get rid of minor grid
+    legend.background = element_rect(fill = "transparent"), # get rid of legend bg
+    legend.box.background = element_rect(fill = "transparent"), # get rid of legend panel bg
+    text = element_text(size=20)
+  )
+```
+
 
 Perform the clustering with default  algorithm. We specify to choose an sbm model since for squared sparse matrix the default is a DcSbm model. An hybrid  algorithm is selected by default and the default value for the parameter K is 20.
 

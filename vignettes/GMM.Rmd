@@ -2,19 +2,19 @@
 title: "Continuous data clustering with Gaussian mixtures"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{GMM}
+  %\VignetteIndexEntry{Continuous data clustering with Gaussian mixtures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include = FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 Loads packages.
-```{r setup, message=FALSE}
+```{r setup, include=TRUE, message=FALSE}
 library(greed)
 library(mclust)
 library(ggplot2)
