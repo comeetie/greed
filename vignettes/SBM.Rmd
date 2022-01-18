@@ -1,6 +1,6 @@
 ---
 title: "Graph clustering with the Stochastic block model"
-author: "Etienne Côme"
+author: "Etienne Côme & Nicolas Jouvin"
 date: "`r Sys.Date()`"
 fig_caption: yes
 output: rmarkdown::html_vignette
@@ -30,12 +30,55 @@ library(ggpubr)
 
 
 ```{r ggplot-theme, include=FALSE, echo=FALSE, message=FALSE}
-source("./vignettes_ggtheme.R")
+# set ggplot2's theme options globally
+th = theme_classic(base_size = 14) +
+  ggplot2::theme(
+      # L'ensemble de la figure
+      plot.title = element_text(size = rel(1), face = "bold", margin = margin(0,0,5,0), hjust = 0),
+      # Zone où se situe le graphique
+      # panel.grid.minor = element_blank(),
+      # panel.border = element_blank(),
+      # Les axes
+      axis.title = element_text(size = rel(0.7), face = "bold"),
+      axis.text = element_text(size = rel(0.55), face = "bold"),
+      axis.line=element_blank(),
+      # La légende
+      legend.title = element_text(size = rel(0.6), face = "bold"),
+      legend.text = element_text(size = rel(0.6), face = "bold"),
+      legend.key = element_rect(fill = "transparent", colour = NA),
+      legend.key.size = unit(1.5, "lines"),
+      legend.background = element_rect(fill = "transparent", colour = NA)
+      )
+ggplot2::theme_set(th)
 ```
 
 # The model
 
-# An introductory example: SBM with hierarchicaltructure
+Graph data arise in various scientific fields from biology to sociology, and accounts for relationship between objects. These objects are expressed as __nodes__, while a relationship between two objects is expressed as an __edge__. Hence, graph data may be expressed and stored in an __adjacency matrix__ $\mathbf{X} = \{ x_{ij} \}$ where $x_{ij}=1$ means that objects $i$ and $j$ are connected. Weighted versions are also possible.  
+
+The stochastic block model (SBM) is a random graph model of the adjacency matrix $\mathbf{X}$ widely used for graph clustering. In this model, the probability of an edge $(i,j)$ is driven by the cluster membership of node $i$ and $j$, hence the __block__ terminology. 
+
+It can be expressed in the [DLVMs](https://arxiv.org/abs/2002.11577) framework and the **greed** package handles this model and its degree-corrected variant, while implementing efficient visualization tools for the clustering results that we detail below. The Bayesian formulation of a binary SBM is as follows
+
+```{=tex}
+\begin{equation}
+\label{eq:sbm}
+\begin{aligned}
+\pi&\sim \textrm{Dirichlet}_K(\alpha),\\
+\theta_{k,l} $ \sim \textrm{Beta}(a0, b0), \\
+Z_i&\sim \mathcal{M}(1,\pi),\\
+\forall (i,j), \quad x_{ij} \mid Z_{ik}Z_{jl}=1& \sim \mathcal{B}(\theta_{k,l}).
+\end{aligned}
+\end{equation}
+```
+
+This model class is implemented in the `?Sbm` class. Here, the model hyperparameters are:
+ * $alpha$ whis is set to $1$ by default.
+ * The beta distribution parameters $a_0$ and $b_0$ on the connectivity matrix $\mathbf{\theta}$. A non-informative prior can be chose with $a_0=b_0=1$, which is the default value in `Sbm`.
+ 
+Note that the greed package also handles the degree-corrected variant of SBM in the `?dcSbm` class, allowing for integer valued edges. The underlying model and its DLVM formulation is described in depth in the Supplementary Materials of [Côme et. al.](https://hal.archives-ouvertes.fr/hal-02530705).
+ 
+# An introductory example: SBM with hierarchical structure
 
 We begin by simulating from a hierarchically structured SBM model, with 3 large clusters, each composed of 5 smaller clusters with higher connection probabilities.
 ```{r, fig.show='hold'}
@@ -50,27 +93,27 @@ mu = bdiag(lapply(1:(K/Ks), function(k){
 sbm = rsbm(N,pi,mu)
 ```
 
-```{r}
+```{r plot-connectivity-matrix, include=TRUE, echo=FALSE}
 df = expand.grid(x=1:K,y=1:K)
 df$Theta=c(t(matrix(mu)))
-leg_title = TeX(r'($\theta_{kl}$)')
-leg_breaks = c(1e-3, 0.03, 0.13)
+leg_breaks = unique(df$Theta)
 gg = ggplot(df, aes(x = x, y = y, fill=Theta, alpha=Theta)) +
   geom_tile() +
   xlab('l') +
   ylab('k') +
-  ggplot2::scale_fill_distiller(leg_title, breaks = leg_breaks, palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(0,max(leg_breaks))) +
-  ggplot2::scale_alpha(leg_title,range=c(0,1),limits=c(0,max(leg_breaks)), breaks = leg_breaks) +
-  ggplot2::coord_fixed()+ggplot2::theme_bw() +
+  ggplot2::scale_fill_distiller("Theta_{k,l}", breaks = leg_breaks, palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(0,max(leg_breaks))) +
+  ggplot2::scale_alpha("Theta_{k,l}",range=c(0,1),limits=c(0,max(leg_breaks)), breaks = leg_breaks) +
+  ggplot2::coord_fixed() + 
+  ggplot2::theme_bw() +
   theme(
     panel.background = element_rect(fill = "transparent"), # bg of the panel
     plot.background = element_rect(fill = "transparent", color = NA), # bg of the plot
     panel.grid.major = element_blank(), # get rid of major grid
     panel.grid.minor = element_blank(), # get rid of minor grid
     legend.background = element_rect(fill = "transparent"), # get rid of legend bg
-    legend.box.background = element_rect(fill = "transparent"), # get rid of legend panel bg
     text = element_text(size=20)
   )
+gg
 ```
 
 
