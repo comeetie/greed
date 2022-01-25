@@ -4,9 +4,9 @@ author: "Etienne Côme & Nicolas Jouvin"
 # date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
+    toc: true
     number_sections: true
-    toc: yes
-fig_caption: yes
+    fig_caption: yes
 vignette: >
   %\VignetteIndexEntry{Graph clustering with the Stochastic block model}
   %\VignetteEngine{knitr::rmarkdown}
@@ -207,14 +207,14 @@ plot(sol2,type='blocks')
 Choosing relevant level(s) to `cut` the dendrogram may be challenging and the **greed** package also provides graphical tools to help the user decide based on a chosen heuristics.
 
  * One can search for changepoints in the evolution of $-log(\alpha)$ with respect to $K$ with the following plot
+ * Or of the ICL value with respect to $log(\alpha)$
+
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='path')
-```
-
- * Or of the ICL value with respect to $log(\alpha)$
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(sol,type='front')
 ```
+
+
 
 
 ## Degree corrected variant
@@ -233,7 +233,7 @@ sol_sbm
 
 As expected the degree corrected version did a better job as the ICL value suggest. Indeed, without degree correction, the model has to use more groups to fit the degree heterogeneity. 
 
-# A (simple) real data example: the Books dataset
+# A real data example: the Books dataset
 
 The **Books** dataset was gathered by Valdis Krebs and is attached to the **greed** package. It consist of a co-purchasing network of $N=105$ books on US politics. Two books have an edge between them if they have been frequently co-purchased together. We have access to the labels of each book according to its political inclination: conservative ("n"), liberal ("l") or neutral ("n").
 
@@ -283,26 +283,29 @@ ggraph(graph, layout = 'kk') +
     geom_node_point(aes(size = Popularity,color=cluster))
 
 ```
-Finally, we can look at both models solutions for $K=3$. We see that both partition make sense according to the available political label liberals books where correctly recovered 
 
-```{r, echo=FALSE, include=TRUE}
+Finally, we can look at both models solutions for $K=3$ and their confusion matrix. We see that both partition make sense according to the available political label.
+
+```{r, fig.show='hold', echo=FALSE, include=TRUE}
 # Regular SBM
 sol_sbm_k3 = cut(sol_sbm,3)
-knitr::kable(table(clustering(sol_sbm_k3), Books$label), format='html', caption = "Regular SBM")
+confmat_sbm = knitr::kable(table(clustering(sol_sbm_k3), Books$label), format='html', caption = "Regular SBM", align="l")
 # DcSbm
-knitr::kable(table(clustering(sol_dcsbm), Books$label), format='html', caption = "DC-SBM")
+confmat_dcsbm = knitr::kable(table(clustering(sol_dcsbm), Books$label), format='html', caption = "DC-SBM")
+knitr::kables(list(confmat_sbm, confmat_dcsbm), format='html', caption = "Confusion matrices")
 ```
 
-# Categorical edges and multiplex graphs
+# Categorical edges and multidimensional graphs
 
 Sometimes, a graph accounts for more complex interactions between object such as
  1. categorical relationship instead of solely binary
- 2. multimodal/multilayered relationships encoded by different graphs (*e.g.* work relation and friendship)
+ 2. multidimensional/multilayered relationships encoded by different graphs (*e.g.* work relation and friendship)
 
 The first case can be adressed in the SBM framework via a multinomial SBM model. The second is different since there are different layer or *views* of the data. Still, the **greed** package may handle this type of data via its `MixedModels` framework where user simply stacks the DLVM of its choice on each view of the data (for more info see the dedicated vignette on Mixed Models).
 
-## Multinomial SBM: newguinea dataset
-The SBM framework allows virtually any distribution on the edges, hence allowing to handle categorical edges modeled as multinomial random variables. With the right choice of priors, this model admits an exact ICL formulation which allows to use the **greed** framework. This model is implemented in the `MultSbm` S4 class and we illustrate its use on a toy data set consisting in interactions between $n=16$ tribes. This interaction can be one of 3 types: ennemies, friends, no relation. These are encoded as 3 dimensional one-hot vectors in the `NewGuinea` dataset. 
+## Categorical edges and the Multinomial SBM: newguinea dataset
+
+The SBM framework allows virtually any distribution on the edges, hence allowing to handle categorical edges modeled as multinomial random variables. With the right choice of conjugate Dirichlet priors, this model admits an exact ICL formulation which allows to use the **greed** framework. This model is implemented in the `MultSbm` S4 class and we illustrate its use on a toy data set consisting in interactions between $n=16$ tribes. This interaction can be one of 3 types: ennemies, friends or no relation. These are encoded as 3 dimensional one-hot vectors in the `NewGuinea` dataset. 
 
 ```{r}
 data("NewGuinea")
@@ -313,11 +316,19 @@ dim(NewGuinea)
 sol_newguinea = greed(NewGuinea,model=MultSbm())
 ```
 
+To each modality (or slice), we can associate a binary graph corresponding the interaction, and plot its he aggregated adjacency matrix. The multiple views allow to interpret the clusters in term of the modalities. In this example, we have three *slices* corresponding to the three modalities and :
+
+ 1. In the first modality (*ennemity*), group 1 and 2 have more interaction outside than within the groups (ennemies fight more than friends) 
+ 2. The second slice (*friendship*) is consistent with the first slice, since the two groups have a pronounced community structure, with group 1 being densely connected. There are no friendships links between the two groups.
+ 3. The third slice (*no relation*) highlight that individuals in group 2 mostly share no relation.
+ 
+To sum up, the algorithm found 2 groups/clusters. The first is composed of a small, densely connected community of friend tribes, whereas the second is larger and more heterogeneous with mostly no interactions between the tribes. The two clusters either have enmity relations or no relation at all.
+
 ```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
 plot(sol_newguinea,type='blocks')
 ```
 
-We can visualize
+To further the analysis, it is possible to visualize the two graphs of enmity and friendships on top of each other. The node shape symbolizes the cluster, while the color of the edge characterizes the modality. One can see that the first cluster makes a 4-node clique for friendship while having a strongly pronounced bi-partite structure for enmity, hence comforting the previous analysis. 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 
 enemies = as.data.frame(which(NewGuinea[,,1]==1,arr.ind = TRUE)) %>% 
@@ -331,33 +342,50 @@ graph = tbl_graph(edges=edges,nodes=data.frame(id=1:16,cluster=factor(clustering
 # plot using ggraph
 ggraph(graph, layout = 'kk', weights = if_else(relation=="friends",1,0)) + 
     geom_edge_link(aes(color=relation),width=1.2) + 
-    scale_edge_color_manual(values = c("friend"="#229922","enemy"="#992222"))+
+    scale_edge_color_manual(values = c("friend"="#4398cc","enemy"="#b60000"))+
     geom_node_point(aes(shape=cluster),size=5)
 
 ```
 
+## General case: multidimensional networks and mixed-models
 
+As explained above, some graphs may encode different kinds of relationships. This general case of multidimensional network correspond to a 3-dimensional encoding $V$ different graphs. Note that graphs with multinomial edges are a particular case where an edge $(i,k)$ can only belong to one of the views.
+
+In the perspective of graphs clustering, we search for **one** common partition of the nodes among the different graphs. From the statistical point-of-view of the DLVMs framework, it amounts to stack observational models (*i.e.* SBM, dc-SBM, or MultinomialSBM) on each of the graphs, that are supposed independent conditionally on the unknown partitions :
+```{=tex}
+\begin{equation}
+p(G_1, \ldots, G_V \mid Z) = p(G_1 \mid Z) \times \ldots \times p(G_V \mid Z).
+\end{equation}
+```
+The ICL of the whole dataset is then simply the sum of the individual ICL of the V models. 
+
+The **greed** package implements this modelization via the ``?`MixedModels-class``. We refer to the dedicated vignettes for more details but, from a practical perspective, one need to specify the $V$ observational models in a named list, and the data (here the $V$ adjacency matrices) in a list sharing the same names. Here is an example on the **NewGuinea** dataset analyzed above, with $V=2$ views corresponding to enmity and friendship. We put a default dcSBM model on both views and provide the two corresponding adjacency matrix as data.
+
+**Practicalities:** The `MixedModel` class allows any observational model, however they need to be initiated via the following syntax: `<your_desired_model>Prior()`. Without going into technical details, the distinction is necessary to account for the shared aspect of the partition $Z$ between all models.
 
 ```{r}
-mod <- MixedModels(list(pos = DcSbmPrior(), neg = DcSbmPrior()))
-data <- list(pos = NewGuinea[, , 2], neg = NewGuinea[, , 1])
+mod <- MixedModels(list(friends = DcSbmPrior(), enmy = DcSbmPrior()))
+data <- list(friends = NewGuinea[, , 2], enmy = NewGuinea[, , 1])
 sol_bidcsbm <- greed(data, model = mod, K = 5)
 ```
-
+The algorithm finds $K=2$ clusters here. Since each views has its own obersvational model, it is possible to use the `?extractSubModel()` function to retrieve the fitted observational model for each view. Then, traditional visualization tools may be used. Here, we display the block representation of the clustering for the two modalities, highlighting a pronouced community structure in the *friendship* modality and a strong bipartite structure in the *enmity* modality as before, with no enmity link in the small cluster and few amongst the tribes of the bigger one.
 ```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
-bl_pos = plot(extractSubModel(sol_bidcsbm,"pos"),type="blocks")
-bl_neg = plot(extractSubModel(sol_bidcsbm,"neg"),type="blocks")
-ggarrange(bl_pos,bl_neg)
+bl_friends = plot(extractSubModel(sol_bidcsbm,"friends"),type="blocks") + ggtitle("Friendship")
+bl_enmy = plot(extractSubModel(sol_bidcsbm,"enmy"),type="blocks") + ggtitle("Enmity")
+ggarrange(bl_friends,bl_enmy)
 ```
 
 
-#### 7th grade dataset
+### 7th grade dataset
 
+The `?SevenGraders` dataset illustrates the interest of multidimensional graphs clustering. There are 3 different relationship (class, best-friends and work) recorded between 29 seventh-grade students in Victoria, Australia. We also have access to the gender of each student: 1 to 12 are boys and 13 to 29 are girls.
 
 ```{r}
 data("SevenGraders")
 dim(SevenGraders)
 ```
+
+We are interested in finding an underlying partition explaining these $3$ kinds of relationships. Again, we put a `DcSbmPrior` model for each view, and provide the models and views as named lists with the same names.
 
 ```{r}
 mod <- MixedModels(list(class = DcSbmPrior(), friends = DcSbmPrior(), work = DcSbmPrior()))
@@ -365,10 +393,13 @@ data <- list(class = SevenGraders[, , 1], friends = SevenGraders[, , 2], work = 
 sol <- greed(data, model = mod, K = 5)
 ```
 
+Here, the algorithm found $K=4$ clusters and we can look at the block matrix representation of the *work* relation graph.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(extractSubModel(sol, "work"), type = "blocks")
 ```
 
 # Bi-partite graphs and co-clustering
+
+This section is still in construction. See ``?`DcLbm-class``` for further information on co-clustering with the degree corrected Latent Block Model. 
 
 
