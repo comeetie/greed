@@ -1,7 +1,11 @@
 ---
 title: "Continuous data clustering with Gaussian mixtures"
 author: "Etienne Côme & Nicolas Jouvin"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+    fig_caption: yes
 vignette: >
   %\VignetteIndexEntry{Continuous data clustering with Gaussian mixtures}
   %\VignetteEngine{knitr::rmarkdown}

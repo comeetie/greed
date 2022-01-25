@@ -1,8 +1,12 @@
 ---
-title: "LCA"
-output: rmarkdown::html_vignette
+title: "Categorical data clustering with the Latent Class Analysis"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+    fig_caption: yes
 vignette: >
-  %\VignetteIndexEntry{LCA}
+  %\VignetteIndexEntry{Categorical data clustering with the Latent Class Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -31,9 +35,9 @@ set.seed(1234)
 
 The `greed` package and DLVM framework allows the clustering of categorical data. This vignette describes typical use cases of the `greed()` function in this context, and illustrates its use on real datasets.
 
-# Categorical data clustering with the Latent Class Analysis
+# The model
 
-We are interested in the clustering of categorical datasets, which are typically found in survey data or item response theory (ITR). In this context, we observe $n$ individuals described by $p$ variables, taking one among $d_j$ modalities for each variable $j$. Such datasets are typically represented using a one-hot-encoding of each factor in a design matrix $\mathbf{X} \in \{0,1\}^{n \times d}$ where $d = \sum_{j=1}^p d_j$. Latent class analysis (LCA) is a generative model for categorical data clustering which posits conditional independance of the factor variables conditionally on the (unknown) partition. Below is a description of its Bayesian formulation with the use of proper conjugate priors
+We are interested in the clustering of categorical datasets, which are typically found in survey data or item response theory (ITR). In this context, we observe $n$ individuals described by $p$ variables, taking one among $d_j$ modalities for each variable $j$. Such datasets are typically represented using a [one-hot-encoding](https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics) of each factor in a design matrix $\mathbf{X} \in \{0,1\}^{n \times d}$ where $d = \sum_{j=1}^p d_j$. Latent class analysis (LCA) is a generative model for categorical data clustering which posits conditional independance of the factor variables conditionally on the (unknown) partition. Below is a description of its Bayesian formulation with the use of proper conjugate priors
 \[
 \begin{equation}
 \begin{aligned}
@@ -44,7 +48,9 @@ Z_i&\sim \mathcal{M}_K(1,\pi),\\
 \end{aligned}
 \end{equation}
 \]
-For each cluster $k$ and variable $j$, the vector $\theta_{kj}$ represents the probability of each of the $d_j$ modalities. With the choice of priors above, the LCA model admits an exact ICL expression similar to the mixture of multinomials [derived here](https://static-content.springer.com/esm/art%3A10.1007%2Fs11634-021-00440-z/MediaObjects/11634_2021_440_MOESM1_ESM.pdf) (Section 3) . 
+For each cluster $k$ and variable $j$, the vector $\theta_{kj}$ represents the probability of each of the $d_j$ modalities. With the choice of priors above, the LCA model admits an exact ICL expression similar to the mixture of multinomials derived in [the supplementary materials](https://static-content.springer.com/esm/art%3A10.1007%2Fs11634-021-00440-z/MediaObjects/11634_2021_440_MOESM1_ESM.pdf) of Côme et. al. (2021, Section 3) . 
+
+The **greed** package
 
 
 # Analysis of two real datasets
@@ -80,7 +86,7 @@ sol_greed<-greed(X[subset,])
 table(Edibility=label, Cluster=clustering(sol_greed))
 ```
 
-The hybrid genetic algorithm found a solution with $K=`r sol_greed@K`$ clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. The ARI of the partition is `r round(aricode::ARI(label, clustering(sol_greed)),2)` which is explained by the over-segmentation of the solution compared to the $2$-class problem.
+The hybrid genetic algorithm found a solution with $K=`r sol_greed@K`$ clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. The ARI of the partition is `r round(NMI(label, clustering(sol_greed)),2)` which is explained by the over-segmentation of the solution compared to the $2$-class problem.
 
 
 #### Hierarchy 
@@ -98,7 +104,7 @@ plot(sol_greed, type='tree')
 sol2 = cut(sol_greed, 2)
 table(Edibility=label, Cluster=clustering(sol2))
 ```
-Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is `r round(aricode::ARI(clustering(sol2), label),2)`. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the [way the labels have been set](https://archive.ics.uci.edu/ml/datasets/Mushroom), since mushrooms for which the edibility status was *unknown* were classified as *poisonous* by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ''\textit{there is no simple rule for determining the edibility of a mushroom}''. Thus, the unsupervised problem is hard and the obtained clustering is satisfying on this unsupervised problem. Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.
+Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is `r round(NMI(clustering(sol2), label),2)`. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the [way the labels have been set](https://archive.ics.uci.edu/ml/datasets/Mushroom), since mushrooms for which the edibility status was *unknown* were classified as *poisonous* by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ''\textit{there is no simple rule for determining the edibility of a mushroom}''. Thus, the unsupervised problem is hard and the obtained clustering is satisfying on this unsupervised problem. Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.
 
 
 
