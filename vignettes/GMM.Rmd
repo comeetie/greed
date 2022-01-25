@@ -51,7 +51,7 @@ ggplot2::theme_set(th)
 Gaussian Mixture Models (GMMs) count among the most widely used [DLVMs](https://arxiv.org/abs/2002.11577) for continuous data clustering. The **greed** package handles this family of models and implements efficient visualization tools for the clustering results that we detail below.
 
 
-Without any constraints, the Bayesian formulation of GMMs leading to a tractable exact ICL expression uses a Normal and inverse-Wishart conjugate prior on the mean and covariances $\mathbf{\theta} = (\mathbf{\mu}_k, \mathbf{\Sigma}_k)_k$. This prior is defined with hyperparameters $\mathbf{Beta} = (\mathbf{\mu}, \tau, n_0, \mathbf{\varepsilon})$ and the hierarchical model is written as follows:
+Without any constraints, the Bayesian formulation of GMMs leading to a tractable exact ICL expression uses a Normal and inverse-Wishart conjugate prior on the mean and covariances $\mathbf{\theta} = (\mathbf{\mu}_k, \mathbf{\Sigma}_k)_k$. This prior is defined with hyperparameters $\mathbf{\beta} = (\mathbf{\mu}, \tau, n_0, \mathbf{\varepsilon})$ and the hierarchical model is written as follows:
 ```{=tex}
 \begin{equation}
 \label{eq:gmm}
