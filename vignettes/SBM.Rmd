@@ -29,6 +29,7 @@ library(ggplot2)
 library(greed)
 library(dplyr)
 library(ggpubr)
+set.seed(2134)
 
 future::plan("multisession", workers=2) # may be increased 
 ```
@@ -129,7 +130,7 @@ gg
 ## Clustering with the greed() function
 
 
-As always, we perform the clustering using the `greed()` function with an `Sbm` model. Note that we need to specify the `Sbm` model, since for squared sparse matrix the default model used is a `DcSbm`. By default, the hybrid genetic algorithm is used, and its default hyperparameters are detailed in ``?`Hybrid-class```.
+As always, we perform the clustering using the `greed()` function with an `Sbm` model. Note that we need to specify the `Sbm` model, since for squared sparse matrix the default model used is a `DcSbm`. By default, the hybrid genetic algorithm is used, and its default hyperparameters are detailed in ``?`Hybrid-class` ``.
 
 ```{r greed-clustering}
 sol = greed(sbm$x,model = Sbm())
@@ -353,13 +354,14 @@ The ICL of the whole dataset is then simply the sum of the individual ICL of the
 
 The **greed** package implements this modelization via the ``?`MixedModels-class``. We refer to the dedicated vignettes for more details but, from a practical perspective, one need to specify the $V$ observational models in a named list, and the data (here the $V$ adjacency matrices) in a list sharing the same names. Here is an example on the **NewGuinea** dataset analyzed above, with $V=2$ views corresponding to enmity and friendship. We put a default dcSBM model on both views and provide the two corresponding adjacency matrix as data.
 
-> **Practicalities:** The `MixedModel` class allows any observational model, however they need to be initiated via the following syntax: `<your_desired_model>Prior()`. Without going into technical details, the distinction is necessary to account for the shared aspect of the partition $Z$ between all models.
 
 ```{r}
 mod <- MixedModels(list(friends = DcSbmPrior(), enmy = DcSbmPrior()))
 data <- list(friends = NewGuinea[, , 2], enmy = NewGuinea[, , 1])
 sol_bidcsbm <- greed(data, model = mod, K = 5)
 ```
+> **Practicalities:** The `MixedModel` class allows any list of observational models. However, they need to be initiated via the following syntax: `<your_desired_model>Prior()`. Without going into technical details, this is necessary to account for the shared aspect of the partition $Z$ between all models.
+
 The algorithm finds $K=2$ clusters here. Since each views has its own obersvational model, it is possible to use the `?extractSubModel()` function to retrieve the fitted observational model for each view. Then, traditional visualization tools may be used. Here, we display the block representation of the clustering for the two modalities, highlighting a pronouced community structure in the *friendship* modality and a strong bipartite structure in the *enmity* modality as before, with no enmity link in the small cluster and few amongst the tribes of the bigger one.
 ```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
 bl_friends = plot(extractSubModel(sol_bidcsbm,"friends"),type="blocks") + ggtitle("Friendship")
@@ -392,6 +394,6 @@ plot(extractSubModel(sol, "work"), type = "blocks")
 
 # Bi-partite graphs and co-clustering
 
-This section is still in construction. See ``?`DcLbm-class``` for further information on co-clustering with the degree corrected Latent Block Model. 
+This section is still in construction. See ``?`DcLbm-class` `` for further information on co-clustering with the degree corrected Latent Block Model. 
 
 

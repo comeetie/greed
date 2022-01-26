@@ -20,10 +20,13 @@ knitr::opts_chunk$set(
 ```
 Loads packages.
 ```{r setup, include=TRUE, message=FALSE}
+library(future) # allows parralel processing in greed()
 library(greed)
 library(mclust)
 library(ggplot2)
 set.seed(2134)
+
+future::plan("multisession", workers=2) # may be increased 
 ```
 
 ```{r ggplot-theme, include=FALSE, echo=FALSE, message=FALSE}
