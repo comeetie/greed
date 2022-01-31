@@ -1,29 +1,37 @@
 ---
 title: "Continuous data clustering with Gaussian mixtures"
-output: rmarkdown::html_vignette
+author: "Etienne Côme & Nicolas Jouvin"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+    fig_caption: yes
 vignette: >
-  %\VignetteIndexEntry{GMM}
+  %\VignetteIndexEntry{Continuous data clustering with Gaussian mixtures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include = FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 Loads packages.
-```{r setup}
+```{r setup, include=TRUE, message=FALSE}
+library(future) # allows parralel processing in greed()
 library(greed)
 library(mclust)
 library(ggplot2)
 set.seed(2134)
+
+future::plan("multisession", workers=2) # may be increased 
 ```
 
-```{r, include=FALSE, echo=FALSE}
+```{r ggplot-theme, include=FALSE, echo=FALSE, message=FALSE}
 # set ggplot2's theme options globally
-th = theme_classic(base_size = 20) %+replace%
+th = theme_classic(base_size = 14) +
   ggplot2::theme(
       # L'ensemble de la figure
       plot.title = element_text(size = rel(1), face = "bold", margin = margin(0,0,5,0), hjust = 0),
@@ -33,7 +41,7 @@ th = theme_classic(base_size = 20) %+replace%
       # Les axes
       axis.title = element_text(size = rel(0.7), face = "bold"),
       axis.text = element_text(size = rel(0.55), face = "bold"),
-      axis.line = element_line(color = "black", arrow = arrow(length = unit(0.3, "lines"), type = "closed")),
+      axis.line=element_blank(),
       # La légende
       legend.title = element_text(size = rel(0.6), face = "bold"),
       legend.text = element_text(size = rel(0.6), face = "bold"),
@@ -44,17 +52,13 @@ th = theme_classic(base_size = 20) %+replace%
 ggplot2::theme_set(th)
 ```
 
-```{r test-plot}
-# gg = ggplot(cars) + geom_point(aes(x=speed, y=dist)) + ggtitle('cars')
-# gg
-```
 
 # The model
 
 Gaussian Mixture Models (GMMs) count among the most widely used [DLVMs](https://arxiv.org/abs/2002.11577) for continuous data clustering. The **greed** package handles this family of models and implements efficient visualization tools for the clustering results that we detail below.
 
 
-Without any constraints, the Bayesian formulation of GMMs leading to a tractable exact ICL expression uses a Normal and inverse-Wishart conjugate prior on the mean and covariances $\mathbf{\theta} = (\mathbf{\mu}_k, \mathbf{\Sigma}_k)_k$. This prior is defined with hyperparameters $\mathbf{Beta} = (\mathbf{\mu}, \tau, n_0, \mathbf{\varepsilon})$ and the hierarchical model is written as follows:
+Without any constraints, the Bayesian formulation of GMMs leading to a tractable exact ICL expression uses a Normal and inverse-Wishart conjugate prior on the mean and covariances $\mathbf{\theta} = (\mathbf{\mu}_k, \mathbf{\Sigma}_k)_k$. This prior is defined with hyperparameters $\mathbf{\beta} = (\mathbf{\mu}, \tau, n_0, \mathbf{\varepsilon})$ and the hierarchical model is written as follows:
 ```{=tex}
 \begin{equation}
 \label{eq:gmm}
@@ -99,8 +103,7 @@ We apply the `greed()` function with a `Gmm` object with default hyperparameters
 ```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 sol = greed(X,model=Gmm())
 cat('\n Confusion table')
-print(knitr::kable(table(diabetes$cl,clustering(sol))), format='html')
-# cat('An ARI of ', aricode::ARI(diabetes$class, clustering(sol)))
+print(knitr::kable(table(diabetes$cl,clustering(sol))), format='html', row.names=T)
 ```
 The optimal clustering found by the hybrid GA has $K^\star=3$ clusters and  roughly corresponds to the known groups with cluster 1,2 and 3 recovering overt, chemical and normal diabetes respectively, with some missclassifications that are expected with GMM clustering on this dataset. 
 

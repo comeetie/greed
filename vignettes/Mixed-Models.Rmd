@@ -7,14 +7,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include = FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 Loads packages.
-```{r setup,message=FALSE}
+```{r setup,message=FALSE, include=TRUE}
 library(greed)
 library(dplyr)
 library(ggplot2)

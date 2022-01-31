@@ -362,7 +362,7 @@
 #'
 #' @usage data(SevenGraders)
 #'
-#' @format A binary array of size (29,29,3) the first layer encodes work relation, the second, the friendship relations. The third, no relations between the two tribes.
+#' @format A binary array of size (29,29,3) containing directed graphs. The first layer encodes "getting along in class" while the second encodes the best-friendship (can be one-way). The third encodes the preferred work relation.
 #'
 #' @keywords datasets
 #'

@@ -8,3 +8,5 @@
 ^pkgdown$
 ^\.github$
 ^CRAN-RELEASE$
+^doc$
+^Meta$

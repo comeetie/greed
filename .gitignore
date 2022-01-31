@@ -5,3 +5,5 @@ data-raw/FD_MIGCOM_2015.txt
 *.o
 *.so
 *.win
+/doc/
+/Meta/

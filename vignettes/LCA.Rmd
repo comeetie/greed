@@ -1,23 +1,27 @@
 ---
-title: "LCA"
-output: rmarkdown::html_vignette
+title: "Categorical data clustering with the Latent Class Analysis"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+    fig_caption: yes
 vignette: >
-  %\VignetteIndexEntry{LCA}
+  %\VignetteIndexEntry{Categorical data clustering with the Latent Class Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include = FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 Loads the necessary packages for the vignettes.
-```{r setup, include=T}
+```{r setup, include=T, message=FALSE}
 library(future) # allows parralel processing in greed()
-plan(multisession)
 library(greed)
+library(knitr)
 library(dplyr)
 library(tidyr)
 library(purrr)
@@ -26,14 +30,16 @@ library(ggplot2)
 library(aricode)
 library(careless) # string processing
 library(ggwordcloud)
-set.seed(1234)
+set.seed(2134)
+
+future::plan("multisession", workers=2) # may be increased 
 ```
 
 The `greed` package and DLVM framework allows the clustering of categorical data. This vignette describes typical use cases of the `greed()` function in this context, and illustrates its use on real datasets.
 
-# Categorical data clustering with the Latent Class Analysis
+# The model
 
-We are interested in the clustering of categorical datasets, which are typically found in survey data or item response theory (ITR). In this context, we observe $n$ individuals described by $p$ variables, taking one among $d_j$ modalities for each variable $j$. Such datasets are typically represented using a one-hot-encoding of each factor in a design matrix $\mathbf{X} \in \{0,1\}^{n \times d}$ where $d = \sum_{j=1}^p d_j$. Latent class analysis (LCA) is a generative model for categorical data clustering which posits conditional independance of the factor variables conditionally on the (unknown) partition. Below is a description of its Bayesian formulation with the use of proper conjugate priors
+We are interested in the clustering of categorical datasets, which are typically found in survey data or item response theory (ITR). In this context, we observe $n$ individuals described by $p$ variables, taking one among $d_j$ modalities for each variable $j$. Such datasets are typically represented using a [one-hot-encoding](https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics) of each factor in a design matrix $\mathbf{X} \in \{0,1\}^{n \times d}$ where $d = \sum_{j=1}^p d_j$. Latent class analysis (LCA) is a generative model for categorical data clustering which posits conditional independance of the factor variables conditionally on the (unknown) partition. Below is a description of its Bayesian formulation with the use of proper conjugate priors
 \[
 \begin{equation}
 \begin{aligned}
@@ -44,7 +50,14 @@ Z_i&\sim \mathcal{M}_K(1,\pi),\\
 \end{aligned}
 \end{equation}
 \]
-For each cluster $k$ and variable $j$, the vector $\theta_{kj}$ represents the probability of each of the $d_j$ modalities. With the choice of priors above, the LCA model admits an exact ICL expression similar to the mixture of multinomials [derived here](https://static-content.springer.com/esm/art%3A10.1007%2Fs11634-021-00440-z/MediaObjects/11634_2021_440_MOESM1_ESM.pdf) (Section 3) . 
+For each cluster $k$ and variable $j$, the vector $\theta_{kj}$ represents the probability of each of the $d_j$ modalities. With the above choice of priors, the LCA model admits an exact ICL expression similar to the mixture of multinomials derived in [the supplementary materials](https://static-content.springer.com/esm/art%3A10.1007%2Fs11634-021-00440-z/MediaObjects/11634_2021_440_MOESM1_ESM.pdf) of Côme et. al. (2021, Section 3) . 
+
+The **greed** package implements this model via the `Lca` model-class and the default values for hyper-parameters are set as follows:
+ 
+ * $\alpha$ is set to 1
+ * $\beta$  is set to 1, defaulting to an uninformative uniform prior on $\theta_{kj}$
+ 
+This default values may be changed and we refer to the `?Lca` documentation for further details.
 
 
 # Analysis of two real datasets
@@ -54,13 +67,15 @@ We now illustrate the use of the `greed` package on two real datasets:
  1. **Mushroom** data from UCI Machine Learning Repository describing 8124 mushrooms with 22 phenotype variables. Each mushroom is classified as "edible" or "poisonous" and the goal is to recover the mushroom class from its phenotype.
  2. **Young people survey** data from Miroslav Sabo and avalaible on the [Kaggle platform](https://www.kaggle.com/miroslavsabo/young-people-survey). This is an authentic example of questionnaire data where Slovakian young people (15-30 years old) were asked musical preferences according to different genres (rock, hip-hop, classical, etc.).
  
-The data are imported by the `greed` package.
-```{r loading-data}
-data("mushroom")
-```
+These two datasets come attached with `greed` package.
+
 
 
 ## Mushroom data
+
+```{r loading-data}
+data("mushroom")
+```
 
 We begin by forming the necessary vectors for analysis. The data has $n=`r nrow(mushroom)`$ rows and $p=`r ncol(mushroom)`$ columns. The first column contains the poisonous status of each mushroom with two possible values, "p" for "poisonous" and "e" for edible, it will serve as the clustering we seek to recover. The remaining variables are used for clustering. Note that we only use a subset of the data for illustration purpose here. 
 
@@ -71,34 +86,41 @@ label = mushroom$edibility[subset]
 head(X[subset,1:10])
 ```
 
-#### Clustering 
+### Clustering 
 
-The clustering is again done via the main function `greed()` with argument `model` set to LCA and the genetic hybrid algorithm for ICLex maximization. The value of the $\beta$ hyperparameter for the Dirichlet prior on $\theta_{kj}$ can be specified by the user, it defaults to 1. The Lca model may only be used with datasets stored in a data.frame object with only factors, when such data are provided to the greed function the Lca model is picked by default. To perform the clustering it therefore sufficient to call greed with the prepared data.frame. 
+The clustering is done via the main function `greed()` with argument `model` set to LCA and the genetic hybrid algorithm for ICLex maximization. The value of the $\beta$ hyper-parameter for the Dirichlet prior on $\theta_{kj}$ can be specified by the user, it defaults to 1. 
+
+> **Note:** The `Lca` model may only be used with datasets stored in a data.frame object containing factors only. When such data are provided to the `greed()` function, an `Lca` model is picked by default. To perform the clustering, it is therefore sufficient to call greed with the prepared data.frame. 
 
 ```{r cluster-mushroom}
-sol_greed<-greed(X[subset,])
-table(Edibility=label, Cluster=clustering(sol_greed))
+sol_mush<-greed(X[subset,], model=Lca())
+```
+```{r}
+kable(table(Edibility=label, Cluster=clustering(sol_mush)), format='html', row.names = T)
 ```
 
-The hybrid genetic algorithm found a solution with $K=`r sol_greed@K`$ clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. The ARI of the partition is `r round(aricode::ARI(label, clustering(sol_greed)),2)` which is explained by the over-segmentation of the solution compared to the $2$-class problem.
+The hybrid genetic algorithm found a solution with $K=`r sol_mush@K`$ clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. Partition's NMI is `r round(NMI(label, clustering(sol_mush)),2)` which is explained by the over-segmentation of the solution compared to the $2$-class problem.
 
 
-#### Hierarchy 
+### Analysis of the hierarchy 
 
 Exploring the dendrogram provided by the hierarchical algorithm is quite useful in this case. We clearly see a hierarchical structure appearing with $K=2$ main clusters. Thus, we can cut the tree at this height and look at the solution.
 
 
 
 ```{r dendo-mushroom, fig.dim=c(5,5),fig.align='center'}
-plot(sol_greed, type='tree')
+plot(sol_mush, type='tree')
 ```
+
+
 
 
 ```{r cut-K2-mushroom}
-sol2 = cut(sol_greed, 2)
-table(Edibility=label, Cluster=clustering(sol2))
+sol2 = cut(sol_mush, 2)
+knitr::kable(table(Edibility=label, Cluster=clustering(sol2)), format='html', row.names = T)
 ```
-Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is `r round(aricode::ARI(clustering(sol2), label),2)`. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the [way the labels have been set](https://archive.ics.uci.edu/ml/datasets/Mushroom), since mushrooms for which the edibility status was *unknown* were classified as *poisonous* by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ''\textit{there is no simple rule for determining the edibility of a mushroom}''. Thus, the unsupervised problem is hard and the obtained clustering is satisfying on this unsupervised problem. Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.
+Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is `r round(NMI(clustering(sol2), label),2)`. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the [way the labels have been set](https://archive.ics.uci.edu/ml/datasets/Mushroom), since mushrooms for which the edibility status was *unknown* were classified as *poisonous* by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ''\textit{there is no simple rule for determining the edibility of a mushroom}''. Thus, the unsupervised problem is hard and the obtained clustering is already satisfactory.  Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.
+
 
 
 
@@ -108,11 +130,13 @@ Here, we clearly see that the order of merges is consistent with the labels, and
 ```{r datayoungpeople,message=FALSE}
 data("Youngpeoplesurvey")
 ```
+
+
+
+### Data preparation
+
 We begin by preprocessing the data, only keeping the categorical variable. The original dataset has $n=`r nrow(Youngpeoplesurvey)`$ respondents for $p=`r ncol(Youngpeoplesurvey)`$. We keep only the feature related to the musical taste of the respondent and remove potential strike of identical responses. Eventually, the data are cast to factors with an explicit levels for the missing responses. 
 
-
-
-#### Data preparation
 
 ```{r}
 nc  = 19
@@ -136,7 +160,7 @@ X = Xnum %>%
 
 ```
 
-#### Hierarchy 
+### Hierarchical clustering 
 
 As previouslythe clustering is obtained with a call to greed and the Lca generative model will be taken by default since the dataset is a data.frame with factors only. 
 
@@ -149,23 +173,38 @@ plot(sol,type='tree')
 ```
 
 
-#### Clustering analysis
+### Clustering analysis
 
 We may also used the `marginals` plot to depict the conditional probabilities of the different responses knowing the clusters assignment.
 
-```{r survey-lca-plot2,fig.show='hold',out.width="100%",fig.dim=c(8,6)}
+```{r survey-lca-plot2,fig.show='hold',out.width="100%",fig.dim=c(10,8)}
 plot(sol,type='marginals')
 ```
 
 
-The cluster appears to be quite different and coherent. If needed, we may get the estimated conditional probabilities with the help of the generic function `coef()`. 
+The clusters appear to be quite different and coherent. For example, the seveth group (second top row, in purple) display a strong tendency to like Opera and Classical music and dislike more *modern* genres (Techno, Trance, Punk or Hi-Hop), whereas the 8th group (top row, in pink) corresponds to music lovers with quite eclectic musical taste across the proposed survey's genres.
+
+> In addition, the conditional maximum a posteriori estimates of $\theta{kj}$ are qvailable through the `coef()` method. 
 
 ```{r}
 params = coef(sol)
-params$Thetak[c("Country","Latino")]
 ```
 
-To show in another way the clusters structure we will use word clouds of feature names with a color encoding that depict if the feature has an average score greater than the average score of the whole population. With this representation big blue feature correspond to music type that score higher than the mean in this cluster and big red feature to music type that have a smaller score than the mean in the corresponding group. 
+```{r thetask, include=TRUE, echo=FALSE}
+thetas = params$Thetak[c("Country","Latino")]
+# kables(lapply(names(thetas), 
+#               function(ind){
+#                 kable(thetas[[ind]], format='html', row.names='true', caption = ind)
+#               }),
+#        format = 'html')
+lapply(names(thetas), 
+              function(ind){
+                kable(thetas[[ind]], format='html', row.names='true', caption = ind)
+              })
+```
+
+
+Cluster structures may also be visualized with a word clouds of feature names. In this representation, a color encodes if the feature has an average score greater than the average score of the whole population. A big blue feature corresponds to music type that scores higher than the mean in this cluster and big red feature to music type that have a smaller score than the mean in the corresponding group. 
 
 ```{r posplot, fig.show='hold',fig.width=8,fig.height=7,out.width="100%"}
 params = coef(sol)
@@ -198,4 +237,4 @@ ggplot(gg %>% filter(abs(dm)>0.1), aes(label = var, size = abs(dm),color=dm)) +
   facet_wrap(~cluster)
 ```
 
-Using such a visualization allow to easily describe the different groups. The first cluster is close to the global mean, the second corresponds to Classical music and Opera lovers, the third to peoples that like almost all the musical genres, the forth to Rockers, the Fifth to Hard Rockers and the sixth to Rap lovers.
+Using such a visualization allow to easily describe the different groups. The first cluster tends to dislike almost all surveyed musical genres, the second almost exlusively likes Dance music, the third have tastes close to the global mean of the dataset, the forth and sixths correspond to Hard-Rockers, the fifth to Rockers, the seventh to exclusive Opera and Classical music lover, and the eight to people with eclectic taste liking almost every surveyed music genres.
