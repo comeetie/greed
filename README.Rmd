@@ -4,13 +4,14 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r, include = FALSE, echo=FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/",
   out.width = "60%"
 )
+set.seed(2134)
 ```
 
 
@@ -22,26 +23,38 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/greed)](https://CRAN.R-project.org/package=greed)
 <!-- badges: end -->
 
-Greed enables model based clustering of networks, matrices of count data and much more with different types of generative models. Model selection and clustering is performed in combination by optimizing the Integrated Classification Likelihood. Details of the algorithms and methods proposed by this package can be found in Côme, Jouvin, Latouche, and Bouveyron (2021) [10.1007/s11634-021-00440-z](https://doi.org/10.1007/s11634-021-00440-z).
+Greed enables model-based clustering of networks, matrices of count data and much more with different types of generative models. Model-selection and clustering are performed in combination by optimizing the Integrated Classification Likelihood. Details of the algorithms and methods proposed by this package can be found in Côme, Jouvin, Latouche, and Bouveyron (2021) [10.1007/s11634-021-00440-z](https://doi.org/10.1007/s11634-021-00440-z).
 
 <img src="man/figures/greed.png" width=200 align="right" />
 
-The following generative models are available currently : 
 
-* **Stochastic Block Models** (see ``?`Sbm-class` ``),
-* **Degree Corrected Stochastic Block Models** (see ``?`DcSbm-class` ``),
-* **Multinomial Stochastic Block Models** (see ``?`MultSbm-class` ``),
-* **Mixture of Multinomials** (see ``?`MoR-class` ``), 
-* **Latent Class Analysis** (see ``?`Lca-class` ``), 
-* **Gaussian Mixture Model** (see ``?`Gmm-class` `` and ``?`DiagGmm-class` ``),
-* **Multivariate Mixture of Gaussian Regression Model** (see ``?`MoR-class` ``),
-* **Degree Corrected Latent Block Model** (see ``?`DcLbm-class` ``).
-* **Mixed Dlvm's** (see ``?`MixedModels-class` ``).
+Dedicated to clustering and visualization, the package is very general and currently handles the following tasks:
+
+ * **Continuous data clustering** with Gaussian Mixture Models. A tutorial is available in `vignette(GMM)`. See also the documentation for the `Gmm` and `DiagGmm` S4 classes.
+  * **Graph data clustering** with the Stochastic Block Model or its degree corrected variants. A tutorial is available in `vignette(LCA)`. See also the documentation for the `Sbm` and `dcSbm` S4 classes.
+ * **Categorical data clustering** with the Latent Class Analysis. A tutorial is available in `vignette(LCA)`. See also the documentation for the `Lca` S4 class.
+ * **Count data clustering** with the Mixture of Multinomials model. A tutorial will soon be available in `vignette(MoM)`. For now, we refer to the documentation for the `Mom` S4 class.
+ * **Mixed-typed** data clustering, *e.g.* categorical and numerical but the package handles virtually any type of data combination by stacking models on top of each data types. For example graph data with continuous or categorical data attached to the nodes are handled. A tutorial is available in `vignette(Mixed-Models)`. See also the documentation for the `MixedModels` S4 class.
+ * **Mixture of regression** for simultaneous clustering and fitting a regression model in each cluster.  A tutorial is available in `vignette(MoR)`. See also the documentation for the `MoR` S4 class.
+ * **Co-clustering** of binary and count-data via the Latent Block Model and its degree-corrected variant. A tutorial will soon be available in `vignette(LBM)`. For now, we refer to the documentation for the `Mom` S4 class.
+ 
+
+<!-- The following generative models are currently available:  -->
+
+<!-- * **Stochastic Block Models** (see ``?`Sbm-class` ``), -->
+<!-- * **Degree Corrected Stochastic Block Models** (see ``?`DcSbm-class` ``), -->
+<!-- * **Multinomial Stochastic Block Models** (see ``?`MultSbm-class` ``), -->
+<!-- * **Mixture of Multinomials** (see ``?`MoR-class` ``),  -->
+<!-- * **Latent Class Analysis** (see ``?`Lca-class` ``),  -->
+<!-- * **Gaussian Mixture Model** (see ``?`Gmm-class` `` and ``?`DiagGmm-class` ``), -->
+<!-- * **Multivariate Mixture of Gaussian Regression Model** (see ``?`MoR-class` ``), -->
+<!-- * **Degree Corrected Latent Block Model** (see ``?`DcLbm-class` ``). -->
+<!-- * **Mixed Dlvm's** (see ``?`MixedModels-class` ``). -->
 
 
-With the Integrated Classification Likelihood, the parameters of the models are integrated out. This allows a natural regularization for complex models. Since the Integrated Classification Likelihood penalizes complex models it allows to automatically find a "natural" value for the number of clusters $K^*$, the user only needs to provide an initial guess as well as values for the prior parameters (sensible default values are used if no prior information is available). The optimization is performed by default thanks to a combination of a greedy local search and a genetic algorithm. Several optimization algorithms are available.
+With the Integrated Classification Likelihood, the parameters of the models are integrated out with a natural regularization effect for complex models. This penalization allows to automatically find a suitable value for the number of clusters $K^\star$. A user only needs to provide an initial guess for the number of clusters $K$, as well as values for the prior parameters (reasonable default values are used if no prior information is given). The default optimization is performed thanks to a combination of a greedy local search and a genetic algorithm described in [Côme, Jouvin, Latouche, and Bouveyron (2021)](https://doi.org/10.1007/s11634-021-00440-z), but several other optimization algorithms are also available.
 
-Eventually, the whole path of solutions from $K^*$ to 1 cluster is extracted. This enables a partial ordering of the clusters, and the evaluation of simpler clustering. The package also provides some plotting functionality.
+Eventually, a whole hierarchy of solutions from $K^\star$ to 1 cluster is extracted. This enables an ordering of the clusters, and the exploration of simpler clustering along the hierarchy. The package also provides some plotting functionality.
 
 
 ## Installation
@@ -60,73 +73,137 @@ Or use the CRAN version:
 install.packages("greed")
 ```
 
-## Usage
+## Usage: the greed function
 
-The main entry point for using the package is simply the greed function (`?greed`). The generative model will be chosen automatically to fit with the data provided, but you may specify another choice with the model parameter. This is a basic example with the classical Books network `?Books`:
+The main entry point for using the package is simply the`greed` function (see `?greed`). The generative model will be chosen automatically to fit the type of the provided data, but you may specify another choice with the `model` argument. 
+
+We illustrate its use on a **graph clustering** example with the classical Books network `?Books`.
+
+> More use cases and their specific plotting functionality are described below.
 
 ```{r example}
 library(greed)
 data(Books)
-sol <- greed(Books$X)
+sol <- greed(Books$X) 
 ```
-You may specify the model you want to use and set the priors parameters with the (model argument), the optimization algorithm (alg argument) and the initial number of cluster K. Here football is a square sparse matrix and a graph clustering ``?`DcSbm-class` `` model will be used by default, and the Hybrid genetic algorithm greed used. 
 
+You may specify the model you want to use and set the priors parameters with the (`model` argument), the optimization algorithm (`alg` argument) and the initial number of cluster `K`. Here `Boos$X` is a square sparse matrix and a graph clustering ``?`DcSbm-class` `` model will be used by default. By default, the Hybrid genetic algorithm is used. 
+
+The next example illustrates a usage without default values. A binary `Sbm` prior is used, along with a spectral clustering algorithm for graphs.
 
 
 ```{r sbm-example}
 sol <- greed(Books$X,model=Sbm(),alg=Seed(),K=10)
 ```
 
+## Visualization
 
-Some plotting function enable the exploration of the clustering results, the hierarchical structure between clusters:
+Many plotting functions are available for exploring the clustering results, and all are accessible via the `plot()` S4 method.  By default, the hierarchical structure found between clusters is returned, as a dendrogram:
 ```{r plot,message=FALSE,results="hide"}
 plot(sol)
 ```
 
-Or a summary représentation of the adjacency matrix:
+However, depending of the specified `model`, a `type` argument may be specified. Here, with our graph clustering model, a summary representation of the adjacency matrix can be obtained via
+
 ```{r tree}
 plot(sol,type='blocks')
 ```
+## Inspecting the results
 
-You may extract the model fitted parameters with the `?coef` function, the clustering with the `?clustering` function, the value of ICL with `?ICL`:
+The resulting partition may be extracted with the `?clustering` method, as well as the final ICL value with `?ICL`. You may also extract a Maximum a Posteriori (MAP) estimation of the model parameters (conditionally to the estimated clustering) with the `?coef` method.
 
 ```{r}
+table(clustering(sol))
 ICL(sol)
 coef(sol)
-table(clustering(sol))
 ```
 
 
-Eventually, one may explore some coarser clustering using the cut function:
+Eventually, one may explore some coarser partitions using the `cut` method:
 ```{r cut}
-plot(cut(sol,3))
+sol_K3 = cut(sol, 3)
+plot(sol_K3)
 ```
 
+## Using parallel computing 
 
-For large datasets, it is possible to use parallelism to speed-up the computation thanks to the [future](https://github.com/HenrikBengtsson/future) package. You only need to specify the type of backend you want to use, before calling the `?greed` function:
+For large datasets, it is possible to use parallelism to speed-up the computations thanks to the [future](https://github.com/HenrikBengtsson/future) package. You only need to specify the type of back-end you want to use, before calling the `?greed` function:
 ```{r future}
 library(future)
-plan(multisession)
+plan(multisession, workers=2) # may be increased
 ```
 
-## Typical use cases
+# Typical use cases
 
-### Classical clustering, GMM
+Alongside with the previous graph clustering example below, we give a preview of other use cases and plotting functionalities that are model-dependent.
 
-See the `vignette("GMM")` for details.
+## Continuous data clustering with GMM
+
+See the `vignette("GMM")` for an in-depth tutorial.
+
+Here, we use the diabetes dataset of `mclust`. `X_cont` is a $145 \times 3$ design matrix, and a full-covariance `Gmm` model is specified as a model prior.
+
 
 ```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
-data("diabetes",package = "mclust")
-X <- diabetes[,-1]
-sol <- greed(X,model=Gmm())
-table(diabetes$cl,clustering(sol))
-gmmpairs(sol,X)
+data("diabetes", package = "mclust")
+X_cont = diabetes[,-1]
+sol_cont <- greed(X = X_cont, model=Gmm())
+table(diabetes$cl,clustering(sol_cont))
+```
+Specific plots are available for this type of models
+
+ * Pairs plots
+ 
+```{r, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
+gmmpairs(sol_cont, X_cont)
+```
+
+ * Violins plots
+```{r, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
+plot(sol_cont, type='violins')
+```
+ 
+
+
+### Categorical data clustering 
+
+See the `vignette("LCA")` for details.
+
+Categorical data are typically found in 
+
+ * Item response theory  
+ * Questionnaires
+ 
+As an illustrative example, we use an extraction from the `?Youngpeoplesurvey` quetionaire data, where each variable is an answer 
+
+```{r datayoungpeople,message=FALSE}
+data("Youngpeoplesurvey")
 ```
 
 
-### Questionnary and item response theory datasets, LCA
+```{r, include=F, echo=FALSE}
+library(tidyr)
+library(dplyr)
+library(careless)
+nc  = 19
 
-See the `vignette("LCA")` for details.
+selected = Youngpeoplesurvey %>% 
+  select(all_of(1:nc)) %>%
+  mutate(string = longstring(.)) %>%
+  mutate(sel = if_else(string <= 10,TRUE,FALSE) ) %>% pull(sel)
+
+Xnum = Youngpeoplesurvey %>% 
+  select(all_of(1:nc)) %>%
+  filter(all_of(selected) )
+
+X = Xnum %>% 
+  mutate_all(function(x){
+    x[is.na(x)]="NA"
+    factor(x,levels=c(1:5,"NA"))
+    }) %>%
+  droplevels()
+```
+
 
 ### Graphs, SBM like models
 
