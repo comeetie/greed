@@ -22,6 +22,7 @@ Loads packages.
 ```{r setup, include=TRUE, message=FALSE}
 library(future) # allows parralel processing in greed()
 library(greed)
+library(dplyr)
 library(mclust)
 library(ggplot2)
 set.seed(2134)
@@ -102,12 +103,17 @@ We apply the `greed()` function with a `Gmm` object with default hyperparameters
 
 ```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 sol = greed(X,model=Gmm())
-cat('\n Confusion table')
-print(knitr::kable(table(diabetes$cl,clustering(sol))), format='html', row.names=T)
 ```
-The optimal clustering found by the hybrid GA has $K^\star=3$ clusters and  roughly corresponds to the known groups with cluster 1,2 and 3 recovering overt, chemical and normal diabetes respectively, with some missclassifications that are expected with GMM clustering on this dataset. 
 
-To get an overview of the clustering results, you may use the `gmmpairs()` plot function which displays the scatter plot matrix, colored by cluster membership, with estimated Gaussian ellipses in each cluster via maximum a posteriori:
+The optimal clustering found by the hybrid GA has $K^\star=3$ clusters. You may then easily extract the found clustering with the `clustering()` method and compare it with the known classes:
+
+```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
+table(diabetes$cl,clustering(sol)) %>% knitr::kable()
+```
+
+It roughly corresponds to the known groups with cluster 1,2 and 3 recovering overt, chemical and normal diabetes respectively, with some missclassifications that are expected with GMM clustering on this dataset. 
+
+To get an overview of the clustering results, you may also use the `gmmpairs()` plot function which displays the scatter plot matrix, colored by cluster membership, with estimated Gaussian ellipses in each cluster via maximum a posteriori:
 ```{r diabetes-gmm-FIG, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 gmmpairs(sol,X) 
 ```
@@ -117,7 +123,6 @@ If a user wants to experiment with other values of the prior hyperparameters, th
 ```{r diabetes-gmm-0.01, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 sol_dense = greed(X,model=Gmm(epsilon=0.01*diag(diag(cov(X))), tau =0.001))
 gmmpairs(sol_dense,X)
-table(diabetes$cl,clustering(sol_dense))
 ``` 
 
 
@@ -130,14 +135,14 @@ Fitting this model on the diabetes dataset, `greed()` with an hybrid GA finds a 
 ```{r diabetes-diaggmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
 soldiag = greed(X,model=DiagGmm())
 gmmpairs(soldiag,X)
-table(diabetes$cl,clustering(soldiag))
+table(diabetes$cl,clustering(soldiag)) %>% knitr::kable()
 ```
 
 Moreover, we may investigate coarser partitions when inspecting the hierarchical clustering dendrogram and using the `cut()` method at any level of the hierarchy. Here is the solution at $K=3$:
 ```{r diabetes-diaggmm-cut, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
 plot(soldiag,type='tree')
 solK3 = cut(soldiag, K=3)
-table(diabetes$cl,clustering(solK3))
+table(diabetes$cl,clustering(solK3)) %>% knitr::kable()
 ```
 
 
