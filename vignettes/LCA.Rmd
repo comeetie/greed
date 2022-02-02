@@ -190,17 +190,21 @@ The clusters appear to be quite different and coherent. For example, the seveth 
 params = coef(sol)
 ```
 
-```{r thetask, include=TRUE, echo=FALSE}
-thetas = params$Thetak[c("Country","Latino")]
-# kables(lapply(names(thetas), 
+```{r thetask, include=TRUE, echo=FALSE, results='asis'}
+vars = c("Country","Latino")
+for (var in vars) {
+  print(kable(thetas[[var]], format='html', row.names='true', caption = var))
+  cat('\n\n\n')
+}
+# kables(sapply(names(thetas),
 #               function(ind){
 #                 kable(thetas[[ind]], format='html', row.names='true', caption = ind)
 #               }),
 #        format = 'html')
-lapply(names(thetas), 
-              function(ind){
-                kable(thetas[[ind]], format='html', row.names='true', caption = ind)
-              })
+# sapply(names(thetas),
+#               function(ind){
+#                 kable(thetas[[ind]], format='html', row.names='true', caption = ind)
+#               })
 ```
 
 
