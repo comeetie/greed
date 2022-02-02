@@ -13,14 +13,17 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-
-
-```{r setup,include=TRUE, message=FALSE}
+Loads packages.
+```{r setup, include=TRUE, message=FALSE}
+library(future) # allows parralel processing in greed()
 library(greed)
+library(mclust)
+library(ggplot2)
 library(dplyr)
 library(tidyr)
-library(ggplot2)
-set.seed(1234)
+set.seed(2134)
+
+future::plan("multisession", workers=2) # may be increased 
 ```
 
 ## Mixture of Regression
