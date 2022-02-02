@@ -134,7 +134,7 @@ See the `vignette("SBM")` for details.
 
 ### Mixture of Regression
 
-See the`vignette("MoR")` for details.
+See the `vignette("MoR")` for details.
 
 ### Advanced models`
 
