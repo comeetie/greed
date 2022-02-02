@@ -102,9 +102,17 @@ We apply the `greed()` function with a `Gmm` object with default hyperparameters
 
 ```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 sol = greed(X,model=Gmm())
-cat('\n Confusion table')
-print(knitr::kable(table(diabetes$cl,clustering(sol))), format='html', row.names=T)
 ```
+
+```{r eval=FALSE}
+cat('\n Confusion table')
+table(diabetes$cl,clustering(sol))
+```
+
+```{r , include=TRUE, echo=TRUE}
+knitr::kable(table(diabetes$cl,clustering(sol)), format='html', row.names=T)
+```
+
 The optimal clustering found by the hybrid GA has $K^\star=3$ clusters and  roughly corresponds to the known groups with cluster 1,2 and 3 recovering overt, chemical and normal diabetes respectively, with some missclassifications that are expected with GMM clustering on this dataset. 
 
 To get an overview of the clustering results, you may use the `gmmpairs()` plot function which displays the scatter plot matrix, colored by cluster membership, with estimated Gaussian ellipses in each cluster via maximum a posteriori:

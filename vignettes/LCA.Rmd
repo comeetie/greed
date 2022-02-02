@@ -193,7 +193,7 @@ params = coef(sol)
 ```{r thetask, include=TRUE, echo=FALSE, results='asis'}
 vars = c("Country","Latino")
 for (var in vars) {
-  print(kable(thetas[[var]], format='html', row.names='true', caption = var))
+  print(kable(params$thetas[[var]], format='html', row.names='true', caption = var))
   cat('\n\n\n')
 }
 # kables(sapply(names(thetas),
