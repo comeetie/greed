@@ -288,9 +288,10 @@ confmat_dcsbm = knitr::kable(table(clustering(sol_dcsbm), Books$label), format='
 knitr::kables(list(confmat_sbm, confmat_dcsbm), format='html', caption = "Confusion matrices")
 ```
 
-# Categorical edges and multidimensional graphs
+# Categorical edges and multidimensional networks
 
 Sometimes, a graph accounts for more complex interactions between object such as
+
  1. categorical relationship instead of solely binary
  2. multidimensional/multilayered relationships encoded by different graphs (*e.g.* work relation and friendship)
 
