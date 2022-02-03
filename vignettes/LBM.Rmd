@@ -7,7 +7,7 @@ output:
     number_sections: true
     fig_caption: yes
 vignette: >
-  %\VignetteIndexEntry{Co-clustering binary and count data with the Latent Block Model}
+  %\VignetteIndexEntry{Co-clustering binary and count data with the degree-corrected Latent Block Model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
