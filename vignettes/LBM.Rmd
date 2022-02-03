@@ -1,0 +1,30 @@
+---
+title: "Co-clustering binary and count data with the degree-corrected Latent Block Model"
+author: "Etienne Côme & Nicolas Jouvin"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+    fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{Co-clustering binary and count data with the degree-corrected Latent Block Model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup}
+library(greed)
+```
+
+Dummy example. Only degree-corrected LBM is available yet.
+```{r}
+help("DcLbm")
+```
+
+```{r , eval=FALSE}
+simu <- rlbm(50, 10, rep(1 / 5, 5), rep(1 / 10, 10), matrix(runif(50), 5, 10))
+model = DcLbm(alpha = 1)
+sol = greed(X = simu$x, model=model, alg = Hybrid())
+```
+

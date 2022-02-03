@@ -115,18 +115,18 @@
     
 <p>Loads packages and set a future plan for parallel processing.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://Matrix.R-forge.R-project.org/" class="external-link">Matrix</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://Matrix.R-forge.R-project.org/" class="external-link">Matrix</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/" class="external-link">greed</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/ggpubr/" class="external-link">ggpubr</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2134</span><span class="op">)</span>
 
-<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="st">"multisession"</span>, workers<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="co"># may be increased </span></code></pre></div>
-<div class="section level1">
-<h1 id="the-model">The model<a class="anchor" aria-label="anchor" href="#the-model"></a>
-</h1>
+<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="st">"multisession"</span>, workers<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="co"># may be increased </span></code></pre></div>
+<div class="section level2">
+<h2 id="the-model">The model<a class="anchor" aria-label="anchor" href="#the-model"></a>
+</h2>
 <p>Graph data arise in various scientific fields from biology to sociology, and accounts for relationship between objects. These objects are expressed as <em>nodes</em>, while a relationship between two objects is expressed as an <em>edge</em>. Hence, graph data may be expressed and stored in an <em>adjacency matrix</em> <span class="math inline">\(\mathbf{X} = \{ x_{ij} \}\)</span> where <span class="math inline">\(x_{ij}=1\)</span> means that objects <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are connected. Weighted versions are also possible.</p>
 <p>The stochastic block model (SBM) is a random graph model of the adjacency matrix <span class="math inline">\(\mathbf{X}\)</span> widely used for graph clustering. In this model, the probability of an edge <span class="math inline">\((i,j)\)</span> is driven by the cluster membership of node <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, hence the <strong>block</strong> terminology.</p>
 <p>It can be expressed in the <a href="https://arxiv.org/abs/2002.11577" class="external-link">DLVMs</a> framework and the <strong>greed</strong> package handles this model and its degree-corrected variant, while implementing efficient visualization tools for the clustering results that we detail below. The Bayesian formulation of a binary SBM is as follows</p>
@@ -147,12 +147,12 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 </ul>
 <p>Note that the greed package also handles the degree-corrected variant of SBM in the <code>?dcSbm</code> class, allowing for integer valued edges. The underlying model and its DLVM formulation is described in depth in the Supplementary Materials of <a href="https://hal.archives-ouvertes.fr/hal-02530705" class="external-link">Côme et. al.</a>.</p>
 </div>
-<div class="section level1">
-<h1 id="an-introductory-example-sbm-with-hierarchical-structure">An introductory example: SBM with hierarchical structure<a class="anchor" aria-label="anchor" href="#an-introductory-example-sbm-with-hierarchical-structure"></a>
-</h1>
 <div class="section level2">
-<h2 id="simulation-scenario">Simulation scenario<a class="anchor" aria-label="anchor" href="#simulation-scenario"></a>
+<h2 id="an-introductory-example-sbm-with-hierarchical-structure">An introductory example: SBM with hierarchical structure<a class="anchor" aria-label="anchor" href="#an-introductory-example-sbm-with-hierarchical-structure"></a>
 </h2>
+<div class="section level3">
+<h3 id="simulation-scenario">Simulation scenario<a class="anchor" aria-label="anchor" href="#simulation-scenario"></a>
+</h3>
 <p>We begin by simulating from a hierarchically structured SBM model, with 2 large clusters, each composed of 3 smaller clusters with higher connection probabilities, making a total of 6 clusters.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">N</span><span class="op">=</span><span class="fl">400</span>
@@ -166,9 +166,9 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 <span class="va">sbm</span> <span class="op">=</span> <span class="fu"><a href="../reference/rsbm.html">rsbm</a></span><span class="op">(</span><span class="va">N</span>,<span class="va">pi</span>,<span class="va">mu</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/plot-connectivity-matrix-1.png" width="70%"></p>
 </div>
-<div class="section level2">
-<h2 id="clustering-with-the-greed-function">Clustering with the greed() function<a class="anchor" aria-label="anchor" href="#clustering-with-the-greed-function"></a>
-</h2>
+<div class="section level3">
+<h3 id="clustering-with-the-greed-function">Clustering with the greed() function<a class="anchor" aria-label="anchor" href="#clustering-with-the-greed-function"></a>
+</h3>
 <p>As always, we perform the clustering using the <code><a href="../reference/greed.html">greed()</a></code> function with an <code>Sbm</code> model. Note that we need to specify the <code>Sbm</code> model, since for squared sparse matrix the default model used is a <code>DcSbm</code>. By default, the hybrid genetic algorithm is used, and its default hyperparameters are detailed in <code><a href="../reference/Hybrid-class.html">?`Hybrid-class`</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">sbm</span><span class="op">$</span><span class="va">x</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/Sbm.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
@@ -176,16 +176,17 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a guess SBM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -14119 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -14164 and 6 clusters.</span>
 <span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -14119 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -14119 and 6 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a SBM model 6 clusters and an ICL of -14119</span></code></pre></div>
 <p>We see that the fine-grained clustering structure with <span class="math inline">\(K=6\)</span> clusters is recovered.</p>
 </div>
-<div class="section level2">
-<h2 id="inspecting-the-clustering-results">Inspecting the clustering results<a class="anchor" aria-label="anchor" href="#inspecting-the-clustering-results"></a>
-</h2>
+<div class="section level3">
+<h3 id="inspecting-the-clustering-results">Inspecting the clustering results<a class="anchor" aria-label="anchor" href="#inspecting-the-clustering-results"></a>
+</h3>
 <p>The result of <code>greed</code> is stored as an S4 class and, as for any model, there are dedicated function to access its attributed. A quick summary of these functions is indicated in the display of the <code>sol</code> object as follows</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol</span>
@@ -228,16 +229,16 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 0
 </td>
 <td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
 63
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
 </td>
 <td style="text-align:right;">
 0
@@ -254,10 +255,10 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 0
 </td>
 <td style="text-align:right;">
-66
+0
 </td>
 <td style="text-align:right;">
-0
+66
 </td>
 <td style="text-align:right;">
 0
@@ -271,22 +272,22 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 3
 </td>
 <td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
 64
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
 </td>
 </tr>
 <tr>
@@ -294,30 +295,27 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 4
 </td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
 79
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 5
-</td>
-<td style="text-align:right;">
-0
 </td>
 <td style="text-align:right;">
 0
@@ -334,6 +332,9 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 <td style="text-align:right;">
 0
 </td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -343,16 +344,16 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 0
 </td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
 68
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
 </td>
 <td style="text-align:right;">
 0
@@ -364,27 +365,27 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
 <span class="co">#&gt; $pi</span>
-<span class="co">#&gt; [1] 0.1600 0.1575 0.1650 0.1500 0.1700 0.1975</span>
+<span class="co">#&gt; [1] 0.1975 0.1700 0.1500 0.1650 0.1575 0.1600</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $thetakl</span>
 <span class="co">#&gt;              [,1]         [,2]         [,3]         [,4]         [,5]</span>
-<span class="co">#&gt; [1,] 0.1188964844 0.0114087302 0.0099431818 0.0013020833 0.0013786765</span>
-<span class="co">#&gt; [2,] 0.0133928571 0.1128747795 0.0086580087 0.0002645503 0.0002334267</span>
-<span class="co">#&gt; [3,] 0.0116003788 0.0098605099 0.1090449954 0.0017676768 0.0013368984</span>
-<span class="co">#&gt; [4,] 0.0007812500 0.0007936508 0.0015151515 0.1136111111 0.0080882353</span>
-<span class="co">#&gt; [5,] 0.0006893382 0.0009337068 0.0013368984 0.0142156863 0.1150519031</span>
-<span class="co">#&gt; [6,] 0.0009889241 0.0006027728 0.0007671653 0.0099156118 0.0111690246</span>
+<span class="co">#&gt; [1,] 0.1046306682 0.0111690246 0.0099156118 0.0007671653 0.0006027728</span>
+<span class="co">#&gt; [2,] 0.0107967238 0.1150519031 0.0142156863 0.0013368984 0.0009337068</span>
+<span class="co">#&gt; [3,] 0.0111814346 0.0080882353 0.1136111111 0.0015151515 0.0007936508</span>
+<span class="co">#&gt; [4,] 0.0003835827 0.0013368984 0.0017676768 0.1090449954 0.0098605099</span>
+<span class="co">#&gt; [5,] 0.0006027728 0.0002334267 0.0002645503 0.0086580087 0.1128747795</span>
+<span class="co">#&gt; [6,] 0.0013844937 0.0013786765 0.0013020833 0.0099431818 0.0114087302</span>
 <span class="co">#&gt;              [,6]</span>
-<span class="co">#&gt; [1,] 0.0013844937</span>
-<span class="co">#&gt; [2,] 0.0006027728</span>
-<span class="co">#&gt; [3,] 0.0003835827</span>
-<span class="co">#&gt; [4,] 0.0111814346</span>
-<span class="co">#&gt; [5,] 0.0107967238</span>
-<span class="co">#&gt; [6,] 0.1046306682</span></code></pre></div>
+<span class="co">#&gt; [1,] 0.0009889241</span>
+<span class="co">#&gt; [2,] 0.0006893382</span>
+<span class="co">#&gt; [3,] 0.0007812500</span>
+<span class="co">#&gt; [4,] 0.0116003788</span>
+<span class="co">#&gt; [5,] 0.0133928571</span>
+<span class="co">#&gt; [6,] 0.1188964844</span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="visualisation-tools">Visualisation tools<a class="anchor" aria-label="anchor" href="#visualisation-tools"></a>
-</h2>
+<div class="section level3">
+<h3 id="visualisation-tools">Visualisation tools<a class="anchor" aria-label="anchor" href="#visualisation-tools"></a>
+</h3>
 <p>The <strong>greed</strong> package also comes with efficient visualization tools for summarization and exploration. For graph data, it allows to:</p>
 <ol style="list-style-type: decimal">
 <li>Plot the aggregated adjacency matrix between the estimated clusters, with colors indicating link density.</li>
@@ -392,39 +393,39 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 <li>Plot the dendrogram extracted via the hierarchical clustering algorithm from <code>K(sol)</code> to <code>1</code> with the required level of regularization <span class="math inline">\(\log(\alpha)\)</span>.</li>
 </ol>
 <p>Note that, in each case, the ordering of the clusters given by the hierarchical algorithm is used and greatly enhances the visualization by highlighting the hierarchical structure in the data.</p>
-<div class="section level3">
-<h3 id="block-representation-of-the-adjacency-matrix">Block representation of the adjacency matrix<a class="anchor" aria-label="anchor" href="#block-representation-of-the-adjacency-matrix"></a>
-</h3>
+<div class="section level4">
+<h4 id="block-representation-of-the-adjacency-matrix">Block representation of the adjacency matrix<a class="anchor" aria-label="anchor" href="#block-representation-of-the-adjacency-matrix"></a>
+</h4>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/unnamed-chunk-2-1.png" width="70%"></p>
 </div>
-<div class="section level3">
-<h3 id="node-link-diagram-of-the-clustering-result">Node link diagram of the clustering result<a class="anchor" aria-label="anchor" href="#node-link-diagram-of-the-clustering-result"></a>
-</h3>
+<div class="section level4">
+<h4 id="node-link-diagram-of-the-clustering-result">Node link diagram of the clustering result<a class="anchor" aria-label="anchor" href="#node-link-diagram-of-the-clustering-result"></a>
+</h4>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'nodelink'</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/unnamed-chunk-3-1.png" width="70%"></p>
 </div>
-<div class="section level3">
-<h3 id="dendrogram-representation-of-the-hierarchical-clustering">Dendrogram representation of the hierarchical clustering<a class="anchor" aria-label="anchor" href="#dendrogram-representation-of-the-hierarchical-clustering"></a>
-</h3>
+<div class="section level4">
+<h4 id="dendrogram-representation-of-the-hierarchical-clustering">Dendrogram representation of the hierarchical clustering<a class="anchor" aria-label="anchor" href="#dendrogram-representation-of-the-hierarchical-clustering"></a>
+</h4>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/unnamed-chunk-4-1.png" width="70%"></p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="exploring-the-hierarchy">Exploring the hierarchy<a class="anchor" aria-label="anchor" href="#exploring-the-hierarchy"></a>
-</h2>
+<div class="section level3">
+<h3 id="exploring-the-hierarchy">Exploring the hierarchy<a class="anchor" aria-label="anchor" href="#exploring-the-hierarchy"></a>
+</h3>
 <p>Eventually, we can <code>cut</code> the dendrogram at any level below <code>K(sol)</code> to easily access other partitions in the hierarchy. Here, we access the coarser at <span class="math inline">\(K=2\)</span> and we can still use the different <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> functions to visualize these other solutions.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">sol</span>,<span class="fl">2</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol2</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/cut-K2-1.png" width="70%"></p>
-<div class="section level3">
-<h3 id="choosing-the-cut-level">Choosing the cut level<a class="anchor" aria-label="anchor" href="#choosing-the-cut-level"></a>
-</h3>
+<div class="section level4">
+<h4 id="choosing-the-cut-level">Choosing the cut level<a class="anchor" aria-label="anchor" href="#choosing-the-cut-level"></a>
+</h4>
 <p>Choosing relevant level(s) to <code>cut</code> the dendrogram may be challenging and the <strong>greed</strong> package also provides graphical tools to help the user decide based on a chosen heuristics.</p>
 <ul>
 <li>One can search for changepoints in the evolution of <span class="math inline">\(-log(\alpha)\)</span> with respect to <span class="math inline">\(K\)</span> with the following plot</li>
@@ -440,9 +441,9 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 <p><img src="SBM_files/figure-html/unnamed-chunk-6-1.png" width="70%"></p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="degree-corrected-variant">Degree corrected variant<a class="anchor" aria-label="anchor" href="#degree-corrected-variant"></a>
-</h2>
+<div class="section level3">
+<h3 id="degree-corrected-variant">Degree corrected variant<a class="anchor" aria-label="anchor" href="#degree-corrected-variant"></a>
+</h3>
 <p>Here, we compare models with and without degree correction on DcSbm simulation (see <code><a href="../reference/rdcsbm.html">?rdcsbm</a></code>).</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_dcsbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rdcsbm.html">rdcsbm</a></span><span class="op">(</span><span class="va">N</span>,<span class="va">pi</span>,<span class="va">mu</span>,<span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="va">N</span>,<span class="fl">1</span><span class="op">/</span><span class="fl">15</span><span class="op">)</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">rexp</a></span><span class="op">(</span><span class="va">N</span>,<span class="fl">1</span><span class="op">/</span><span class="fl">15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
@@ -453,30 +454,35 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a guess DCSBM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -11667 and 6 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -11667 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -11679 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -11679 and 6 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a DCSBM model 6 clusters and an ICL of -11667</span>
+<span class="co">#&gt; ── Clustering with a DCSBM model 6 clusters and an ICL of -11679</span>
 <span class="va">sol_sbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model <span class="op">=</span> <span class="fu"><a href="../reference/Sbm.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a guess SBM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -12764 and 13 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -12590 and 11 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -12572 and 11 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -12564 and 11 clusters.</span>
-<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -12564 and 11 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -12901 and 12 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -12744 and 12 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -12700 and 11 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -12692 and 11 clusters.</span>
+<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -12685 and 12 clusters.</span>
+<span class="co">#&gt; ℹ Generation 6 : best solution with an ICL of -12683 and 12 clusters.</span>
+<span class="co">#&gt; ℹ Generation 7 : best solution with an ICL of -12678 and 12 clusters.</span>
+<span class="co">#&gt; ℹ Generation 8 : best solution with an ICL of -12677 and 12 clusters.</span>
+<span class="co">#&gt; ℹ Generation 9 : best solution with an ICL of -12674 and 12 clusters.</span>
+<span class="co">#&gt; ℹ Generation 10 : best solution with an ICL of -12673 and 11 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a SBM model 11 clusters and an ICL of -12564</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a SBM model 10 clusters and an ICL of -12662</span></code></pre></div>
 <p>As expected the degree corrected version did a better job as the ICL value suggest. Indeed, without degree correction, the model has to use more groups to fit the degree heterogeneity.</p>
 </div>
 </div>
-<div class="section level1">
-<h1 id="a-real-data-example-the-books-dataset">A real data example: the Books dataset<a class="anchor" aria-label="anchor" href="#a-real-data-example-the-books-dataset"></a>
-</h1>
+<div class="section level2">
+<h2 id="a-real-data-example-the-books-dataset">A real data example: the Books dataset<a class="anchor" aria-label="anchor" href="#a-real-data-example-the-books-dataset"></a>
+</h2>
 <p>The <strong>Books</strong> dataset was gathered by Valdis Krebs and is attached to the <strong>greed</strong> package. It consist of a co-purchasing network of <span class="math inline">\(N=105\)</span> books on US politics. Two books have an edge between them if they have been frequently co-purchased together. We have access to the labels of each book according to its political inclination: conservative (“n”), liberal (“l”) or neutral (“n”).</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Books</span><span class="op">)</span>
@@ -485,8 +491,9 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a guess DCSBM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1346 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1355 and 5 clusters.</span>
 <span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1346 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -1346 and 4 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a DCSBM model 3 clusters and an ICL of -1345</span>
@@ -501,9 +508,10 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a guess SBM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1251 and 6 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1251 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1269 and 8 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1253 and 6 clusters.</span>
 <span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -1251 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -1251 and 6 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a SBM model 5 clusters and an ICL of -1249</span>
@@ -574,13 +582,13 @@ n
 1
 </td>
 <td style="text-align:right;">
-9
+1
 </td>
 <td style="text-align:right;">
-0
+38
 </td>
 <td style="text-align:right;">
-0
+2
 </td>
 </tr>
 <tr>
@@ -602,13 +610,13 @@ n
 3
 </td>
 <td style="text-align:right;">
-1
+9
 </td>
 <td style="text-align:right;">
-38
+0
 </td>
 <td style="text-align:right;">
-2
+0
 </td>
 </tr>
 </tbody>
@@ -638,13 +646,13 @@ n
 1
 </td>
 <td style="text-align:right;">
-1
+41
 </td>
 <td style="text-align:right;">
-38
+0
 </td>
 <td style="text-align:right;">
-2
+3
 </td>
 </tr>
 <tr>
@@ -666,13 +674,13 @@ n
 3
 </td>
 <td style="text-align:right;">
-41
+1
 </td>
 <td style="text-align:right;">
-0
+38
 </td>
 <td style="text-align:right;">
-3
+2
 </td>
 </tr>
 </tbody>
@@ -681,14 +689,18 @@ n
 </tr></tbody>
 </table>
 </div>
-<div class="section level1">
-<h1 id="categorical-edges-and-multidimensional-graphs">Categorical edges and multidimensional graphs<a class="anchor" aria-label="anchor" href="#categorical-edges-and-multidimensional-graphs"></a>
-</h1>
-<p>Sometimes, a graph accounts for more complex interactions between object such as 1. categorical relationship instead of solely binary 2. multidimensional/multilayered relationships encoded by different graphs (<em>e.g.</em> work relation and friendship)</p>
-<p>The first case can be adressed in the SBM framework via a multinomial SBM model. The second is different since there are different layer or <em>views</em> of the data. Still, the <strong>greed</strong> package may handle this type of data via its <code>MixedModels</code> framework where user simply stacks the DLVM of its choice on each view of the data (for more info see the dedicated vignette on Mixed Models).</p>
 <div class="section level2">
-<h2 id="categorical-edges-and-the-multinomial-sbm-newguinea-dataset">Categorical edges and the Multinomial SBM: newguinea dataset<a class="anchor" aria-label="anchor" href="#categorical-edges-and-the-multinomial-sbm-newguinea-dataset"></a>
+<h2 id="categorical-edges-and-multidimensional-networks">Categorical edges and multidimensional networks<a class="anchor" aria-label="anchor" href="#categorical-edges-and-multidimensional-networks"></a>
 </h2>
+<p>Sometimes, a graph accounts for more complex interactions between object such as</p>
+<ol style="list-style-type: decimal">
+<li>categorical relationship instead of solely binary</li>
+<li>multidimensional/multilayered relationships encoded by different graphs (<em>e.g.</em> work relation and friendship)</li>
+</ol>
+<p>The first case can be adressed in the SBM framework via a multinomial SBM model. The second is different since there are different layer or <em>views</em> of the data. Still, the <strong>greed</strong> package may handle this type of data via its <code>MixedModels</code> framework where user simply stacks the DLVM of its choice on each view of the data (for more info see the dedicated vignette on Mixed Models).</p>
+<div class="section level3">
+<h3 id="categorical-edges-and-the-multinomial-sbm-newguinea-dataset">Categorical edges and the Multinomial SBM: newguinea dataset<a class="anchor" aria-label="anchor" href="#categorical-edges-and-the-multinomial-sbm-newguinea-dataset"></a>
+</h3>
 <p>The SBM framework allows virtually any distribution on the edges, hence allowing to handle categorical edges modeled as multinomial random variables. With the right choice of conjugate Dirichlet priors, this model admits an exact ICL formulation which allows to use the <strong>greed</strong> framework. This model is implemented in the <code>MultSbm</code> S4 class and we illustrate its use on a toy data set consisting in interactions between <span class="math inline">\(n=16\)</span> tribes. This interaction can be one of 3 types: ennemies, friends or no relation. These are encoded as 3 dimensional one-hot vectors in the <code>NewGuinea</code> dataset.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"NewGuinea"</span><span class="op">)</span>
@@ -700,7 +712,7 @@ n
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a guess MULTSBM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -125 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -127 and 3 clusters.</span>
 <span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -125 and 2 clusters.</span>
 <span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -125 and 2 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
@@ -734,9 +746,9 @@ n
     <span class="fu"><a href="https://ggraph.data-imaginist.com/reference/geom_node_point.html" class="external-link">geom_node_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>shape<span class="op">=</span><span class="va">cluster</span><span class="op">)</span>,size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/unnamed-chunk-16-1.png" width="70%"></p>
 </div>
-<div class="section level2">
-<h2 id="general-case-multidimensional-networks-and-mixed-models">General case: multidimensional networks and mixed-models<a class="anchor" aria-label="anchor" href="#general-case-multidimensional-networks-and-mixed-models"></a>
-</h2>
+<div class="section level3">
+<h3 id="general-case-multidimensional-networks-and-mixed-models">General case: multidimensional networks and mixed-models<a class="anchor" aria-label="anchor" href="#general-case-multidimensional-networks-and-mixed-models"></a>
+</h3>
 <p>As explained above, some graphs may encode different kinds of relationships. This general case of multidimensional network correspond to a 3-dimensional encoding <span class="math inline">\(V\)</span> different graphs. Note that graphs with multinomial edges are a particular case where an edge <span class="math inline">\((i,k)\)</span> can only belong to one of the views.</p>
 <p>In the perspective of graphs clustering, we search for <strong>one</strong> common partition of the nodes among the different graphs. From the statistical point-of-view of the DLVMs framework, it amounts to stack observational models (<em>i.e.</em> SBM, dc-SBM, MultinomialSBM, etc.) on each of the graphs, that are supposed independent conditionally on the unknown partitions :</p>
 <span class="math display">\[\begin{equation}
@@ -766,9 +778,9 @@ p(G_1, \ldots, G_V \mid Z) = p(G_1 \mid Z) \times \ldots \times p(G_V \mid Z).
 <span class="va">bl_enmy</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/extractSubModel.html">extractSubModel</a></span><span class="op">(</span><span class="va">sol_bidcsbm</span>,<span class="st">"enmy"</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"blocks"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Enmity"</span><span class="op">)</span>
 <span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html" class="external-link">ggarrange</a></span><span class="op">(</span><span class="va">bl_friends</span>,<span class="va">bl_enmy</span><span class="op">)</span></code></pre></div>
 <p><img src="SBM_files/figure-html/unnamed-chunk-18-1.png" width="100%"></p>
-<div class="section level3">
-<h3 id="th-grade-dataset">7th grade dataset<a class="anchor" aria-label="anchor" href="#th-grade-dataset"></a>
-</h3>
+<div class="section level4">
+<h4 id="th-grade-dataset">7th grade dataset<a class="anchor" aria-label="anchor" href="#th-grade-dataset"></a>
+</h4>
 <p>The <code><a href="../reference/SevenGraders.html">?SevenGraders</a></code> dataset illustrates the interest of multidimensional graphs clustering. There are 3 different relationship (class, best-friends and work) recorded between 29 seventh-grade students in Victoria, Australia. We also have access to the gender of each student: 1 to 12 are boys and 13 to 29 are girls.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SevenGraders"</span><span class="op">)</span>
@@ -783,9 +795,10 @@ p(G_1, \ldots, G_V \mid Z) = p(G_1 \mid Z) \times \ldots \times p(G_V \mid Z).
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a MIXEDMODELS model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1516 and 3 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1514 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1519 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1516 and 3 clusters.</span>
 <span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -1514 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -1514 and 4 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a MIXEDMODELS model 4 clusters and an ICL of -1514</span></code></pre></div>
@@ -796,9 +809,9 @@ p(G_1, \ldots, G_V \mid Z) = p(G_1 \mid Z) \times \ldots \times p(G_V \mid Z).
 </div>
 </div>
 </div>
-<div class="section level1">
-<h1 id="bi-partite-graphs-and-co-clustering">Bi-partite graphs and co-clustering<a class="anchor" aria-label="anchor" href="#bi-partite-graphs-and-co-clustering"></a>
-</h1>
+<div class="section level2">
+<h2 id="bi-partite-graphs-and-co-clustering">Bi-partite graphs and co-clustering<a class="anchor" aria-label="anchor" href="#bi-partite-graphs-and-co-clustering"></a>
+</h2>
 <p>This section is still in construction. See <code><a href="../reference/DcLbm.html">?`DcLbm-class`</a></code> for further information on co-clustering with the degree corrected Latent Block Model.</p>
 </div>
   </div>
@@ -820,7 +833,7 @@ p(G_1, \ldots, G_V \mid Z) = p(G_1 \mid Z) \times \ldots \times p(G_V \mid Z).
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>

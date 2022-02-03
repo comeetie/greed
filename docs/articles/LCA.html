@@ -114,7 +114,7 @@
     
 <p>Loads the necessary packages for the vignettes.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span> <span class="co"># allows parralel processing in greed()</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span> <span class="co"># allows parralel processing in greed()</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/" class="external-link">greed</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
@@ -127,11 +127,11 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lepennec/ggwordcloud" class="external-link">ggwordcloud</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2134</span><span class="op">)</span>
 
-<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="st">"multisession"</span>, workers<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="co"># may be increased </span></code></pre></div>
+<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="st">"multisession"</span>, workers<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="co"># may be increased </span></code></pre></div>
 <p>The <code>greed</code> package and DLVM framework allows the clustering of categorical data. This vignette describes typical use cases of the <code><a href="../reference/greed.html">greed()</a></code> function in this context, and illustrates its use on real datasets.</p>
-<div class="section level1">
-<h1 id="the-model">The model<a class="anchor" aria-label="anchor" href="#the-model"></a>
-</h1>
+<div class="section level2">
+<h2 id="the-model">The model<a class="anchor" aria-label="anchor" href="#the-model"></a>
+</h2>
 <p>We are interested in the clustering of categorical datasets, which are typically found in survey data or item response theory (ITR). In this context, we observe <span class="math inline">\(n\)</span> individuals described by <span class="math inline">\(p\)</span> variables, taking one among <span class="math inline">\(d_j\)</span> modalities for each variable <span class="math inline">\(j\)</span>. Such datasets are typically represented using a <a href="https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics" class="external-link">one-hot-encoding</a> of each factor in a design matrix <span class="math inline">\(\mathbf{X} \in \{0,1\}^{n \times d}\)</span> where <span class="math inline">\(d = \sum_{j=1}^p d_j\)</span>. Latent class analysis (LCA) is a generative model for categorical data clustering which posits conditional independance of the factor variables conditionally on the (unknown) partition. Below is a description of its Bayesian formulation with the use of proper conjugate priors <span class="math display">\[
 \begin{equation}
 \begin{aligned}
@@ -152,9 +152,9 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 </ul>
 <p>This default values may be changed and we refer to the <code><a href="../reference/Lca.html">?Lca</a></code> documentation for further details.</p>
 </div>
-<div class="section level1">
-<h1 id="analysis-of-two-real-datasets">Analysis of two real datasets<a class="anchor" aria-label="anchor" href="#analysis-of-two-real-datasets"></a>
-</h1>
+<div class="section level2">
+<h2 id="analysis-of-two-real-datasets">Analysis of two real datasets<a class="anchor" aria-label="anchor" href="#analysis-of-two-real-datasets"></a>
+</h2>
 <p>We now illustrate the use of the <code>greed</code> package on two real datasets:</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -163,9 +163,9 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <strong>Young people survey</strong> data from Miroslav Sabo and avalaible on the <a href="https://www.kaggle.com/miroslavsabo/young-people-survey" class="external-link">Kaggle platform</a>. This is an authentic example of questionnaire data where Slovakian young people (15-30 years old) were asked musical preferences according to different genres (rock, hip-hop, classical, etc.).</li>
 </ol>
 <p>These two datasets come attached with <code>greed</code> package.</p>
-<div class="section level2">
-<h2 id="mushroom-data">Mushroom data<a class="anchor" aria-label="anchor" href="#mushroom-data"></a>
-</h2>
+<div class="section level3">
+<h3 id="mushroom-data">Mushroom data<a class="anchor" aria-label="anchor" href="#mushroom-data"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"mushroom"</span><span class="op">)</span></code></pre></div>
 <p>We begin by forming the necessary vectors for analysis. The data has <span class="math inline">\(n=8124\)</span> rows and <span class="math inline">\(p=23\)</span> columns. The first column contains the poisonous status of each mushroom with two possible values, “p” for “poisonous” and “e” for edible, it will serve as the clustering we seek to recover. The remaining variables are used for clustering. Note that we only use a subset of the data for illustration purpose here.</p>
@@ -181,9 +181,9 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <span class="co">#&gt; 4154  x  y  g  f  f  f  c  b   p   e</span>
 <span class="co">#&gt; 1267  f  f  g  f  n  f  w  b   p   t</span>
 <span class="co">#&gt; 4593  f  y  y  f  f  f  c  b   p   e</span></code></pre></div>
-<div class="section level3">
-<h3 id="clustering">Clustering<a class="anchor" aria-label="anchor" href="#clustering"></a>
-</h3>
+<div class="section level4">
+<h4 id="clustering">Clustering<a class="anchor" aria-label="anchor" href="#clustering"></a>
+</h4>
 <p>The clustering is done via the main function <code><a href="../reference/greed.html">greed()</a></code> with argument <code>model</code> set to LCA and the genetic hybrid algorithm for ICLex maximization. The value of the <span class="math inline">\(\beta\)</span> hyper-parameter for the Dirichlet prior on <span class="math inline">\(\theta_{kj}\)</span> can be specified by the user, it defaults to 1.</p>
 <blockquote>
 <p><strong>Note:</strong> The <code>Lca</code> model may only be used with datasets stored in a data.frame object containing factors only. When such data are provided to the <code><a href="../reference/greed.html">greed()</a></code> function, an <code>Lca</code> model is picked by default. To perform the clustering, it is therefore sufficient to call greed with the prepared data.frame.</p>
@@ -194,13 +194,13 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a LCA model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -12696 and 13 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -12612 and 13 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -12603 and 13 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -12603 and 13 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -12673 and 14 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -12612 and 14 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -12603 and 12 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -12603 and 12 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a LCA model 12 clusters and an ICL of -12589</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a LCA model 12 clusters and an ICL of -12603</span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span>Edibility<span class="op">=</span><span class="va">label</span>, Cluster<span class="op">=</span><span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol_mush</span><span class="op">)</span><span class="op">)</span>, format<span class="op">=</span><span class="st">'html'</span>, row.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <table class="table">
@@ -256,10 +256,10 @@ e
 0
 </td>
 <td style="text-align:right;">
-11
+12
 </td>
 <td style="text-align:right;">
-27
+26
 </td>
 <td style="text-align:right;">
 32
@@ -331,9 +331,9 @@ p
 </table>
 <p>The hybrid genetic algorithm found a solution with <span class="math inline">\(K=12\)</span> clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. Partition’s NMI is 0.29 which is explained by the over-segmentation of the solution compared to the <span class="math inline">\(2\)</span>-class problem.</p>
 </div>
-<div class="section level3">
-<h3 id="analysis-of-the-hierarchy">Analysis of the hierarchy<a class="anchor" aria-label="anchor" href="#analysis-of-the-hierarchy"></a>
-</h3>
+<div class="section level4">
+<h4 id="analysis-of-the-hierarchy">Analysis of the hierarchy<a class="anchor" aria-label="anchor" href="#analysis-of-the-hierarchy"></a>
+</h4>
 <p>Exploring the dendrogram provided by the hierarchical algorithm is quite useful in this case. We clearly see a hierarchical structure appearing with <span class="math inline">\(K=2\)</span> main clusters. Thus, we can cut the tree at this height and look at the solution.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol_mush</span>, type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
@@ -380,14 +380,14 @@ p
 <p>Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is 0.57. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the <a href="https://archive.ics.uci.edu/ml/datasets/Mushroom" class="external-link">way the labels have been set</a>, since mushrooms for which the edibility status was <em>unknown</em> were classified as <em>poisonous</em> by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ’‘’’. Thus, the unsupervised problem is hard and the obtained clustering is already satisfactory. Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.</p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="young-people-survey-data">Young people survey data<a class="anchor" aria-label="anchor" href="#young-people-survey-data"></a>
-</h2>
+<div class="section level3">
+<h3 id="young-people-survey-data">Young people survey data<a class="anchor" aria-label="anchor" href="#young-people-survey-data"></a>
+</h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Youngpeoplesurvey"</span><span class="op">)</span></code></pre></div>
-<div class="section level3">
-<h3 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
-</h3>
+<div class="section level4">
+<h4 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
+</h4>
 <p>We begin by preprocessing the data, only keeping the categorical variable. The original dataset has <span class="math inline">\(n=1010\)</span> respondents for <span class="math inline">\(p=150\)</span>. We keep only the feature related to the musical taste of the respondent and remove potential strike of identical responses. Eventually, the data are cast to factors with an explicit levels for the missing responses.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc</span>  <span class="op">=</span> <span class="fl">19</span>
@@ -408,9 +408,9 @@ p
     <span class="op">}</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="hierarchical-clustering">Hierarchical clustering<a class="anchor" aria-label="anchor" href="#hierarchical-clustering"></a>
-</h3>
+<div class="section level4">
+<h4 id="hierarchical-clustering">Hierarchical clustering<a class="anchor" aria-label="anchor" href="#hierarchical-clustering"></a>
+</h4>
 <p>As previouslythe clustering is obtained with a call to greed and the Lca generative model will be taken by default since the dataset is a data.frame with factors only.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>
@@ -418,19 +418,19 @@ p
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a LCA model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -27493 and 10 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -27493 and 10 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -27492 and 10 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -27492 and 10 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a LCA model 7 clusters and an ICL of -27457</span></code></pre></div>
-<p>The algorithm found <span class="math inline">\(K=7\)</span> clusters which are quite balanced. To explore the results, we plot the dendogram found.</p>
+<span class="co">#&gt; ── Clustering with a LCA model 8 clusters and an ICL of -27443</span></code></pre></div>
+<p>The algorithm found <span class="math inline">\(K=8\)</span> clusters which are quite balanced. To explore the results, we plot the dendogram found.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
 <p><img src="LCA_files/figure-html/survey-lca-plot1-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div class="section level3">
-<h3 id="clustering-analysis">Clustering analysis<a class="anchor" aria-label="anchor" href="#clustering-analysis"></a>
-</h3>
+<div class="section level4">
+<h4 id="clustering-analysis">Clustering analysis<a class="anchor" aria-label="anchor" href="#clustering-analysis"></a>
+</h4>
 <p>We may also used the <code>marginals</code> plot to depict the conditional probabilities of the different responses knowing the clusters assignment.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'marginals'</span><span class="op">)</span></code></pre></div>
@@ -441,169 +441,28 @@ p
 </blockquote>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; &lt;table&gt;</span>
-<span class="co">#&gt; &lt;caption&gt;Country&lt;/caption&gt;</span>
-<span class="co">#&gt;  &lt;thead&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:left;"&gt;   &lt;/th&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:right;"&gt; 1 &lt;/th&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:right;"&gt; 2 &lt;/th&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:right;"&gt; 3 &lt;/th&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:right;"&gt; 4 &lt;/th&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:right;"&gt; 5 &lt;/th&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:right;"&gt; NA &lt;/th&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;  &lt;/thead&gt;</span>
-<span class="co">#&gt; &lt;tbody&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster1 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.1904762 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.4246032 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2936508 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0873016 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0039683 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster2 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.3027027 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.5135135 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.1513514 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0270270 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0054054 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster3 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.7453416 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.1552795 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0931677 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0062112 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster4 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.3181818 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2272727 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0909091 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.3181818 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0454545 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster5 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.1287129 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2673267 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2376238 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2574257 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.1089109 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster6 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2666667 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0666667 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.1333333 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.5333333 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster7 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.3458647 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.3195489 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.1954887 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0864662 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0413534 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0112782 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt; &lt;/tbody&gt;</span>
-<span class="co">#&gt; &lt;/table&gt;</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt; &lt;table&gt;</span>
-<span class="co">#&gt; &lt;caption&gt;Latino&lt;/caption&gt;</span>
-<span class="co">#&gt;  &lt;thead&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:left;"&gt;   &lt;/th&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:right;"&gt; 1 &lt;/th&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:right;"&gt; 2 &lt;/th&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:right;"&gt; 3 &lt;/th&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:right;"&gt; 4 &lt;/th&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:right;"&gt; 5 &lt;/th&gt;</span>
-<span class="co">#&gt;    &lt;th style="text-align:right;"&gt; NA &lt;/th&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;  &lt;/thead&gt;</span>
-<span class="co">#&gt; &lt;tbody&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster1 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0277778 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.3015873 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.3174603 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2539683 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0873016 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0119048 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster2 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0702703 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.1837838 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2918919 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.1891892 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2648649 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster3 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.5652174 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2236025 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.1180124 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0496894 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0310559 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0124224 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster4 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.4545455 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.3636364 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0454545 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0909091 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0454545 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster5 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0297030 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0891089 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.1683168 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2079208 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.4950495 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0099010 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster6 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0666667 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2666667 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.6666667 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt;   &lt;tr&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:left;"&gt; cluster7 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2293233 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.3571429 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.2180451 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.1466165 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0451128 &lt;/td&gt;</span>
-<span class="co">#&gt;    &lt;td style="text-align:right;"&gt; 0.0037594 &lt;/td&gt;</span>
-<span class="co">#&gt;   &lt;/tr&gt;</span>
-<span class="co">#&gt; &lt;/tbody&gt;</span>
-<span class="co">#&gt; &lt;/table&gt;</span></code></pre>
+<table class="table">
+<caption>
+Country
+</caption>
+<thead><tr>
+<th style="text-align:left;">
+</th>
+</tr></thead>
+<tbody><tr></tr></tbody>
+</table>
+<table class="table">
+<caption>
+Latino
+</caption>
+<thead><tr>
+<th style="text-align:left;">
+</th>
+</tr></thead>
+<tbody><tr></tr></tbody>
+</table>
 <p>Cluster structures may also be visualized with a word clouds of feature names. In this representation, a color encodes if the feature has an average score greater than the average score of the whole population. A big blue feature corresponds to music type that scores higher than the mean in this cluster and big red feature to music type that have a smaller score than the mean in the corresponding group.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
 <span class="va">means_scores</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">Thetak</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,<span class="fl">1</span>,<span class="kw">function</span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">{</span>
@@ -657,7 +516,7 @@ p
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>

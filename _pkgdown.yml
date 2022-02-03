@@ -27,6 +27,10 @@ navbar:
         href: articles/SBM.html
       - text: "Mixed Models"
         href: articles/Mixed-Models.html
+      - text: "Mixture of Multinomials"
+        href: articles/MoM.html
+      - text: "Co-clustering and LBM"
+        href: articles/LBM.html
   right:
     - icon: fa-github
     - text: github
