@@ -275,12 +275,11 @@ setMethod(
   f = "cleanObsStats",
   signature = signature("DiagGmmPrior", "list"),
   definition = function(model, obs_stats, data) {
-    num_names <- data$col_names
+    num_names <- data$var_names
     new_obs_stats <- lapply(obs_stats, function(clust_stats) {
       new_clust_stats <- clust_stats[c("m", "S", "ng", "log_evidence")]
       colnames(new_clust_stats$m) <- num_names
       colnames(new_clust_stats$S) <- num_names
-      rownames(new_clust_stats$S) <- num_names
       new_clust_stats
     })
     names(new_obs_stats) <- paste0("cluster", 1:length(obs_stats))
@@ -292,7 +291,7 @@ setMethod(
   f = "cleanObsStats",
   signature = signature("DiagGmm", "list"),
   definition = function(model, obs_stats, data) {
-    if (!is.null(obs_stats$Gmm)) {
+    if (!is.null(obs_stats$DiagGmm)) {
       obs_stats$DiagGmm <- methods::callNextMethod(model, obs_stats$DiagGmm, data)
     }
     obs_stats

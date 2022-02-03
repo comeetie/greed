@@ -41,7 +41,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a>
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
@@ -82,7 +82,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a>
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -116,18 +116,15 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/" class="external-link">greed</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/ggpubr/" class="external-link">ggpubr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mclust-org.github.io/mclust/" class="external-link">mclust</a></span><span class="op">)</span>
-
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/ggpubr/" class="external-link">ggpubr</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2134</span><span class="op">)</span></code></pre></div>
 <div class="section level2">
 <h2 id="mixed-models-clustering">Mixed Models clustering<a class="anchor" aria-label="anchor" href="#mixed-models-clustering"></a>
 </h2>
-<p>One of distinctive feature of greed is that you may mix several model together. Using such an approach one may perform a clustering of several view of the same individuals with different generative models. In all case this approach suppose that the different views are generated in an independent way when the clustering assignment is known. To explore this capability we will begin with the Fifa dataset and cluster simultaneously the categorical features with an Lca and the continuous one with a Gmm.</p>
+<p>One of distinctive feature of greed is that you may mix several model together. Using such an approach one may perform a clustering of several view of the same individuals with different generative models. In all case this approach suppose that the different views are generated in an independent way when the clustering assignment is known. To explore this capability we will begin with the Fifa dataset and cluster simultaneously the categorical features with an <code><a href="../reference/Lca.html">LcaPrior()</a></code> and the continuous one with a <code><a href="../reference/Gmm.html">GmmPrior()</a></code>.</p>
 <div class="section level3">
-<h3 id="the-fifa-data-set-lca-gmm">The Fifa data-set Lca + GMM<a class="anchor" aria-label="anchor" href="#the-fifa-data-set-lca-gmm"></a>
+<h3 id="lca-gmm-the-fifa-data-set">Lca + Gmm, the Fifa data-set<a class="anchor" aria-label="anchor" href="#lca-gmm-the-fifa-data-set"></a>
 </h3>
 <p>We first load the <code><a href="../reference/Fifa.html">?Fifa</a></code> dataset (several features of Soccer players in the Fifa 2020 videogame). We remove the first two columns that give the players names and nationality, and we kept only the players which earn more than 3000000 euros.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -138,27 +135,33 @@
 <p>This leave us with a dataset of <span class="math inline">\(n=3345\)</span> rows and <span class="math inline">\(p=24\)</span> columns. The features correspond to players characteristics (age,height,weight), skills scores (pace,shooting,…) and a set of binary factors that describe the field positions were the players may be aligned.</p>
 <p>Preparing the data and the model is a little bit more complicated than for the other models since we must specify the different models we want to use. The data are provided with a named list, and the model is created with the <code><a href="../reference/MixedModels.html">?MixedModels</a></code> constructor, which must also be provided with a list of model priors, with the same named slots as in the data list. The following piece of code demonstrate this approach and the Fifa dataset:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>
-<span class="co"># prepare the dataset create a list with the factor colums in one slot and the numeric columns in another slot</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span>
+<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>
+<span class="co"># prepare the dataset create a list with the factor columns in one slot </span>
+<span class="co"># and the numeric columns in another slot</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>categorical <span class="op">=</span> <span class="va">X</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html" class="external-link">select_if</a></span><span class="op">(</span><span class="va">is.factor</span><span class="op">)</span>,
             cont <span class="op">=</span> <span class="va">X</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html" class="external-link">select_if</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">{</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">is.factor</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">}</span><span class="op">)</span><span class="op">)</span>
-<span class="co"># create the MixedModels, as expected we will use an LcaPrior for the factors and a GmmPrior for the numeric columns.</span>
-<span class="co"># !be carefull names in the models list and in the data list must match</span>
+<span class="co"># create the MixedModels, as expected we will use an LcaPrior for the factors </span>
+<span class="co"># and a GmmPrior for the numeric columns.</span>
+<span class="co"># Be careful names in the models list and in the data list must match !</span>
 <span class="va">mixmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MixedModels.html">MixedModels</a></span><span class="op">(</span>models<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>categorical<span class="op">=</span><span class="fu"><a href="../reference/Lca.html">LcaPrior</a></span><span class="op">(</span><span class="op">)</span>,cont<span class="op">=</span><span class="fu"><a href="../reference/Gmm.html">GmmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># perform the clustering</span>
 <span class="va">sol</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">data</span>,model <span class="op">=</span> <span class="va">mixmod</span><span class="op">)</span>
-<span class="co">#&gt; ------- MIXEDMODELS model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -107151 and 9 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -107109 and 9 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -107081 and 8 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -107038 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -107036 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  6: best solution with an ICL of -107034 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  7: best solution with an ICL of -107033 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  8: best solution with an ICL of -107033 and 7 clusters #################</span>
-<span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a MIXEDMODELS model, 7 clusters and an icl of -107033.</span></code></pre></div>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a MIXEDMODELS model</span> ──</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -107151 and 9 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -107109 and 9 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -107081 and 8 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -107038 and 7 clusters.</span>
+<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -107036 and 7 clusters.</span>
+<span class="co">#&gt; ℹ Generation 6 : best solution with an ICL of -107034 and 7 clusters.</span>
+<span class="co">#&gt; ℹ Generation 7 : best solution with an ICL of -107033 and 7 clusters.</span>
+<span class="co">#&gt; ℹ Generation 8 : best solution with an ICL of -107033 and 7 clusters.</span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ── Clustering with a MIXEDMODELS model 7 clusters and an ICL of -107033</span></code></pre></div>
 <p>When the model is fitted the <code><a href="../reference/extractSubModel.html">extractSubModel()</a></code> function allow to retrieve the fitted sub-models, and use the plotting capabilities of each of them. We may for example look at the categorical part of the model and make a <code>marginals</code> plot. We see with this figure that the clusters found agree quite strongly with the field positions features. The preferred foot feature has also an impact on cluster 2 and 3.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/extractSubModel.html">extractSubModel</a></span><span class="op">(</span><span class="va">sol</span>,<span class="st">"categorical"</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"marginals"</span><span class="op">)</span></code></pre></div>
@@ -186,23 +189,16 @@ Marginal plots of the Gmm part of the model over continuous features.
 <p>To clearly show, the alignment of the cluster with field position we will make a little figure and plot for each cluster their mean position on the field. This will be computed as the weighted average coordinate of each field position were the weight correspond to the probability that a cluster member can play at this position.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Fifa_positions"</span><span class="op">)</span>
-<span class="va">params</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="fu"><a href="../reference/extractSubModel.html">extractSubModel</a></span><span class="op">(</span><span class="va">sol</span>,<span class="st">"categorical"</span><span class="op">)</span><span class="op">)</span>
 
-<span class="va">pos_clust</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>,<span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="../reference/K.html">K</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>,<span class="kw">function</span><span class="op">(</span><span class="va">k</span><span class="op">)</span><span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">Thetak</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">Thetak</span><span class="op">)</span><span class="op">]</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-    <span class="fl">1</span><span class="op">-</span><span class="va">x</span><span class="op">[</span><span class="va">k</span>,<span class="fl">1</span><span class="op">]</span>
-    <span class="op">}</span><span class="op">)</span>
-  <span class="op">}</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="va">pos_clust</span><span class="op">$</span><span class="va">cluster</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="../reference/K.html">K</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span>
+<span class="va">clust_positions</span> <span class="op">=</span> <span class="va">Fifa</span><span class="op">[</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">value_eur</span><span class="op">&gt;</span><span class="fl">3000000</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">pos_x</span>,<span class="va">pos_y</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cluster<span class="op">=</span><span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>pos_x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pos_x</span><span class="op">)</span>,pos_y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pos_y</span><span class="op">)</span><span class="op">)</span>
 
-<span class="va">pos_clust_long</span> <span class="op">=</span> <span class="va">pos_clust</span> <span class="op"><a href="https://rpkgs.datanovia.com/ggpubr/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">pos_clust</span><span class="op">)</span>,names_to <span class="op">=</span> <span class="st">"position"</span>,values_to <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span> <span class="op"><a href="https://rpkgs.datanovia.com/ggpubr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>position<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">position</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rpkgs.datanovia.com/ggpubr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">Fifa_positions</span><span class="op">$</span><span class="va">positions</span>,by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"position"</span><span class="op">=</span><span class="st">"team_position"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">pos_clust_mean</span> <span class="op">=</span> <span class="va">pos_clust_long</span> <span class="op"><a href="https://rpkgs.datanovia.com/ggpubr/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span> <span class="op"><a href="https://rpkgs.datanovia.com/ggpubr/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html" class="external-link">weighted.mean</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">p</span><span class="op">)</span>,y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html" class="external-link">weighted.mean</a></span><span class="op">(</span><span class="va">y</span>,<span class="va">p</span><span class="op">)</span><span class="op">)</span>
-
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/ggpubr/" class="external-link">ggpubr</a></span><span class="op">)</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">pos_clust_mean</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/background_image.html" class="external-link">background_image</a></span><span class="op">(</span><span class="va">Fifa_positions</span><span class="op">$</span><span class="va">bg_img</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">x</span>,y<span class="op">=</span><span class="va">y</span>,label<span class="op">=</span><span class="va">cluster</span><span class="op">)</span>,size<span class="op">=</span><span class="fl">5</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span><span class="op">+</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">clust_positions</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/background_image.html" class="external-link">background_image</a></span><span class="op">(</span><span class="va">Fifa_positions</span><span class="op">$</span><span class="va">bg_img</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">pos_x</span>,y<span class="op">=</span><span class="va">pos_y</span>,label<span class="op">=</span><span class="va">cluster</span><span class="op">)</span>,size<span class="op">=</span><span class="fl">5</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span>ratio<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">203.2</span><span class="op">)</span>,expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">101.6</span><span class="op">)</span>,expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -214,7 +210,7 @@ Field position map of the clusters.
 <p>The organisation of the clusters clearly appears, cluster 1 correspond to central defensive players, cluster 2 and 3 to lateral defensive players (recall that the preferred foot of this player were quite different between this two clusters with almost only right footed players in cluster 2 and left footed players in cluster 3).</p>
 </div>
 <div class="section level3">
-<h3 id="the-ndrangheta-data-set-sbm-lca">The Ndrangheta data-set Sbm + Lca<a class="anchor" aria-label="anchor" href="#the-ndrangheta-data-set-sbm-lca"></a>
+<h3 id="sbm-lca-the-ndrangheta-data-set">Sbm + Lca, the Ndrangheta data-set<a class="anchor" aria-label="anchor" href="#sbm-lca-the-ndrangheta-data-set"></a>
 </h3>
 <p>Mixed models may also be used to analyse graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangeta dataset. This dataset contains relationship information between members of the Ndrangheta mafia together with some information on their group affiliation and their role. We wil use an Sbm model to fit the adjacency matrix and an Lca model for the facotr describing the roles.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -226,13 +222,17 @@ Field position map of the clusters.
 <span class="va">mixmod</span> <span class="op">=</span> <span class="fu"><a href="../reference/MixedModels.html">MixedModels</a></span><span class="op">(</span>models<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>graph<span class="op">=</span><span class="fu"><a href="../reference/Sbm.html">SbmPrior</a></span><span class="op">(</span><span class="op">)</span>,node_infos<span class="op">=</span><span class="fu"><a href="../reference/Lca.html">LcaPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># cluster</span>
 <span class="va">sol</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">data</span>,model<span class="op">=</span><span class="va">mixmod</span><span class="op">)</span>
-<span class="co">#&gt; ------- MIXEDMODELS model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -2582 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -2412 and 22 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -2398 and 23 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -2398 and 23 clusters #################</span>
-<span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a MIXEDMODELS model, 22 clusters and an icl of -2367.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a MIXEDMODELS model</span> ──</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -2582 and 16 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -2412 and 22 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -2398 and 23 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -2398 and 23 clusters.</span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ── Clustering with a MIXEDMODELS model 22 clusters and an ICL of -2367</span>
 <span class="co"># analyse the results</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
 <div class="figure">

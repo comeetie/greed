@@ -41,7 +41,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a>
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
@@ -82,7 +82,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a>
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -141,11 +141,15 @@ Z_i  &amp;\sim \mathcal{M}(1,\pi)\\
 <p><img src="MoR_files/figure-html/unnamed-chunk-2-1.png" width="624" style="display: block; margin: auto;"> To fit a mixture of regression model with greed, you must provide a <code>data.frame</code> and a <code>MoR</code> model. To build such a model, we simply use the <code>MoR</code> function which has one mandatory argument, the formula of the supposed regression model. In our toy case, we may thus use the following line of code to fit the clustering model using a polynomial regression model of degree two:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">NPreg</span>,model<span class="op">=</span><span class="fu"><a href="../reference/MoR.html">MoR</a></span><span class="op">(</span><span class="va">yn</span> <span class="op">~</span> <span class="va">x</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; ------- MOR model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -675 and 2 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -675 and 2 clusters #################</span>
-<span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a MOR model, 2 clusters and an icl of -675.</span></code></pre></div>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a MOR model</span> ──</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -675 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -675 and 2 clusters.</span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ── Clustering with a MOR model 2 clusters and an ICL of -675</span></code></pre></div>
 <p>As expected the partition with two cluster that was used to simulate the data is recovered by the algoritthm. When, the clustering is performed, we may use the classical functions <code>clustering,coef,prior,plot,...</code> to explore the results. We may start by comparing the found clustering with the true labels :</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cl</span> <span class="op">=</span> <span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
@@ -233,13 +237,17 @@ Z_i  &amp;\sim \mathcal{M}(1,\pi)\\
 <code class="sourceCode R"><span class="va">reg_formula</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">value_eur</span><span class="op">)</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">pace</span> <span class="op">+</span> <span class="va">shooting</span> <span class="op">+</span> <span class="va">dribbling</span> <span class="op">+</span> <span class="va">passing</span> <span class="op">+</span> <span class="va">defending</span>  <span class="op">+</span> <span class="va">physic</span>
 <span class="va">mod_reg</span> <span class="op">=</span> <span class="fu"><a href="../reference/MoR.html">MoR</a></span><span class="op">(</span><span class="va">reg_formula</span><span class="op">)</span>
 <span class="va">sol</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Xreg</span>,<span class="va">mod_reg</span><span class="op">)</span>
-<span class="co">#&gt; ------- MOR model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -2286 and 2 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -2272 and 2 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -2265 and 2 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -2265 and 2 clusters #################</span>
-<span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a MOR model, 2 clusters and an icl of -2265.</span></code></pre></div>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a MOR model</span> ──</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -2286 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -2272 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -2265 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -2265 and 2 clusters.</span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ── Clustering with a MOR model 2 clusters and an ICL of -2265</span></code></pre></div>
 <p>The clustering found has two clusters, if we look at the regression models parameters :</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cl</span><span class="op">=</span><span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>

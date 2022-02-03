@@ -31,7 +31,7 @@ The Sbm-class must be used when fitting a simple Sbm whereas the SbmPrior-class 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
   <a>
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
@@ -68,7 +68,7 @@ The Sbm-class must be used when fitting a simple Sbm whereas the SbmPrior-class 
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a>
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -162,12 +162,16 @@ a <code>Sbm-class</code> object</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span class="va">sbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="rsbm.html">rsbm</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.1</span> <span class="op">+</span> <span class="fl">0.01</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="greed.html">greed</a></span><span class="op">(</span><span class="va">sbm</span><span class="op">$</span><span class="va">x</span>, model <span class="op">=</span> <span class="fu">Sbm</span><span class="op">(</span>a0 <span class="op">=</span> <span class="fl">0.5</span>, b0 <span class="op">=</span> <span class="fl">0.5</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ------- guess SBM model fitting ------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ################# Generation  1: best solution with an ICL of -2175 and 4 clusters #################</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ################# Generation  2: best solution with an ICL of -2152 and 2 clusters #################</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ################# Generation  3: best solution with an ICL of -2152 and 2 clusters #################</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ------- Final clustering -------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ICL clustering with a SBM model, 2 clusters and an icl of -2152.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Fitting a guess SBM model</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ℹ Initializing a population of 20 solutions.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ℹ Generation 1 : best solution with an ICL of -2036 and 3 clusters.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ℹ Generation 2 : best solution with an ICL of -2024 and 2 clusters.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ℹ Generation 3 : best solution with an ICL of -2024 and 2 clusters.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Final clustering</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── Clustering with a SBM model 2 clusters and an ICL of -2024 </span>
 <span class="r-in"><span class="fu">SbmPrior</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> An object of class "SbmPrior"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Slot "a0":</span>
