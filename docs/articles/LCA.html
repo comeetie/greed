@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LCA • greed</title>
+<title>Categorical data clustering with the Latent Class Analysis • greed</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="LCA">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Categorical data clustering with the Latent Class Analysis">
 <meta property="og:description" content="greed">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -41,7 +41,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a>
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
@@ -82,7 +82,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a>
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -102,7 +102,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>LCA</h1>
+      <h1 data-toc-skip>Categorical data clustering with the Latent Class Analysis</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/comeetie/greed/blob/HEAD/vignettes/LCA.Rmd" class="external-link"><code>vignettes/LCA.Rmd</code></a></small>
@@ -115,36 +115,24 @@
 <p>Loads the necessary packages for the vignettes.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span> <span class="co"># allows parralel processing in greed()</span>
-<span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/" class="external-link">greed</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'dplyr'</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     filter, lag</span>
-<span class="co">#&gt; The following objects are masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     intersect, setdiff, setequal, union</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org" class="external-link">purrr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/ggpubr/" class="external-link">ggpubr</a></span><span class="op">)</span>
-<span class="co">#&gt; Loading required package: ggplot2</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jchiquet/aricode" class="external-link">aricode</a></span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'aricode'</span>
-<span class="co">#&gt; The following object is masked from 'package:greed':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     NMI</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ryentes/careless/" class="external-link">careless</a></span><span class="op">)</span> <span class="co"># string processing</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lepennec/ggwordcloud" class="external-link">ggwordcloud</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2134</span><span class="op">)</span>
+
+<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="st">"multisession"</span>, workers<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="co"># may be increased </span></code></pre></div>
 <p>The <code>greed</code> package and DLVM framework allows the clustering of categorical data. This vignette describes typical use cases of the <code><a href="../reference/greed.html">greed()</a></code> function in this context, and illustrates its use on real datasets.</p>
-<div class="section level1">
-<h1 id="categorical-data-clustering-with-the-latent-class-analysis">Categorical data clustering with the Latent Class Analysis<a class="anchor" aria-label="anchor" href="#categorical-data-clustering-with-the-latent-class-analysis"></a>
-</h1>
-<p>We are interested in the clustering of categorical datasets, which are typically found in survey data or item response theory (ITR). In this context, we observe <span class="math inline">\(n\)</span> individuals described by <span class="math inline">\(p\)</span> variables, taking one among <span class="math inline">\(d_j\)</span> modalities for each variable <span class="math inline">\(j\)</span>. Such datasets are typically represented using a one-hot-encoding of each factor in a design matrix <span class="math inline">\(\mathbf{X} \in \{0,1\}^{n \times d}\)</span> where <span class="math inline">\(d = \sum_{j=1}^p d_j\)</span>. Latent class analysis (LCA) is a generative model for categorical data clustering which posits conditional independance of the factor variables conditionally on the (unknown) partition. Below is a description of its Bayesian formulation with the use of proper conjugate priors <span class="math display">\[
+<div class="section level2">
+<h2 id="the-model">The model<a class="anchor" aria-label="anchor" href="#the-model"></a>
+</h2>
+<p>We are interested in the clustering of categorical datasets, which are typically found in survey data or item response theory (ITR). In this context, we observe <span class="math inline">\(n\)</span> individuals described by <span class="math inline">\(p\)</span> variables, taking one among <span class="math inline">\(d_j\)</span> modalities for each variable <span class="math inline">\(j\)</span>. Such datasets are typically represented using a <a href="https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics" class="external-link">one-hot-encoding</a> of each factor in a design matrix <span class="math inline">\(\mathbf{X} \in \{0,1\}^{n \times d}\)</span> where <span class="math inline">\(d = \sum_{j=1}^p d_j\)</span>. Latent class analysis (LCA) is a generative model for categorical data clustering which posits conditional independance of the factor variables conditionally on the (unknown) partition. Below is a description of its Bayesian formulation with the use of proper conjugate priors <span class="math display">\[
 \begin{equation}
 \begin{aligned}
 \pi&amp;\sim \textrm{Dirichlet}(\alpha),\\
@@ -153,11 +141,20 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 \forall j=1, \ldots, p, \quad X_{ij}|Z_{ik}=1 &amp;\sim \mathcal{M}_{d_j}(1, \theta_{kj}),\\
 \end{aligned}
 \end{equation}
-\]</span> For each cluster <span class="math inline">\(k\)</span> and variable <span class="math inline">\(j\)</span>, the vector <span class="math inline">\(\theta_{kj}\)</span> represents the probability of each of the <span class="math inline">\(d_j\)</span> modalities. With the choice of priors above, the LCA model admits an exact ICL expression similar to the mixture of multinomials <a href="https://static-content.springer.com/esm/art%3A10.1007%2Fs11634-021-00440-z/MediaObjects/11634_2021_440_MOESM1_ESM.pdf" class="external-link">derived here</a> (Section 3) .</p>
+\]</span> For each cluster <span class="math inline">\(k\)</span> and variable <span class="math inline">\(j\)</span>, the vector <span class="math inline">\(\theta_{kj}\)</span> represents the probability of each of the <span class="math inline">\(d_j\)</span> modalities. With the above choice of priors, the LCA model admits an exact ICL expression similar to the mixture of multinomials derived in <a href="https://static-content.springer.com/esm/art%3A10.1007%2Fs11634-021-00440-z/MediaObjects/11634_2021_440_MOESM1_ESM.pdf" class="external-link">the supplementary materials</a> of Côme et. al. (2021, Section 3) .</p>
+<p>The <strong>greed</strong> package implements this model via the <code>Lca</code> model-class and the default values for hyper-parameters are set as follows:</p>
+<ul>
+<li>
+<span class="math inline">\(\alpha\)</span> is set to 1</li>
+<li>
+<span class="math inline">\(\beta\)</span> is set to 1, defaulting to an uninformative uniform prior on <span class="math inline">\(\theta_{kj}\)</span>
+</li>
+</ul>
+<p>This default values may be changed and we refer to the <code><a href="../reference/Lca.html">?Lca</a></code> documentation for further details.</p>
 </div>
-<div class="section level1">
-<h1 id="analysis-of-two-real-datasets">Analysis of two real datasets<a class="anchor" aria-label="anchor" href="#analysis-of-two-real-datasets"></a>
-</h1>
+<div class="section level2">
+<h2 id="analysis-of-two-real-datasets">Analysis of two real datasets<a class="anchor" aria-label="anchor" href="#analysis-of-two-real-datasets"></a>
+</h2>
 <p>We now illustrate the use of the <code>greed</code> package on two real datasets:</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -165,12 +162,12 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <li>
 <strong>Young people survey</strong> data from Miroslav Sabo and avalaible on the <a href="https://www.kaggle.com/miroslavsabo/young-people-survey" class="external-link">Kaggle platform</a>. This is an authentic example of questionnaire data where Slovakian young people (15-30 years old) were asked musical preferences according to different genres (rock, hip-hop, classical, etc.).</li>
 </ol>
-<p>The data are imported by the <code>greed</code> package.</p>
+<p>These two datasets come attached with <code>greed</code> package.</p>
+<div class="section level3">
+<h3 id="mushroom-data">Mushroom data<a class="anchor" aria-label="anchor" href="#mushroom-data"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"mushroom"</span><span class="op">)</span></code></pre></div>
-<div class="section level2">
-<h2 id="mushroom-data">Mushroom data<a class="anchor" aria-label="anchor" href="#mushroom-data"></a>
-</h2>
 <p>We begin by forming the necessary vectors for analysis. The data has <span class="math inline">\(n=8124\)</span> rows and <span class="math inline">\(p=23\)</span> columns. The first column contains the poisonous status of each mushroom with two possible values, “p” for “poisonous” and “e” for edible, it will serve as the clustering we seek to recover. The remaining variables are used for clustering. Note that we only use a subset of the data for illustration purpose here.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">X</span> <span class="op">=</span> <span class="va">mushroom</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>
@@ -178,59 +175,221 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <span class="va">label</span> <span class="op">=</span> <span class="va">mushroom</span><span class="op">$</span><span class="va">edibility</span><span class="op">[</span><span class="va">subset</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span><span class="va">subset</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span>
 <span class="co">#&gt;      V2 V3 V4 V5 V6 V7 V8 V9 V10 V11</span>
-<span class="co">#&gt; 7452  k  s  n  f  f  f  c  n   b   t</span>
-<span class="co">#&gt; 8016  k  f  w  f  n  f  w  b   p   e</span>
-<span class="co">#&gt; 7162  k  s  n  f  s  f  c  n   b   t</span>
-<span class="co">#&gt; 8086  k  f  w  f  n  f  w  b   g   e</span>
-<span class="co">#&gt; 7269  x  y  e  f  s  f  c  n   b   t</span>
-<span class="co">#&gt; 1004  x  s  w  t  p  f  c  n   w   e</span></code></pre></div>
+<span class="co">#&gt; 7782  k  y  e  f  s  f  c  n   b   t</span>
+<span class="co">#&gt; 1459  x  s  n  f  n  f  w  b   h   t</span>
+<span class="co">#&gt; 2742  f  f  g  t  n  f  c  b   p   t</span>
+<span class="co">#&gt; 4154  x  y  g  f  f  f  c  b   p   e</span>
+<span class="co">#&gt; 1267  f  f  g  f  n  f  w  b   p   t</span>
+<span class="co">#&gt; 4593  f  y  y  f  f  f  c  b   p   e</span></code></pre></div>
 <div class="section level4">
 <h4 id="clustering">Clustering<a class="anchor" aria-label="anchor" href="#clustering"></a>
 </h4>
-<p>The clustering is again done via the main function <code><a href="../reference/greed.html">greed()</a></code> with argument <code>model</code> set to LCA and the genetic hybrid algorithm for ICLex maximization. The value of the <span class="math inline">\(\beta\)</span> hyperparameter for the Dirichlet prior on <span class="math inline">\(\theta_{kj}\)</span> can be specified by the user, it defaults to 1. The Lca model may only be used with datasets stored in a data.frame object with only factors, when such data are provided to the greed function the Lca model is picked by default. To perform the clustering it therefore sufficient to call greed with the prepared data.frame.</p>
+<p>The clustering is done via the main function <code><a href="../reference/greed.html">greed()</a></code> with argument <code>model</code> set to LCA and the genetic hybrid algorithm for ICLex maximization. The value of the <span class="math inline">\(\beta\)</span> hyper-parameter for the Dirichlet prior on <span class="math inline">\(\theta_{kj}\)</span> can be specified by the user, it defaults to 1.</p>
+<blockquote>
+<p><strong>Note:</strong> The <code>Lca</code> model may only be used with datasets stored in a data.frame object containing factors only. When such data are provided to the <code><a href="../reference/greed.html">greed()</a></code> function, an <code>Lca</code> model is picked by default. To perform the clustering, it is therefore sufficient to call greed with the prepared data.frame.</p>
+</blockquote>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sol_greed</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span><span class="va">subset</span>,<span class="op">]</span><span class="op">)</span>
-<span class="co">#&gt; ------- LCA model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -12902 and 14 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -12836 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -12822 and 16 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -12822 and 16 clusters #################</span>
-<span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a LCA model, 14 clusters and an icl of -12775.</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span>Edibility<span class="op">=</span><span class="va">label</span>, Cluster<span class="op">=</span><span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol_greed</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;          Cluster</span>
-<span class="co">#&gt; Edibility   1   2   3   4   5   6   7   8   9  10  11  12  13  14</span>
-<span class="co">#&gt;         e   0   0   0  14  26  43  24  72   0  15  11  71  31 218</span>
-<span class="co">#&gt;         p 201 162   5   7   7   0   0   0  35  24  34   0   0   0</span></code></pre></div>
-<p>The hybrid genetic algorithm found a solution with <span class="math inline">\(K=14\)</span> clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. The ARI of the partition is 0.26 which is explained by the over-segmentation of the solution compared to the <span class="math inline">\(2\)</span>-class problem.</p>
+<code class="sourceCode R"><span class="va">sol_mush</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span><span class="va">subset</span>,<span class="op">]</span>, model<span class="op">=</span><span class="fu"><a href="../reference/Lca.html">Lca</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a LCA model</span> ──</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -12673 and 14 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -12612 and 14 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -12603 and 12 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -12603 and 12 clusters.</span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ── Clustering with a LCA model 12 clusters and an ICL of -12603</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span>Edibility<span class="op">=</span><span class="va">label</span>, Cluster<span class="op">=</span><span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol_mush</span><span class="op">)</span><span class="op">)</span>, format<span class="op">=</span><span class="st">'html'</span>, row.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<table class="table">
+<thead><tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+1
+</th>
+<th style="text-align:right;">
+2
+</th>
+<th style="text-align:right;">
+3
+</th>
+<th style="text-align:right;">
+4
+</th>
+<th style="text-align:right;">
+5
+</th>
+<th style="text-align:right;">
+6
+</th>
+<th style="text-align:right;">
+7
+</th>
+<th style="text-align:right;">
+8
+</th>
+<th style="text-align:right;">
+9
+</th>
+<th style="text-align:right;">
+10
+</th>
+<th style="text-align:right;">
+11
+</th>
+<th style="text-align:right;">
+12
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+e
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+92
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+74
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+221
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p
+</td>
+<td style="text-align:right;">
+173
+</td>
+<td style="text-align:right;">
+209
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+46
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+37
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p>The hybrid genetic algorithm found a solution with <span class="math inline">\(K=12\)</span> clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. Partition’s NMI is 0.29 which is explained by the over-segmentation of the solution compared to the <span class="math inline">\(2\)</span>-class problem.</p>
 </div>
 <div class="section level4">
-<h4 id="hierarchy">Hierarchy<a class="anchor" aria-label="anchor" href="#hierarchy"></a>
+<h4 id="analysis-of-the-hierarchy">Analysis of the hierarchy<a class="anchor" aria-label="anchor" href="#analysis-of-the-hierarchy"></a>
 </h4>
 <p>Exploring the dendrogram provided by the hierarchical algorithm is quite useful in this case. We clearly see a hierarchical structure appearing with <span class="math inline">\(K=2\)</span> main clusters. Thus, we can cut the tree at this height and look at the solution.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol_greed</span>, type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
-<p><img src="LCA_files/figure-html/dendo-mushroom-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sol2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">sol_greed</span>, <span class="fl">2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span>Edibility<span class="op">=</span><span class="va">label</span>, Cluster<span class="op">=</span><span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;          Cluster</span>
-<span class="co">#&gt; Edibility   1   2</span>
-<span class="co">#&gt;         e   0 525</span>
-<span class="co">#&gt;         p 363 112</span></code></pre></div>
-<p>Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is 0.6. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the <a href="https://archive.ics.uci.edu/ml/datasets/Mushroom" class="external-link">way the labels have been set</a>, since mushrooms for which the edibility status was <em>unknown</em> were classified as <em>poisonous</em> by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ’‘’’. Thus, the unsupervised problem is hard and the obtained clustering is satisfying on this unsupervised problem. Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="young-people-survey-data">Young people survey data<a class="anchor" aria-label="anchor" href="#young-people-survey-data"></a>
-</h2>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol_mush</span>, type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
+<p><img src="LCA_files/figure-html/dendo-mushroom-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sol2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">sol_mush</span>, <span class="fl">2</span><span class="op">)</span>
+<span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span>Edibility<span class="op">=</span><span class="va">label</span>, Cluster<span class="op">=</span><span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol2</span><span class="op">)</span><span class="op">)</span>, format<span class="op">=</span><span class="st">'html'</span>, row.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<table class="table">
+<thead><tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+1
+</th>
+<th style="text-align:right;">
+2
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+e
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+502
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p
+</td>
+<td style="text-align:right;">
+382
+</td>
+<td style="text-align:right;">
+116
+</td>
+</tr>
+</tbody>
+</table>
+<p>Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is 0.57. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the <a href="https://archive.ics.uci.edu/ml/datasets/Mushroom" class="external-link">way the labels have been set</a>, since mushrooms for which the edibility status was <em>unknown</em> were classified as <em>poisonous</em> by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ’‘’’. Thus, the unsupervised problem is hard and the obtained clustering is already satisfactory. Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="young-people-survey-data">Young people survey data<a class="anchor" aria-label="anchor" href="#young-people-survey-data"></a>
+</h3>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Youngpeoplesurvey"</span><span class="op">)</span></code></pre></div>
-<p>We begin by preprocessing the data, only keeping the categorical variable. The original dataset has <span class="math inline">\(n=1010\)</span> respondents for <span class="math inline">\(p=150\)</span>. We keep only the feature related to the musical taste of the respondent and remove potential strike of identical responses. Eventually, the data are cast to factors with an explicit levels for the missing responses.</p>
 <div class="section level4">
 <h4 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
 </h4>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>We begin by preprocessing the data, only keeping the categorical variable. The original dataset has <span class="math inline">\(n=1010\)</span> respondents for <span class="math inline">\(p=150\)</span>. We keep only the feature related to the musical taste of the respondent and remove potential strike of identical responses. Eventually, the data are cast to factors with an explicit levels for the missing responses.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc</span>  <span class="op">=</span> <span class="fl">19</span>
 
 <span class="va">selected</span> <span class="op">=</span> <span class="va">Youngpeoplesurvey</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
@@ -250,21 +409,22 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
   <span class="fu"><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="hierarchy-1">Hierarchy<a class="anchor" aria-label="anchor" href="#hierarchy-1"></a>
+<h4 id="hierarchical-clustering">Hierarchical clustering<a class="anchor" aria-label="anchor" href="#hierarchical-clustering"></a>
 </h4>
 <p>As previouslythe clustering is obtained with a call to greed and the Lca generative model will be taken by default since the dataset is a data.frame with factors only.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sol</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>
-<span class="co">#&gt; ------- LCA model fitting ------</span>
-<span class="co">#&gt; ################# Generation  1: best solution with an ICL of -27481 and 9 clusters #################</span>
-<span class="co">#&gt; ################# Generation  2: best solution with an ICL of -27478 and 10 clusters #################</span>
-<span class="co">#&gt; ################# Generation  3: best solution with an ICL of -27445 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  4: best solution with an ICL of -27418 and 7 clusters #################</span>
-<span class="co">#&gt; ################# Generation  5: best solution with an ICL of -27418 and 7 clusters #################</span>
-<span class="co">#&gt; ------- Final clustering -------</span>
-<span class="co">#&gt; ICL clustering with a LCA model, 6 clusters and an icl of -27415.</span></code></pre></div>
-<p>The algorithm found <span class="math inline">\(K=6\)</span> clusters which are quite balanced. To explore the results, we plot the dendogram found.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sol</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a LCA model</span> ──</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -27492 and 10 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -27492 and 10 clusters.</span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; ── Clustering with a LCA model 8 clusters and an ICL of -27443</span></code></pre></div>
+<p>The algorithm found <span class="math inline">\(K=8\)</span> clusters which are quite balanced. To explore the results, we plot the dendogram found.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
 <p><img src="LCA_files/figure-html/survey-lca-plot1-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
@@ -272,32 +432,37 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <h4 id="clustering-analysis">Clustering analysis<a class="anchor" aria-label="anchor" href="#clustering-analysis"></a>
 </h4>
 <p>We may also used the <code>marginals</code> plot to depict the conditional probabilities of the different responses knowing the clusters assignment.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'marginals'</span><span class="op">)</span></code></pre></div>
 <p><img src="LCA_files/figure-html/survey-lca-plot2-1.png" width="100%"></p>
-<p>The cluster appears to be quite different and coherent. If needed, we may get the estimated conditional probabilities with the help of the generic function <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code>.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
-<span class="va">params</span><span class="op">$</span><span class="va">Thetak</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Country"</span>,<span class="st">"Latino"</span><span class="op">)</span><span class="op">]</span>
-<span class="co">#&gt; $Country</span>
-<span class="co">#&gt;                  1         2         3          4           5          NA</span>
-<span class="co">#&gt; cluster1 0.5781991 0.2843602 0.1137441 0.01895735 0.000000000 0.004739336</span>
-<span class="co">#&gt; cluster2 0.2333333 0.3500000 0.1666667 0.18333333 0.066666667 0.000000000</span>
-<span class="co">#&gt; cluster3 0.5508982 0.2455090 0.1257485 0.02994012 0.041916168 0.005988024</span>
-<span class="co">#&gt; cluster4 0.1941176 0.3352941 0.3058824 0.11764706 0.029411765 0.017647059</span>
-<span class="co">#&gt; cluster5 0.1509434 0.1509434 0.1320755 0.28301887 0.283018868 0.000000000</span>
-<span class="co">#&gt; cluster6 0.2082111 0.4633431 0.2375367 0.08797654 0.002932551 0.000000000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $Latino</span>
-<span class="co">#&gt;                   1          2         3          4          5          NA</span>
-<span class="co">#&gt; cluster1 0.31279621 0.25118483 0.1895735 0.10900474 0.12322275 0.014218009</span>
-<span class="co">#&gt; cluster2 0.26666667 0.15000000 0.3500000 0.11666667 0.11666667 0.000000000</span>
-<span class="co">#&gt; cluster3 0.49101796 0.32335329 0.1257485 0.01197605 0.04790419 0.000000000</span>
-<span class="co">#&gt; cluster4 0.07058824 0.29411765 0.3000000 0.24705882 0.08235294 0.005882353</span>
-<span class="co">#&gt; cluster5 0.01886792 0.01886792 0.1132075 0.11320755 0.71698113 0.018867925</span>
-<span class="co">#&gt; cluster6 0.02639296 0.24340176 0.2844575 0.26979472 0.16715543 0.008797654</span></code></pre></div>
-<p>To show in another way the clusters structure we will use word clouds of feature names with a color encoding that depict if the feature has an average score greater than the average score of the whole population. With this representation big blue feature correspond to music type that score higher than the mean in this cluster and big red feature to music type that have a smaller score than the mean in the corresponding group.</p>
+<p>The clusters appear to be quite different and coherent. For example, the seveth group (second top row, in purple) display a strong tendency to like Opera and Classical music and dislike more <em>modern</em> genres (Techno, Trance, Punk or Hi-Hop), whereas the 8th group (top row, in pink) corresponds to music lovers with quite eclectic musical taste across the proposed survey’s genres.</p>
+<blockquote>
+<p>In addition, the conditional maximum a posteriori estimates of <span class="math inline">\(\theta{kj}\)</span> are qvailable through the <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> method.</p>
+</blockquote>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
+<table class="table">
+<caption>
+Country
+</caption>
+<thead><tr>
+<th style="text-align:left;">
+</th>
+</tr></thead>
+<tbody><tr></tr></tbody>
+</table>
+<table class="table">
+<caption>
+Latino
+</caption>
+<thead><tr>
+<th style="text-align:left;">
+</th>
+</tr></thead>
+<tbody><tr></tr></tbody>
+</table>
+<p>Cluster structures may also be visualized with a word clouds of feature names. In this representation, a color encodes if the feature has an average score greater than the average score of the whole population. A big blue feature corresponds to music type that scores higher than the mean in this cluster and big red feature to music type that have a smaller score than the mean in the corresponding group.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
 <span class="va">means_scores</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">Thetak</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,<span class="fl">1</span>,<span class="kw">function</span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">{</span>
@@ -328,7 +493,7 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_color_gradient2</a></span><span class="op">(</span>guide<span class="op">=</span><span class="st">"none"</span><span class="op">)</span><span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">cluster</span><span class="op">)</span></code></pre></div>
 <p><img src="LCA_files/figure-html/posplot-1.png" width="100%"></p>
-<p>Using such a visualization allow to easily describe the different groups. The first cluster is close to the global mean, the second corresponds to Classical music and Opera lovers, the third to peoples that like almost all the musical genres, the forth to Rockers, the Fifth to Hard Rockers and the sixth to Rap lovers.</p>
+<p>Using such a visualization allow to easily describe the different groups. The first cluster tends to dislike almost all surveyed musical genres, the second almost exlusively likes Dance music, the third have tastes close to the global mean of the dataset, the forth and sixths correspond to Hard-Rockers, the fifth to Rockers, the seventh to exclusive Opera and Classical music lover, and the eight to people with eclectic taste liking almost every surveyed music genres.</p>
 </div>
 </div>
 </div>
@@ -351,7 +516,7 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
