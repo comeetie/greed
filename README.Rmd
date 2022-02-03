@@ -11,6 +11,8 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/",
   out.width = "60%"
 )
+library(knitr)
+# library(kableExtra)
 set.seed(2134)
 ```
 
@@ -139,8 +141,6 @@ Alongside with the previous graph clustering example below, we give a preview of
 
 ## Continuous data clustering with GMM
 
-See the `vignette("GMM")` for an in-depth tutorial.
-
 Here, we use the diabetes dataset of `mclust`. `X_cont` is a $145 \times 3$ design matrix, and a full-covariance `Gmm` model is specified as a model prior.
 
 
@@ -163,18 +163,17 @@ gmmpairs(sol_cont, X_cont)
 plot(sol_cont, type='violins')
 ```
  
+> See the `vignette("GMM")` for an in-depth tutorial.
 
 
-### Categorical data clustering 
-
-See the `vignette("LCA")` for details.
+### Categorical data clustering with latent class analysis
 
 Categorical data are typically found in 
 
  * Item response theory  
  * Questionnaires
  
-As an illustrative example, we use an extraction from the `?Youngpeoplesurvey` quetionaire data, where each variable is an answer 
+As an illustrative example, we use an extraction from the `?Youngpeoplesurvey` questionaire data, where each variable is an answer to "On a scale of 1 to 5 (NA allowed), how do you like musical genre [X]", for 19 musical genres [X]. Next table shows a quick glimpse at the data.
 
 ```{r datayoungpeople,message=FALSE}
 data("Youngpeoplesurvey")
@@ -202,17 +201,41 @@ X = Xnum %>%
     factor(x,levels=c(1:5,"NA"))
     }) %>%
   droplevels()
+
+subset = sample(1:nrow(X), size = 200 , replace = F)
+X = X[subset,]
 ```
 
+```{r, echo=F, include=TRUE}
+head(X[,2:8])
+```
 
-### Graphs, SBM like models
+Plot the frequency of each modality inside each cluster for all categorical variables. The size of the point represents the frequency, the bigger the point, the larger the frequency.
+```{r survey-lca-cust,fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
+sol=greed(X)
+plot(sol,type='marginals') 
+```
 
-See the `vignette("SBM")` for details.
+> See the `vignette("LCA")` for details.
 
-### Mixture of Regression
 
-See the `vignette("MoR")` for details.
+## Graph clustering, SBM like models
 
-### Advanced models`
+The SBM allows handling categorical edges for graphs encoding complex, non-binary interaction. This is done through a multinomial SBM implemented in the `MultSbm` S4 class. A dedicated `plot` function is available, representing aggregated adjacency matrix for each modality/interaction/*view*.
 
-See the `vignette("Mixed Models")`for details.
+```{r}
+data("NewGuinea")
+dim(NewGuinea)
+sol_newguinea = greed(NewGuinea,model=MultSbm())
+plot(sol_newguinea,type='blocks')
+```
+
+> See the `vignette("SBM")` for details.
+
+## Mixture of Regression
+
+> See the `vignette("MoR")` for details.
+
+## Advanced models`
+
+> See the `vignette("Mixed Models")`for details.
