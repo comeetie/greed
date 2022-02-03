@@ -76,6 +76,12 @@
     <li>
       <a href="../articles/Mixed-Models.html">Mixed Models</a>
     </li>
+    <li>
+      <a href="../articles/MoM.html">Mixture of Multinomials</a>
+    </li>
+    <li>
+      <a href="../articles/LBM.html">Co-clustering and LBM</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -113,14 +119,17 @@
 
     
     
+<style type="text/css">
+p.caption {
+  font-style: italic;
+}
+</style>
 <p>Loads packages.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span> <span class="co"># allows parralel processing in greed()</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/" class="external-link">greed</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mclust-org.github.io/mclust/" class="external-link">mclust</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
-<span class="co">#&gt; Warning in register(): Can't find generic `scale_type` in package ggplot2 to</span>
-<span class="co">#&gt; register S3 method.</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2134</span><span class="op">)</span>
 
 <span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="st">"multisession"</span>, workers<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="co"># may be increased </span></code></pre></div>
@@ -154,7 +163,7 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_{k})\\
 </h2>
 <p>Let us describe a first use case on the <code>diabetes</code> dataset from the <strong>mclust</strong> package. The data describes <span class="math inline">\(p=3\)</span> biological variables for <span class="math inline">\(n=145\)</span> patients with <span class="math inline">\(K=3\)</span> different types of diabetes: normal, overt and chemical. We are interested in the clustering of this dataset to see if the three biological variables can discriminate between the three diabetes type.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">diabetes</span>,package<span class="op">=</span><span class="st">"mclust"</span><span class="op">)</span>
 <span class="va">X</span><span class="op">=</span><span class="va">diabetes</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>
 <span class="va">X</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span> <span class="co"># centering and scaling</span></code></pre></div>
 <div class="section level3">
@@ -172,25 +181,57 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_{k})\\
 <span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -278 and 5 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a GMM model 3 clusters and an ICL of -261</span>
-<span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">'\n Confusion table'</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  Confusion table</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, format<span class="op">=</span><span class="st">'html'</span>, row.names<span class="op">=</span><span class="cn">T</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; |         |  1|  2|  3|</span>
-<span class="co">#&gt; |:--------|--:|--:|--:|</span>
-<span class="co">#&gt; |Chemical |  1| 23| 12|</span>
-<span class="co">#&gt; |Normal   |  0|  4| 72|</span>
-<span class="co">#&gt; |Overt    | 26|  7|  0|</span></code></pre></div>
-<p>The optimal clustering found by the hybrid GA has <span class="math inline">\(K^\star=3\)</span> clusters and roughly corresponds to the known groups with cluster 1,2 and 3 recovering overt, chemical and normal diabetes respectively, with some missclassifications that are expected with GMM clustering on this dataset.</p>
-<p>To get an overview of the clustering results, you may use the <code><a href="../reference/gmmpairs.html">gmmpairs()</a></code> plot function which displays the scatter plot matrix, colored by cluster membership, with estimated Gaussian ellipses in each cluster via maximum a posteriori:</p>
+<span class="co">#&gt; ── Clustering with a GMM model 3 clusters and an ICL of -261</span></code></pre></div>
+<p>The optimal clustering found by the hybrid GA has <span class="math inline">\(K^\star=3\)</span> clusters. You may then easily extract the found clustering with the <code><a href="../reference/clustering.html">clustering()</a></code> method and compare it with the known classes:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">sol</span>,<span class="va">X</span><span class="op">)</span> </code></pre></div>
-<p><img src="GMM_files/figure-html/diabetes-gmm-FIG-1.png" width="90%"></p>
-<p>If a user wants to experiment with other values of the prior hyperparameters, the most important is <span class="math inline">\(\mathbf{\varepsilon}\)</span>, which control the clusters’ covariance matrices Wishart prior. This amounts to specify the prior on the dispersion inside each class. For instance, one may specify a priori belief that the variance is small inside clusters, which amounts to diminish the <span class="math inline">\(0.1\)</span> coefficient in front of <span class="math inline">\(\hat{\mathbf{\Sigma}}_{\mathbf{X}}\)</span>. In this case, it makes sense to decrease <span class="math inline">\(\tau\)</span> in the same proportions to keep a flat priors on the clusters means. For the diabetes data such a choice leads to an interesting solution, where the strong prior constraint leads to one cluster being created to fit one outlier in the “chemical” diabetes.</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">3</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Chemical</td>
+<td align="right">1</td>
+<td align="right">23</td>
+<td align="right">12</td>
+</tr>
+<tr class="even">
+<td align="left">Normal</td>
+<td align="right">0</td>
+<td align="right">4</td>
+<td align="right">72</td>
+</tr>
+<tr class="odd">
+<td align="left">Overt</td>
+<td align="right">26</td>
+<td align="right">7</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>It roughly corresponds to the known groups with cluster 1,2 and 3 recovering overt, chemical and normal diabetes respectively, with some missclassifications that are expected with GMM clustering on this dataset.</p>
+<p>To get an overview of the clustering results, you may also use the <code><a href="../reference/gmmpairs.html">gmmpairs()</a></code> plot function which displays the scatter plot matrix, colored by cluster membership, with estimated Gaussian ellipses in each cluster via maximum a posteriori:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">sol</span>,<span class="va">X</span><span class="op">)</span> </code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="GMM_files/figure-html/diabetes-gmm-FIG-1.png" alt="Matrix pairs plots of the clustering with default hyperparameters on the diabetes data." width="90%"><p class="caption">
+Matrix pairs plots of the clustering with default hyperparameters on the diabetes data.
+</p>
+</div>
+<p>Furthermore, users may use the generic <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> function to get the mixture component parameters, or rather their maximum a posteriori estimated conditionally on the partition. The result will be a simple list with fields for each parameters (means: <code>muk</code>, covariance matrices: <code>Sigmak</code>, proportions: <code>pi</code>). Here is an example for the <span class="math inline">\(3\)</span>-component GMM we just extracted, were we extract the mean of the first component.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">params</span><span class="op">)</span>
+<span class="co">#&gt; [1] "pi"     "muk"    "Sigmak"</span>
+<span class="va">params</span><span class="op">$</span><span class="va">muk</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
+<span class="co">#&gt;       glucose  insulin       sspg</span>
+<span class="co">#&gt; [1,] 1.784482 1.848331 -0.8955159</span></code></pre></div>
+<p>If a user wants to experiment with other values of the prior hyperparameters, the most important is <span class="math inline">\(\mathbf{\varepsilon}\)</span>, which control the clusters’ covariance matrices Wishart prior. This amounts to specify the prior on the dispersion inside each class. For instance, one may specify a priori belief that the variance is small inside clusters, which amounts to diminish the <span class="math inline">\(0.1\)</span> coefficient in front of <span class="math inline">\(\hat{\mathbf{\Sigma}}_{\mathbf{X}}\)</span>. In this case, it makes sense to decrease <span class="math inline">\(\tau\)</span> in the same proportions to keep a flat priors on the clusters means. For the diabetes data such a choice leads to an interesting solution, where the strong prior constraint leads to one cluster being created to fit one outlier in the “chemical” diabetes.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol_dense</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="../reference/Gmm.html">Gmm</a></span><span class="op">(</span>epsilon<span class="op">=</span><span class="fl">0.01</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, tau <span class="op">=</span><span class="fl">0.001</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a GMM model</span> ──</span>
@@ -206,21 +247,19 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_{k})\\
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a GMM model 4 clusters and an ICL of -290</span>
-<span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">sol_dense</span>,<span class="va">X</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol_dense</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;           </span>
-<span class="co">#&gt;             1  2  3  4</span>
-<span class="co">#&gt;   Chemical  1  1 23 11</span>
-<span class="co">#&gt;   Normal    0  0  2 74</span>
-<span class="co">#&gt;   Overt    27  0  6  0</span></code></pre></div>
-<p><img src="GMM_files/figure-html/diabetes-gmm-0.01-1.png" width="90%"></p>
+<span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">sol_dense</span>,<span class="va">X</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="GMM_files/figure-html/diabetes-gmm-0.01-1.png" alt="Matrix pairs plots of the clustering with user specified hyperparameters on the diabetes data." width="90%"><p class="caption">
+Matrix pairs plots of the clustering with user specified hyperparameters on the diabetes data.
+</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="diagonal-covariance-matrix">Diagonal covariance matrix<a class="anchor" aria-label="anchor" href="#diagonal-covariance-matrix"></a>
 </h3>
 <p>When the number of variables <span class="math inline">\(p\)</span> becomes large, it can be of interest to reduce the flexibility of a GMM by adding a specific set of constraints. The diagonal covariance model, with constraint <span class="math inline">\(\mathbf{\Sigma}_k = \textrm{diag}(\sigma_{k1}, \ldots, \sigma_{kp})\)</span>, is implemented in the <strong>greed</strong> package through its <code>DiagGmm</code> S4 class. Its hierarchical formulation is similar to unconstrained GMM, except the Wishart prior on <span class="math inline">\(\mathbf{\Sigma}_k\)</span> is now replaced by a Gamma prior on each <span class="math inline">\(\sigma_{kj}\)</span> with shape <span class="math inline">\(\kappa\)</span> and rate <span class="math inline">\(\beta\)</span> hyperparameters defaulted to <span class="math inline">\(1\)</span> and mean of the empirical columns variances respectively.</p>
 <p>Fitting this model on the diabetes dataset, <code><a href="../reference/greed.html">greed()</a></code> with an hybrid GA finds a <span class="math inline">\(4\)</span>-components diagonal GMM.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">soldiag</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="../reference/DiagGmm.html">DiagGmm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a DIAGGMM model</span> ──</span>
@@ -232,51 +271,108 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_{k})\\
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a DIAGGMM model 4 clusters and an ICL of -282</span>
-<span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">soldiag</span>,<span class="va">X</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">soldiag</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;           </span>
-<span class="co">#&gt;             1  2  3  4</span>
-<span class="co">#&gt;   Chemical 10 26  0  0</span>
-<span class="co">#&gt;   Normal   72  4  0  0</span>
-<span class="co">#&gt;   Overt     0  7 15 11</span></code></pre></div>
-<p><img src="GMM_files/figure-html/diabetes-diaggmm-1.png" width="90%"></p>
-<p>Moreover, we may investigate coarser partitions when inspecting the hierarchical clustering dendrogram and using the <code><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut()</a></code> method at any level of the hierarchy. Here is the solution at <span class="math inline">\(K=3\)</span>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">soldiag</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span>
-<span class="va">solK3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">soldiag</span>, K<span class="op">=</span><span class="fl">3</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">solK3</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;           </span>
-<span class="co">#&gt;             1  2  3</span>
-<span class="co">#&gt;   Chemical 10 26  0</span>
-<span class="co">#&gt;   Normal   72  4  0</span>
-<span class="co">#&gt;   Overt     0  7 26</span></code></pre></div>
-<p><img src="GMM_files/figure-html/diabetes-diaggmm-cut-1.png" width="60%"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">solK3</span>,<span class="va">X</span><span class="op">)</span></code></pre></div>
-<p><img src="GMM_files/figure-html/diabetes-diaggmm-cut-pairs-1.png" width="90%"></p>
-<p>Again, the clusters are relevant compared to the known groups.</p>
-<!-- **Pas sûr du tout de cette section** -->
-<!-- Furthermore, we may compare the ICL values between the full and diagonal models: -->
-<!-- ```{r icl-comp} -->
-<!-- cat('Full GMM has an ICL = ', ICL(sol), '.\n') -->
-<!-- cat('Diagonal GMM has an ICL = ', ICL(soldiag), '.\n') -->
-<!-- ``` -->
-<!-- The full model seems preferable on this dataset.  -->
-<p>Furthermore, users may use the generic <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> function to get the mixture component parameters, or rather their maximum a posteriori estimated conditionally on the partition. Here is an example for the <span class="math inline">\(3\)</span>-component diagonal GMM we just extracted from the hierarchy.</p>
+<span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">soldiag</span>,<span class="va">X</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="GMM_files/figure-html/diabetes-diaggmm-1.png" alt="Matrix pairs plots of the Diagonal GMM clustering with default parameters on the diabetes data." width="90%"><p class="caption">
+Matrix pairs plots of the Diagonal GMM clustering with default parameters on the diabetes data.
+</p>
+</div>
+<p>As previously, the clustering is quite aligned with the known groups except that now two clusters were needed to fit the “overt” class which presents an important ellongation.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">solK3</span><span class="op">)</span>
-<span class="va">params</span><span class="op">$</span><span class="va">Sigmak</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>
-<span class="co">#&gt;            [,1]      [,2]     [,3]</span>
-<span class="co">#&gt; [1,] 0.05378706 0.0000000 0.000000</span>
-<span class="co">#&gt; [2,] 0.00000000 0.1324993 0.000000</span>
-<span class="co">#&gt; [3,] 0.00000000 0.0000000 1.691815</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">soldiag</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">3</th>
+<th align="right">4</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Chemical</td>
+<td align="right">10</td>
+<td align="right">26</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Normal</td>
+<td align="right">72</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Overt</td>
+<td align="right">0</td>
+<td align="right">7</td>
+<td align="right">15</td>
+<td align="right">11</td>
+</tr>
+</tbody>
+</table>
+<p>Moreover, we may investigate coarser partitions when inspecting a clustering. To plot the dendogram, one may simply use the plot function with the type option set to <code>'tree'</code>:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">soldiag</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="GMM_files/figure-html/diabetes-diaggmm-tree-1.png" alt="Dendogram extracted with a DiagGmm model on the diabetes data." width="60%"><p class="caption">
+Dendogram extracted with a DiagGmm model on the diabetes data.
+</p>
+</div>
+<p>Then, one may use the <code><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut()</a></code> to extract a new clustering at any level of the hierarchy. Here is the solution at <span class="math inline">\(K=3\)</span>:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">solK3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">soldiag</span>, K<span class="op">=</span><span class="fl">3</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">solK3</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">3</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Chemical</td>
+<td align="right">10</td>
+<td align="right">26</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Normal</td>
+<td align="right">72</td>
+<td align="right">4</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Overt</td>
+<td align="right">0</td>
+<td align="right">7</td>
+<td align="right">26</td>
+</tr>
+</tbody>
+</table>
+<p>Again, the clusters are relevant compared to the known groups.</p>
+<p>Eventually, we may compare the ICL values between the full and diagonal models, using the <code>ICL</code> method and compute their difference to get a quantity similar to Bayes factor with the difference that the partition was not marginalized out, but optimized.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">'Full GMM has an ICL = '</span>, <span class="fu"><a href="../reference/ICL.html">ICL</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>, <span class="st">'.\n'</span><span class="op">)</span>
+<span class="co">#&gt; Full GMM has an ICL =  -260.9632 .</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">'Diagonal GMM has an ICL = '</span>, <span class="fu"><a href="../reference/ICL.html">ICL</a></span><span class="op">(</span><span class="va">soldiag</span><span class="op">)</span>, <span class="st">'.\n'</span><span class="op">)</span>
+<span class="co">#&gt; Diagonal GMM has an ICL =  -281.5068 .</span>
+<span class="va">bayesfactor</span> <span class="op">=</span> <span class="fu"><a href="../reference/ICL.html">ICL</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">-</span><span class="fu"><a href="../reference/ICL.html">ICL</a></span><span class="op">(</span><span class="va">soldiag</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">'Bayes factor = '</span>, <span class="va">bayesfactor</span>, <span class="st">'.\n'</span><span class="op">)</span>
+<span class="co">#&gt; Bayes factor =  20.54361 .</span></code></pre></div>
+<p>The full model achieved a quite better fit on this dataset.</p>
+<blockquote>
+<p><strong>Note:</strong> A note on caution on these statistics which take into account the chosen hyperparmaters and may therefore be influenced by the chosen values, as a classical bayes factor.</p>
+</blockquote>
 </div>
 </div>
 <div class="section level2">
 <h2 id="high-dimensional-example-the-fashion-mnist-dataset">High-dimensional example : the fashion MNIST dataset<a class="anchor" aria-label="anchor" href="#high-dimensional-example-the-fashion-mnist-dataset"></a>
 </h2>
 <p>As explained above, diagonal models are attractive when working in high-dimensional settings. Their interest is twofold. First, the number of free parameters in the generative model is reduced, which is useful to reduce computational time even though they are integrated out in the ICL. Second, the prior maybe defined such that it will be less informative. We illustrate this with a subset of the <code>fashion-mnist</code> data provided with the package which contains <span class="math inline">\(p=784\)</span> dimensional vectors (corresponding to 28x28 flattened images of clothing). In this setting, the optimization algorithm is switched to <code>?`seed-class`</code>, which, while a bit less efficient than the hybrid algorithm used by default in <code><a href="../reference/greed.html">greed()</a></code>, has a lowest computational burden since it relies on a single and carefully chosen seeded initialization. In addition, we also increase the initial value for <span class="math inline">\(K\)</span> in order to compensate for the <code>seed</code> method’s inability to find a value of <span class="math inline">\(K\)</span> bigger than its initialization.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"fashion"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">fashion</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>
 <span class="co">#&gt; [1] 1000  784</span>
@@ -288,11 +384,15 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_{k})\\
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a DIAGGMM model 23 clusters and an ICL of -3596642</span></code></pre></div>
 <p>On this more complex dataset, the clustering found by the algorithm has <span class="math inline">\(K=23\)</span> clusters and the dendrogram proves very informative, highlighting the complex structure of these data.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol_fashion</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
-<p><img src="GMM_files/figure-html/fashion-tree-1.png" width="60%"></p>
+<div class="figure" style="text-align: center">
+<img src="GMM_files/figure-html/fashion-tree-1.png" alt="Dendogram extracted with a DiagGmm model on the fashionMNIST data." width="60%"><p class="caption">
+Dendogram extracted with a DiagGmm model on the fashionMNIST data.
+</p>
+</div>
 <p>Finally, the clusters centers look coherent and the hierarchical ordering underlines a form of “geometric proximities” between cluster objects.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">plot_clust_centers</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">sol</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">clust_centers</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">$</span><span class="va">muk</span>
   <span class="va">im_list</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">sol</span><span class="op">@</span><span class="va">K</span>,<span class="kw">function</span><span class="op">(</span><span class="va">k</span><span class="op">)</span><span class="op">{</span>
@@ -309,11 +409,20 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_{k})\\
   <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">gg</span><span class="op">)</span>
 <span class="op">}</span> 
 <span class="fu">plot_clust_centers</span><span class="op">(</span><span class="va">sol_fashion</span><span class="op">)</span></code></pre></div>
-<p><img src="GMM_files/figure-html/fashion-means-1.png" width="90%"></p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="figure" style="text-align: center">
+<img src="GMM_files/figure-html/fashion-means-1.png" alt="Visualization of the clusters centers extracted on the FashionMNIST data." width="90%"><p class="caption">
+Visualization of the clusters centers extracted on the FashionMNIST data.
+</p>
+</div>
+<p>As already demonstrated, the clustering can be cut at a coarser levels, if one wants a more synthetic result. We may for example look at the centers for the <span class="math inline">\(7\)</span>-components clustering:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol_fashion_K7</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">sol_fashion</span>, K<span class="op">=</span><span class="fl">7</span><span class="op">)</span>
 <span class="fu">plot_clust_centers</span><span class="op">(</span><span class="va">sol_fashion_K7</span><span class="op">)</span></code></pre></div>
-<p><img src="GMM_files/figure-html/fashion-K7-1.png" width="700"></p>
+<div class="figure" style="text-align: center">
+<img src="GMM_files/figure-html/fashion-K7-1.png" alt="Visualization of the clusters centers extracted on the FashionMNIST data at a coarser level." width="700"><p class="caption">
+Visualization of the clusters centers extracted on the FashionMNIST data at a coarser level.
+</p>
+</div>
 </div>
   </div>
 
