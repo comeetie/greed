@@ -32,13 +32,13 @@ Greed enables model-based clustering of networks, matrices of count data and muc
 
 Dedicated to clustering and visualization, the package is very general and currently handles the following tasks:
 
- * **Continuous data clustering** with Gaussian Mixture Models. A tutorial is available in `vignette(GMM)`. See also the documentation for the `Gmm` and `DiagGmm` S4 classes.
-  * **Graph data clustering** with the Stochastic Block Model or its degree corrected variants. A tutorial is available in `vignette(LCA)`. See also the documentation for the `Sbm` and `dcSbm` S4 classes.
- * **Categorical data clustering** with the Latent Class Analysis. A tutorial is available in `vignette(LCA)`. See also the documentation for the `Lca` S4 class.
- * **Count data clustering** with the Mixture of Multinomials model. A tutorial will soon be available in `vignette(MoM)`. For now, we refer to the documentation for the `Mom` S4 class.
- * **Mixed-typed** data clustering, *e.g.* categorical and numerical but the package handles virtually any type of data combination by stacking models on top of each data types. For example graph data with continuous or categorical data attached to the nodes are handled. A tutorial is available in `vignette(Mixed-Models)`. See also the documentation for the `MixedModels` S4 class.
- * **Mixture of regression** for simultaneous clustering and fitting a regression model in each cluster.  A tutorial is available in `vignette(MoR)`. See also the documentation for the `MoR` S4 class.
- * **Co-clustering** of binary and count-data via the Latent Block Model and its degree-corrected variant. A tutorial will soon be available in `vignette(LBM)`. For now, we refer to the documentation for the `Mom` S4 class.
+ * **Continuous data clustering** with Gaussian Mixture Models. A tutorial is available in `vignette("GMM")`. See also the documentation for the `Gmm` and `DiagGmm` S4 classes.
+  * **Graph data clustering** with the Stochastic Block Model or its degree corrected variants. A tutorial is available in `vignette("SBM")`. See also the documentation for the `Sbm` and `dcSbm` S4 classes.
+ * **Categorical data clustering** with the Latent Class Analysis. A tutorial is available in `vignette("LCA")`. See also the documentation for the `Lca` S4 class.
+ * **Count data clustering** with the Mixture of Multinomials model. A tutorial will soon be available in `vignette("MoM")`. For now, we refer to the documentation for the `Mom` S4 class.
+ * **Mixed-typed** data clustering, *e.g.* categorical and numerical but the package handles virtually any type of data combination by stacking models on top of each data types. For example graph data with continuous or categorical data attached to the nodes are handled. A tutorial is available in `vignette("Mixed-Models")`. See also the documentation for the `MixedModels` S4 class.
+ * **Mixture of regression** for simultaneous clustering and fitting a regression model in each cluster.  A tutorial is available in `vignette("MoR")`. See also the documentation for the `MoR` S4 class.
+ * **Co-clustering** of binary and count-data via the Latent Block Model and its degree-corrected variant. A tutorial will soon be available in `vignette("LBM")`. For now, we refer to the documentation for the `DcLbm` S4 class.
  
 
 <!-- The following generative models are currently available:  -->
@@ -206,7 +206,7 @@ subset = sample(1:nrow(X), size = 200 , replace = F)
 X = X[subset,]
 ```
 
-```{r, echo=F, include=TRUE}
+```{r, echo=T, include=TRUE}
 head(X[,2:8])
 ```
 
@@ -238,4 +238,4 @@ plot(sol_newguinea,type='blocks')
 
 ## Advanced models`
 
-> See the `vignette("Mixed Models")`for details.
+> See the `vignette("Mixed-Models")`for details.
