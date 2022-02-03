@@ -164,7 +164,7 @@ cat('Bayes factor = ', bayesfactor, '.\n')
 
 The full model achieved a quite better fit on this dataset. 
 
-> **Note:** A note on caution on these statistics which take into account the chosen hyperparmaters and may therefore be influenced by the chosen values, as a classical bayes factor.   
+> **Note:** A note on caution on these statistics which take into account the chosen hyperparmaters and may therefore be influenced by the chosen values, as a classical bayes factor. These value must therefore be chosen with care and eventually their impact investigated with a sensibility analysis.
 
 
 

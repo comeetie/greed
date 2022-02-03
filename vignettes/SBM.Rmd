@@ -5,6 +5,7 @@ author: "Etienne Côme & Nicolas Jouvin"
 output: 
   rmarkdown::html_vignette:
     toc: true
+    toc_depth: 1
     number_sections: true
     fig_caption: yes
 vignette: >
@@ -13,50 +14,34 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup-knitr, include = FALSE, message=FALSE}
+```{r, include = FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.align = "center"
 )
+```
+
+```{css, echo=FALSE}
+p.caption {
+  font-style: italic;
+}
 ```
 
 
 Loads packages and set a future plan for parallel processing.
 ```{r setup-packages,message=FALSE, include=TRUE}
-library(future)
-library(Matrix)
-library(ggplot2)
+library(future) # allows parralel processing in greed()
+library(Matrix) # sparse matrix
+library(ggplot2) # ploting and data 
 library(greed)
 library(dplyr)
 library(ggpubr)
 set.seed(2134)
 
-future::plan("multisession", workers=2) # may be increased 
+future::plan("multisession", workers=5) # may be increased 
 ```
 
-
-```{r ggplot-theme, include=FALSE, echo=FALSE, message=FALSE}
-# set ggplot2's theme options globally
-# th = theme_classic(base_size = 14) +
-#   ggplot2::theme(
-#       # L'ensemble de la figure
-#       plot.title = element_text(size = rel(1), face = "bold", margin = margin(0,0,5,0), hjust = 0),
-#       # Zone où se situe le graphique
-#       # panel.grid.minor = element_blank(),
-#       # panel.border = element_blank(),
-#       # Les axes
-#       axis.title = element_text(size = rel(0.7), face = "bold"),
-#       axis.text = element_text(size = rel(0.55), face = "bold"),
-#       axis.line=element_blank(),
-#       # La légende
-#       legend.title = element_text(size = rel(0.6), face = "bold"),
-#       legend.text = element_text(size = rel(0.6), face = "bold"),
-#       legend.key = element_rect(fill = "transparent", colour = NA),
-#       legend.key.size = unit(1.5, "lines"),
-#       legend.background = element_rect(fill = "transparent", colour = NA)
-#       )
-# ggplot2::theme_set(th)
-```
 
 # The model
 
@@ -90,7 +75,7 @@ Note that the greed package also handles the degree-corrected variant of SBM in 
 
 
 ## Simulation scenario
-We begin by simulating from a hierarchically structured SBM model, with 2 large clusters, each composed of 3 smaller clusters with higher connection probabilities, making a total of 6 clusters.
+We begin by simulating from a hierarchically structured SBM model, with 2 large clusters, each composed of 3 smaller clusters with higher connection probabilities, making a total of 6 clusters. Greed comes shipped with simulation function for the different generative models it handle and we will take advantage of the ``rsbm()` function to simulate an SBM graph with 6 clusters and 400 nodes:
 ```{r, fig.show='hold'}
 N=400
 K=6
@@ -103,28 +88,11 @@ mu = bdiag(lapply(1:(K/Ks), function(k){
 sbm = rsbm(N,pi,mu)
 ```
 
-```{r plot-connectivity-matrix, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5, include=TRUE, echo=FALSE}
-df = expand.grid(x=1:K,y=1:K)
-df$Theta=c(t(matrix(mu)))
-leg_breaks = unique(df$Theta)
-gg = ggplot(df, aes(x = x, y = y, fill=Theta, alpha=Theta)) +
-  geom_tile() +
-  xlab('l') +
-  ylab('k') +
-  ggplot2::scale_fill_distiller("Theta_{k,l}", breaks = leg_breaks, palette="YlOrRd",direction = 1,guide = ggplot2::guide_legend(),limits=c(0,max(leg_breaks))) +
-  ggplot2::scale_alpha("Theta_{k,l}",range=c(0,1),limits=c(0,max(leg_breaks)), breaks = leg_breaks) +
-  ggplot2::coord_fixed() + 
-  ggplot2::theme_bw() +
-  theme(
-    panel.background = element_rect(fill = "transparent"), # bg of the panel
-    plot.background = element_rect(fill = "transparent", color = NA), # bg of the plot
-    panel.grid.major = element_blank(), # get rid of major grid
-    panel.grid.minor = element_blank(), # get rid of minor grid
-    legend.background = element_rect(fill = "transparent"), # get rid of legend bg
-    text = element_text(size=20)
-  )
-gg
+The connectivity pattern used for the simulation, present a small hierarchical structure with two big clusters each composed of three sub clusters with a community like pattern:
+```{r}
+mu %>% as.matrix() %>% knitr::kable()
 ```
+
 
 
 ## Clustering with the greed() function
@@ -133,10 +101,11 @@ gg
 As always, we perform the clustering using the `greed()` function with an `Sbm` model. Note that we need to specify the `Sbm` model, since for squared sparse matrix the default model used is a `DcSbm`. By default, the hybrid genetic algorithm is used, and its default hyperparameters are detailed in ``?`Hybrid-class` ``.
 
 ```{r greed-clustering}
+class(sbm$x)
 sol = greed(sbm$x,model = Sbm())
 ```
 
-We see that the fine-grained clustering structure with $K=6$ clusters is recovered.
+We see that the fine-grained clustering structure with $K=6$ clusters is recovered. For network data, and Sbm like models, greed accept an adjacency matrix of class `Matrix::dgCMatrix` like in the previous example, but the network can also be provided as a simple `matrix` or as an `igraph` object.
 
 ## Inspecting the clustering results
 
@@ -159,8 +128,13 @@ knitr::kable(table(sbm$cl,clustering(sol)), format='html', row.names = T)
 The Maximum a Posteriori (MAP) estimation of $\theta$ and $\pi$ is available through the `coef()` function. Note that the MAP is computed conditionally to the estimated partition returned by `greed`.
 
 ```{r get-coef-greed}
-coef(sol)
+params=coef(sol)
+names(params)
+params$thetakl %>% knitr::kable(digits=3)
 ```
+
+We may observe, as expected, that the MAP estimate of the connectivity pattern is close to the one used for the simualtion.
+
 ## Visualisation tools
 The **greed** package also comes with efficient visualization tools for summarization and exploration. For graph data, it allows to:
 
@@ -172,21 +146,22 @@ Note that, in each case, the ordering of the clusters given by the hierarchical 
 
 ### Block representation of the adjacency matrix
 
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5,fig.cap="Block representation of the SBM results."}
 plot(sol,type='blocks')
 ```
 
 
 
 ### Node link diagram of the clustering result
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5,fig.cap="Cluster and link representation of the SBM results."}
 plot(sol,type='nodelink')
 ```
 
 ### Dendrogram representation of the hierarchical clustering
-```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
+```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5, fig.cap="Dendogram representation of the greed result on the simulated Sbm data."}
 plot(sol,type='tree')
 ```
+
 
 ## Exploring the hierarchy
 Eventually, we can `cut` the dendrogram at any level below `K(sol)` to easily access other partitions in the hierarchy. Here, we access the coarser at $K=2$ and we can still use the different `plot()` functions to visualize these other solutions.
@@ -360,6 +335,7 @@ mod <- MixedModels(list(friends = DcSbmPrior(), enmy = DcSbmPrior()))
 data <- list(friends = NewGuinea[, , 2], enmy = NewGuinea[, , 1])
 sol_bidcsbm <- greed(data, model = mod, K = 5)
 ```
+
 > **Practicalities:** The `MixedModel` class allows any list of observational models. However, they need to be initiated via the following syntax: `<your_desired_model>Prior()`. Without going into technical details, this is necessary to account for the shared aspect of the partition $Z$ between all models.
 
 The algorithm finds $K=2$ clusters here. Since each views has its own obersvational model, it is possible to use the `?extractSubModel()` function to retrieve the fitted observational model for each view. Then, traditional visualization tools may be used. Here, we display the block representation of the clustering for the two modalities, highlighting a pronouced community structure in the *friendship* modality and a strong bipartite structure in the *enmity* modality as before, with no enmity link in the small cluster and few amongst the tribes of the bigger one.
@@ -391,9 +367,5 @@ Here, the algorithm found $K=4$ clusters and we can look at the block matrix rep
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5}
 plot(extractSubModel(sol, "work"), type = "blocks")
 ```
-
-# Bi-partite graphs and co-clustering
-
-This section is still in construction. See ``?`DcLbm-class` `` for further information on co-clustering with the degree corrected Latent Block Model. 
 
 
