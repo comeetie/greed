@@ -242,3 +242,5 @@ ggplot(gg %>% filter(abs(dm)>0.1), aes(label = var, size = abs(dm),color=dm)) +
 ```
 
 Using such a visualization allow to easily describe the different groups. The first cluster tends to dislike almost all surveyed musical genres, the second almost exlusively likes Dance music, the third have tastes close to the global mean of the dataset, the forth and sixths correspond to Hard-Rockers, the fifth to Rockers, the seventh to exclusive Opera and Classical music lover, and the eight to people with eclectic taste liking almost every surveyed music genres.
+
+<!-- dans les plots cluster 1 en bas passer a cluster 1 haut pour lca plot et violins ? !-->
