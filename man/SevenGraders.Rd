@@ -5,7 +5,7 @@
 \alias{SevenGraders}
 \title{SevenGraders data}
 \format{
-A binary array of size (29,29,3) the first layer encodes work relation, the second, the friendship relations. The third, no relations between the two tribes.
+A binary array of size (29,29,3) containing directed graphs. The first layer encodes "getting along in class" while the second encodes the best-friendship (can be one-way). The third encodes the preferred work relation.
 }
 \source{
 \url{https://networks.skewed.de/net/7th_graders}
