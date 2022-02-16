@@ -17,7 +17,7 @@ An object of class \code{list} with two fields;
 }
 }
 \source{
-\href{https://sites.google.com/site/ucinetsoftware/datasets/covert-networks/ndranghetamafia2}{ucinetsoftware/datasets/covert-networks}
+\href{https://sites.google.com/site/ucinetsoftware/datasets/covert-networks}{ucinetsoftware/datasets/covert-networks}
 }
 \usage{
 data(Ndrangheta)
