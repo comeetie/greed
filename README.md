@@ -128,7 +128,7 @@ sol <- greed(Books$X)
 
 You may specify the model you want to use and set the priors parameters
 with the (`model` argument), the optimization algorithm (`alg` argument)
-and the initial number of cluster `K`. Here `Boos$X` is a square sparse
+and the initial number of cluster `K`. Here `Books$X` is a square sparse
 matrix and a graph clustering `` ?`DcSbm-class` `` model will be used by
 default. By default, the Hybrid genetic algorithm is used.
 
@@ -146,42 +146,27 @@ sol <- greed(Books$X,model=Sbm(),alg=Seed(),K=10)
 #> ── Clustering with a SBM model 5 clusters and an ICL of -1316
 ```
 
-## Visualization
+## Result analysis
 
-Many plotting functions are available for exploring the clustering
-results, and all are accessible via the `plot()` S4 method. By default,
-the hierarchical structure found between clusters is returned, as a
-dendrogram:
+The results of `greed()` is an S4 class which depends on the `model`
+argument (here, an SBM) which comes with readily implemented methods:
+`clustering()` to access the estimated partitions, `K()` the estimated
+number of clusters, and `coef()` the (conditional) maximum a posteriori
+of the model parameters.
 
 ``` r
-plot(sol)
+table(Books$label,clustering(sol)) %>% knitr::kable()
 ```
 
-<img src="man/figures/plot-1.png" width="60%" />
-
-However, depending of the specified `model`, a `type` argument may be
-specified. Here, with our graph clustering model, a summary
-representation of the adjacency matrix can be obtained via
-
-``` r
-plot(sol,type='blocks')
-```
-
-<img src="man/figures/tree-1.png" width="60%" /> \#\# Inspecting the
-results
-
-The resulting partition may be extracted with the `?clustering` method,
-as well as the final ICL value with `?ICL`. You may also extract a
-Maximum a Posteriori (MAP) estimation of the model parameters
-(conditionally to the estimated clustering) with the `?coef` method.
+|     |   1 |   2 |   3 |   4 |   5 |
+|:----|----:|----:|----:|----:|----:|
+| c   |  30 |  16 |   2 |   1 |   0 |
+| l   |   0 |   0 |   5 |  25 |  13 |
+| n   |   0 |   7 |   4 |   2 |   0 |
 
 ``` r
-table(clustering(sol))
-#> 
-#>  1  2  3  4  5 
-#> 30 23 11 28 13
-ICL(sol)
-#> [1] -1315.899
+K(sol)
+#> [1] 5
 coef(sol)
 #> $pi
 #> [1] 0.2857143 0.2190476 0.1047619 0.2666667 0.1238095
@@ -195,15 +180,73 @@ coef(sol)
 #> [5,] 0.000000000 0.01337793 0.048951049 0.277472527 0.55128205
 ```
 
-Eventually, one may explore some coarser partitions using the `cut`
-method:
+## Hierarchical
+
+An important aspect of the **greed** package is its hierarchical
+clustering algorithm which extract a set of nested partitions from
+`K=K(sol)` to `K=1`. This hierarchy may be visualized thanks to a
+dendogram representing the fusion order and the level of regularization
+ − log (*α*) needed for each fusion.
 
 ``` r
-sol_K3 = cut(sol, 3)
-plot(sol_K3)
+plot(sol, type='tree') # try also: type="path"
 ```
 
-<img src="man/figures/cut-1.png" width="60%" />
+<img src="man/figures/unnamed-chunk-2-1.png" width="90%" />
+
+Moreover, similar to standard hierarchical algorithm such as `hclust`,
+the `cut()` method allows you to extract a partition at any stage of the
+hierarchy. Its results is still an S4 object, and the S4 methods
+introduced earlier may again be used to investigate the results.
+
+``` r
+sol_K3 = cut(sol, K=3)
+K(sol_K3)
+#> [1] 3
+table(Books$label,clustering(sol_K3)) %>% knitr::kable()
+```
+
+|     |   1 |   2 |   3 |
+|:----|----:|----:|----:|
+| c   |  30 |  18 |   1 |
+| l   |   0 |   5 |  38 |
+| n   |   0 |  11 |   2 |
+
+## Visualization
+
+Finally, the **greed** package propose efficient and model-adapted
+visualization via the `plot()` methods. In this graph clustering
+example, the `"blocks"` and `"nodelink"` display the cluster-aggregated
+adjacency matrix and diagram of the graph respectively. Note that the
+ordering of the clusters is the same than the one computed for the
+dendrogram, greatly enhancing visualization of the hierarchical
+structure.
+
+``` r
+plot(sol,type='blocks')
+plot(sol, type='nodelink')
+```
+
+<img src="man/figures/plot-1.png" width="90%" /><img src="man/figures/plot-2.png" width="90%" />
+
+## Other models
+
+As explained above, the greed package implements many standard models
+and the list may be displayed with
+
+``` r
+available_models()
+```
+
+Many plotting functions are available and, depending of the specified
+`model`, different `type` argument may be specified. For further
+information we refer to the vignettes linked above for each use case.
+
+<!-- > See the `vignette("GMM")` for an in-depth tutorial. -->
+<!-- > See the `vignette("LCA")` for details. -->
+<!-- > See the `vignette("SBM")` for details. -->
+<!-- > See the `vignette("MoR")` for details. -->
+<!-- > See the `vignette("Mixed-Models")`for details. -->
 
 ## Using parallel computing
 
@@ -217,148 +260,3 @@ need to specify the type of back-end you want to use, before calling the
 library(future)
 plan(multisession, workers=2) # may be increased
 ```
-
-# Typical use cases
-
-Alongside with the previous graph clustering example below, we give a
-preview of other use cases and plotting functionalities that are
-model-dependent.
-
-## Continuous data clustering with GMM
-
-Here, we use the diabetes dataset of `mclust`. `X_cont` is a 145 × 3
-design matrix, and a full-covariance `Gmm` model is specified as a model
-prior.
-
-``` r
-data("diabetes", package = "mclust")
-X_cont = diabetes[,-1]
-sol_cont <- greed(X = X_cont, model=Gmm())
-#> 
-#> ── Fitting a GMM model ──
-#> 
-#> ℹ Initializing a population of 20 solutions.
-#> ℹ Generation 1 : best solution with an ICL of -2413 and 6 clusters.
-#> ℹ Generation 2 : best solution with an ICL of -2411 and 6 clusters.
-#> ℹ Generation 3 : best solution with an ICL of -2401 and 3 clusters.
-#> ℹ Generation 4 : best solution with an ICL of -2401 and 3 clusters.
-#> ── Final clustering ──
-#> 
-#> ── Clustering with a GMM model 3 clusters and an ICL of -2401
-table(diabetes$cl,clustering(sol_cont))
-#>           
-#>             1  2  3
-#>   Chemical  0 25 11
-#>   Normal    0  3 73
-#>   Overt    27  6  0
-```
-
-Specific plots are available for this type of models
-
--   Pairs plots
-
-``` r
-gmmpairs(sol_cont, X_cont)
-```
-
-<img src="man/figures/unnamed-chunk-3-1.png" width="90%" />
-
--   Violins plots
-
-``` r
-plot(sol_cont, type='violins')
-```
-
-<img src="man/figures/unnamed-chunk-4-1.png" width="90%" />
-
-> See the `vignette("GMM")` for an in-depth tutorial.
-
-### Categorical data clustering with latent class analysis
-
-Categorical data are typically found in
-
--   Item response theory  
--   Questionnaires
-
-As an illustrative example, we use an extraction from the
-`?Youngpeoplesurvey` questionaire data, where each variable is an answer
-to “On a scale of 1 to 5 (NA allowed), how do you like musical genre
-\[X\]”, for 19 musical genres \[X\]. Next table shows a quick glimpse at
-the data.
-
-``` r
-data("Youngpeoplesurvey")
-```
-
-``` r
-head(X[,2:8])
-#> # A tibble: 6 x 7
-#>   `Slow songs or fast songs` Dance Folk  Country `Classical music` Musical Pop  
-#>   <fct>                      <fct> <fct> <fct>   <fct>             <fct>   <fct>
-#> 1 5                          3     2     1       2                 4       3    
-#> 2 3                          2     2     2       4                 3       3    
-#> 3 5                          3     2     2       4                 3       5    
-#> 4 3                          3     2     1       4                 3       4    
-#> 5 5                          3     3     4       4                 4       4    
-#> 6 4                          4     3     1       5                 3       5
-```
-
-Plot the frequency of each modality inside each cluster for all
-categorical variables. The size of the point represents the frequency,
-the bigger the point, the larger the frequency.
-
-``` r
-sol=greed(X)
-#> 
-#> ── Fitting a LCA model ──
-#> 
-#> ℹ Initializing a population of 20 solutions.
-#> ℹ Generation 1 : best solution with an ICL of -5766 and 5 clusters.
-#> ℹ Generation 2 : best solution with an ICL of -5740 and 6 clusters.
-#> ℹ Generation 3 : best solution with an ICL of -5740 and 6 clusters.
-#> ── Final clustering ──
-#> 
-#> ── Clustering with a LCA model 5 clusters and an ICL of -5730
-plot(sol,type='marginals') 
-```
-
-<img src="man/figures/survey-lca-cust-1.png" width="100%" />
-
-> See the `vignette("LCA")` for details.
-
-## Graph clustering, SBM like models
-
-The SBM allows handling categorical edges for graphs encoding complex,
-non-binary interaction. This is done through a multinomial SBM
-implemented in the `MultSbm` S4 class. A dedicated `plot` function is
-available, representing aggregated adjacency matrix for each
-modality/interaction/*view*.
-
-``` r
-data("NewGuinea")
-dim(NewGuinea)
-#> [1] 16 16  3
-sol_newguinea = greed(NewGuinea,model=MultSbm())
-#> 
-#> ── Fitting a guess MULTSBM model ──
-#> 
-#> ℹ Initializing a population of 20 solutions.
-#> ℹ Generation 1 : best solution with an ICL of -125 and 2 clusters.
-#> ℹ Generation 2 : best solution with an ICL of -125 and 2 clusters.
-#> ── Final clustering ──
-#> 
-#> ── Clustering with a MULTSBM model 2 clusters and an ICL of -125
-plot(sol_newguinea,type='blocks')
-```
-
-<img src="man/figures/unnamed-chunk-7-1.png" width="60%" />
-
-> See the `vignette("SBM")` for details.
-
-## Mixture of Regression
-
-> See the `vignette("MoR")` for details.
-
-## Advanced models\`
-
-> See the `vignette("Mixed-Models")`for details.
