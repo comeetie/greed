@@ -137,3 +137,27 @@ to_multinomial <- function(X) {
   }
   Xc
 }
+
+#' @title Display the list of every currently available DLVM
+#' @description Display the list of every currently available DLVM
+#' @return NULL
+#' @export
+available_models <- function() {
+  cli::cli_rule(left="Implemented DLVM available in the {.pkg greed} package")
+  cli::cli_ol()
+  cli::cli_li("Stochastic Block models (Graphs)")
+  ulid <- cli::cli_ul()
+  cli::cli_li("Binary SBM, see ?Sbm")
+  cli::cli_li("Degree-corrected SBM, see ?DcSbm")
+  cli::cli_end(ulid)
+  cli::cli_li("Gaussian mixture models (Continous)")
+  ulid <- cli::cli_ul()
+  cli::cli_li("Full covariance GMM, see ?Gmm")
+  cli::cli_li("Diagonal covariance GMM, see ?DiagGmm")
+  cli::cli_end(ulid)
+  cli::cli_li("Latent class analysis (factor), see ?Lca")
+  cli::cli_li("Mixture of multinomials (counts), see ?MoM")
+  cli::cli_li("Mixture of regression (continuous), see ?MoR")
+  cli::cli_li("Combined DLVMs (heterogeneous data), see ?MixedModels")
+  cli::cli_li("Degree-corrected latent block model (co-clustering / bi-partite graphs), see ?DcLbm")
+}
