@@ -109,7 +109,7 @@ We illustrate its use on a **graph clustering** example with the
 classical Books network `?Books`.
 
 > More use cases and their specific plotting functionality are described
-> below.
+> in the vignettes.
 
 ``` r
 library(greed)
@@ -180,7 +180,7 @@ coef(sol)
 #> [5,] 0.000000000 0.01337793 0.048951049 0.277472527 0.55128205
 ```
 
-## Hierarchical
+## Inspecting the hierarchy
 
 An important aspect of the **greed** package is its hierarchical
 clustering algorithm which extract a set of nested partitions from

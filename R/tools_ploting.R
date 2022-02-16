@@ -691,7 +691,7 @@ gmmpairs <- function(sol, X) {
       ii <- ii + 1
     }
   }
-  
+
   g_title = grid::textGrob(paste0(class(sol@model), " clustering with ", max(sol@cl), " clusters.\n"),
                      gp=grid::gpar(fontsize=curr_t$text$size,font=4))
   grob.mat <- matrix(lapply(plts.df, function(x) {
@@ -734,7 +734,7 @@ block_lca <- function(sol) {
   })
   plts <- lapply(theta.df, function(x) {
     ggplot2::ggplot(x) +
-      ggplot2::geom_point(ggplot2::aes_(y = ~cluster, x = ~level, fill = ~prob, size = ~prob, color = ~ factor(cluster))) +
+      ggplot2::geom_point(ggplot2::aes_(y = ~(sol@K+1-cluster), x = ~level, fill = ~prob, size = ~prob, color = ~ factor(cluster))) +
       ggplot2::scale_size_area(limits = c(0, 1)) +
       ggplot2::scale_y_continuous(limits = c(0.5, sol@K + 0.5)) +
       ggplot2::theme_bw() +

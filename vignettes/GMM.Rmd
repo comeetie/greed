@@ -15,43 +15,29 @@ vignette: >
 ```{r, include = FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.align = "center"
 )
 ```
+
+```{css, echo=FALSE}
+p.caption {
+  font-style: italic;
+}
+```
+
 Loads packages.
 ```{r setup, include=TRUE, message=FALSE}
 library(future) # allows parralel processing in greed()
 library(greed)
 library(dplyr)
-library(mclust)
 library(ggplot2)
 set.seed(2134)
 
 future::plan("multisession", workers=2) # may be increased 
 ```
 
-```{r ggplot-theme, include=FALSE, echo=FALSE, message=FALSE}
-# set ggplot2's theme options globally
-th = theme_classic(base_size = 14) +
-  ggplot2::theme(
-      # L'ensemble de la figure
-      plot.title = element_text(size = rel(1), face = "bold", margin = margin(0,0,5,0), hjust = 0),
-      # Zone où se situe le graphique
-      # panel.grid.minor = element_blank(),
-      # panel.border = element_blank(),
-      # Les axes
-      axis.title = element_text(size = rel(0.7), face = "bold"),
-      axis.text = element_text(size = rel(0.55), face = "bold"),
-      axis.line=element_blank(),
-      # La légende
-      legend.title = element_text(size = rel(0.6), face = "bold"),
-      legend.text = element_text(size = rel(0.6), face = "bold"),
-      legend.key = element_rect(fill = "transparent", colour = NA),
-      legend.key.size = unit(1.5, "lines"),
-      legend.background = element_rect(fill = "transparent", colour = NA)
-      )
-ggplot2::theme_set(th)
-```
+
 
 
 # The model
@@ -89,7 +75,7 @@ These default values were chosen to accommodate a variety of situation but may b
 Let us describe a first use case on the `diabetes` dataset from the **mclust** package. The data describes $p=3$ biological variables for $n=145$ patients with $K=3$ different types of diabetes: normal, overt and chemical. We are interested in the clustering of this dataset to see if the three biological variables can discriminate between the three diabetes type. 
 
 ```{r load-data}
-data(diabetes)
+data(diabetes,package="mclust")
 X=diabetes[,-1]
 X = data.frame(scale(X)) # centering and scaling
 ```
@@ -107,20 +93,29 @@ sol = greed(X,model=Gmm())
 
 The optimal clustering found by the hybrid GA has $K^\star=3$ clusters. You may then easily extract the found clustering with the `clustering()` method and compare it with the known classes:
 
-```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
+```{r diabetes-gmm-table, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
 table(diabetes$cl,clustering(sol)) %>% knitr::kable()
 ```
 
 It roughly corresponds to the known groups with cluster 1,2 and 3 recovering overt, chemical and normal diabetes respectively, with some missclassifications that are expected with GMM clustering on this dataset. 
 
 To get an overview of the clustering results, you may also use the `gmmpairs()` plot function which displays the scatter plot matrix, colored by cluster membership, with estimated Gaussian ellipses in each cluster via maximum a posteriori:
-```{r diabetes-gmm-FIG, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
+```{r diabetes-gmm-FIG, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5, fig.cap="Matrix pairs plots of the clustering with default hyperparameters on the diabetes data."}
 gmmpairs(sol,X) 
 ```
 
+Furthermore, users may use the generic `coef()` function to get the mixture component parameters, or rather their maximum a posteriori estimated conditionally on the partition. The result will be a simple list with fields for each parameters (means: `muk`,  covariance matrices: `Sigmak`, proportions: `pi`). Here is an example for the $3$-component GMM we just extracted, were we extract the mean of the first component. 
+
+```{r diabetes-diaggmm-cut-params}
+params = coef(sol)
+names(params)
+params$muk[[1]]
+```
+
+
 If a user wants to experiment with other values of the prior hyperparameters, the most important is $\mathbf{\varepsilon}$, which control the clusters' covariance matrices Wishart prior. This amounts to specify the prior on the dispersion inside each class. For instance, one may specify a priori belief that the variance is small inside clusters, which amounts to diminish the $0.1$ coefficient in front of $\hat{\mathbf{\Sigma}}_{\mathbf{X}}$. In this case, it makes sense to decrease $\tau$ in the same proportions to keep a flat priors on the clusters means. For the diabetes data such a choice leads to an interesting solution, where the strong prior constraint leads to one cluster being created to fit one outlier in the "chemical" diabetes.
 
-```{r diabetes-gmm-0.01, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
+```{r diabetes-gmm-0.01, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5, fig.cap="Matrix pairs plots of the clustering with user specified hyperparameters on the diabetes data."}
 sol_dense = greed(X,model=Gmm(epsilon=0.01*diag(diag(cov(X))), tau =0.001))
 gmmpairs(sol_dense,X)
 ``` 
@@ -132,40 +127,46 @@ When the number of variables $p$ becomes large, it can be of interest to reduce 
 
 Fitting this model on the diabetes dataset, `greed()` with an hybrid GA finds a $4$-components diagonal GMM.
 
-```{r diabetes-diaggmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
+```{r diabetes-diaggmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=8, fig.cap="Matrix pairs plots of the Diagonal GMM clustering with default parameters on the diabetes data."}
 soldiag = greed(X,model=DiagGmm())
 gmmpairs(soldiag,X)
+```
+
+As previously, the clustering is quite aligned with the known groups except that now two clusters were needed to fit the "overt" class which presents an important ellongation.
+
+```{r}
 table(diabetes$cl,clustering(soldiag)) %>% knitr::kable()
 ```
 
-Moreover, we may investigate coarser partitions when inspecting the hierarchical clustering dendrogram and using the `cut()` method at any level of the hierarchy. Here is the solution at $K=3$:
-```{r diabetes-diaggmm-cut, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
+Moreover, we may investigate coarser partitions when inspecting a clustering. To plot the dendogram, one may simply use the plot function with the type option set to `'tree'`:
+```{r diabetes-diaggmm-tree, fig.show='hold',out.width="60%",fig.width=8,fig.height=6, fig.cap="Dendogram extracted with a DiagGmm model on the diabetes data."}
 plot(soldiag,type='tree')
+```
+
+Then, one may use the `cut()` to extract a new clustering at any level of the hierarchy. Here is the solution at $K=3$:
+
+```{r diabetes-diaggmm-cut}
 solK3 = cut(soldiag, K=3)
 table(diabetes$cl,clustering(solK3)) %>% knitr::kable()
 ```
 
-
-```{r diabetes-diaggmm-cut-pairs, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
-gmmpairs(solK3,X)
-```
-
 Again, the clusters are relevant compared to the known groups. 
 
-<!-- **Pas sûr du tout de cette section** -->
-<!-- Furthermore, we may compare the ICL values between the full and diagonal models: -->
-<!-- ```{r icl-comp} -->
-<!-- cat('Full GMM has an ICL = ', ICL(sol), '.\n') -->
-<!-- cat('Diagonal GMM has an ICL = ', ICL(soldiag), '.\n') -->
-<!-- ``` -->
 
-<!-- The full model seems preferable on this dataset.  -->
+Eventually, we may compare the ICL values between the full and diagonal models, using the `ICL` method and compute their difference to get a quantity similar to Bayes factor with the difference that the partition was not marginalized out, but optimized. 
 
-Furthermore, users may use the generic `coef()` function to get the mixture component parameters, or rather their maximum a posteriori estimated conditionally on the partition. Here is an example for the $3$-component diagonal GMM we just extracted from the hierarchy.
-```{r diabetes-diaggmm-cut-params}
-params = coef(solK3)
-params$Sigmak[[2]]
+```{r icl-comp}
+cat('Full GMM has an ICL = ', ICL(sol), '.\n')
+cat('Diagonal GMM has an ICL = ', ICL(soldiag), '.\n')
+bayesfactor = ICL(sol)-ICL(soldiag)
+cat('Bayes factor = ', bayesfactor, '.\n')
 ```
+
+The full model achieved a quite better fit on this dataset. 
+
+> **Note:** A note on caution on these statistics which take into account the chosen hyperparmaters and may therefore be influenced by the chosen values, as a classical bayes factor. These value must therefore be chosen with care and eventually their impact investigated with a sensibility analysis.
+
+
 
 
 # High-dimensional example : the fashion MNIST dataset
@@ -180,13 +181,13 @@ sol_fashion=greed(fashion$X,model=DiagGmm(),alg=Seed(),K=60)
 
 On this more complex dataset, the clustering found by the algorithm has $K=23$ clusters and the dendrogram proves very informative, highlighting the complex structure of these data.
 
-```{r fashion-tree, fig.show='hold',out.width="60%",fig.width=8,fig.height=6}
+```{r fashion-tree, fig.show='hold',out.width="60%",fig.width=8,fig.height=6,fig.cap="Dendogram extracted with a DiagGmm model on the fashionMNIST data."}
 plot(sol_fashion,type='tree')
 ```
 
 Finally, the clusters centers look coherent and the hierarchical ordering underlines a form of "geometric proximities" between cluster objects.
 
-```{r fashion-means, fig.show='hold',out.width="90%",fig.width=8,fig.height=8}
+```{r fashion-means, fig.show='hold',out.width="90%",fig.width=8,fig.height=8, fig.cap="Visualization of the clusters centers extracted on the FashionMNIST data."}
 plot_clust_centers <- function(sol) {
   clust_centers = coef(sol)$muk
   im_list=lapply(1:sol@K,function(k){
@@ -205,8 +206,9 @@ plot_clust_centers <- function(sol) {
 plot_clust_centers(sol_fashion)
 ```
 
+As already demonstrated, the clustering can be cut at a coarser levels, if one wants a more synthetic result. We may for example look at the centers for the $7$-components clustering: 
 
-```{r fashion-K7}
+```{r fashion-K7, fig.cap="Visualization of the clusters centers extracted on the FashionMNIST data at a coarser level."}
 sol_fashion_K7 = cut(sol_fashion, K=7)
 plot_clust_centers(sol_fashion_K7)
 ```

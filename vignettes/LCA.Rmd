@@ -1,38 +1,47 @@
 ---
-title: "Categorical data clustering with the Latent Class Analysis"
+title: "Categorical and item/response data clustering with the Latent Class Analysis"
 output: 
   rmarkdown::html_vignette:
     toc: true
     number_sections: true
     fig_caption: yes
 vignette: >
-  %\VignetteIndexEntry{Categorical data clustering with the Latent Class Analysis}
+  %\VignetteIndexEntry{Categorical and item/response data clustering with the Latent Class Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
+
 ```{r, include = FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.align = "center"
 )
+```
+
+```{css, echo=FALSE}
+p.caption {
+  font-style: italic;
+}
 ```
 Loads the necessary packages for the vignettes.
 ```{r setup, include=T, message=FALSE}
 library(future) # allows parralel processing in greed()
 library(greed)
-library(knitr)
-library(dplyr)
+library(aricode) # for ari computation
+library(dplyr) # data wrangling
 library(tidyr)
 library(purrr)
-library(ggpubr)
+library(ggpubr) # advanced ploting 
 library(ggplot2)
-library(aricode)
-library(careless) # string processing
 library(ggwordcloud)
+
+library(careless) # survey pre-processing
+
 set.seed(2134)
 
-future::plan("multisession", workers=2) # may be increased 
+future::plan("multisession", workers=5) # may be increased 
 ```
 
 The `greed` package and DLVM framework allows the clustering of categorical data. This vignette describes typical use cases of the `greed()` function in this context, and illustrates its use on real datasets.
@@ -77,48 +86,59 @@ These two datasets come attached with `greed` package.
 data("mushroom")
 ```
 
-We begin by forming the necessary vectors for analysis. The data has $n=`r nrow(mushroom)`$ rows and $p=`r ncol(mushroom)`$ columns. The first column contains the poisonous status of each mushroom with two possible values, "p" for "poisonous" and "e" for edible, it will serve as the clustering we seek to recover. The remaining variables are used for clustering. Note that we only use a subset of the data for illustration purpose here. 
+We begin by forming the necessary vectors for analysis. The data has $n=`r nrow(mushroom)`$ rows and $p=`r ncol(mushroom)`$ columns. The first column contains the poisonous status of each mushroom with two possible values, "p" for "poisonous" and "e" for edible, it will serve as the clustering we seek to recover. 
+
+```{r muhroom-data-table}
+mushroom[,1:10] %>% head() %>% knitr::kable()
+```
+
+The remaining variables are used for clustering. Note that we only use a subset of the data for illustration purpose here. 
 
 ```{r muhroom-data}
 X = mushroom[,-1]
 subset =sample(1:nrow(X), size = 1000)
 label = mushroom$edibility[subset]
-head(X[subset,1:10])
 ```
 
 ### Clustering 
 
-The clustering is done via the main function `greed()` with argument `model` set to LCA and the genetic hybrid algorithm for ICLex maximization. The value of the $\beta$ hyper-parameter for the Dirichlet prior on $\theta_{kj}$ can be specified by the user, it defaults to 1. 
+The clustering is done via the main function `greed()` with argument `model` set to LCA and the genetic hybrid algorithm for ICL maximization. 
+<!--The value of the $\beta$ hyper-parameter for the Dirichlet prior on $\theta_{kj}$ can be specified by the user, it defaults to 1. -->
 
 > **Note:** The `Lca` model may only be used with datasets stored in a data.frame object containing factors only. When such data are provided to the `greed()` function, an `Lca` model is picked by default. To perform the clustering, it is therefore sufficient to call greed with the prepared data.frame. 
 
 ```{r cluster-mushroom}
 sol_mush<-greed(X[subset,], model=Lca())
 ```
+
+
+The hybrid genetic algorithm found a solution with $K=`r sol_mush@K`$ clusters which is quite over-segmented. But, it display a good separation among edible and poisonous mushrooms:
+
 ```{r}
-kable(table(Edibility=label, Cluster=clustering(sol_mush)), format='html', row.names = T)
+table(label, clustering(sol_mush)) %>% knitr::kable()
 ```
 
-The hybrid genetic algorithm found a solution with $K=`r sol_mush@K`$ clusters which is quite over-segmented while displaying a good separation among edible and poisonous mushrooms. Partition's NMI is `r round(NMI(label, clustering(sol_mush)),2)` which is explained by the over-segmentation of the solution compared to the $2$-class problem.
+Partition's NMI is `r round(NMI(label, clustering(sol_mush)),2)` which is explained by the over-segmentation of the solution compared to the $2$-class problem.
+
 
 
 ### Analysis of the hierarchy 
 
-Exploring the dendrogram provided by the hierarchical algorithm is quite useful in this case. We clearly see a hierarchical structure appearing with $K=2$ main clusters. Thus, we can cut the tree at this height and look at the solution.
+Exploring the dendrogram provided by the hierarchical algorithm is quite useful in this case. 
 
 
-
-```{r dendo-mushroom, fig.dim=c(5,5),fig.align='center'}
+```{r dendo-mushroom, fig.dim=c(5,4),fig.cap="Dendogram obtained with greed with the Lca model on the Mushroom dataset."}
 plot(sol_mush, type='tree')
 ```
 
-
+We clearly see a hierarchical structure appearing with $K=2$ or $K=4$ main clusters. Thus, we can cut the tree at this height and look at the solution.
 
 
 ```{r cut-K2-mushroom}
 sol2 = cut(sol_mush, 2)
-knitr::kable(table(Edibility=label, Cluster=clustering(sol2)), format='html', row.names = T)
+table(label, clustering(sol2)) %>% knitr::kable()
 ```
+
 Here, we clearly see that the order of merges is consistent with the labels, and the final ARI is `r round(NMI(clustering(sol2), label),2)`. While, some poisonous mushrooms have been categorized as edible, this is the consequence of the [way the labels have been set](https://archive.ics.uci.edu/ml/datasets/Mushroom), since mushrooms for which the edibility status was *unknown* were classified as *poisonous* by default. While this choice is reasonable from a strict health perspective. Furthermore, as the data documentation specifies, ''\textit{there is no simple rule for determining the edibility of a mushroom}''. Thus, the unsupervised problem is hard and the obtained clustering is already satisfactory.  Moreover, this illustrates the interest of having the hierarchical algorithm in order to access coarser partitions.
 
 
@@ -162,13 +182,14 @@ X = Xnum %>%
 
 ### Hierarchical clustering 
 
-As previouslythe clustering is obtained with a call to greed and the Lca generative model will be taken by default since the dataset is a data.frame with factors only. 
+As previously the clustering is obtained with a call to greed and the Lca generative model will be taken by default since the dataset is a data.frame with factors only. We demonstrate here how to increase a little bit the exploration capabilities of the optimization algorithm by increasing the population size and the probaility of mutation.
 
 ```{r survey-lca-cust,fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
-sol=greed(X)
+sol=greed(X, alg = Hybrid(pop_size = 50,prob_mutation = 0.5))
 ```
+
 The algorithm found $K=`r K(sol)`$ clusters which are quite balanced. To explore the results, we plot the dendogram found. 
-```{r survey-lca-plot1,fig.dim=c(5,5),fig.align='center'}
+```{r survey-lca-plot1,fig.dim=c(5,4),fig.cap="Dendogram obtained with greed with the Lca model on the Young people survey dataset."}
 plot(sol,type='tree')
 ```
 
@@ -177,62 +198,60 @@ plot(sol,type='tree')
 
 We may also used the `marginals` plot to depict the conditional probabilities of the different responses knowing the clusters assignment.
 
-```{r survey-lca-plot2,fig.show='hold',out.width="100%",fig.dim=c(10,8)}
+```{r survey-lca-plot2,fig.show='hold',out.width="100%",fig.dim=c(10,8),fig.cap="Marginals plot of the clustering obtained with greed on the Young adult data."}
 plot(sol,type='marginals')
 ```
 
 
-The clusters appear to be quite different and coherent. For example, the seveth group (second top row, in purple) display a strong tendency to like Opera and Classical music and dislike more *modern* genres (Techno, Trance, Punk or Hi-Hop), whereas the 8th group (top row, in pink) corresponds to music lovers with quite eclectic musical taste across the proposed survey's genres.
+The clusters appear to be quite different and coherent. For example, the seventh group (second row, in brown) display a strong tendency to like Opera and Classical music and dislike more *modern* genres (Techno, Trance, Punk or Hi-Hop), whereas the 4th group (top row, in pink) corresponds to music lovers with quite eclectic musical taste across the proposed survey's genres.
 
-> In addition, the conditional maximum a posteriori estimates of $\theta{kj}$ are qvailable through the `coef()` method. 
+In addition, the conditional maximum a posteriori estimates of $\theta_{kj}$ are qvailable through the `coef()` method. 
 
 ```{r}
 params = coef(sol)
 ```
 
-```{r thetask, include=TRUE, echo=FALSE, results='asis'}
-vars = c("Country","Latino")
-for (var in vars) {
-  print(kable(params$thetas[[var]], format='html', row.names='true', caption = var))
-  cat('\n\n\n')
-}
-# kables(sapply(names(thetas),
-#               function(ind){
-#                 kable(thetas[[ind]], format='html', row.names='true', caption = ind)
-#               }),
-#        format = 'html')
-# sapply(names(thetas),
-#               function(ind){
-#                 kable(thetas[[ind]], format='html', row.names='true', caption = ind)
-#               })
+
+And look for example at the cluster distributions for the Country music style:
+
+```{r thetask, include=TRUE}
+params$Thetak$Country %>% knitr::kable(digits=2)
 ```
 
 
 Cluster structures may also be visualized with a word clouds of feature names. In this representation, a color encodes if the feature has an average score greater than the average score of the whole population. A big blue feature corresponds to music type that scores higher than the mean in this cluster and big red feature to music type that have a smaller score than the mean in the corresponding group. 
 
-```{r posplot, fig.show='hold',fig.width=8,fig.height=7,out.width="100%"}
+```{r posplot, fig.show='hold',fig.width=8,fig.height=6,out.width="100%", fig.cap="Word cloud visualization of the greed clustering on the Young adult survey data."}
+# get the Lca MAP parameters estimates
 params = coef(sol)
+
+# compute the mean score per cluster and features
 means_scores = lapply(params$Thetak,function(x){
   apply(x[,1:5],1,function(r){
     sum(r*1:5)
     })
   })
+
+# move to long format
 means_scores_long = do.call(rbind,
                             map2(means_scores, names(means_scores),function(x,y){
                               tibble(cluster=1:K(sol),mean=x,var=y)
                               }))  %>% 
   mutate(var = gsub("\\."," ",var))
 
+# compute the average score for the whole population
 means_scores_glob = Xnum %>% 
   summarise_all(function(x){mean(x,na.rm=TRUE)}) %>% 
   tidyr::pivot_longer(all_of(1:nc),names_to = "var",) %>% 
   mutate(var = gsub("[,-/]"," ",var))
 
+# compute the differences between clusters scores and averages scores
 gg = means_scores_long %>% 
   left_join(means_scores_glob) %>% 
   mutate(dm=mean-value) 
 
 
+# create the word clouds (we kept only the music genre that depart from the average for each cluster)
 ggplot(gg %>% filter(abs(dm)>0.1), aes(label = var, size = abs(dm),color=dm)) +
   geom_text_wordcloud() +
   scale_size_area(max_size = 7) +
@@ -241,6 +260,5 @@ ggplot(gg %>% filter(abs(dm)>0.1), aes(label = var, size = abs(dm),color=dm)) +
   facet_wrap(~cluster)
 ```
 
-Using such a visualization allow to easily describe the different groups. The first cluster tends to dislike almost all surveyed musical genres, the second almost exlusively likes Dance music, the third have tastes close to the global mean of the dataset, the forth and sixths correspond to Hard-Rockers, the fifth to Rockers, the seventh to exclusive Opera and Classical music lover, and the eight to people with eclectic taste liking almost every surveyed music genres.
+Using such a visualization allow to easily describe the different groups. The first cluster almost exlusively likes Pop and Dance music, the second Opera and Classical music. The third cluster has higher score for almost all music genres and the third is close to the global average score and so on.
 
-<!-- dans les plots cluster 1 en bas passer a cluster 1 haut pour lca plot et violins ? !-->

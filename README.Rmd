@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 library(knitr)
 library(dplyr) 
-# library(kableExtra)
+
 set.seed(2134)
 ```
 
@@ -78,11 +78,12 @@ install.packages("greed")
 
 ## Usage: the greed function
 
+
 The main entry point for using the package is simply the`greed` function (see `?greed`). The generative model will be chosen automatically to fit the type of the provided data, but you may specify another choice with the `model` argument. 
 
 We illustrate its use on a **graph clustering** example with the classical Books network `?Books`.
 
-> More use cases and their specific plotting functionality are described below.
+> More use cases and their specific plotting functionality are described in the vignettes.
 
 ```{r example}
 library(greed)
@@ -92,12 +93,14 @@ sol <- greed(Books$X)
 
 You may specify the model you want to use and set the priors parameters with the (`model` argument), the optimization algorithm (`alg` argument) and the initial number of cluster `K`. Here `Books$X` is a square sparse matrix and a graph clustering ``?`DcSbm-class` `` model will be used by default. By default, the Hybrid genetic algorithm is used. 
 
+
 The next example illustrates a usage without default values. A binary `Sbm` prior is used, along with a spectral clustering algorithm for graphs.
 
 
 ```{r sbm-example}
 sol <- greed(Books$X,model=Sbm(),alg=Seed(),K=10)
 ```
+
 ## Result analysis
 The results of `greed()` is an S4 class which depends on the `model` argument (here, an SBM) which comes with readily implemented methods: `clustering()` to access the estimated partitions, `K()` the estimated number of clusters, and `coef()` the (conditional) maximum a posteriori of the model parameters. 
 ```{r coef,K, clust}
@@ -107,7 +110,7 @@ coef(sol)
 ```
 
 
-## Hierarchical
+## Inspecting the hierarchy 
 An important aspect of the **greed** package is its hierarchical clustering algorithm which extract a set of nested partitions from `K=K(sol)` to `K=1`. This hierarchy may be visualized thanks to a dendogram representing the fusion order and the level of regularization $- \log(\alpha)$ needed for each fusion.
 ```{r, out.width="90%",fig.width=8,fig.height=8}
 plot(sol, type='tree') # try also: type="path"
@@ -157,7 +160,5 @@ For large datasets, it is possible to use parallelism to speed-up the computatio
 library(future)
 plan(multisession, workers=2) # may be increased
 ```
-
-
 
 

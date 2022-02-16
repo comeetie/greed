@@ -7,6 +7,9 @@
     <loc>/articles/GMM.html</loc>
   </url>
   <url>
+    <loc>/articles/LBM.html</loc>
+  </url>
+  <url>
     <loc>/articles/LCA.html</loc>
   </url>
   <url>
@@ -251,6 +254,9 @@
   </url>
   <url>
     <loc>/reference/alg-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/available_models.html</loc>
   </url>
   <url>
     <loc>/reference/clustering-IclFit-method.html</loc>

@@ -22,7 +22,7 @@
 #' @references{Extended Stochastic Block Models with Application to Criminal Networks, Sirio Legramanti and Tommaso Rigon and Daniele Durante and David B. Dunson, 2021,
 #' (\href{https://arxiv.org/abs/2007.08569v2}{arXiv:2007.08569}).}
 #'
-#' @source \href{https://sites.google.com/site/ucinetsoftware/datasets/covert-networks/ndranghetamafia2}{ucinetsoftware/datasets/covert-networks}
+#' @source \href{https://sites.google.com/site/ucinetsoftware/datasets/covert-networks}{ucinetsoftware/datasets/covert-networks}
 #'
 #' @examples
 #' data(Ndrangheta)
