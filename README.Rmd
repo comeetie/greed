@@ -12,7 +12,8 @@ knitr::opts_chunk$set(
   out.width = "60%"
 )
 library(knitr)
-# library(kableExtra)
+library(dplyr) 
+
 set.seed(2134)
 ```
 
@@ -77,11 +78,12 @@ install.packages("greed")
 
 ## Usage: the greed function
 
+
 The main entry point for using the package is simply the`greed` function (see `?greed`). The generative model will be chosen automatically to fit the type of the provided data, but you may specify another choice with the `model` argument. 
 
 We illustrate its use on a **graph clustering** example with the classical Books network `?Books`.
 
-> More use cases and their specific plotting functionality are described below.
+> More use cases and their specific plotting functionality are described in the vignettes.
 
 ```{r example}
 library(greed)
@@ -89,7 +91,8 @@ data(Books)
 sol <- greed(Books$X) 
 ```
 
-You may specify the model you want to use and set the priors parameters with the (`model` argument), the optimization algorithm (`alg` argument) and the initial number of cluster `K`. Here `Boos$X` is a square sparse matrix and a graph clustering ``?`DcSbm-class` `` model will be used by default. By default, the Hybrid genetic algorithm is used. 
+You may specify the model you want to use and set the priors parameters with the (`model` argument), the optimization algorithm (`alg` argument) and the initial number of cluster `K`. Here `Books$X` is a square sparse matrix and a graph clustering ``?`DcSbm-class` `` model will be used by default. By default, the Hybrid genetic algorithm is used. 
+
 
 The next example illustrates a usage without default values. A binary `Sbm` prior is used, along with a spectral clustering algorithm for graphs.
 
@@ -98,34 +101,57 @@ The next example illustrates a usage without default values. A binary `Sbm` prio
 sol <- greed(Books$X,model=Sbm(),alg=Seed(),K=10)
 ```
 
-## Visualization
-
-Many plotting functions are available for exploring the clustering results, and all are accessible via the `plot()` S4 method.  By default, the hierarchical structure found between clusters is returned, as a dendrogram:
-```{r plot,message=FALSE,results="hide"}
-plot(sol)
-```
-
-However, depending of the specified `model`, a `type` argument may be specified. Here, with our graph clustering model, a summary representation of the adjacency matrix can be obtained via
-
-```{r tree}
-plot(sol,type='blocks')
-```
-## Inspecting the results
-
-The resulting partition may be extracted with the `?clustering` method, as well as the final ICL value with `?ICL`. You may also extract a Maximum a Posteriori (MAP) estimation of the model parameters (conditionally to the estimated clustering) with the `?coef` method.
-
-```{r}
-table(clustering(sol))
-ICL(sol)
+## Result analysis
+The results of `greed()` is an S4 class which depends on the `model` argument (here, an SBM) which comes with readily implemented methods: `clustering()` to access the estimated partitions, `K()` the estimated number of clusters, and `coef()` the (conditional) maximum a posteriori of the model parameters. 
+```{r coef,K, clust}
+table(Books$label,clustering(sol)) %>% knitr::kable()
+K(sol)
 coef(sol)
 ```
 
 
-Eventually, one may explore some coarser partitions using the `cut` method:
-```{r cut}
-sol_K3 = cut(sol, 3)
-plot(sol_K3)
+## Inspecting the hierarchy 
+An important aspect of the **greed** package is its hierarchical clustering algorithm which extract a set of nested partitions from `K=K(sol)` to `K=1`. This hierarchy may be visualized thanks to a dendogram representing the fusion order and the level of regularization $- \log(\alpha)$ needed for each fusion.
+```{r, out.width="90%",fig.width=8,fig.height=8}
+plot(sol, type='tree') # try also: type="path"
 ```
+
+Moreover, similar to standard hierarchical algorithm such as `hclust`, the `cut()` method allows you to extract a partition at any stage of the hierarchy. Its results is still an S4 object, and the S4 methods introduced earlier may again be used to investigate the results.
+
+```{r}
+sol_K3 = cut(sol, K=3)
+K(sol_K3)
+table(Books$label,clustering(sol_K3)) %>% knitr::kable()
+```
+
+
+## Visualization
+Finally, the **greed** package propose efficient and model-adapted visualization via the `plot()` methods. In this graph clustering example, the `"blocks"` and `"nodelink"` display the cluster-aggregated adjacency matrix and diagram of the graph respectively. Note that the ordering of the clusters is the same than the one computed for the dendrogram, greatly enhancing visualization of the hierarchical structure.
+
+```{r plot,message=FALSE,results="hide", fig.show='hold', out.width="90%",fig.width=8,fig.height=8}
+plot(sol,type='blocks')
+plot(sol, type='nodelink')
+```
+
+## Other models
+As explained above, the greed package implements many standard models and the list may be displayed with
+```{r, eval=FALSE}
+available_models()
+```
+
+Many plotting functions are available and, depending of the specified `model`, different `type` argument may be specified. For further information we refer to the vignettes linked above for each use case.
+
+<!-- > See the `vignette("GMM")` for an in-depth tutorial. -->
+
+<!-- > See the `vignette("LCA")` for details. -->
+
+<!-- > See the `vignette("SBM")` for details. -->
+
+<!-- > See the `vignette("MoR")` for details. -->
+
+<!-- > See the `vignette("Mixed-Models")`for details. -->
+
+
 
 ## Using parallel computing 
 
@@ -135,107 +161,4 @@ library(future)
 plan(multisession, workers=2) # may be increased
 ```
 
-# Typical use cases
 
-Alongside with the previous graph clustering example below, we give a preview of other use cases and plotting functionalities that are model-dependent.
-
-## Continuous data clustering with GMM
-
-Here, we use the diabetes dataset of `mclust`. `X_cont` is a $145 \times 3$ design matrix, and a full-covariance `Gmm` model is specified as a model prior.
-
-
-```{r diabetes-gmm, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
-data("diabetes", package = "mclust")
-X_cont = diabetes[,-1]
-sol_cont <- greed(X = X_cont, model=Gmm())
-table(diabetes$cl,clustering(sol_cont))
-```
-Specific plots are available for this type of models
-
- * Pairs plots
- 
-```{r, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
-gmmpairs(sol_cont, X_cont)
-```
-
- * Violins plots
-```{r, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5}
-plot(sol_cont, type='violins')
-```
- 
-> See the `vignette("GMM")` for an in-depth tutorial.
-
-
-### Categorical data clustering with latent class analysis
-
-Categorical data are typically found in 
-
- * Item response theory  
- * Questionnaires
- 
-As an illustrative example, we use an extraction from the `?Youngpeoplesurvey` questionaire data, where each variable is an answer to "On a scale of 1 to 5 (NA allowed), how do you like musical genre [X]", for 19 musical genres [X]. Next table shows a quick glimpse at the data.
-
-```{r datayoungpeople,message=FALSE}
-data("Youngpeoplesurvey")
-```
-
-
-```{r, include=F, echo=FALSE}
-library(tidyr)
-library(dplyr)
-library(careless)
-nc  = 19
-
-selected = Youngpeoplesurvey %>% 
-  select(all_of(1:nc)) %>%
-  mutate(string = longstring(.)) %>%
-  mutate(sel = if_else(string <= 10,TRUE,FALSE) ) %>% pull(sel)
-
-Xnum = Youngpeoplesurvey %>% 
-  select(all_of(1:nc)) %>%
-  filter(all_of(selected) )
-
-X = Xnum %>% 
-  mutate_all(function(x){
-    x[is.na(x)]="NA"
-    factor(x,levels=c(1:5,"NA"))
-    }) %>%
-  droplevels()
-
-subset = sample(1:nrow(X), size = 200 , replace = F)
-X = X[subset,]
-```
-
-```{r, echo=T, include=TRUE}
-head(X[,2:8])
-```
-
-Plot the frequency of each modality inside each cluster for all categorical variables. The size of the point represents the frequency, the bigger the point, the larger the frequency.
-```{r survey-lca-cust,fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
-sol=greed(X)
-plot(sol,type='marginals') 
-```
-
-> See the `vignette("LCA")` for details.
-
-
-## Graph clustering, SBM like models
-
-The SBM allows handling categorical edges for graphs encoding complex, non-binary interaction. This is done through a multinomial SBM implemented in the `MultSbm` S4 class. A dedicated `plot` function is available, representing aggregated adjacency matrix for each modality/interaction/*view*.
-
-```{r}
-data("NewGuinea")
-dim(NewGuinea)
-sol_newguinea = greed(NewGuinea,model=MultSbm())
-plot(sol_newguinea,type='blocks')
-```
-
-> See the `vignette("SBM")` for details.
-
-## Mixture of Regression
-
-> See the `vignette("MoR")` for details.
-
-## Advanced models`
-
-> See the `vignette("Mixed-Models")`for details.

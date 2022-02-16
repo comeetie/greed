@@ -211,6 +211,7 @@ In addition, the conditional maximum a posteriori estimates of $\theta_{kj}$ are
 params = coef(sol)
 ```
 
+
 And look for example at the cluster distributions for the Country music style:
 
 ```{r thetask, include=TRUE}

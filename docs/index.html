@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">greed</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.0</span>
       </span>
     </div>
 
@@ -107,7 +107,6 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-
 <div class="section level1">
 <div class="page-header"><h1 id="greed--bayesian-greedy-clustering">GREED : Bayesian greedy clustering<a class="anchor" aria-label="anchor" href="#greed--bayesian-greedy-clustering"></a>
 </h1></div>
@@ -153,7 +152,7 @@
 <p>The main entry point for using the package is simply the<code>greed</code> function (see <code><a href="reference/greed.html">?greed</a></code>). The generative model will be chosen automatically to fit the type of the provided data, but you may specify another choice with the <code>model</code> argument.</p>
 <p>We illustrate its use on a <strong>graph clustering</strong> example with the classical Books network <code><a href="reference/Books.html">?Books</a></code>.</p>
 <blockquote>
-<p>More use cases and their specific plotting functionality are described below.</p>
+<p>More use cases and their specific plotting functionality are described in the vignettes.</p>
 </blockquote>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/" class="external-link">greed</a></span><span class="op">)</span>
@@ -168,7 +167,7 @@
 <span class="co">#&gt; ── Final clustering ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a DCSBM model 3 clusters and an ICL of -1345</span></code></pre></div>
-<p>You may specify the model you want to use and set the priors parameters with the (<code>model</code> argument), the optimization algorithm (<code>alg</code> argument) and the initial number of cluster <code>K</code>. Here <code>Boos$X</code> is a square sparse matrix and a graph clustering <code><a href="reference/DcSbm.html">?`DcSbm-class`</a></code> model will be used by default. By default, the Hybrid genetic algorithm is used.</p>
+<p>You may specify the model you want to use and set the priors parameters with the (<code>model</code> argument), the optimization algorithm (<code>alg</code> argument) and the initial number of cluster <code>K</code>. Here <code>Books$X</code> is a square sparse matrix and a graph clustering <code><a href="reference/DcSbm.html">?`DcSbm-class`</a></code> model will be used by default. By default, the Hybrid genetic algorithm is used.</p>
 <p>The next example illustrates a usage without default values. A binary <code>Sbm</code> prior is used, along with a spectral clustering algorithm for graphs.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="reference/Sbm.html">Sbm</a></span><span class="op">(</span><span class="op">)</span>,alg<span class="op">=</span><span class="fu"><a href="reference/Seed-class.html">Seed</a></span><span class="op">(</span><span class="op">)</span>,K<span class="op">=</span><span class="fl">10</span><span class="op">)</span>
@@ -180,24 +179,50 @@
 <span class="co">#&gt; ── Clustering with a SBM model 5 clusters and an ICL of -1316</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="visualization">Visualization<a class="anchor" aria-label="anchor" href="#visualization"></a>
+<h2 id="result-analysis">Result analysis<a class="anchor" aria-label="anchor" href="#result-analysis"></a>
 </h2>
-<p>Many plotting functions are available for exploring the clustering results, and all are accessible via the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> S4 method. By default, the hierarchical structure found between clusters is returned, as a dendrogram:</p>
+<p>The results of <code><a href="reference/greed.html">greed()</a></code> is an S4 class which depends on the <code>model</code> argument (here, an SBM) which comes with readily implemented methods: <code><a href="reference/clustering.html">clustering()</a></code> to access the estimated partitions, <code><a href="reference/K.html">K()</a></code> the estimated number of clusters, and <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> the (conditional) maximum a posteriori of the model parameters.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/plot-1.png" width="60%"></p>
-<p>However, depending of the specified <code>model</code>, a <code>type</code> argument may be specified. Here, with our graph clustering model, a summary representation of the adjacency matrix can be obtained via</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">label</span>,<span class="fu"><a href="reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">3</th>
+<th align="right">4</th>
+<th align="right">5</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">c</td>
+<td align="right">30</td>
+<td align="right">16</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">l</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">5</td>
+<td align="right">25</td>
+<td align="right">13</td>
+</tr>
+<tr class="odd">
+<td align="left">n</td>
+<td align="right">0</td>
+<td align="right">7</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/tree-1.png" width="60%"> ## Inspecting the results</p>
-<p>The resulting partition may be extracted with the <code><a href="reference/clustering.html">?clustering</a></code> method, as well as the final ICL value with <code><a href="reference/ICL.html">?ICL</a></code>. You may also extract a Maximum a Posteriori (MAP) estimation of the model parameters (conditionally to the estimated clustering) with the <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">?coef</a></code> method.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  1  2  3  4  5 </span>
-<span class="co">#&gt; 30 23 11 28 13</span>
-<span class="fu"><a href="reference/ICL.html">ICL</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
-<span class="co">#&gt; [1] -1315.899</span>
+<code class="sourceCode R"><span class="fu"><a href="reference/K.html">K</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
+<span class="co">#&gt; [1] 5</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
 <span class="co">#&gt; $pi</span>
 <span class="co">#&gt; [1] 0.2857143 0.2190476 0.1047619 0.2666667 0.1238095</span>
@@ -209,149 +234,80 @@
 <span class="co">#&gt; [3,] 0.009090909 0.01976285 0.436363636 0.006493506 0.04895105</span>
 <span class="co">#&gt; [4,] 0.000000000 0.01086957 0.006493506 0.084656085 0.27747253</span>
 <span class="co">#&gt; [5,] 0.000000000 0.01337793 0.048951049 0.277472527 0.55128205</span></code></pre></div>
-<p>Eventually, one may explore some coarser partitions using the <code>cut</code> method:</p>
+</div>
+<div class="section level2">
+<h2 id="inspecting-the-hierarchy">Inspecting the hierarchy<a class="anchor" aria-label="anchor" href="#inspecting-the-hierarchy"></a>
+</h2>
+<p>An important aspect of the <strong>greed</strong> package is its hierarchical clustering algorithm which extract a set of nested partitions from <code>K=K(sol)</code> to <code>K=1</code>. This hierarchy may be visualized thanks to a dendogram representing the fusion order and the level of regularization  − log (<em>α</em>) needed for each fusion.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>, type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span> <span class="co"># try also: type="path"</span></code></pre></div>
+<p><img src="reference/figures/unnamed-chunk-2-1.png" width="90%"></p>
+<p>Moreover, similar to standard hierarchical algorithm such as <code>hclust</code>, the <code><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut()</a></code> method allows you to extract a partition at any stage of the hierarchy. Its results is still an S4 object, and the S4 methods introduced earlier may again be used to investigate the results.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sol_K3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">sol</span>, <span class="fl">3</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol_K3</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/cut-1.png" width="60%"></p>
+<code class="sourceCode R"><span class="va">sol_K3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">sol</span>, K<span class="op">=</span><span class="fl">3</span><span class="op">)</span>
+<span class="fu"><a href="reference/K.html">K</a></span><span class="op">(</span><span class="va">sol_K3</span><span class="op">)</span>
+<span class="co">#&gt; [1] 3</span>
+<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">label</span>,<span class="fu"><a href="reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol_K3</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">3</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">c</td>
+<td align="right">30</td>
+<td align="right">18</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">l</td>
+<td align="right">0</td>
+<td align="right">5</td>
+<td align="right">38</td>
+</tr>
+<tr class="odd">
+<td align="left">n</td>
+<td align="right">0</td>
+<td align="right">11</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
+<h2 id="visualization">Visualization<a class="anchor" aria-label="anchor" href="#visualization"></a>
+</h2>
+<p>Finally, the <strong>greed</strong> package propose efficient and model-adapted visualization via the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> methods. In this graph clustering example, the <code>"blocks"</code> and <code>"nodelink"</code> display the cluster-aggregated adjacency matrix and diagram of the graph respectively. Note that the ordering of the clusters is the same than the one computed for the dendrogram, greatly enhancing visualization of the hierarchical structure.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>, type<span class="op">=</span><span class="st">'nodelink'</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/plot-1.png" width="90%"><img src="reference/figures/plot-2.png" width="90%"></p>
+</div>
+<div class="section level2">
+<h2 id="other-models">Other models<a class="anchor" aria-label="anchor" href="#other-models"></a>
+</h2>
+<p>As explained above, the greed package implements many standard models and the list may be displayed with</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/available_models.html">available_models</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>Many plotting functions are available and, depending of the specified <code>model</code>, different <code>type</code> argument may be specified. For further information we refer to the vignettes linked above for each use case.</p>
+<!-- > See the `vignette("GMM")` for an in-depth tutorial. -->
+<!-- > See the `vignette("LCA")` for details. -->
+<!-- > See the `vignette("SBM")` for details. -->
+<!-- > See the `vignette("MoR")` for details. -->
+<!-- > See the `vignette("Mixed-Models")`for details. -->
 </div>
 <div class="section level2">
 <h2 id="using-parallel-computing">Using parallel computing<a class="anchor" aria-label="anchor" href="#using-parallel-computing"></a>
 </h2>
 <p>For large datasets, it is possible to use parallelism to speed-up the computations thanks to the <a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a> package. You only need to specify the type of back-end you want to use, before calling the <code><a href="reference/greed.html">?greed</a></code> function:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span>
-<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="co"># may be increased</span></code></pre></div>
-</div>
-</div>
-<div class="section level1">
-<h1 id="typical-use-cases">Typical use cases<a class="anchor" aria-label="anchor" href="#typical-use-cases"></a>
-</h1>
-<p>Alongside with the previous graph clustering example below, we give a preview of other use cases and plotting functionalities that are model-dependent.</p>
-<div class="section level2">
-<h2 id="continuous-data-clustering-with-gmm">Continuous data clustering with GMM<a class="anchor" aria-label="anchor" href="#continuous-data-clustering-with-gmm"></a>
-</h2>
-<p>Here, we use the diabetes dataset of <code>mclust</code>. <code>X_cont</code> is a 145 × 3 design matrix, and a full-covariance <code>Gmm</code> model is specified as a model prior.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"diabetes"</span>, package <span class="op">=</span> <span class="st">"mclust"</span><span class="op">)</span>
-<span class="va">X_cont</span> <span class="op">=</span> <span class="va">diabetes</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>
-<span class="va">sol_cont</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">X_cont</span>, model<span class="op">=</span><span class="fu"><a href="reference/Gmm.html">Gmm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ── Fitting a GMM model ──</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -2413 and 6 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -2411 and 6 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -2401 and 3 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -2401 and 3 clusters.</span>
-<span class="co">#&gt; ── Final clustering ──</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a GMM model 3 clusters and an ICL of -2401</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol_cont</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt;           </span>
-<span class="co">#&gt;             1  2  3</span>
-<span class="co">#&gt;   Chemical  0 25 11</span>
-<span class="co">#&gt;   Normal    0  3 73</span>
-<span class="co">#&gt;   Overt    27  6  0</span></code></pre></div>
-<p>Specific plots are available for this type of models</p>
-<ul>
-<li>Pairs plots</li>
-</ul>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">sol_cont</span>, <span class="va">X_cont</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/unnamed-chunk-3-1.png" width="90%"></p>
-<ul>
-<li>Violins plots</li>
-</ul>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol_cont</span>, type<span class="op">=</span><span class="st">'violins'</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/unnamed-chunk-4-1.png" width="90%"></p>
-<blockquote>
-<p>See the <code><a href="articles/GMM.html">vignette("GMM")</a></code> for an in-depth tutorial.</p>
-</blockquote>
-<div class="section level3">
-<h3 id="categorical-data-clustering-with-latent-class-analysis">Categorical data clustering with latent class analysis<a class="anchor" aria-label="anchor" href="#categorical-data-clustering-with-latent-class-analysis"></a>
-</h3>
-<p>Categorical data are typically found in</p>
-<ul>
-<li>Item response theory<br>
-</li>
-<li>Questionnaires</li>
-</ul>
-<p>As an illustrative example, we use an extraction from the <code><a href="reference/Youngpeoplesurvey.html">?Youngpeoplesurvey</a></code> questionaire data, where each variable is an answer to “On a scale of 1 to 5 (NA allowed), how do you like musical genre [X]”, for 19 musical genres [X]. Next table shows a quick glimpse at the data.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Youngpeoplesurvey"</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 6 x 7</span>
-<span class="co">#&gt;   `Slow songs or fast songs` Dance Folk  Country `Classical music` Musical Pop  </span>
-<span class="co">#&gt;   &lt;fct&gt;                      &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;   &lt;fct&gt;             &lt;fct&gt;   &lt;fct&gt;</span>
-<span class="co">#&gt; 1 5                          3     2     1       2                 4       3    </span>
-<span class="co">#&gt; 2 3                          2     2     2       4                 3       3    </span>
-<span class="co">#&gt; 3 5                          3     2     2       4                 3       5    </span>
-<span class="co">#&gt; 4 3                          3     2     1       4                 3       4    </span>
-<span class="co">#&gt; 5 5                          3     3     4       4                 4       4    </span>
-<span class="co">#&gt; 6 4                          4     3     1       5                 3       5</span></code></pre></div>
-<p>Plot the frequency of each modality inside each cluster for all categorical variables. The size of the point represents the frequency, the bigger the point, the larger the frequency.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sol</span><span class="op">=</span><span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ── Fitting a LCA model ──</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -5766 and 5 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -5740 and 6 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -5740 and 6 clusters.</span>
-<span class="co">#&gt; ── Final clustering ──</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a LCA model 5 clusters and an ICL of -5730</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'marginals'</span><span class="op">)</span> </code></pre></div>
-<p><img src="reference/figures/survey-lca-cust-1.png" width="100%"></p>
-<blockquote>
-<p>See the <code><a href="articles/LCA.html">vignette("LCA")</a></code> for details.</p>
-</blockquote>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="co"># may be increased</span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="graph-clustering-sbm-like-models">Graph clustering, SBM like models<a class="anchor" aria-label="anchor" href="#graph-clustering-sbm-like-models"></a>
-</h2>
-<p>The SBM allows handling categorical edges for graphs encoding complex, non-binary interaction. This is done through a multinomial SBM implemented in the <code>MultSbm</code> S4 class. A dedicated <code>plot</code> function is available, representing aggregated adjacency matrix for each modality/interaction/<em>view</em>.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"NewGuinea"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">NewGuinea</span><span class="op">)</span>
-<span class="co">#&gt; [1] 16 16  3</span>
-<span class="va">sol_newguinea</span> <span class="op">=</span> <span class="fu"><a href="reference/greed.html">greed</a></span><span class="op">(</span><span class="va">NewGuinea</span>,model<span class="op">=</span><span class="fu"><a href="reference/MultSbm.html">MultSbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ── Fitting a guess MULTSBM model ──</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -125 and 2 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -125 and 2 clusters.</span>
-<span class="co">#&gt; ── Final clustering ──</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a MULTSBM model 2 clusters and an ICL of -125</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol_newguinea</span>,type<span class="op">=</span><span class="st">'blocks'</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/unnamed-chunk-7-1.png" width="60%"></p>
-<blockquote>
-<p>See the <code><a href="articles/SBM.html">vignette("SBM")</a></code> for details.</p>
-</blockquote>
-</div>
-<div class="section level2">
-<h2 id="mixture-of-regression">Mixture of Regression<a class="anchor" aria-label="anchor" href="#mixture-of-regression"></a>
-</h2>
-<blockquote>
-<p>See the <code><a href="articles/MoR.html">vignette("MoR")</a></code> for details.</p>
-</blockquote>
-</div>
-<div class="section level2">
-<h2 id="advanced-models">Advanced models`<a class="anchor" aria-label="anchor" href="#advanced-models"></a>
-</h2>
-<blockquote>
-<p>See the <code><a href="articles/Mixed-Models.html">vignette("Mixed-Models")</a></code>for details.</p>
-</blockquote>
-</div>
-</div>
-
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -406,7 +362,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>

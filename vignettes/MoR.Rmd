@@ -19,6 +19,7 @@ p.caption {
   font-style: italic;
 }
 ```
+
 Loads packages.
 ```{r setup, include=TRUE, message=FALSE}
 library(future) # allows parralel processing in greed()
