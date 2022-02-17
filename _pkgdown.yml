@@ -131,7 +131,8 @@ reference:
     - '`MI`'
     - '`spectral`'
     - '`to_multinomial`'
-
+    - '`available_models`'
+    
 - title: 'Data generation function'
   desc: >
     Functions to generate data from a specified generative model.
