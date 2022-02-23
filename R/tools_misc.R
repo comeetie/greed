@@ -157,7 +157,19 @@ available_models <- function() {
   cli::cli_end(ulid)
   cli::cli_li("Latent class analysis (factor), see ?Lca")
   cli::cli_li("Mixture of multinomials (counts), see ?MoM")
-  cli::cli_li("Combined DLVMs (heterogeneous data), see ?MixedModels")
   cli::cli_li("Degree-corrected latent block model (co-clustering / bi-partite graphs), see ?DcLbm")
   cli::cli_li("Mixture of regression (continuous), see ?MoR")
+  cli::cli_li("Combined DLVMs (heterogeneous data), see ?MixedModels")
+}
+
+#' @title Display the list of every currently available optimization algorithm
+#' @description Display the list of every currently available optimization algorithm
+#' @return NULL
+#' @export
+available_algorithms <- function() {
+  cli::cli_rule(left="Available algorithms for the {.pkg greed} package")
+  cli::cli_ol()
+  cli::cli_li("Hybrid genetic algorithm, see ?Hybrid")
+  cli::cli_li("Greedy hill-climbing heuristics with multiple starts, see ?Multistarts")
+  cli::cli_li("Initialization (e.g. spectral clustering or k-means algorithm), see ?Seed")
 }
