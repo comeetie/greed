@@ -14,7 +14,7 @@ NULL
 #' \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,\lambda_{k}^{-1})}
 #' with \eqn{\mathcal{G}(\kappa,\beta)} the Gamma distribution with shape parameter \eqn{\kappa} and rate parameter \eqn{\beta}.
 #' These classes mainly store the prior parameters value (\eqn{\alpha,\tau,\kappa\beta,\mu}) of this generative model.
-#' The \code{DiagGmm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DiagGmmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
+#' The \code{DiagGmm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DiagGmmPrior-class} must be sued when fitting a \code{\link{CombinedModels-class}}.
 #' @name DiagGmm
 NULL  
 #> NULL

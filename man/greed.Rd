@@ -37,13 +37,13 @@ provides sampling functions for all the implemented DLVMs
 }
 \seealso{
 Other DlvmModels: 
+\code{\link{CombinedModels}},
 \code{\link{DcLbm}},
 \code{\link{DcSbm}},
 \code{\link{DiagGmm}},
 \code{\link{DlvmPrior-class}},
 \code{\link{Gmm}},
 \code{\link{Lca}},
-\code{\link{MixedModels}},
 \code{\link{MoM}},
 \code{\link{MoR}},
 \code{\link{MultSbm}},

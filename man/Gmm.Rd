@@ -37,7 +37,7 @@ The model corresponds to the following generative model:
 \deqn{ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})}
 \deqn{ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})}
 with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Wishart distribution.
-The \code{Gmm-class} must be used when fitting a simple Gaussian Mixture Model whereas the \code{GmmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
+The \code{Gmm-class} must be used when fitting a simple Gaussian Mixture Model whereas the \code{GmmPrior-class} must be used when fitting a \code{\link{CombinedModels-class}}.
 }
 \examples{
 GmmPrior()
@@ -52,12 +52,12 @@ Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the numbe
 \code{\link{GmmFit-class}}, \code{\link{GmmPath-class}}
 
 Other DlvmModels: 
+\code{\link{CombinedModels}},
 \code{\link{DcLbm}},
 \code{\link{DcSbm}},
 \code{\link{DiagGmm}},
 \code{\link{DlvmPrior-class}},
 \code{\link{Lca}},
-\code{\link{MixedModels}},
 \code{\link{MoM}},
 \code{\link{MoR}},
 \code{\link{MultSbm}},

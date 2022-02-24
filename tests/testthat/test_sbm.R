@@ -77,8 +77,8 @@ test_that("SBM seed", {
 })
 
 
-test_that("SBM multitstart", {
-  N <- 100
+test_that("SBM multistart", {
+  N <- 101
   K <- 3
   pi <- rep(1 / K, K)
   mu <- diag(rep(1 / 5, K)) + runif(K * K) * 0.01
@@ -120,7 +120,7 @@ test_that("SBM genetic", {
 })
 
 
-test_that("SBM hybrid unidrected", {
+test_that("SBM hybrid undirected", {
   N <- 100
   K <- 3
   pi <- rep(1 / K, K)

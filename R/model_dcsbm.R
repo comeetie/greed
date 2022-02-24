@@ -14,7 +14,7 @@ NULL
 #' The individuals parameters \eqn{\gamma_i^+,\gamma_i^-} allow to take into account the node degree heterogeneity.
 #' These parameters have uniform priors over the simplex \eqn{S_k} ie. \eqn{\sum_{i:z_{ik}=1}\gamma_i^+=1}.
 #' These classes mainly store the prior parameters value \eqn{\alpha,p} of this generative model.
-#' The \code{DcSbm-class} must be used when fitting a simple Degree Corrected Stochastic Block Model whereas the \code{DcSbmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
+#' The \code{DcSbm-class} must be used when fitting a simple Degree Corrected Stochastic Block Model whereas the \code{DcSbmPrior-class} must be used when fitting a \code{\link{CombinedModels-class}}.
 #' @name DcSbm
 NULL
 #> NULL

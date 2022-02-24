@@ -11,7 +11,7 @@ NULL
 #' \deqn{ \theta_{k} \sim Dirichlet(\beta)}
 #' \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{M}(L_i,\theta_{k})}
 #' With \eqn{L_i=\sum_d=1^DX_{id}}. These classes mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model.
-#' The \code{MoM-class} must be used when fitting a simple Mixture of Multinomials whereas the \code{MoMPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
+#' The \code{MoM-class} must be used when fitting a simple Mixture of Multinomials whereas the \code{MoMPrior-class} must be sued when fitting a \code{\link{CombinedModels-class}}.
 #' @name MoM 
 NULL
 #> NULL

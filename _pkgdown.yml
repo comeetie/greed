@@ -54,7 +54,7 @@ reference:
     - '`show,IclFit-method`'
     - '`cut,IclPath-method`'
     - '`plot,IclPath,missing-method`'
-    - '`extractSubModel,MixedModelsPath,character-method`'
+    - '`extractSubModel,CombinedModelsPath,character-method`'
     
 - title: 'Fitting algorithms classes'
   desc: >
@@ -78,7 +78,7 @@ reference:
     - '`DiagGmm-class`'
     - '`MoR-class`'
     - '`DcLbm-class`'
-    - '`MixedModels-class`'
+    - '`CombinedModels-class`'
     - '`DlvmPrior-class`'
     - '`DlvmCoPrior-class`'
 - title: 'Models fit classes'
@@ -96,7 +96,7 @@ reference:
     - '`DiagGmmFit-class`'
     - '`MoRFit-class`'
     - '`DcLbmFit-class`'
-    - '`MixedModelsFit-class`'
+    - '`CombinedModelsFit-class`'
 
 - title: 'Hierarchical models fit classes'
   desc: >
@@ -111,7 +111,7 @@ reference:
     - '`DiagGmmPath-class`'
     - '`MoRPath-class`'
     - '`DcLbmPath-class`'
-    - '`MixedModelsPath-class`'
+    - '`CombinedModelsPath-class`'
     
 - title: 'Methods to explore a hierarchical fit'
   desc: >

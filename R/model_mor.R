@@ -14,7 +14,7 @@ NULL
 #' \deqn{ A_k \sim \mathcal{MN}(0,(V_k)^{-1},\tau XX^\top)}
 #' \deqn{ Y_{i.}|X_{i.}, A_k, Z_{ik}=1 \sim \mathcal{N}(A_k x_{i.},V_{k}^{-1})}
 #' with \eqn{\mathcal{W}(\epsilon^{-1},n_0)} the Wishart distribution and \eqn{\mathcal{MN}} the matrix-normal distribution.
-#' The \code{MoR-class} must be used when fitting a simple Mixture of Regression whereas the \code{MoRPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
+#' The \code{MoR-class} must be used when fitting a simple Mixture of Regression whereas the \code{MoRPrior-class} must be used when fitting a \code{\link{CombinedModels-class}}.
 #' @name MoR
 NULL
 #> NULL

@@ -30,7 +30,7 @@ Such model can be used to cluster a data matrix \eqn{X} with the following gener
 \deqn{ \theta_{k} \sim Dirichlet(\beta)}
 \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{M}(L_i,\theta_{k})}
 With \eqn{L_i=\sum_d=1^DX_{id}}. These classes mainly store the prior parameters value (\eqn{\alpha,\beta}) of this generative model.
-The \code{MoM-class} must be used when fitting a simple Mixture of Multinomials whereas the \code{MoMPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
+The \code{MoM-class} must be used when fitting a simple Mixture of Multinomials whereas the \code{MoMPrior-class} must be sued when fitting a \code{\link{CombinedModels-class}}.
 }
 \examples{
 MoMPrior()
@@ -42,13 +42,13 @@ MoM(beta = 0.5)
 \code{\link{MoMFit-class}}, \code{\link{MoMPath-class}}
 
 Other DlvmModels: 
+\code{\link{CombinedModels}},
 \code{\link{DcLbm}},
 \code{\link{DcSbm}},
 \code{\link{DiagGmm}},
 \code{\link{DlvmPrior-class}},
 \code{\link{Gmm}},
 \code{\link{Lca}},
-\code{\link{MixedModels}},
 \code{\link{MoR}},
 \code{\link{MultSbm}},
 \code{\link{Sbm}},

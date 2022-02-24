@@ -11,7 +11,7 @@ NULL
 #' \deqn{ \theta_{kl} \sim Dirichlet(\beta)}
 #' \deqn{ X_{ij.}|Z_{ik}Z_{jl}=1 \sim \mathcal{M}(L_{ij},\theta_{kl})}
 #' With \eqn{L_{ij}=\sum_{m=1}^MX_{ijm}}. These classes mainly store the prior parameters value \eqn{\alpha,\beta} of this generative model.
-#' The \code{MultSbm-class} must be used when fitting a simple MultSbm whereas the \code{MultSbmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
+#' The \code{MultSbm-class} must be used when fitting a simple MultSbm whereas the \code{MultSbmPrior-class} must be sued when fitting a \code{\link{CombinedModels-class}}.
 #' @name MultSbm
 NULL
 #> NULL

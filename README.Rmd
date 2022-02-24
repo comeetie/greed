@@ -42,18 +42,6 @@ Dedicated to clustering and visualization, the package is very general and curre
  * **Co-clustering** of binary and count-data via the Latent Block Model and its degree-corrected variant. A tutorial will soon be available in `vignette("LBM")`. For now, we refer to the documentation for the `DcLbm` S4 class.
  
 
-<!-- The following generative models are currently available:  -->
-
-<!-- * **Stochastic Block Models** (see ``?`Sbm-class` ``), -->
-<!-- * **Degree Corrected Stochastic Block Models** (see ``?`DcSbm-class` ``), -->
-<!-- * **Multinomial Stochastic Block Models** (see ``?`MultSbm-class` ``), -->
-<!-- * **Mixture of Multinomials** (see ``?`MoR-class` ``),  -->
-<!-- * **Latent Class Analysis** (see ``?`Lca-class` ``),  -->
-<!-- * **Gaussian Mixture Model** (see ``?`Gmm-class` `` and ``?`DiagGmm-class` ``), -->
-<!-- * **Multivariate Mixture of Gaussian Regression Model** (see ``?`MoR-class` ``), -->
-<!-- * **Degree Corrected Latent Block Model** (see ``?`DcLbm-class` ``). -->
-<!-- * **Mixed Dlvm's** (see ``?`MixedModels-class` ``). -->
-
 
 With the Integrated Classification Likelihood, the parameters of the models are integrated out with a natural regularization effect for complex models. This penalization allows to automatically find a suitable value for the number of clusters $K^\star$. A user only needs to provide an initial guess for the number of clusters $K$, as well as values for the prior parameters (reasonable default values are used if no prior information is given). The default optimization is performed thanks to a combination of a greedy local search and a genetic algorithm described in [Côme, Jouvin, Latouche, and Bouveyron (2021)](https://doi.org/10.1007/s11634-021-00440-z), but several other optimization algorithms are also available.
 
@@ -140,18 +128,6 @@ available_models()
 ```
 
 Many plotting functions are available and, depending of the specified `model`, different `type` argument may be specified. For further information we refer to the vignettes linked above for each use case.
-
-<!-- > See the `vignette("GMM")` for an in-depth tutorial. -->
-
-<!-- > See the `vignette("LCA")` for details. -->
-
-<!-- > See the `vignette("SBM")` for details. -->
-
-<!-- > See the `vignette("MoR")` for details. -->
-
-<!-- > See the `vignette("Mixed-Models")`for details. -->
-
-
 
 ## Using parallel computing 
 

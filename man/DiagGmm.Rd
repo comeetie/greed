@@ -38,7 +38,7 @@ The model corresponds to the following generative model:
 \deqn{ X_{i.}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,\lambda_{k}^{-1})}
 with \eqn{\mathcal{G}(\kappa,\beta)} the Gamma distribution with shape parameter \eqn{\kappa} and rate parameter \eqn{\beta}.
 These classes mainly store the prior parameters value (\eqn{\alpha,\tau,\kappa\beta,\mu}) of this generative model.
-The \code{DiagGmm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DiagGmmPrior-class} must be sued when fitting a \code{\link{MixedModels-class}}.
+The \code{DiagGmm-class} must be used when fitting a simple Diagonal Gaussian Mixture Model whereas the \code{DiagGmmPrior-class} must be sued when fitting a \code{\link{CombinedModels-class}}.
 }
 \examples{
 DiagGmmPrior()
@@ -53,12 +53,12 @@ Bertoletti, Marco & Friel, Nial & Rastelli, Riccardo. (2014). Choosing the numbe
 \code{\link{DiagGmmFit-class}}, \code{\link{DiagGmmPath-class}}
 
 Other DlvmModels: 
+\code{\link{CombinedModels}},
 \code{\link{DcLbm}},
 \code{\link{DcSbm}},
 \code{\link{DlvmPrior-class}},
 \code{\link{Gmm}},
 \code{\link{Lca}},
-\code{\link{MixedModels}},
 \code{\link{MoM}},
 \code{\link{MoR}},
 \code{\link{MultSbm}},

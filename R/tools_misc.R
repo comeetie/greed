@@ -159,7 +159,7 @@ available_models <- function() {
   cli::cli_li("Mixture of multinomials (counts), see ?MoM")
   cli::cli_li("Degree-corrected latent block model (co-clustering / bi-partite graphs), see ?DcLbm")
   cli::cli_li("Mixture of regression (continuous), see ?MoR")
-  cli::cli_li("Combined DLVMs (heterogeneous data), see ?MixedModels")
+  cli::cli_li("Combined DLVMs (heterogeneous data), see ?CombinedModels")
 }
 
 #' @title Display the list of every currently available optimization algorithm
