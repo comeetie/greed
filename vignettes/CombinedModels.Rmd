@@ -1,8 +1,8 @@
 ---
-title: "Mixed Models"
+title: "Combined Models"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Mixed Models}
+  %\VignetteIndexEntry{Combined Models}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -29,9 +29,9 @@ library(ggpubr)
 set.seed(2134)
 ```
 
-## Mixed Models clustering
+## Mixed-type data clustering
 
-One of distinctive feature of greed is that you may mix several model together. Using such an approach one may perform a clustering of several view of the same individuals with different generative models. In all case this approach suppose that the different views are generated in an independent way when the clustering assignment is known. To explore this capability we will begin with the Fifa dataset and cluster simultaneously the categorical features with an `LcaPrior()` and the continuous one with a `GmmPrior()`.
+One of distinctive feature of greed is that you may combine several model together. Using such an approach one may perform a clustering of several view of the same individuals with different generative models. In all case this approach suppose that the different views are generated in an independent way when the clustering assignment is known. To explore this capability we will begin with the Fifa dataset and cluster simultaneously the categorical features with an `LcaPrior()` and the continuous one with a `GmmPrior()`.
 
 
 ### Lca + Gmm, the Fifa data-set 
@@ -47,7 +47,7 @@ X <- Fifa[,-c(1,2)] %>%
 
 This leave us with a dataset of $n=`r nrow(X)`$ rows and $p=`r ncol(X)`$ columns. The features correspond to players characteristics (age,height,weight), skills scores (pace,shooting,...) and a set of binary factors that describe the field positions were the players may be aligned.
 
-Preparing the data and the model is a little bit more complicated than for the other models since we must specify the different models we want to use. The data are provided with a named list, and the model is created with the `?MixedModels` constructor, which must also be provided with a list of model priors, with the same named slots as in the data list. The following piece of code demonstrate this approach and the Fifa dataset:
+Preparing the data and the model is a little bit more complicated than for the other models since we must specify the different models we want to use. The data are provided with a named list, and the model is created with the `?CombinedModels` constructor, which must also be provided with a list of model priors, with the same named slots as in the data list. The following piece of code demonstrate this approach and the Fifa dataset:
 ```{r fifa-mmm}
 library(future)
 plan(multisession)
@@ -55,10 +55,10 @@ plan(multisession)
 # and the numeric columns in another slot
 data <- list(categorical = X %>% select_if(is.factor),
             cont = X %>% select_if(function(v){!is.factor(v)}))
-# create the MixedModels, as expected we will use an LcaPrior for the factors 
+# create the CombinedModels, as expected we will use an LcaPrior for the factors 
 # and a GmmPrior for the numeric columns.
 # Be careful names in the models list and in the data list must match !
-mixmod <- MixedModels(models=list(categorical=LcaPrior(),cont=GmmPrior()))
+mixmod <- CombinedModels(models=list(categorical=LcaPrior(),cont=GmmPrior()))
 # perform the clustering
 sol = greed(data,model = mixmod)
 ```
@@ -106,15 +106,15 @@ The organisation of the clusters clearly appears, cluster 1 correspond to centra
 
 ### Sbm + Lca, the Ndrangheta data-set 
 
-Mixed models may also be used to analyse graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangeta dataset. This dataset contains relationship information between members of the Ndrangheta mafia together with some information on their group affiliation and their role. We wil use an Sbm model to fit the adjacency matrix and an Lca model for the facotr describing the roles. 
+Combined models may also be used to analyse graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangeta dataset. This dataset contains relationship information between members of the Ndrangheta mafia together with some information on their group affiliation and their role. We wil use an Sbm model to fit the adjacency matrix and an Lca model for the facotr describing the roles. 
 
 ```{r,out.width="90%",fig.width=8,fig.height=5.5,fig.cap="Ndrangheta dataset dendogram with Sbm + Lca."}
 # laod the dataset
 data(Ndrangheta)
 # prepare the data 
 data= list(graph=Ndrangheta$X,node_infos=data.frame(Role=Ndrangheta$node_meta$Role,stringsAsFactors = TRUE))
-# build the mixed model
-mixmod = MixedModels(models= list(graph=SbmPrior(),node_infos=LcaPrior()))
+# build the combined model
+mixmod = CombinedModels(models= list(graph=SbmPrior(),node_infos=LcaPrior()))
 # cluster
 sol=greed(data,model=mixmod)
 # analyse the results

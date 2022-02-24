@@ -15,12 +15,12 @@ An S4 class to represent an abstract generative model
 
 \seealso{
 Other DlvmModels: 
+\code{\link{CombinedModels}},
 \code{\link{DcLbm}},
 \code{\link{DcSbm}},
 \code{\link{DiagGmm}},
 \code{\link{Gmm}},
 \code{\link{Lca}},
-\code{\link{MixedModels}},
 \code{\link{MoM}},
 \code{\link{MoR}},
 \code{\link{MultSbm}},

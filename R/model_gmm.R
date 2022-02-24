@@ -13,7 +13,7 @@ NULL
 #' \deqn{ \mu_k \sim \mathcal{N}(\mu,(\tau V_k)^{-1})}
 #' \deqn{ X_{i}|Z_{ik}=1 \sim \mathcal{N}(\mu_k,V_{k}^{-1})}
 #' with \eqn{\mathcal{W}(\varepsilon^{-1},n_0)} the Wishart distribution.
-#' The \code{Gmm-class} must be used when fitting a simple Gaussian Mixture Model whereas the \code{GmmPrior-class} must be used when fitting a \code{\link{MixedModels-class}}.
+#' The \code{Gmm-class} must be used when fitting a simple Gaussian Mixture Model whereas the \code{GmmPrior-class} must be used when fitting a \code{\link{CombinedModels-class}}.
 #' @name Gmm
 NULL
 #> NULL

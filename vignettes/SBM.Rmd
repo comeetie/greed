@@ -270,7 +270,7 @@ Sometimes, a graph accounts for more complex interactions between object such as
  1. categorical relationship instead of solely binary
  2. multidimensional/multilayered relationships encoded by different graphs (*e.g.* work relation and friendship)
 
-The first case can be adressed in the SBM framework via a multinomial SBM model. The second is different since there are different layer or *views* of the data. Still, the **greed** package may handle this type of data via its `MixedModels` framework where user simply stacks the DLVM of its choice on each view of the data (for more info see the dedicated vignette on Mixed Models).
+The first case can be adressed in the SBM framework via a multinomial SBM model. The second is different since there are different layer or *views* of the data. Still, the **greed** package may handle this type of data via its `CombinedModels` framework where user simply stacks the DLVM of its choice on each view of the data (for more info see the dedicated vignette on Combined Models).
 
 ## Categorical edges and the Multinomial SBM: newguinea dataset
 
@@ -332,18 +332,18 @@ p(G_1, \ldots, G_V \mid Z) = p(G_1 \mid Z) \times \ldots \times p(G_V \mid Z).
 ```
 The ICL of the whole dataset is then simply the sum of the individual ICL of the V models. 
 
-The **greed** package implements this modelization via the `?MixedModels-class`. We refer to the dedicated vignettes for more details `vignette("Mxixed-Models")` but, from a practical perspective, one need to specify the $V$ observational models in a named list, and the data (here the $V$ adjacency matrices) in a list sharing the same names. Here is an example on the **NewGuinea** dataset analyzed above, with $V=2$ views corresponding to enmity and friendship. We put a default dcSBM model on both views and provide the two corresponding adjacency matrix as data.
+The **greed** package implements this modelization via the `?CombinedModels-class`. We refer to the dedicated vignettes for more details `vignette("Mxixed-Models")` but, from a practical perspective, one need to specify the $V$ observational models in a named list, and the data (here the $V$ adjacency matrices) in a list sharing the same names. Here is an example on the **NewGuinea** dataset analyzed above, with $V=2$ views corresponding to enmity and friendship. We put a default dcSBM model on both views and provide the two corresponding adjacency matrix as data.
 
 
 ```{r}
-mod <- MixedModels(list(friends = DcSbmPrior(), enmy = DcSbmPrior()))
+mod <- CombinedModels(list(friends = DcSbmPrior(), enmy = DcSbmPrior()))
 data <- list(friends = NewGuinea[, , 2], enmy = NewGuinea[, , 1])
 sol_bidcsbm <- greed(data, model = mod, K = 5)
 ```
 
-> **Practicalities:** The `MixedModel` class allows any list of observational models. However, they need to be initiated via the following syntax: `<your_desired_model>Prior()`. Without going into technical details, this is necessary to account for the shared aspect of the partition $Z$ between all models.
+> **Practicalities:** The `CombinedModels` class allows any list of observational models. However, they need to be initiated via the following syntax: `<your_desired_model>Prior()`. Without going into technical details, this is necessary to account for the shared aspect of the partition $Z$ between all models.
 
-> **Practicalities:** A `MixedModel` with `SbmPrior` or `DcSbmPrior` views will use a sparse representation of the differents views and will therefore scale well with the network size.
+> **Practicalities:** A `CombinedModels` with `SbmPrior` or `DcSbmPrior` views will use a sparse representation of the differents views and will therefore scale well with the network size.
 
 The algorithm finds $K=2$ clusters here. Since each views has its own obersvational model, it is possible to use the `?extractSubModel()` function to retrieve the fitted observational model for each view. Then, traditional visualization tools may be used. Here, we display the block representation of the clustering for the two modalities, highlighting a pronouced community structure in the *friendship* modality and a strong bipartite structure in the *enmity* modality as before, with no enmity link in the small cluster and few amongst the tribes of the bigger one.
 
@@ -366,7 +366,7 @@ dim(SevenGraders)
 We are interested in finding an underlying partition explaining these $3$ kinds of relationships. Again, we put a `DcSbmPrior` model for each view, and provide the models and views as named lists with the same names.
 
 ```{r}
-mod <- MixedModels(list(class = DcSbmPrior(), friends = DcSbmPrior(), work = DcSbmPrior()))
+mod <- CombinedModels(list(class = DcSbmPrior(), friends = DcSbmPrior(), work = DcSbmPrior()))
 data <- list(class = SevenGraders[, , 1], friends = SevenGraders[, , 2], work = SevenGraders[, , 3])
 sol <- greed(data, model = mod, K = 5)
 ```

@@ -187,7 +187,7 @@ IclModel * init(S4 model,List data, arma::uvec clr, bool verbose){
     M = new SimpleIclCoModel(m,model,clt,Nr,Nc,verbose);
   }else{
     if(model.is("DlvmPrior")){
-      if(model.is("MixedModels")){
+      if(model.is("CombinedModels")){
         List models = as<List>(model.slot("models"));
         std::vector<IclModelEmission*> icl_models;
         CharacterVector models_names = models.names();

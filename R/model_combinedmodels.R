@@ -3,49 +3,49 @@ NULL
 
 
 
-#' @title Mixed Models classes
+#' @title Combined Models classes
 #'
 #' @description
-#' An S4 class to represent a mixed clustering models, where sevral models are used to model different datasets. A conditional independence assumption between the view knowing the cluster is made.
+#' An S4 class to represent a combined clustering models, where several models are used to model different datasets. A conditional independence assumption between the view knowing the cluster is made.
 #' @details
 #' The filed name in the models list must match the name of the list use to provide the datasets to cluster together.
-#' @name MixedModels
+#' @name CombinedModels
 NULL
 #> NULL
 
-#' @rdname MixedModels
+#' @rdname CombinedModels
 #' @family DlvmModels
 #' @export
-setClass("MixedModels",
+setClass("CombinedModels",
   representation = list(models = "list"),
   contains = "DlvmPrior",
   prototype(alpha = 1, models = list())
 )
 
-setValidity("MixedModels", function(object) {
+setValidity("CombinedModels", function(object) {
   models_classes <- lapply(object@models, class)
   valid_models <- c("GmmPrior", "DiagGmmPrior", "MoRPrior", "SbmPrior", "DcSbmPrior", "MultSbmPrior", "MoMPrior", "LcaPrior")
   if (!all(models_classes %in% valid_models)) {
-    return(paste0("At least one of the provided models to MixedModels is not of the good classe, only ", valid_models, " may be used with a MixedModels.", collapse = ", "))
+    return(paste0("At least one of the provided models to CombinedModels is not of the good classe, only ", valid_models, " may be used with a CombinedModels.", collapse = ", "))
   }
   TRUE
 })
 
-#' @rdname MixedModels
+#' @rdname CombinedModels
 #' @param models a named list of DlvmPrior's object
 #' @param alpha Dirichlet prior parameter over the cluster proportions (default to 1)
-#' @return a \code{MixedModels-class} object
-#' @seealso \code{\link{MixedModelsFit-class}}, \code{\link{MixedModelsPath-class}}
+#' @return a \code{CombinedModels-class} object
+#' @seealso \code{\link{CombinedModelsFit-class}}, \code{\link{CombinedModelsPath-class}}
 #' @examples
-#' MixedModels(models = list(continuous = GmmPrior(), discrete = LcaPrior()))
+#' CombinedModels(models = list(continuous = GmmPrior(), discrete = LcaPrior()))
 #' @export
-MixedModels <- function(models, alpha = 1) {
-  methods::new("MixedModels", alpha = alpha, models = models)
+CombinedModels <- function(models, alpha = 1) {
+  methods::new("CombinedModels", alpha = alpha, models = models)
 }
 
 
 
-#' @title Mixed Models fit results class
+#' @title Combined Models fit results class
 #'
 #' @description
 #'  An S4 class to represent a fit of a degree corrected stochastic block model for co_clustering, extend \code{\link{IclFit-class}}.
@@ -57,15 +57,15 @@ MixedModels <- function(models, alpha = 1) {
 #' @slot obs_stats a list with the following elements:
 #' @slot move_mat binary matrix which store move constraints
 #' @slot train_hist data.frame with training history information (details depends on the training procedure)
-#' @seealso \code{\link{extractSubModel,MixedModelsPath,character-method}}
+#' @seealso \code{\link{extractSubModel,CombinedModelsPath,character-method}}
 #' @export
-setClass("MixedModelsFit", slots = list(model = "MixedModels"), contains = "IclFit")
+setClass("CombinedModelsFit", slots = list(model = "CombinedModels"), contains = "IclFit")
 
 
 
 
 
-#' @title Mixed Models hierarchical fit results class
+#' @title Combined Models hierarchical fit results class
 #'
 #'
 #' @description An S4 class to represent a hierarchical fit of a degree corrected stochastic block model, extend \code{\link{IclPath-class}}.
@@ -89,9 +89,9 @@ setClass("MixedModelsFit", slots = list(model = "MixedModels"), contains = "IclF
 #' @slot ggtree data.frame with complete merge tree for easy plotting with \code{ggplot2}
 #' @slot tree numeric vector with merge tree \code{tree[i]} contains the index of \code{i} father
 #' @slot train_hist  data.frame with training history information (details depends on the training procedure)
-#' @seealso \code{\link{extractSubModel,MixedModelsPath,character-method}}
+#' @seealso \code{\link{extractSubModel,CombinedModelsPath,character-method}}
 #' @export
-setClass("MixedModelsPath", contains = c("IclPath", "MixedModelsFit"))
+setClass("CombinedModelsPath", contains = c("IclPath", "CombinedModelsFit"))
 
 
 
@@ -99,7 +99,7 @@ setClass("MixedModelsPath", contains = c("IclPath", "MixedModelsFit"))
 
 setMethod(
   f = "reorder",
-  signature = signature("MixedModels", "list", "integer"),
+  signature = signature("CombinedModels", "list", "integer"),
   definition = function(model, obs_stats, order) {
     mnames <- names(model@models)
     new_obs_stats <- lapply(mnames, function(current_name) {
@@ -114,7 +114,7 @@ setMethod(
 
 setMethod(
   f = "cleanObsStats",
-  signature = signature("MixedModels", "list"),
+  signature = signature("CombinedModels", "list"),
   definition = function(model, obs_stats, data) {
     mnames <- names(model@models)
     new_obs_stats <- lapply(mnames, function(current_name) {
@@ -131,7 +131,7 @@ setMethod(
 
 setMethod(
   f = "preprocess",
-  signature = signature("MixedModels"),
+  signature = signature("CombinedModels"),
   definition = function(model, data) {
     mnames <- names(model@models)
     if ("counts" %in% mnames) {
@@ -158,9 +158,9 @@ setMethod(
   }
 )
 
-#' @title Extract a part of a \code{\link{MixedModelsPath-class}} object
+#' @title Extract a part of a \code{\link{CombinedModelsPath-class}} object
 #'
-#' @param sol an \code{\link{MixedModelsPath-class}} object
+#' @param sol an \code{\link{CombinedModelsPath-class}} object
 #' @param sub_model_name a string which specify the part of the model to
 #'   extract. Note that the name must correspond to the one of the names used in
 #'   the list of models during the origin call to \code{\link{greed}}.
@@ -169,11 +169,11 @@ setMethod(
 setGeneric("extractSubModel", function(sol, sub_model_name) standardGeneric("extractSubModel"))
 
 
-#' @describeIn extractSubModel MixedModelsPath method
+#' @describeIn extractSubModel CombinedModelsPath method
 #' @export 
 setMethod(
   f = "extractSubModel",
-  signature = signature("MixedModelsPath", "character"),
+  signature = signature("CombinedModelsPath", "character"),
   definition = function(sol, sub_model_name) {
     model <- sol@model@models[[sub_model_name]]
     model_type <- gsub("Prior", "", as.character(class(model)))

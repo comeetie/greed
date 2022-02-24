@@ -4,7 +4,7 @@ library(ggplot2)
 library(Matrix)
 set.seed(1234)
 
-test_that("Mixed models sbm and gmm", {
+test_that("Combined models sbm and gmm", {
   N <- 500
   K <- 10
   pi <- rep(1 / K, K)
@@ -16,7 +16,7 @@ test_that("Mixed models sbm and gmm", {
   Xnodes <- as.matrix(gmm[cbind(1:N, sbm$cl)])
 
   Xinput <- list(graph = sbm$x, Xnodes = Xnodes)
-  Mtt <- MixedModels(models = list(graph = SbmPrior(), Xnodes = GmmPrior()))
+  Mtt <- CombinedModels(models = list(graph = SbmPrior(), Xnodes = GmmPrior()))
   sol <- greed(Xinput, model = Mtt)
   expect_equal(sol@K, K)
   solc <- cut(sol, 8)
@@ -28,7 +28,7 @@ test_that("Mixed models sbm and gmm", {
 })
 
 
-test_that("Mixed models multsbm and gmm", {
+test_that("Combined models multsbm and gmm", {
   N <- 100
   K <- 3
   pi <- rep(1 / K, K)
@@ -46,7 +46,7 @@ test_that("Mixed models multsbm and gmm", {
   Xnodes <- as.matrix(gmm[cbind(1:N, multsbm$cl)])
 
   Xinput <- list(graph = multsbm$x, Xnodes = Xnodes)
-  Mtt <- MixedModels(models = list(graph = MultSbmPrior(), Xnodes = GmmPrior()))
+  Mtt <- CombinedModels(models = list(graph = MultSbmPrior(), Xnodes = GmmPrior()))
   sol <- greed(Xinput, model = Mtt)
   expect_equal(sol@K, K)
   solc <- cut(sol, 2)
@@ -57,7 +57,7 @@ test_that("Mixed models multsbm and gmm", {
   expect_true(is.ggplot(plot(extractSubModel(sol, "graph"))))
 })
 
-test_that("Mixed models mom and gmm", {
+test_that("Combined models mom and gmm", {
   N <- 200
   K <- 4
   pi <- rep(1 / K, K)
@@ -68,7 +68,7 @@ test_that("Mixed models mom and gmm", {
   }))
   Xnodes <- as.matrix(gmm[cbind(1:N, mm$cl)])
   Xinput <- list(mom = mm$x, Xnodes = Xnodes)
-  Mtt <- MixedModels(models = list(mom = MoMPrior(), Xnodes = GmmPrior()))
+  Mtt <- CombinedModels(models = list(mom = MoMPrior(), Xnodes = GmmPrior()))
   sol <- greed(Xinput, model = Mtt)
   expect_equal(sol@K, K)
   solc <- cut(sol, 2)
@@ -79,7 +79,7 @@ test_that("Mixed models mom and gmm", {
   expect_true(is.ggplot(plot(extractSubModel(sol, "mom"))))
 })
 
-test_that("Mixed models lca and gmm", {
+test_that("Combined models lca and gmm", {
   N <- 500
   theta <- list(
     matrix(c(0.1, 0.9, 0.9, 0.1, 0.8, 0.2, 0.05, 0.95), ncol = 2, byrow = TRUE),
@@ -94,7 +94,7 @@ test_that("Mixed models lca and gmm", {
   }))
   Xnodes <- as.matrix(gmm[cbind(1:N, lca.data$cl)])
   Xinput <- list(lca = lca.data$x, Xnodes = Xnodes)
-  Mtt <- MixedModels(models = list(lca = LcaPrior(), Xnodes = GmmPrior()))
+  Mtt <- CombinedModels(models = list(lca = LcaPrior(), Xnodes = GmmPrior()))
   sol <- greed(Xinput, model = Mtt)
   solc <- cut(sol, 2)
   expect_true(is.ggplot(plot(sol, type = "tree")))
@@ -104,7 +104,7 @@ test_that("Mixed models lca and gmm", {
   expect_true(is(plot(extractSubModel(sol, "lca")), "gtable"))
 })
 
-test_that("Mixed models lca and diaggmm", {
+test_that("Combined models lca and diaggmm", {
   N <- 500
   theta <- list(
     matrix(c(0.1, 0.9, 0.9, 0.1, 0.8, 0.2, 0.05, 0.95), ncol = 2, byrow = TRUE),
@@ -119,7 +119,7 @@ test_that("Mixed models lca and diaggmm", {
   }))
   Xnodes <- as.matrix(gmm[cbind(1:N, lca.data$cl)])
   Xinput <- list(lca = lca.data$x, Xnodes = Xnodes)
-  Mtt <- MixedModels(models = list(lca = LcaPrior(), Xnodes = DiagGmmPrior()))
+  Mtt <- CombinedModels(models = list(lca = LcaPrior(), Xnodes = DiagGmmPrior()))
   sol <- greed(Xinput, model = Mtt)
   expect_equal(sol@K, K)
   solc <- cut(sol, 2)
