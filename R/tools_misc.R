@@ -170,6 +170,9 @@ available_algorithms <- function() {
   cli::cli_rule(left="Available algorithms for the {.pkg greed} package")
   cli::cli_ol()
   cli::cli_li("Hybrid genetic algorithm, see ?Hybrid")
-  cli::cli_li("Greedy hill-climbing heuristics with multiple starts, see ?Multistarts")
-  cli::cli_li("Initialization (e.g. spectral clustering or k-means algorithm), see ?Seed")
+  cli::cli_li("Greedy hill-climbing heuristics")
+  ulid <- cli::cli_ul()
+  cli::cli_li("With multiple random starts, see ?Multistarts")
+  cli::cli_li("With one 'seeded' initialization (e.g. spectral clustering or k-means algorithm), see ?Seed")
+  cli::cli_end(ulid)
 }
