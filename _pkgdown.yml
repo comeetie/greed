@@ -25,8 +25,8 @@ navbar:
         href: articles/MoR.html
       - text: "Graph clustering"
         href: articles/SBM.html
-      - text: "Mixed Models"
-        href: articles/Mixed-Models.html
+      - text: "Combined Models"
+        href: articles/CombinedModels.html
       - text: "Mixture of Multinomials"
         href: articles/MoM.html
       - text: "Co-clustering and LBM"

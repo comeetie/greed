@@ -4,6 +4,9 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/articles/CombinedModels.html</loc>
+  </url>
+  <url>
     <loc>/articles/GMM.html</loc>
   </url>
   <url>
@@ -53,6 +56,15 @@
   </url>
   <url>
     <loc>/reference/Books.html</loc>
+  </url>
+  <url>
+    <loc>/reference/CombinedModels.html</loc>
+  </url>
+  <url>
+    <loc>/reference/CombinedModelsFit-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/CombinedModelsPath-class.html</loc>
   </url>
   <url>
     <loc>/reference/DcLbm.html</loc>
@@ -254,6 +266,9 @@
   </url>
   <url>
     <loc>/reference/alg-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/available_algorithms.html</loc>
   </url>
   <url>
     <loc>/reference/available_models.html</loc>

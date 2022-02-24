@@ -74,7 +74,7 @@
       <a href="articles/SBM.html">Graph clustering</a>
     </li>
     <li>
-      <a href="articles/Mixed-Models.html">Mixed Models</a>
+      <a href="articles/CombinedModels.html">Combined Models</a>
     </li>
     <li>
       <a href="articles/MoM.html">Mixture of Multinomials</a>
@@ -125,13 +125,13 @@
 <li>
 <strong>Count data clustering</strong> with the Mixture of Multinomials model. A tutorial will soon be available in <code><a href="articles/MoM.html">vignette("MoM")</a></code>. For now, we refer to the documentation for the <code>Mom</code> S4 class.</li>
 <li>
-<strong>Mixed-typed</strong> data clustering, <em>e.g.</em> categorical and numerical but the package handles virtually any type of data combination by stacking models on top of each data types. For example graph data with continuous or categorical data attached to the nodes are handled. A tutorial is available in <code><a href="articles/Mixed-Models.html">vignette("Mixed-Models")</a></code>. See also the documentation for the <code>MixedModels</code> S4 class.</li>
+<strong>Mixed-typed</strong> data clustering, <em>e.g.</em> categorical and numerical but the package handles virtually any type of data combination by stacking models on top of each data types. For example graph data with continuous or categorical data attached to the nodes are handled. A tutorial is available in <code><a href="articles/CombinedModels.html">vignette("CombinedModels")</a></code>. See also the documentation for the <code>CombinedModels</code> S4 class.</li>
 <li>
 <strong>Mixture of regression</strong> for simultaneous clustering and fitting a regression model in each cluster. A tutorial is available in <code><a href="articles/MoR.html">vignette("MoR")</a></code>. See also the documentation for the <code>MoR</code> S4 class.</li>
 <li>
 <strong>Co-clustering</strong> of binary and count-data via the Latent Block Model and its degree-corrected variant. A tutorial will soon be available in <code><a href="articles/LBM.html">vignette("LBM")</a></code>. For now, we refer to the documentation for the <code>DcLbm</code> S4 class.</li>
 </ul>
-<!-- The following generative models are currently available:  --><!-- * **Stochastic Block Models** (see ``?`Sbm-class` ``), --><!-- * **Degree Corrected Stochastic Block Models** (see ``?`DcSbm-class` ``), --><!-- * **Multinomial Stochastic Block Models** (see ``?`MultSbm-class` ``), --><!-- * **Mixture of Multinomials** (see ``?`MoR-class` ``),  --><!-- * **Latent Class Analysis** (see ``?`Lca-class` ``),  --><!-- * **Gaussian Mixture Model** (see ``?`Gmm-class` `` and ``?`DiagGmm-class` ``), --><!-- * **Multivariate Mixture of Gaussian Regression Model** (see ``?`MoR-class` ``), --><!-- * **Degree Corrected Latent Block Model** (see ``?`DcLbm-class` ``). --><!-- * **Mixed Dlvm's** (see ``?`MixedModels-class` ``). --><p>With the Integrated Classification Likelihood, the parameters of the models are integrated out with a natural regularization effect for complex models. This penalization allows to automatically find a suitable value for the number of clusters <em>K</em><sup>⋆</sup>. A user only needs to provide an initial guess for the number of clusters <em>K</em>, as well as values for the prior parameters (reasonable default values are used if no prior information is given). The default optimization is performed thanks to a combination of a greedy local search and a genetic algorithm described in <a href="https://doi.org/10.1007/s11634-021-00440-z" class="external-link">Côme, Jouvin, Latouche, and Bouveyron (2021)</a>, but several other optimization algorithms are also available.</p>
+<p>With the Integrated Classification Likelihood, the parameters of the models are integrated out with a natural regularization effect for complex models. This penalization allows to automatically find a suitable value for the number of clusters <em>K</em><sup>⋆</sup>. A user only needs to provide an initial guess for the number of clusters <em>K</em>, as well as values for the prior parameters (reasonable default values are used if no prior information is given). The default optimization is performed thanks to a combination of a greedy local search and a genetic algorithm described in <a href="https://doi.org/10.1007/s11634-021-00440-z" class="external-link">Côme, Jouvin, Latouche, and Bouveyron (2021)</a>, but several other optimization algorithms are also available.</p>
 <p>Eventually, a whole hierarchy of solutions from <em>K</em><sup>⋆</sup> to 1 cluster is extracted. This enables an ordering of the clusters, and the exploration of simpler clustering along the hierarchy. The package also provides some plotting functionality.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -293,11 +293,6 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/available_models.html">available_models</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Many plotting functions are available and, depending of the specified <code>model</code>, different <code>type</code> argument may be specified. For further information we refer to the vignettes linked above for each use case.</p>
-<!-- > See the `vignette("GMM")` for an in-depth tutorial. -->
-<!-- > See the `vignette("LCA")` for details. -->
-<!-- > See the `vignette("SBM")` for details. -->
-<!-- > See the `vignette("MoR")` for details. -->
-<!-- > See the `vignette("Mixed-Models")`for details. -->
 </div>
 <div class="section level2">
 <h2 id="using-parallel-computing">Using parallel computing<a class="anchor" aria-label="anchor" href="#using-parallel-computing"></a>

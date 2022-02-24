@@ -74,7 +74,7 @@
       <a href="../articles/SBM.html">Graph clustering</a>
     </li>
     <li>
-      <a href="../articles/Mixed-Models.html">Mixed Models</a>
+      <a href="../articles/CombinedModels.html">Combined Models</a>
     </li>
     <li>
       <a href="../articles/MoM.html">Mixture of Multinomials</a>
@@ -817,7 +817,7 @@ n
 <li>categorical relationship instead of solely binary</li>
 <li>multidimensional/multilayered relationships encoded by different graphs (<em>e.g.</em> work relation and friendship)</li>
 </ol>
-<p>The first case can be adressed in the SBM framework via a multinomial SBM model. The second is different since there are different layer or <em>views</em> of the data. Still, the <strong>greed</strong> package may handle this type of data via its <code>MixedModels</code> framework where user simply stacks the DLVM of its choice on each view of the data (for more info see the dedicated vignette on Mixed Models).</p>
+<p>The first case can be adressed in the SBM framework via a multinomial SBM model. The second is different since there are different layer or <em>views</em> of the data. Still, the <strong>greed</strong> package may handle this type of data via its <code>CombinedModels</code> framework where user simply stacks the DLVM of its choice on each view of the data (for more info see the dedicated vignette on Combined Models).</p>
 <div class="section level3">
 <h3 id="categorical-edges-and-the-multinomial-sbm-newguinea-dataset">Categorical edges and the Multinomial SBM: newguinea dataset<a class="anchor" aria-label="anchor" href="#categorical-edges-and-the-multinomial-sbm-newguinea-dataset"></a>
 </h3>
@@ -887,25 +887,25 @@ Ggraph plot of the NewGuinea network with the result of the MultSbm model.
 p(G_1, \ldots, G_V \mid Z) = p(G_1 \mid Z) \times \ldots \times p(G_V \mid Z).
 \end{equation}\]</span>
 <p>The ICL of the whole dataset is then simply the sum of the individual ICL of the V models.</p>
-<p>The <strong>greed</strong> package implements this modelization via the <code>?MixedModels-class</code>. We refer to the dedicated vignettes for more details <code>vignette("Mxixed-Models")</code> but, from a practical perspective, one need to specify the <span class="math inline">\(V\)</span> observational models in a named list, and the data (here the <span class="math inline">\(V\)</span> adjacency matrices) in a list sharing the same names. Here is an example on the <strong>NewGuinea</strong> dataset analyzed above, with <span class="math inline">\(V=2\)</span> views corresponding to enmity and friendship. We put a default dcSBM model on both views and provide the two corresponding adjacency matrix as data.</p>
+<p>The <strong>greed</strong> package implements this modelization via the <code>?CombinedModels-class</code>. We refer to the dedicated vignettes for more details <code>vignette("Mxixed-Models")</code> but, from a practical perspective, one need to specify the <span class="math inline">\(V\)</span> observational models in a named list, and the data (here the <span class="math inline">\(V\)</span> adjacency matrices) in a list sharing the same names. Here is an example on the <strong>NewGuinea</strong> dataset analyzed above, with <span class="math inline">\(V=2\)</span> views corresponding to enmity and friendship. We put a default dcSBM model on both views and provide the two corresponding adjacency matrix as data.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MixedModels.html">MixedModels</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>friends <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, enmy <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CombinedModels.html">CombinedModels</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>friends <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, enmy <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>friends <span class="op">=</span> <span class="va">NewGuinea</span><span class="op">[</span>, , <span class="fl">2</span><span class="op">]</span>, enmy <span class="op">=</span> <span class="va">NewGuinea</span><span class="op">[</span>, , <span class="fl">1</span><span class="op">]</span><span class="op">)</span>
 <span class="va">sol_bidcsbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">data</span>, model <span class="op">=</span> <span class="va">mod</span>, K <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a MIXEDMODELS model</span> ──</span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a COMBINEDMODELS model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
 <span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -151 and 2 clusters.</span>
 <span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -151 and 2 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a MIXEDMODELS model 2 clusters and an ICL of -151</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a COMBINEDMODELS model 2 clusters and an ICL of -151</span></code></pre></div>
 <blockquote>
-<p><strong>Practicalities:</strong> The <code>MixedModel</code> class allows any list of observational models. However, they need to be initiated via the following syntax: <code>&lt;your_desired_model&gt;Prior()</code>. Without going into technical details, this is necessary to account for the shared aspect of the partition <span class="math inline">\(Z\)</span> between all models.</p>
+<p><strong>Practicalities:</strong> The <code>CombinedModels</code> class allows any list of observational models. However, they need to be initiated via the following syntax: <code>&lt;your_desired_model&gt;Prior()</code>. Without going into technical details, this is necessary to account for the shared aspect of the partition <span class="math inline">\(Z\)</span> between all models.</p>
 </blockquote>
 <blockquote>
-<p><strong>Practicalities:</strong> A <code>MixedModel</code> with <code>SbmPrior</code> or <code>DcSbmPrior</code> views will use a sparse representation of the differents views and will therefore scale well with the network size.</p>
+<p><strong>Practicalities:</strong> A <code>CombinedModels</code> with <code>SbmPrior</code> or <code>DcSbmPrior</code> views will use a sparse representation of the differents views and will therefore scale well with the network size.</p>
 </blockquote>
 <p>The algorithm finds <span class="math inline">\(K=2\)</span> clusters here. Since each views has its own obersvational model, it is possible to use the <code>?extractSubModel()</code> function to retrieve the fitted observational model for each view. Then, traditional visualization tools may be used. Here, we display the block representation of the clustering for the two modalities, highlighting a pronouced community structure in the <em>friendship</em> modality and a strong bipartite structure in the <em>enmity</em> modality as before, with no enmity link in the small cluster and few amongst the tribes of the bigger one.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
@@ -927,18 +927,18 @@ Block matrix repressentation of the clustering with the two views.
 <span class="co">#&gt; [1] 29 29  3</span></code></pre></div>
 <p>We are interested in finding an underlying partition explaining these <span class="math inline">\(3\)</span> kinds of relationships. Again, we put a <code>DcSbmPrior</code> model for each view, and provide the models and views as named lists with the same names.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MixedModels.html">MixedModels</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>class <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, friends <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, work <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CombinedModels.html">CombinedModels</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>class <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, friends <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, work <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>class <span class="op">=</span> <span class="va">SevenGraders</span><span class="op">[</span>, , <span class="fl">1</span><span class="op">]</span>, friends <span class="op">=</span> <span class="va">SevenGraders</span><span class="op">[</span>, , <span class="fl">2</span><span class="op">]</span>, work <span class="op">=</span> <span class="va">SevenGraders</span><span class="op">[</span>, , <span class="fl">3</span><span class="op">]</span><span class="op">)</span>
 <span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">data</span>, model <span class="op">=</span> <span class="va">mod</span>, K <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a MIXEDMODELS model</span> ──</span>
+<span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a COMBINEDMODELS model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
 <span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1516 and 4 clusters.</span>
 <span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1516 and 4 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a MIXEDMODELS model 4 clusters and an ICL of -1516</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a COMBINEDMODELS model 4 clusters and an ICL of -1516</span></code></pre></div>
 <p>Here, the algorithm found <span class="math inline">\(K=4\)</span> clusters and we can look at the block matrix representation of the <em>work</em> relation graph.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/extractSubModel.html">extractSubModel</a></span><span class="op">(</span><span class="va">sol</span>, <span class="st">"work"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"blocks"</span><span class="op">)</span></code></pre></div>

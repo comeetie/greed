@@ -41,8 +41,8 @@ and currently handles the following tasks:
     but the package handles virtually any type of data combination by
     stacking models on top of each data types. For example graph data
     with continuous or categorical data attached to the nodes are
-    handled. A tutorial is available in `vignette("Mixed-Models")`. See
-    also the documentation for the `MixedModels` S4 class.
+    handled. A tutorial is available in `vignette("CombinedModels")`.
+    See also the documentation for the `CombinedModels` S4 class.
 -   **Mixture of regression** for simultaneous clustering and fitting a
     regression model in each cluster. A tutorial is available in
     `vignette("MoR")`. See also the documentation for the `MoR` S4
@@ -51,17 +51,6 @@ and currently handles the following tasks:
     Model and its degree-corrected variant. A tutorial will soon be
     available in `vignette("LBM")`. For now, we refer to the
     documentation for the `DcLbm` S4 class.
-
-<!-- The following generative models are currently available:  -->
-<!-- * **Stochastic Block Models** (see ``?`Sbm-class` ``), -->
-<!-- * **Degree Corrected Stochastic Block Models** (see ``?`DcSbm-class` ``), -->
-<!-- * **Multinomial Stochastic Block Models** (see ``?`MultSbm-class` ``), -->
-<!-- * **Mixture of Multinomials** (see ``?`MoR-class` ``),  -->
-<!-- * **Latent Class Analysis** (see ``?`Lca-class` ``),  -->
-<!-- * **Gaussian Mixture Model** (see ``?`Gmm-class` `` and ``?`DiagGmm-class` ``), -->
-<!-- * **Multivariate Mixture of Gaussian Regression Model** (see ``?`MoR-class` ``), -->
-<!-- * **Degree Corrected Latent Block Model** (see ``?`DcLbm-class` ``). -->
-<!-- * **Mixed Dlvm's** (see ``?`MixedModels-class` ``). -->
 
 With the Integrated Classification Likelihood, the parameters of the
 models are integrated out with a natural regularization effect for
@@ -241,12 +230,6 @@ available_models()
 Many plotting functions are available and, depending of the specified
 `model`, different `type` argument may be specified. For further
 information we refer to the vignettes linked above for each use case.
-
-<!-- > See the `vignette("GMM")` for an in-depth tutorial. -->
-<!-- > See the `vignette("LCA")` for details. -->
-<!-- > See the `vignette("SBM")` for details. -->
-<!-- > See the `vignette("MoR")` for details. -->
-<!-- > See the `vignette("Mixed-Models")`for details. -->
 
 ## Using parallel computing
 
