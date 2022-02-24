@@ -74,7 +74,7 @@
       <a href="../articles/SBM.html">Graph clustering</a>
     </li>
     <li>
-      <a href="../articles/Mixed-Models.html">Mixed Models</a>
+      <a href="../articles/CombinedModels.html">Combined Models</a>
     </li>
     <li>
       <a href="../articles/MoM.html">Mixture of Multinomials</a>
@@ -163,8 +163,6 @@ Z_i  &amp;\sim \mathcal{M}(1,\pi)\\
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
 <span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -675 and 2 clusters.</span>
 <span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -675 and 2 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -675 and 2 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -675 and 2 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a MOR model 2 clusters and an ICL of -675</span></code></pre></div>
@@ -174,8 +172,8 @@ Z_i  &amp;\sim \mathcal{M}(1,\pi)\\
 <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">cl</span>,<span class="va">NPreg</span><span class="op">$</span><span class="va">class</span><span class="op">)</span>
 <span class="co">#&gt;    </span>
 <span class="co">#&gt; cl   1  2</span>
-<span class="co">#&gt;   1 95  6</span>
-<span class="co">#&gt;   2  5 94</span></code></pre></div>
+<span class="co">#&gt;   1 96  7</span>
+<span class="co">#&gt;   2  4 93</span></code></pre></div>
 <p>Look at the value used for the prior parameters :</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/prior.html">prior</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
@@ -201,31 +199,31 @@ Z_i  &amp;\sim \mathcal{M}(1,\pi)\\
 <span class="va">params</span>
 <span class="co">#&gt; $pi</span>
 <span class="co">#&gt;       [,1]</span>
-<span class="co">#&gt; [1,] 0.505</span>
-<span class="co">#&gt; [2,] 0.495</span>
+<span class="co">#&gt; [1,] 0.515</span>
+<span class="co">#&gt; [2,] 0.485</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $A</span>
 <span class="co">#&gt; $A$cluster1</span>
 <span class="co">#&gt;                      yn</span>
-<span class="co">#&gt; (Intercept) -0.34359366</span>
-<span class="co">#&gt; x            4.43470799</span>
-<span class="co">#&gt; I(x^2)       0.03019472</span>
+<span class="co">#&gt; (Intercept) -0.31166547</span>
+<span class="co">#&gt; x            4.41332219</span>
+<span class="co">#&gt; I(x^2)       0.03143649</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $A$cluster2</span>
 <span class="co">#&gt;                     yn</span>
-<span class="co">#&gt; (Intercept) 13.1491302</span>
-<span class="co">#&gt; x            9.0759455</span>
-<span class="co">#&gt; I(x^2)      -0.8943487</span>
+<span class="co">#&gt; (Intercept) 13.1712665</span>
+<span class="co">#&gt; x            9.0646986</span>
+<span class="co">#&gt; I(x^2)      -0.8937822</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $Sigmak</span>
 <span class="co">#&gt; $Sigmak$cluster1</span>
 <span class="co">#&gt;          yn</span>
-<span class="co">#&gt; yn 11.27076</span>
+<span class="co">#&gt; yn 11.12687</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $Sigmak$cluster2</span>
 <span class="co">#&gt;          yn</span>
-<span class="co">#&gt; yn 11.73185</span></code></pre></div>
+<span class="co">#&gt; yn 11.93445</span></code></pre></div>
 <p>And plot prediction line of the fitted sub-models:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df.pred</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span>,length.out<span class="op">=</span><span class="fl">200</span><span class="op">)</span><span class="op">)</span>
@@ -259,16 +257,14 @@ Z_i  &amp;\sim \mathcal{M}(1,\pi)\\
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a MOR model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -2380 and 2 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -2357 and 2 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -2338 and 2 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -2335 and 3 clusters.</span>
-<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -2325 and 2 clusters.</span>
-<span class="co">#&gt; ℹ Generation 6 : best solution with an ICL of -2323 and 2 clusters.</span>
-<span class="co">#&gt; ℹ Generation 7 : best solution with an ICL of -2323 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -2389 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -2350 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -2339 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -2329 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -2329 and 2 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a MOR model 2 clusters and an ICL of -2323</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a MOR model 2 clusters and an ICL of -2329</span></code></pre></div>
 <p>The clustering found has two clusters, if we look at the regression models parameters :</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cl</span><span class="op">=</span><span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
@@ -276,25 +272,25 @@ Z_i  &amp;\sim \mathcal{M}(1,\pi)\\
 <span class="va">co</span><span class="op">$</span><span class="va">A</span>
 <span class="co">#&gt; $cluster1</span>
 <span class="co">#&gt;                value_eur</span>
-<span class="co">#&gt; (Intercept)  2.538343324</span>
-<span class="co">#&gt; age         -0.065244620</span>
-<span class="co">#&gt; pace        -0.001941323</span>
-<span class="co">#&gt; shooting     0.032408846</span>
-<span class="co">#&gt; dribbling    0.099125856</span>
-<span class="co">#&gt; passing      0.014545585</span>
-<span class="co">#&gt; defending    0.006462211</span>
-<span class="co">#&gt; physic       0.034161168</span>
+<span class="co">#&gt; (Intercept)  2.478606946</span>
+<span class="co">#&gt; age         -0.062825024</span>
+<span class="co">#&gt; pace        -0.001049408</span>
+<span class="co">#&gt; shooting     0.032929820</span>
+<span class="co">#&gt; dribbling    0.097291919</span>
+<span class="co">#&gt; passing      0.014868996</span>
+<span class="co">#&gt; defending    0.006414618</span>
+<span class="co">#&gt; physic       0.034364676</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $cluster2</span>
 <span class="co">#&gt;                value_eur</span>
-<span class="co">#&gt; (Intercept)  1.427605707</span>
-<span class="co">#&gt; age         -0.078783433</span>
-<span class="co">#&gt; pace         0.005243721</span>
-<span class="co">#&gt; shooting     0.003842183</span>
-<span class="co">#&gt; dribbling    0.014055643</span>
-<span class="co">#&gt; passing      0.008362171</span>
-<span class="co">#&gt; defending    0.141212325</span>
-<span class="co">#&gt; physic       0.031419501</span></code></pre></div>
+<span class="co">#&gt; (Intercept)  1.599018391</span>
+<span class="co">#&gt; age         -0.079072081</span>
+<span class="co">#&gt; pace         0.003887539</span>
+<span class="co">#&gt; shooting     0.004165481</span>
+<span class="co">#&gt; dribbling    0.015030871</span>
+<span class="co">#&gt; passing      0.008196094</span>
+<span class="co">#&gt; defending    0.140021033</span>
+<span class="co">#&gt; physic       0.030607252</span></code></pre></div>
 <p>The two regression model extracted are quite different, one has an important weight for the defending ability and the physic. Whereas the player’s value is more influenced by the dribling and shooting capabilities in the other regression model. The clustering seems therefore to have extracted two submarkets one for more defensive players and one for the other players. This can be confirmed by looking at the average position of the players of the two groups on the field:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Fifa_positions"</span><span class="op">)</span>

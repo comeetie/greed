@@ -74,7 +74,7 @@
       <a href="../articles/SBM.html">Graph clustering</a>
     </li>
     <li>
-      <a href="../articles/Mixed-Models.html">Mixed Models</a>
+      <a href="../articles/CombinedModels.html">Combined Models</a>
     </li>
     <li>
       <a href="../articles/MoM.html">Mixture of Multinomials</a>
@@ -289,15 +289,13 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a LCA model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -12696 and 13 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -12612 and 13 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -12603 and 13 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -12603 and 13 clusters.</span>
-<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -12603 and 13 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -12678 and 13 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -12616 and 15 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -12616 and 15 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a LCA model 12 clusters and an ICL of -12589</span></code></pre></div>
-<p>The hybrid genetic algorithm found a solution with <span class="math inline">\(K=12\)</span> clusters which is quite over-segmented. But, it display a good separation among edible and poisonous mushrooms:</p>
+<span class="co">#&gt; ── Clustering with a LCA model 13 clusters and an ICL of -12586</span></code></pre></div>
+<p>The hybrid genetic algorithm found a solution with <span class="math inline">\(K=13\)</span> clusters which is quite over-segmented. But, it display a good separation among edible and poisonous mushrooms:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">label</span>, <span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol_mush</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <table class="table">
@@ -315,6 +313,7 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <th align="right">10</th>
 <th align="right">11</th>
 <th align="right">12</th>
+<th align="right">13</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -322,7 +321,8 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">11</td>
-<td align="right">27</td>
+<td align="right">21</td>
+<td align="right">6</td>
 <td align="right">32</td>
 <td align="right">27</td>
 <td align="right">92</td>
@@ -337,6 +337,7 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <td align="right">173</td>
 <td align="right">209</td>
 <td align="right">3</td>
+<td align="right">0</td>
 <td align="right">9</td>
 <td align="right">0</td>
 <td align="right">0</td>
@@ -426,14 +427,19 @@ Dendogram obtained with greed with the Lca model on the Mushroom dataset.
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a LCA model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 50 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -27521 and 8 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -27476 and 9 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -27425 and 7 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -27414 and 7 clusters.</span>
-<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -27414 and 7 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -27497 and 9 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -27471 and 9 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -27454 and 8 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -27438 and 7 clusters.</span>
+<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -27435 and 8 clusters.</span>
+<span class="co">#&gt; ℹ Generation 6 : best solution with an ICL of -27415 and 7 clusters.</span>
+<span class="co">#&gt; ℹ Generation 7 : best solution with an ICL of -27407 and 7 clusters.</span>
+<span class="co">#&gt; ℹ Generation 8 : best solution with an ICL of -27406 and 7 clusters.</span>
+<span class="co">#&gt; ℹ Generation 9 : best solution with an ICL of -27406 and 7 clusters.</span>
+<span class="co">#&gt; ℹ Generation 10 : best solution with an ICL of -27406 and 7 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a LCA model 6 clusters and an ICL of -27407</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a LCA model 6 clusters and an ICL of -27403</span></code></pre></div>
 <p>The algorithm found <span class="math inline">\(K=6\)</span> clusters which are quite balanced. To explore the results, we plot the dendogram found.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
@@ -474,57 +480,57 @@ Marginals plot of the clustering obtained with greed on the Young adult data.
 <tbody>
 <tr class="odd">
 <td align="left">cluster1</td>
-<td align="right">0.55</td>
+<td align="right">0.31</td>
 <td align="right">0.33</td>
-<td align="right">0.10</td>
-<td align="right">0.02</td>
-<td align="right">0.00</td>
-<td align="right">0.00</td>
-</tr>
-<tr class="even">
-<td align="left">cluster2</td>
-<td align="right">0.69</td>
-<td align="right">0.11</td>
-<td align="right">0.14</td>
-<td align="right">0.05</td>
-<td align="right">0.00</td>
-<td align="right">0.01</td>
-</tr>
-<tr class="odd">
-<td align="left">cluster3</td>
-<td align="right">0.30</td>
-<td align="right">0.32</td>
-<td align="right">0.23</td>
+<td align="right">0.22</td>
 <td align="right">0.09</td>
 <td align="right">0.04</td>
 <td align="right">0.01</td>
 </tr>
 <tr class="even">
-<td align="left">cluster4</td>
-<td align="right">0.20</td>
-<td align="right">0.32</td>
-<td align="right">0.21</td>
-<td align="right">0.21</td>
+<td align="left">cluster2</td>
+<td align="right">0.19</td>
+<td align="right">0.33</td>
+<td align="right">0.19</td>
+<td align="right">0.22</td>
 <td align="right">0.06</td>
 <td align="right">0.00</td>
 </tr>
 <tr class="odd">
-<td align="left">cluster5</td>
-<td align="right">0.19</td>
-<td align="right">0.12</td>
-<td align="right">0.12</td>
-<td align="right">0.25</td>
+<td align="left">cluster3</td>
+<td align="right">0.16</td>
+<td align="right">0.13</td>
+<td align="right">0.13</td>
+<td align="right">0.27</td>
 <td align="right">0.31</td>
 <td align="right">0.00</td>
 </tr>
 <tr class="even">
-<td align="left">cluster6</td>
-<td align="right">0.21</td>
-<td align="right">0.46</td>
+<td align="left">cluster4</td>
+<td align="right">0.23</td>
+<td align="right">0.43</td>
 <td align="right">0.25</td>
-<td align="right">0.08</td>
+<td align="right">0.09</td>
 <td align="right">0.01</td>
 <td align="right">0.00</td>
+</tr>
+<tr class="odd">
+<td align="left">cluster5</td>
+<td align="right">0.34</td>
+<td align="right">0.50</td>
+<td align="right">0.14</td>
+<td align="right">0.03</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td align="left">cluster6</td>
+<td align="right">0.74</td>
+<td align="right">0.14</td>
+<td align="right">0.10</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.01</td>
 </tr>
 </tbody>
 </table>
@@ -569,12 +575,9 @@ Marginals plot of the clustering obtained with greed on the Young adult data.
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">cluster</span><span class="op">)</span>
 <span class="co">#&gt; Warning in wordcloud_boxes(data_points = points_valid_first, boxes = boxes, :</span>
 <span class="co">#&gt; One word could not fit on page. It has been placed at its original position.</span>
-
 <span class="co">#&gt; Warning in wordcloud_boxes(data_points = points_valid_first, boxes = boxes, :</span>
-<span class="co">#&gt; One word could not fit on page. It has been placed at its original position.</span>
-
-<span class="co">#&gt; Warning in wordcloud_boxes(data_points = points_valid_first, boxes = boxes, :</span>
-<span class="co">#&gt; One word could not fit on page. It has been placed at its original position.</span></code></pre></div>
+<span class="co">#&gt; Some words could not fit on page. They have been placed at their original</span>
+<span class="co">#&gt; positions.</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="LCA_files/figure-html/posplot-1.png" alt="Word cloud visualization of the greed clustering on the Young adult survey data." width="100%"><p class="caption">
 Word cloud visualization of the greed clustering on the Young adult survey data.

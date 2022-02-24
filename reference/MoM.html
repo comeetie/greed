@@ -6,7 +6,7 @@ $$ Z_i  \sim \mathcal{M}(1,\pi)$$
 $$ \theta_{k} \sim Dirichlet(\beta)$$
 $$ X_{i.}|Z_{ik}=1 \sim \mathcal{M}(L_i,\theta_{k})$$
 With \(L_i=\sum_d=1^DX_{id}\). These classes mainly store the prior parameters value (\(\alpha,\beta\)) of this generative model.
-The MoM-class must be used when fitting a simple Mixture of Multinomials whereas the MoMPrior-class must be sued when fitting a MixedModels-class."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
+The MoM-class must be used when fitting a simple Mixture of Multinomials whereas the MoMPrior-class must be sued when fitting a CombinedModels-class."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body data-spy="scroll" data-target="#toc">
@@ -63,7 +63,7 @@ The MoM-class must be used when fitting a simple Mixture of Multinomials whereas
       <a href="../articles/SBM.html">Graph clustering</a>
     </li>
     <li>
-      <a href="../articles/Mixed-Models.html">Mixed Models</a>
+      <a href="../articles/CombinedModels.html">Combined Models</a>
     </li>
     <li>
       <a href="../articles/MoM.html">Mixture of Multinomials</a>
@@ -103,7 +103,7 @@ $$ Z_i  \sim \mathcal{M}(1,\pi)$$
 $$ \theta_{k} \sim Dirichlet(\beta)$$
 $$ X_{i.}|Z_{ik}=1 \sim \mathcal{M}(L_i,\theta_{k})$$
 With \(L_i=\sum_d=1^DX_{id}\). These classes mainly store the prior parameters value (\(\alpha,\beta\)) of this generative model.
-The <code>MoM-class</code> must be used when fitting a simple Mixture of Multinomials whereas the <code>MoMPrior-class</code> must be sued when fitting a <code><a href="MixedModels.html">MixedModels-class</a></code>.</p>
+The <code>MoM-class</code> must be used when fitting a simple Mixture of Multinomials whereas the <code>MoMPrior-class</code> must be sued when fitting a <code><a href="CombinedModels.html">CombinedModels-class</a></code>.</p>
     </div>
 
     <div id="ref-usage">
@@ -128,13 +128,13 @@ a <code>MoM-class</code> object</p>
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="MoMFit-class.html">MoMFit-class</a></code>, <code><a href="MoMPath-class.html">MoMPath-class</a></code></p>
 <p>Other DlvmModels: 
+<code><a href="CombinedModels.html">CombinedModels</a></code>,
 <code><a href="DcLbm.html">DcLbm</a></code>,
 <code><a href="DcSbm.html">DcSbm</a></code>,
 <code><a href="DiagGmm.html">DiagGmm</a></code>,
 <code><a href="DlvmPrior-class.html">DlvmPrior-class</a></code>,
 <code><a href="Gmm.html">Gmm</a></code>,
 <code><a href="Lca.html">Lca</a></code>,
-<code><a href="MixedModels.html">MixedModels</a></code>,
 <code><a href="MoR.html">MoR</a></code>,
 <code><a href="MultSbm.html">MultSbm</a></code>,
 <code><a href="Sbm.html">Sbm</a></code>,

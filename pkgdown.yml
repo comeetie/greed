@@ -2,12 +2,12 @@ pandoc: 2.7.3
 pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
+  CombinedModels: CombinedModels.html
   GMM: GMM.html
   LBM: LBM.html
   LCA: LCA.html
-  Mixed-Models: Mixed-Models.html
   MoM: MoM.html
   MoR: MoR.html
   SBM: SBM.html
-last_built: 2022-02-17T08:47Z
+last_built: 2022-02-24T16:27Z
 
