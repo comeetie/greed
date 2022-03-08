@@ -488,10 +488,10 @@ Z_i&amp;\sim \mathcal{M}(1,\pi),\\
 <td align="right">0.105</td>
 </tr>
 </tbody></table>
-<p>We may observe, as expected, that the MAP estimate of the connectivity pattern is close to the one used for the simualtion.</p>
+<p>We may observe, as expected, that the MAP estimate of the connectivity pattern is close to the one used for the simulation.</p>
 </div>
 <div class="section level3">
-<h3 id="visualisation-tools">Visualisation tools<a class="anchor" aria-label="anchor" href="#visualisation-tools"></a>
+<h3 id="visualization-tools">Visualization tools<a class="anchor" aria-label="anchor" href="#visualization-tools"></a>
 </h3>
 <p>The <strong>greed</strong> package also comes with efficient visualization tools for summarization and exploration. For graph data, it allows to:</p>
 <ol style="list-style-type: decimal">
@@ -561,7 +561,7 @@ Path plot, evolution of regularization with respect to <span class="math inline"
 </p>
 </div>
 <ul>
-<li>Or of the ICL value with respect to <span class="math inline">\(log(\alpha)\)</span>, with the pareto front highlight the range of dominance of each partition in the hierarchy.</li>
+<li>Or of the ICL value with respect to <span class="math inline">\(log(\alpha)\)</span>, with the Pareto front highlight the range of dominance of each partition in the hierarchy.</li>
 </ul>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span>,type<span class="op">=</span><span class="st">'front'</span><span class="op">)</span></code></pre></div>
@@ -653,7 +653,7 @@ Path plot, evolution of regularization with respect to <span class="math inline"
 Block matrix representation of the DcSbm and Sbm solution found with greed on the Book network.
 </p>
 </div>
-<p>It is also possible to use external R packages to plot the graph layout with node color as clusters and node size as book popularity (computed using centrality degree). Here, we represent the result for the SBM solution with 5 clusters. One can see a hierarchical clustering structure appearing, with a central cluster of neutral books in-between two densely connected set. In each of these two dense set, there is a clear distinction between popular books (heavily purchase) and more peripheric ones, indicated by node size.</p>
+<p>It is also possible to use external R packages to plot the graph layout with node color as clusters and node size as book popularity (computed using centrality degree). Here, we represent the result for the SBM solution with 5 clusters. One can see a hierarchical clustering structure appearing, with a central cluster of neutral books in-between two densely connected set. In each of these two dense set, there is a clear distinction between popular books (heavily purchase) and more peripheral ones, indicated by node size.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggraph.data-imaginist.com" class="external-link">ggraph</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidygraph.data-imaginist.com" class="external-link">tidygraph</a></span><span class="op">)</span>
@@ -818,11 +818,11 @@ n
 <li>categorical relationship instead of solely binary</li>
 <li>multidimensional/multilayered relationships encoded by different graphs (<em>e.g.</em> work relation and friendship)</li>
 </ol>
-<p>The first case can be adressed in the SBM framework via a multinomial SBM model. The second is different since there are different layer or <em>views</em> of the data. Still, the <strong>greed</strong> package may handle this type of data via its <code>CombinedModels</code> framework where user simply stacks the DLVM of its choice on each view of the data (for more info see the dedicated vignette on Combined Models).</p>
+<p>The first case can be addressed in the SBM framework via a multinomial SBM model. The second is different since there are different layer or <em>views</em> of the data. Still, the <strong>greed</strong> package may handle this type of data via its <code>CombinedModels</code> framework where user simply stacks the DLVM of its choice on each view of the data (for more info see the dedicated vignette on Combined Models).</p>
 <div class="section level3">
 <h3 id="categorical-edges-and-the-multinomial-sbm-newguinea-dataset">Categorical edges and the Multinomial SBM: newguinea dataset<a class="anchor" aria-label="anchor" href="#categorical-edges-and-the-multinomial-sbm-newguinea-dataset"></a>
 </h3>
-<p>The SBM framework allows virtually any distribution on the edges, hence allowing to handle categorical edges modeled as multinomial random variables. With the right choice of conjugate Dirichlet priors, this model admits an exact ICL formulation which allows to use the <strong>greed</strong> framework. This model is implemented in the <code>MultSbm</code> S4 class and we illustrate its use on a toy data set consisting in interactions between <span class="math inline">\(n=16\)</span> tribes. This interaction can be one of 3 types: ennemies, friends or no relation. These are encoded as 3 dimensional one-hot vectors in the <code>NewGuinea</code> dataset.</p>
+<p>The SBM framework allows virtually any distribution on the edges, hence allowing to handle categorical edges modeled as multinomial random variables. With the right choice of conjugate Dirichlet priors, this model admits an exact ICL formulation which allows to use the <strong>greed</strong> framework. This model is implemented in the <code>MultSbm</code> S4 class and we illustrate its use on a toy data set consisting in interactions between <span class="math inline">\(n=16\)</span> tribes. This interaction can be one of 3 types: enemies, friends or no relation. These are encoded as 3 dimensional one-hot vectors in the <code>NewGuinea</code> dataset.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"NewGuinea"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">NewGuinea</span><span class="op">)</span>
@@ -845,7 +845,7 @@ n
 </blockquote>
 <p>To each modality (or slice), we can associate a binary graph corresponding to the interaction, and plot its aggregated adjacency matrix. The multiple views allow to interpret the clusters in term of the modalities. In this example, we have three <em>slices</em> corresponding to the three modalities and :</p>
 <ol style="list-style-type: decimal">
-<li>In the first modality (<em>ennemity</em>), group 1 and 2 have more interaction outside than within the groups (ennemies fight more than friends)</li>
+<li>In the first modality (<em>enmity</em>), group 1 and 2 have more interaction outside than within the groups (enemies fight more than friends)</li>
 <li>The second slice (<em>friendship</em>) is consistent with the first slice, since the two groups have a pronounced community structure, with group 2 being small and densely connected. There are no friendships links between the two groups.</li>
 <li>The third slice (<em>no relation</em>) highlight that individuals in group 1 mostly share less relations.</li>
 </ol>
@@ -888,7 +888,7 @@ Ggraph plot of the NewGuinea network with the result of the MultSbm model.
 p(G_1, \ldots, G_V \mid Z) = p(G_1 \mid Z) \times \ldots \times p(G_V \mid Z).
 \end{equation}\]</span>
 <p>The ICL of the whole dataset is then simply the sum of the individual ICL of the V models.</p>
-<p>The <strong>greed</strong> package implements this modelization via the <code>?CombinedModels-class</code>. We refer to the dedicated vignettes for more details <code>vignette("Mxixed-Models")</code> but, from a practical perspective, one need to specify the <span class="math inline">\(V\)</span> observational models in a named list, and the data (here the <span class="math inline">\(V\)</span> adjacency matrices) in a list sharing the same names. Here is an example on the <strong>NewGuinea</strong> dataset analyzed above, with <span class="math inline">\(V=2\)</span> views corresponding to enmity and friendship. We put a default dcSBM model on both views and provide the two corresponding adjacency matrix as data.</p>
+<p>The <strong>greed</strong> package implements this modelisation via the <code>?CombinedModels-class</code>. We refer to the dedicated vignettes for more details <code>vignette("Mxixed-Models")</code> but, from a practical perspective, one need to specify the <span class="math inline">\(V\)</span> observational models in a named list, and the data (here the <span class="math inline">\(V\)</span> adjacency matrices) in a list sharing the same names. Here is an example on the <strong>NewGuinea</strong> dataset analyzed above, with <span class="math inline">\(V=2\)</span> views corresponding to enmity and friendship. We put a default DcSBM model on both views and provide the two corresponding adjacency matrix as data.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CombinedModels.html">CombinedModels</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>friends <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span>, enmy <span class="op">=</span> <span class="fu"><a href="../reference/DcSbm.html">DcSbmPrior</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>friends <span class="op">=</span> <span class="va">NewGuinea</span><span class="op">[</span>, , <span class="fl">2</span><span class="op">]</span>, enmy <span class="op">=</span> <span class="va">NewGuinea</span><span class="op">[</span>, , <span class="fl">1</span><span class="op">]</span><span class="op">)</span>
@@ -906,9 +906,9 @@ p(G_1, \ldots, G_V \mid Z) = p(G_1 \mid Z) \times \ldots \times p(G_V \mid Z).
 <p><strong>Practicalities:</strong> The <code>CombinedModels</code> class allows any list of observational models. However, they need to be initiated via the following syntax: <code>&lt;your_desired_model&gt;Prior()</code>. Without going into technical details, this is necessary to account for the shared aspect of the partition <span class="math inline">\(Z\)</span> between all models.</p>
 </blockquote>
 <blockquote>
-<p><strong>Practicalities:</strong> A <code>CombinedModels</code> with <code>SbmPrior</code> or <code>DcSbmPrior</code> views will use a sparse representation of the differents views and will therefore scale well with the network size.</p>
+<p><strong>Practicalities:</strong> A <code>CombinedModels</code> with <code>SbmPrior</code> or <code>DcSbmPrior</code> views will use a sparse representation of the different views and will therefore scale well with the network size.</p>
 </blockquote>
-<p>The algorithm finds <span class="math inline">\(K=2\)</span> clusters here. Since each views has its own obersvational model, it is possible to use the <code>?extractSubModel()</code> function to retrieve the fitted observational model for each view. Then, traditional visualization tools may be used. Here, we display the block representation of the clustering for the two modalities, highlighting a pronouced community structure in the <em>friendship</em> modality and a strong bipartite structure in the <em>enmity</em> modality as before, with no enmity link in the small cluster and few amongst the tribes of the bigger one.</p>
+<p>The algorithm finds <span class="math inline">\(K=2\)</span> clusters here. Since each views has its own observational model, it is possible to use the <code>?extractSubModel()</code> function to retrieve the fitted observational model for each view. Then, traditional visualization tools may be used. Here, we display the block representation of the clustering for the two modalities, highlighting a pronounced community structure in the <em>friendship</em> modality and a strong bipartite structure in the <em>enmity</em> modality as before, with no enmity link in the small cluster and few among the tribes of the bigger one.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bl_friends</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/extractSubModel.html">extractSubModel</a></span><span class="op">(</span><span class="va">sol_bidcsbm</span>,<span class="st">"friends"</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"blocks"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Friendship"</span><span class="op">)</span>
 <span class="va">bl_enmy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/extractSubModel.html">extractSubModel</a></span><span class="op">(</span><span class="va">sol_bidcsbm</span>,<span class="st">"enmy"</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"blocks"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Enmity"</span><span class="op">)</span>

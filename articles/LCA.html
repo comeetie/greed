@@ -144,7 +144,7 @@ p.caption {
 <div class="section level2">
 <h2 id="the-model">The model<a class="anchor" aria-label="anchor" href="#the-model"></a>
 </h2>
-<p>We are interested in the clustering of categorical datasets, which are typically found in survey data or item response theory (ITR). In this context, we observe <span class="math inline">\(n\)</span> individuals described by <span class="math inline">\(p\)</span> variables, taking one among <span class="math inline">\(d_j\)</span> modalities for each variable <span class="math inline">\(j\)</span>. Such datasets are typically represented using a <a href="https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics" class="external-link">one-hot-encoding</a> of each factor in a design matrix <span class="math inline">\(\mathbf{X} \in \{0,1\}^{n \times d}\)</span> where <span class="math inline">\(d = \sum_{j=1}^p d_j\)</span>. Latent class analysis (LCA) is a generative model for categorical data clustering which posits conditional independance of the factor variables conditionally on the (unknown) partition. Below is a description of its Bayesian formulation with the use of proper conjugate priors <span class="math display">\[
+<p>We are interested in the clustering of categorical datasets, which are typically found in survey data or item response theory (ITR). In this context, we observe <span class="math inline">\(n\)</span> individuals described by <span class="math inline">\(p\)</span> variables, taking one among <span class="math inline">\(d_j\)</span> modalities for each variable <span class="math inline">\(j\)</span>. Such datasets are typically represented using a <a href="https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics" class="external-link">one-hot-encoding</a> of each factor in a design matrix <span class="math inline">\(\mathbf{X} \in \{0,1\}^{n \times d}\)</span> where <span class="math inline">\(d = \sum_{j=1}^p d_j\)</span>. Latent class analysis (LCA) is a generative model for categorical data clustering which posits conditional independence of the factor variables conditionally on the (unknown) partition. Below is a description of its Bayesian formulation with the use of proper conjugate priors <span class="math display">\[
 \begin{equation}
 \begin{aligned}
 \pi&amp;\sim \textrm{Dirichlet}(\alpha),\\
@@ -172,7 +172,7 @@ Z_i&amp;\sim \mathcal{M}_K(1,\pi),\\
 <li>
 <strong>Mushroom</strong> data from UCI Machine Learning Repository describing 8124 mushrooms with 22 phenotype variables. Each mushroom is classified as “edible” or “poisonous” and the goal is to recover the mushroom class from its phenotype.</li>
 <li>
-<strong>Young people survey</strong> data from Miroslav Sabo and avalaible on the <a href="https://www.kaggle.com/miroslavsabo/young-people-survey" class="external-link">Kaggle platform</a>. This is an authentic example of questionnaire data where Slovakian young people (15-30 years old) were asked musical preferences according to different genres (rock, hip-hop, classical, etc.).</li>
+<strong>Young people survey</strong> data from Miroslav Sabo and available on the <a href="https://www.kaggle.com/miroslavsabo/young-people-survey" class="external-link">Kaggle platform</a>. This is an authentic example of questionnaire data where Slovakian young people (15-30 years old) were asked musical preferences according to different genres (rock, hip-hop, classical, etc.).</li>
 </ol>
 <p>These two datasets come attached with <code>greed</code> package.</p>
 <div class="section level3">
@@ -421,7 +421,7 @@ Dendogram obtained with greed with the Lca model on the Mushroom dataset.
 <div class="section level4">
 <h4 id="hierarchical-clustering">Hierarchical clustering<a class="anchor" aria-label="anchor" href="#hierarchical-clustering"></a>
 </h4>
-<p>As previously the clustering is obtained with a call to greed and the Lca generative model will be taken by default since the dataset is a data.frame with factors only. We demonstrate here how to increase a little bit the exploration capabilities of the optimization algorithm by increasing the population size and the probaility of mutation.</p>
+<p>As previously the clustering is obtained with a call to greed and the Lca generative model will be taken by default since the dataset is a data.frame with factors only. We demonstrate here how to increase a little bit the exploration capabilities of the optimization algorithm by increasing the population size and the probability of mutation.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol</span><span class="op">=</span><span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>, alg <span class="op">=</span> <span class="fu"><a href="../reference/Hybrid-class.html">Hybrid</a></span><span class="op">(</span>pop_size <span class="op">=</span> <span class="fl">50</span>,prob_mutation <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; </span>
@@ -458,7 +458,7 @@ Marginals plot of the clustering obtained with greed on the Young adult data.
 </p>
 </div>
 <p>The clusters appear to be quite different and coherent. For example, the seventh group (second row, in brown) display a strong tendency to like Opera and Classical music and dislike more <em>modern</em> genres (Techno, Trance, Punk or Hi-Hop), whereas the 4th group (top row, in pink) corresponds to music lovers with quite eclectic musical taste across the proposed survey’s genres.</p>
-<p>In addition, the conditional maximum a posteriori estimates of <span class="math inline">\(\theta_{kj}\)</span> are qvailable through the <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> method.</p>
+<p>In addition, the conditional maximum a posteriori estimates of <span class="math inline">\(\theta_{kj}\)</span> are available through the <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> method.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">params</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
 <p>And look for example at the cluster distributions for the Country music style:</p>
@@ -580,7 +580,7 @@ Marginals plot of the clustering obtained with greed on the Young adult data.
 Word cloud visualization of the greed clustering on the Young adult survey data.
 </p>
 </div>
-<p>Using such a visualization allow to easily describe the different groups. The first cluster almost exlusively likes Pop and Dance music, the second Opera and Classical music. The third cluster has higher score for almost all music genres and the third is close to the global average score and so on.</p>
+<p>Using such a visualization allow to easily describe the different groups. The first cluster almost exclusively likes Pop and Dance music, the second Opera and Classical music. The third cluster has higher score for almost all music genres and the third is close to the global average score and so on.</p>
 </div>
 </div>
 </div>

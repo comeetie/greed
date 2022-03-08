@@ -213,7 +213,7 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_{k})\\
 </tr>
 </tbody>
 </table>
-<p>It roughly corresponds to the known groups with cluster 1,2 and 3 recovering overt, chemical and normal diabetes respectively, with some missclassifications that are expected with GMM clustering on this dataset.</p>
+<p>It roughly corresponds to the known groups with cluster 1,2 and 3 recovering overt, chemical and normal diabetes respectively, with some miss-classifications that are expected with GMM clustering on this dataset.</p>
 <p>To get an overview of the clustering results, you may also use the <code><a href="../reference/gmmpairs.html">gmmpairs()</a></code> plot function which displays the scatter plot matrix, colored by cluster membership, with estimated Gaussian ellipses in each cluster via maximum a posteriori:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">sol</span>,<span class="va">X</span><span class="op">)</span> </code></pre></div>
@@ -275,7 +275,7 @@ Matrix pairs plots of the clustering with user specified hyperparameters on the 
 Matrix pairs plots of the Diagonal GMM clustering with default parameters on the diabetes data.
 </p>
 </div>
-<p>As previously, the clustering is quite aligned with the known groups except that now two clusters were needed to fit the “overt” class which presents an important ellongation.</p>
+<p>As previously, the clustering is quite aligned with the known groups except that now two clusters were needed to fit the “overt” class which presents an important elongation.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">soldiag</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <table class="table">

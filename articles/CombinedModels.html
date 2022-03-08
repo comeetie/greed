@@ -218,12 +218,12 @@ Marginal plots of the Gmm part of the model over continuous features.
 Field position map of the clusters.
 </p>
 </div>
-<p>The organisation of the clusters clearly appears, cluster 1 correspond to central defensive players, cluster 2 and 3 to lateral defensive players (recall that the preferred foot of this player were quite different between this two clusters with almost only right footed players in cluster 2 and left footed players in cluster 3).</p>
+<p>The organization of the clusters clearly appears, cluster 1 correspond to central defensive players, cluster 2 and 3 to lateral defensive players (recall that the preferred foot of this player were quite different between this two clusters with almost only right footed players in cluster 2 and left footed players in cluster 3).</p>
 </div>
 <div class="section level3">
 <h3 id="sbm-lca-the-ndrangheta-data-set">Sbm + Lca, the Ndrangheta data-set<a class="anchor" aria-label="anchor" href="#sbm-lca-the-ndrangheta-data-set"></a>
 </h3>
-<p>Combined models may also be used to analyse graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangeta dataset. This dataset contains relationship information between members of the Ndrangheta mafia together with some information on their group affiliation and their role. We wil use an Sbm model to fit the adjacency matrix and an Lca model for the facotr describing the roles.</p>
+<p>Combined models may also be used to analyze graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangheta dataset. This dataset contains relationship information between members of the Ndrangheta mafia together with some information on their group affiliation and their role. We wil use an Sbm model to fit the adjacency matrix and an Lca model for the factor describing the roles.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># laod the dataset</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Ndrangheta</span><span class="op">)</span>
@@ -244,7 +244,7 @@ Field position map of the clusters.
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a COMBINEDMODELS model 20 clusters and an ICL of -2367</span>
-<span class="co"># analyse the results</span>
+<span class="co"># analyze the results</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="CombinedModels_files/figure-html/unnamed-chunk-3-1.png" alt="Ndrangheta dataset dendogram with Sbm + Lca." width="90%"><p class="caption">
