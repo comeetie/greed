@@ -208,7 +208,7 @@ setMethod(
   definition = function(model, data) {
     methods::validObject(model)
     if (!(methods::is(data, "dgCMatrix") | methods::is(data, "matrix") | methods::is(data, "data.frame"))) {
-      stop("n dcsbm model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.", call. = FALSE)
+      stop("A MoM model expect a data.frame, a matrix or a sparse (dgCMatrix) matrix.", call. = FALSE)
     }
     if (methods::is(data, "data.frame")) {
       data <- as.matrix(data)

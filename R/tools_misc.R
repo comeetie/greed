@@ -85,7 +85,7 @@ as.sparse <- function(X) {
   S <- X
   if (methods::is(X, "matrix") | methods::is(X, "data.frame")) {
     ij <- which(X != 0, arr.ind = TRUE)
-    S <- Matrix::sparseMatrix(ij[, 1], ij[, 2], x = X[ij])
+    S <- Matrix::sparseMatrix(ij[, 1], ij[, 2], x = X[ij],dims=dim(X))
   } else {
     if (!methods::is(X, "dgCMatrix")) {
       stop("Unsuported data type for sparse format conversion use a matrix or a data.frame like object.", call. = FALSE)

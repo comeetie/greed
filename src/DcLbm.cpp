@@ -8,6 +8,7 @@ DcLbm::DcLbm(const arma::sp_mat  & xp,int Nri, int Nci,S4 modeli,bool verb){
   
 
   x  = xp;
+  xt = xp.t();
   N  = Nri+Nci;
   Nc=Nci;
   Nr=Nri;
@@ -151,7 +152,7 @@ arma::vec DcLbm::delta_swap(const int i,arma::uvec & cl, bool almost_dead_cluste
   arma::sp_mat delta_counts;
   
   if(clusttypes(oldcl)==1){
-    delta_counts =  gsum_col(cl.subvec(arma::span(Nr,N-1)),x.t(),i,K);
+    delta_counts =  gsum_col(cl.subvec(arma::span(Nr,N-1)),xt,i,K);
     cd = arma::accu(delta_counts);
   }else{
     delta_counts =  gsum_col(cl.subvec(arma::span(0,Nr-1)),x,i-Nr,K);
@@ -202,7 +203,7 @@ void DcLbm::swap_update(const int i,arma::uvec &  cl,bool dead_cluster,const int
   counts = update_count(counts,oldcl,newcl);
   arma::sp_mat delta_counts;
   if(clusttypes(oldcl)==1){
-    delta_counts =  gsum_col(cl.subvec(arma::span(Nr,N-1)),x.t(),i,K);
+    delta_counts =  gsum_col(cl.subvec(arma::span(Nr,N-1)),xt,i,K);
     cd = arma::accu(delta_counts);
     dr(oldcl)=dr(oldcl)-cd;
     dr(newcl)=dr(newcl)+cd;

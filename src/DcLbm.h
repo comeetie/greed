@@ -24,6 +24,7 @@ public:
   List get_obs_stats_cst();
 protected:
   arma::sp_mat x;
+  arma::sp_mat xt;
   arma::mat x_counts;
   arma::vec counts;
   double p;

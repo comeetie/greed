@@ -50,8 +50,8 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
 
         if(ncl!=cl(cnode)){
   
-          // if best swap corresponds to a move
-          // update the stats
+          //if best swap corresponds to a move
+          //update the stats
           if(counts(cl(cnode))==1){
             //Rcout << iclust << std::endl;
             iclust = iclust.elem(arma::find(iclust!=cl(cnode)));
@@ -71,8 +71,8 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::uvec iclust
           arma::vec deltaneg = delta.elem(arma::find(delta<0));
           int bmn= deltaneg.index_max();
           if(deltaneg(bmn) <  -4 ){
-            workingset(cnode) = 0;
-            //Rcout << "BMN :"<< bmn << "val" << deltaneg(bmn) << std::endl;
+             workingset(cnode) = 0;
+             //Rcout << "BMN :"<< bmn << "val" << deltaneg(bmn) << std::endl;
           }
         }
       }
@@ -151,7 +151,7 @@ void IclModel::greedy_swap(int nbpassmax, arma::vec workingset,arma::sp_mat & mo
           try{
             arma::vec deltaneg = delta.elem(arma::find(delta<0));
             int bmn= deltaneg.index_max();
-            if(deltaneg(bmn) <  -5 ){
+            if(deltaneg(bmn) <  -2 ){
               workingset(cnode) = 0;
               //Rcout << "BMN :"<< bmn << "val" << deltaneg(bmn) << std::endl;
             }
