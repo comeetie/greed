@@ -55,7 +55,7 @@
   <a href="../news/index.html">News</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -176,14 +176,12 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_{k})\\
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a GMM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -285 and 6 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -265 and 5 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -262 and 4 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -262 and 4 clusters.</span>
-<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -262 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -288 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -264 and 3 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -264 and 3 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a GMM model 3 clusters and an ICL of -260</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a GMM model 3 clusters and an ICL of -264</span></code></pre></div>
 <p>The optimal clustering found by the hybrid GA has <span class="math inline">\(K^\star=3\)</span> clusters. You may then easily extract the found clustering with the <code><a href="../reference/clustering.html">clustering()</a></code> method and compare it with the known classes:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -197,9 +195,9 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_{k})\\
 <tbody>
 <tr class="odd">
 <td align="left">Chemical</td>
-<td align="right">1</td>
+<td align="right">0</td>
 <td align="right">24</td>
-<td align="right">11</td>
+<td align="right">12</td>
 </tr>
 <tr class="even">
 <td align="left">Normal</td>
@@ -209,8 +207,8 @@ X_{i}|Z_{ik}=1 &amp;\sim \mathcal{N}(\mathbf{\mu}_k, \mathbf{\Sigma}_{k})\\
 </tr>
 <tr class="odd">
 <td align="left">Overt</td>
-<td align="right">27</td>
-<td align="right">6</td>
+<td align="right">26</td>
+<td align="right">7</td>
 <td align="right">0</td>
 </tr>
 </tbody>
@@ -230,8 +228,8 @@ Matrix pairs plots of the clustering with default hyperparameters on the diabete
 <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">params</span><span class="op">)</span>
 <span class="co">#&gt; [1] "pi"     "muk"    "Sigmak"</span>
 <span class="va">params</span><span class="op">$</span><span class="va">muk</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
-<span class="co">#&gt;       glucose insulin       sspg</span>
-<span class="co">#&gt; [1,] 1.730833 1.79041 -0.8798159</span></code></pre></div>
+<span class="co">#&gt;       glucose  insulin      sspg</span>
+<span class="co">#&gt; [1,] 1.871123 1.914675 -0.912741</span></code></pre></div>
 <p>If a user wants to experiment with other values of the prior hyperparameters, the most important is <span class="math inline">\(\mathbf{\varepsilon}\)</span>, which control the clusters’ covariance matrices Wishart prior. This amounts to specify the prior on the dispersion inside each class. For instance, one may specify a priori belief that the variance is small inside clusters, which amounts to diminish the <span class="math inline">\(0.1\)</span> coefficient in front of <span class="math inline">\(\hat{\mathbf{\Sigma}}_{\mathbf{X}}\)</span>. In this case, it makes sense to decrease <span class="math inline">\(\tau\)</span> in the same proportions to keep a flat priors on the clusters means. For the diabetes data such a choice leads to an interesting solution, where the strong prior constraint leads to one cluster being created to fit one outlier in the “chemical” diabetes.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sol_dense</span> <span class="op">=</span> <span class="fu"><a href="../reference/greed.html">greed</a></span><span class="op">(</span><span class="va">X</span>,model<span class="op">=</span><span class="fu"><a href="../reference/Gmm.html">Gmm</a></span><span class="op">(</span>epsilon<span class="op">=</span><span class="fl">0.01</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, tau <span class="op">=</span><span class="fl">0.001</span><span class="op">)</span><span class="op">)</span>
@@ -239,15 +237,13 @@ Matrix pairs plots of the clustering with default hyperparameters on the diabete
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a GMM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -364 and 11 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -335 and 8 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -309 and 6 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -302 and 4 clusters.</span>
-<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -290 and 4 clusters.</span>
-<span class="co">#&gt; ℹ Generation 6 : best solution with an ICL of -290 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -372 and 12 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -328 and 7 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -306 and 5 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -306 and 5 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a GMM model 4 clusters and an ICL of -290</span>
+<span class="co">#&gt; ── Clustering with a GMM model 3 clusters and an ICL of -304</span>
 <span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">sol_dense</span>,<span class="va">X</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="GMM_files/figure-html/diabetes-gmm-0.01-1.png" alt="Matrix pairs plots of the clustering with user specified hyperparameters on the diabetes data." width="90%"><p class="caption">
@@ -266,13 +262,13 @@ Matrix pairs plots of the clustering with user specified hyperparameters on the 
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a DIAGGMM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -292 and 7 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -287 and 5 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -285 and 6 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -285 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -292 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -285 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -284 and 6 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -284 and 6 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a DIAGGMM model 5 clusters and an ICL of -279</span>
+<span class="co">#&gt; ── Clustering with a DIAGGMM model 5 clusters and an ICL of -278</span>
 <span class="fu"><a href="../reference/gmmpairs.html">gmmpairs</a></span><span class="op">(</span><span class="va">soldiag</span>,<span class="va">X</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="GMM_files/figure-html/diabetes-diaggmm-1.png" alt="Matrix pairs plots of the Diagonal GMM clustering with default parameters on the diabetes data." width="90%"><p class="caption">
@@ -294,27 +290,27 @@ Matrix pairs plots of the Diagonal GMM clustering with default parameters on the
 <tbody>
 <tr class="odd">
 <td align="left">Chemical</td>
-<td align="right">8</td>
-<td align="right">27</td>
+<td align="right">0</td>
+<td align="right">0</td>
 <td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<td align="right">27</td>
+<td align="right">8</td>
 </tr>
 <tr class="even">
 <td align="left">Normal</td>
-<td align="right">71</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
 <td align="right">5</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<td align="right">71</td>
 </tr>
 <tr class="odd">
 <td align="left">Overt</td>
+<td align="right">11</td>
+<td align="right">19</td>
 <td align="right">0</td>
 <td align="right">3</td>
 <td align="right">0</td>
-<td align="right">17</td>
-<td align="right">13</td>
 </tr>
 </tbody>
 </table>
@@ -340,21 +336,21 @@ Dendogram extracted with a DiagGmm model on the diabetes data.
 <tbody>
 <tr class="odd">
 <td align="left">Chemical</td>
-<td align="right">8</td>
-<td align="right">28</td>
 <td align="right">0</td>
+<td align="right">28</td>
+<td align="right">8</td>
 </tr>
 <tr class="even">
 <td align="left">Normal</td>
-<td align="right">71</td>
-<td align="right">5</td>
 <td align="right">0</td>
+<td align="right">5</td>
+<td align="right">71</td>
 </tr>
 <tr class="odd">
 <td align="left">Overt</td>
-<td align="right">0</td>
-<td align="right">3</td>
 <td align="right">30</td>
+<td align="right">3</td>
+<td align="right">0</td>
 </tr>
 </tbody>
 </table>
@@ -362,12 +358,12 @@ Dendogram extracted with a DiagGmm model on the diabetes data.
 <p>Eventually, we may compare the ICL values between the full and diagonal models, using the <code>ICL</code> method and compute their difference to get a quantity similar to Bayes factor with the difference that the partition was not marginalized out, but optimized.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">'Full GMM has an ICL = '</span>, <span class="fu"><a href="../reference/ICL.html">ICL</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>, <span class="st">'.\n'</span><span class="op">)</span>
-<span class="co">#&gt; Full GMM has an ICL =  -260.3401 .</span>
+<span class="co">#&gt; Full GMM has an ICL =  -263.9857 .</span>
 <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">'Diagonal GMM has an ICL = '</span>, <span class="fu"><a href="../reference/ICL.html">ICL</a></span><span class="op">(</span><span class="va">soldiag</span><span class="op">)</span>, <span class="st">'.\n'</span><span class="op">)</span>
-<span class="co">#&gt; Diagonal GMM has an ICL =  -278.884 .</span>
+<span class="co">#&gt; Diagonal GMM has an ICL =  -278.1018 .</span>
 <span class="va">bayesfactor</span> <span class="op">=</span> <span class="fu"><a href="../reference/ICL.html">ICL</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">-</span><span class="fu"><a href="../reference/ICL.html">ICL</a></span><span class="op">(</span><span class="va">soldiag</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">'Bayes factor = '</span>, <span class="va">bayesfactor</span>, <span class="st">'.\n'</span><span class="op">)</span>
-<span class="co">#&gt; Bayes factor =  18.54385 .</span></code></pre></div>
+<span class="co">#&gt; Bayes factor =  14.11607 .</span></code></pre></div>
 <p>The full model achieved a quite better fit on this dataset.</p>
 <blockquote>
 <p><strong>Note:</strong> A note on caution on these statistics which take into account the chosen hyperparmaters and may therefore be influenced by the chosen values, as a classical bayes factor. These value must therefore be chosen with care and eventually their impact investigated with a sensibility analysis.</p>
@@ -388,7 +384,7 @@ Dendogram extracted with a DiagGmm model on the diabetes data.
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a DIAGGMM model 22 clusters and an ICL of -3587535</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a DIAGGMM model 22 clusters and an ICL of -3588313</span></code></pre></div>
 <p>On this more complex dataset, the clustering found by the algorithm has <span class="math inline">\(K=23\)</span> clusters and the dendrogram proves very informative, highlighting the complex structure of these data.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sol_fashion</span>,type<span class="op">=</span><span class="st">'tree'</span><span class="op">)</span></code></pre></div>
