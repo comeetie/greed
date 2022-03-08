@@ -158,17 +158,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// timesTwo
-NumericVector timesTwo(NumericVector x);
-RcppExport SEXP _greed_timesTwo(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(timesTwo(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // sp_cross
 arma::sp_mat sp_cross(arma::sp_mat colvec, arma::sp_mat rowvec, int self, int oldcl, int newcl, int K);
 RcppExport SEXP _greed_sp_cross(SEXP colvecSEXP, SEXP rowvecSEXP, SEXP selfSEXP, SEXP oldclSEXP, SEXP newclSEXP, SEXP KSEXP) {
@@ -504,7 +493,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_test_swap", (DL_FUNC) &_greed_test_swap, 5},
     {"_greed_test_merge", (DL_FUNC) &_greed_test_merge, 5},
     {"_greed_test_merge_correction", (DL_FUNC) &_greed_test_merge_correction, 5},
-    {"_greed_timesTwo", (DL_FUNC) &_greed_timesTwo, 1},
     {"_greed_sp_cross", (DL_FUNC) &_greed_sp_cross, 6},
     {"_greed_add_sppat", (DL_FUNC) &_greed_add_sppat, 2},
     {"_greed_add_spmatpat", (DL_FUNC) &_greed_add_spmatpat, 2},

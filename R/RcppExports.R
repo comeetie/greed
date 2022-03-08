@@ -41,10 +41,6 @@ test_merge_correction <- function(model, data, cl, k, l) {
     .Call('_greed_test_merge_correction', PACKAGE = 'greed', model, data, cl, k, l)
 }
 
-timesTwo <- function(x) {
-    .Call('_greed_timesTwo', PACKAGE = 'greed', x)
-}
-
 sp_cross <- function(colvec, rowvec, self, oldcl, newcl, K) {
     .Call('_greed_sp_cross', PACKAGE = 'greed', colvec, rowvec, self, oldcl, newcl, K)
 }
