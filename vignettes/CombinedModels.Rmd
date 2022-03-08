@@ -101,12 +101,12 @@ ggplot(clust_positions)+ background_image(Fifa_positions$bg_img)+
 
 ```
 
-The organisation of the clusters clearly appears, cluster 1 correspond to central defensive players, cluster 2 and 3 to lateral defensive players (recall that the preferred foot of this player were quite different between this two clusters with almost only right footed players in cluster 2 and left footed players in cluster 3).
+The organization of the clusters clearly appears, cluster 1 correspond to central defensive players, cluster 2 and 3 to lateral defensive players (recall that the preferred foot of this player were quite different between this two clusters with almost only right footed players in cluster 2 and left footed players in cluster 3).
 
 
 ### Sbm + Lca, the Ndrangheta data-set 
 
-Combined models may also be used to analyse graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangeta dataset. This dataset contains relationship information between members of the Ndrangheta mafia together with some information on their group affiliation and their role. We wil use an Sbm model to fit the adjacency matrix and an Lca model for the facotr describing the roles. 
+Combined models may also be used to analyze graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangheta dataset. This dataset contains relationship information between members of the Ndrangheta mafia together with some information on their group affiliation and their role. We wil use an Sbm model to fit the adjacency matrix and an Lca model for the factor describing the roles. 
 
 ```{r,out.width="90%",fig.width=8,fig.height=5.5,fig.cap="Ndrangheta dataset dendogram with Sbm + Lca."}
 # laod the dataset
@@ -117,7 +117,7 @@ data= list(graph=Ndrangheta$X,node_infos=data.frame(Role=Ndrangheta$node_meta$Ro
 mixmod = CombinedModels(models= list(graph=SbmPrior(),node_infos=LcaPrior()))
 # cluster
 sol=greed(data,model=mixmod)
-# analyse the results
+# analyze the results
 plot(sol)
 ```
 

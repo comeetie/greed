@@ -62,7 +62,7 @@ To fit a mixture of regression model with greed, you must provide a `data.frame`
 ```{r}
 sol=greed(NPreg,model=MoR(yn ~ x + I(x^2)))
 ```
-As expected the partition with two cluster that was used to simulate the data is recovered by the algoritthm. When, the clustering is performed, we may use the classical functions `clustering,coef,prior,plot,...`  to explore the results. We may start by comparing the found clustering with the true labels :
+As expected the partition with two cluster that was used to simulate the data is recovered by the algorithm. When, the clustering is performed, we may use the classical functions `clustering,coef,prior,plot,...`  to explore the results. We may start by comparing the found clustering with the true labels :
 
 ```{r}
 cl = clustering(sol)
@@ -123,7 +123,7 @@ co=coef(sol)
 co$A
 ```
 
-The two regression model extracted are quite different, one has an important weight for the defending ability and the physic. Whereas the player's value is more influenced by the dribling and shooting capabilities in the other regression model. The clustering seems therefore to have extracted two submarkets one for more defensive players and one for the other players. This can be confirmed by looking at the average position of the players of the two groups on the field:
+The two regression model extracted are quite different, one has an important weight for the defending ability and the physic. Whereas the player's value is more influenced by the dribbling and shooting capabilities in the other regression model. The clustering seems therefore to have extracted two submarkets one for more defensive players and one for the other players. This can be confirmed by looking at the average position of the players of the two groups on the field:
 
 ```{r}
 data("Fifa_positions")

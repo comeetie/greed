@@ -135,9 +135,9 @@ names(params)
 params$thetakl %>% knitr::kable(digits=3)
 ```
 
-We may observe, as expected, that the MAP estimate of the connectivity pattern is close to the one used for the simualtion.
+We may observe, as expected, that the MAP estimate of the connectivity pattern is close to the one used for the simulation.
 
-## Visualisation tools
+## Visualization tools
 The **greed** package also comes with efficient visualization tools for summarization and exploration. For graph data, it allows to:
 
  1. Plot the aggregated adjacency matrix between the estimated clusters, with colors indicating link density.
@@ -184,7 +184,7 @@ plot(sol,type='path')
 ```
 
 
- * Or of the ICL value with respect to $log(\alpha)$, with the pareto front highlight the range of dominance of each partition in the hierarchy.
+ * Or of the ICL value with respect to $log(\alpha)$, with the Pareto front highlight the range of dominance of each partition in the hierarchy.
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5,fig.Cap="Pareto front plot of the greed results."}
 plot(sol,type='front')
 ```
@@ -232,7 +232,7 @@ ggarrange(bl_sbm,bl_dcsbm)
 ```
 
 
-It is also possible to use external R packages to plot the graph layout with node color as clusters and node size as book popularity (computed using centrality degree). Here, we represent the result for the SBM solution with 5 clusters. One can see a hierarchical clustering structure appearing, with a central cluster of neutral books in-between two densely connected set. In each of these two dense set, there is a clear distinction between popular books (heavily purchase) and more peripheric ones, indicated by node size.
+It is also possible to use external R packages to plot the graph layout with node color as clusters and node size as book popularity (computed using centrality degree). Here, we represent the result for the SBM solution with 5 clusters. One can see a hierarchical clustering structure appearing, with a central cluster of neutral books in-between two densely connected set. In each of these two dense set, there is a clear distinction between popular books (heavily purchase) and more peripheral ones, indicated by node size.
 
 ```{r, fig.show='hold',out.width="70%",fig.width=8,fig.height=5.5, message=FALSE,fig.cap="Ggraph plot of the book network with node colors given by the clustering found with greed and an Sbm model."}
 library(ggraph)
@@ -270,11 +270,11 @@ Sometimes, a graph accounts for more complex interactions between object such as
  1. categorical relationship instead of solely binary
  2. multidimensional/multilayered relationships encoded by different graphs (*e.g.* work relation and friendship)
 
-The first case can be adressed in the SBM framework via a multinomial SBM model. The second is different since there are different layer or *views* of the data. Still, the **greed** package may handle this type of data via its `CombinedModels` framework where user simply stacks the DLVM of its choice on each view of the data (for more info see the dedicated vignette on Combined Models).
+The first case can be addressed in the SBM framework via a multinomial SBM model. The second is different since there are different layer or *views* of the data. Still, the **greed** package may handle this type of data via its `CombinedModels` framework where user simply stacks the DLVM of its choice on each view of the data (for more info see the dedicated vignette on Combined Models).
 
 ## Categorical edges and the Multinomial SBM: newguinea dataset
 
-The SBM framework allows virtually any distribution on the edges, hence allowing to handle categorical edges modeled as multinomial random variables. With the right choice of conjugate Dirichlet priors, this model admits an exact ICL formulation which allows to use the **greed** framework. This model is implemented in the `MultSbm` S4 class and we illustrate its use on a toy data set consisting in interactions between $n=16$ tribes. This interaction can be one of 3 types: ennemies, friends or no relation. These are encoded as 3 dimensional one-hot vectors in the `NewGuinea` dataset. 
+The SBM framework allows virtually any distribution on the edges, hence allowing to handle categorical edges modeled as multinomial random variables. With the right choice of conjugate Dirichlet priors, this model admits an exact ICL formulation which allows to use the **greed** framework. This model is implemented in the `MultSbm` S4 class and we illustrate its use on a toy data set consisting in interactions between $n=16$ tribes. This interaction can be one of 3 types: enemies, friends or no relation. These are encoded as 3 dimensional one-hot vectors in the `NewGuinea` dataset. 
 
 ```{r}
 data("NewGuinea")
@@ -290,7 +290,7 @@ sol_newguinea = greed(NewGuinea,model=MultSbm())
 
 To each modality (or slice), we can associate a binary graph corresponding to the interaction, and plot its  aggregated adjacency matrix. The multiple views allow to interpret the clusters in term of the modalities. In this example, we have three *slices* corresponding to the three modalities and :
 
- 1. In the first modality (*ennemity*), group 1 and 2 have more interaction outside than within the groups (ennemies fight more than friends) 
+ 1. In the first modality (*enmity*), group 1 and 2 have more interaction outside than within the groups (enemies fight more than friends) 
  2. The second slice (*friendship*) is consistent with the first slice, since the two groups have a pronounced community structure, with group 2 being small and densely connected. There are no friendships links between the two groups.
  3. The third slice (*no relation*) highlight that individuals in group 1 mostly share less relations.
  
@@ -332,7 +332,7 @@ p(G_1, \ldots, G_V \mid Z) = p(G_1 \mid Z) \times \ldots \times p(G_V \mid Z).
 ```
 The ICL of the whole dataset is then simply the sum of the individual ICL of the V models. 
 
-The **greed** package implements this modelization via the `?CombinedModels-class`. We refer to the dedicated vignettes for more details `vignette("Mxixed-Models")` but, from a practical perspective, one need to specify the $V$ observational models in a named list, and the data (here the $V$ adjacency matrices) in a list sharing the same names. Here is an example on the **NewGuinea** dataset analyzed above, with $V=2$ views corresponding to enmity and friendship. We put a default dcSBM model on both views and provide the two corresponding adjacency matrix as data.
+The **greed** package implements this modelisation via the `?CombinedModels-class`. We refer to the dedicated vignettes for more details `vignette("Mxixed-Models")` but, from a practical perspective, one need to specify the $V$ observational models in a named list, and the data (here the $V$ adjacency matrices) in a list sharing the same names. Here is an example on the **NewGuinea** dataset analyzed above, with $V=2$ views corresponding to enmity and friendship. We put a default DcSBM model on both views and provide the two corresponding adjacency matrix as data.
 
 
 ```{r}
@@ -343,9 +343,9 @@ sol_bidcsbm <- greed(data, model = mod, K = 5)
 
 > **Practicalities:** The `CombinedModels` class allows any list of observational models. However, they need to be initiated via the following syntax: `<your_desired_model>Prior()`. Without going into technical details, this is necessary to account for the shared aspect of the partition $Z$ between all models.
 
-> **Practicalities:** A `CombinedModels` with `SbmPrior` or `DcSbmPrior` views will use a sparse representation of the differents views and will therefore scale well with the network size.
+> **Practicalities:** A `CombinedModels` with `SbmPrior` or `DcSbmPrior` views will use a sparse representation of the different views and will therefore scale well with the network size.
 
-The algorithm finds $K=2$ clusters here. Since each views has its own obersvational model, it is possible to use the `?extractSubModel()` function to retrieve the fitted observational model for each view. Then, traditional visualization tools may be used. Here, we display the block representation of the clustering for the two modalities, highlighting a pronouced community structure in the *friendship* modality and a strong bipartite structure in the *enmity* modality as before, with no enmity link in the small cluster and few amongst the tribes of the bigger one.
+The algorithm finds $K=2$ clusters here. Since each views has its own observational model, it is possible to use the `?extractSubModel()` function to retrieve the fitted observational model for each view. Then, traditional visualization tools may be used. Here, we display the block representation of the clustering for the two modalities, highlighting a pronounced community structure in the *friendship* modality and a strong bipartite structure in the *enmity* modality as before, with no enmity link in the small cluster and few among the tribes of the bigger one.
 
 ```{r, fig.show='hold',out.width="100%",fig.width=8,fig.height=3.5,fig.cap="Block matrix repressentation of the clustering with the two views."}
 bl_friends <- plot(extractSubModel(sol_bidcsbm,"friends"),type="blocks") + ggtitle("Friendship")

@@ -246,7 +246,7 @@ setMethod(
 
       new_clust_stats
     })
-    names(new_obs_stats) <- paste0("cluster", 1:length(obs_stats))
+    names(new_obs_stats) <- paste0("cluster", seq_len(length(obs_stats)))
     new_obs_stats
   }
 )

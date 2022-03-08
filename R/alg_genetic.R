@@ -18,8 +18,6 @@ genetic <- function(model, alg, data, K, verbose = FALSE) {
   }
   train.hist <- data.frame(generation = c(), icl = c(), K = c())
 
-  # multi-start in //
-  # future::plan(future::multiprocess)
 
   solutions <- listenv::listenv()
   # first generation of solutions

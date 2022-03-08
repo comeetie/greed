@@ -1,3 +1,17 @@
+# greed 0.6
+
+* Finalization of the Models and Algorithms API with user friendly constructors and final model acronyms see greed::available_algorithms() and greed::available_models()
+* Generic functions to access fit results slots ICL(), K(), clustering(), coefs(), prior() and analyze them cut(), plot()
+* New CombinedModels() model to combine multiple observational models with the same discrete latent variable and conditional independence assumptions
+* New Lca() model for Latent class analysis
+* 7 Vignettes for the main package / model use cases
+* Better tests for all models swap and merge moves
+* Optimization of MoM model swap moves to avoid unnecessary matrix transpositions
+* Bug correction on Lbm merge matrix update
+* Bug correction on as.sparse matrix to avoid problems with empty rows / columns
+
+
+
 # greed 0.5.1
 
 * New Gaussian mixture model diaggmm for diagonal mixture models

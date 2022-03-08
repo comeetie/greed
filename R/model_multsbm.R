@@ -5,7 +5,7 @@ NULL
 #' @title Multinomial Stochastic Block Model Prior class
 #'
 #' @description
-#' An S4 class to represent a Multinomial Stochastic Block Model. Such model can be used to cluster multilayer-graph vertex, and model a square adjacency cube \eqn{X} of size NxNxM with the following generative model :
+#' An S4 class to represent a Multinomial Stochastic Block Model. Such model can be used to cluster multi-layer graph vertex, and model a square adjacency cube \eqn{X} of size NxNxM with the following generative model :
 #' \deqn{ \pi \sim Dirichlet(\alpha)}
 #' \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 #' \deqn{ \theta_{kl} \sim Dirichlet(\beta)}
@@ -94,7 +94,7 @@ MultSbm <- function(alpha = 1, beta = 1, type = "guess") {
 setClass("MultSbmFit", slots = list(model = "MultSbm"), contains = "IclFit")
 
 
-#' @title Multinomial Stochastic Block Model hierachical fit results class
+#' @title Multinomial Stochastic Block Model hierarchical fit results class
 #'
 #'
 #' @description An S4 class to represent a hierarchical fit of a Multinomial Stochastic Block Model, extend \code{\link{IclPath-class}}.

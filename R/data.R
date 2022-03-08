@@ -13,7 +13,7 @@
 #'   \describe{
 #'   \item{Id}{id of the node, rownames of network adjacency matrix}
 #'   \item{Locale}{factor with the locali affiliation of the node , "OUT": Suspects not belonging to La Lombardia, "MISS": Information not available, other Locali Id.}
-#'   \item{Role}{factor with the type of hierarchical position of the node "MISS": Information not available,"boss": high hierachical position, "aff": affiliate}
+#'   \item{Role}{factor with the type of hierarchical position of the node "MISS": Information not available,"boss": high hierarchical position, "aff": affiliate}
 #'  }
 #' }
 #'
@@ -265,7 +265,7 @@
 
 #' Young People survey data
 #'
-#' Young people survey data from Miroslav Sabo and avalaible on the Kaggle
+#' Young people survey data from Miroslav Sabo and available on the Kaggle
 #' platform. This is an authentic example of questionnaire data where Slovakian
 #' young people (15-30 years old) were asked musical preferences according to
 #' different genres (rock, hip-hop, classical, etc.).
@@ -304,7 +304,7 @@
 #'
 #' @keywords datasets
 #'
-#' @source \url{https://}
+#' @source \url{https://www.kaggle.com/stefanoleone992/fifa-20-complete-player-dataset?select=players_20.csv}
 #'
 #' @examples
 #' data(Fifa)
@@ -313,8 +313,8 @@
 
 #' Fifa_positions data
 #'
-#' A subset of the \code{\link{Fifa}} dataset with 36 players containing their
-#' position and x and y coordinate on a 2D image of a football field. Mainly
+#' A subset of the \code{\link{Fifa}} dataset with 36 possible players positions containing their
+#' x and y coordinate on a 2D image of a football field. Mainly
 #' useful for plotting.
 #'
 #' @docType data
@@ -323,13 +323,11 @@
 #'
 #' @format An object of class \code{list} with two fields; \describe{
 #'   \item{bg_img}{a matrix containing raw pixel representation of an image of a football
-#'   field (usefull for plotting payers).}
+#'   field (useful for plotting payers).}
 #'   \item{positions}{An R data.frame with 36 rows and 3 columns describing position, x and y axis on the field respectively.}
 #'   }
 #'
 #' @keywords datasets
-#'
-#' @source \url{https://}
 #'
 #' @examples
 #' data(Fifa_positions)

@@ -48,7 +48,7 @@ The `greed` package and DLVM framework allows the clustering of categorical data
 
 # The model
 
-We are interested in the clustering of categorical datasets, which are typically found in survey data or item response theory (ITR). In this context, we observe $n$ individuals described by $p$ variables, taking one among $d_j$ modalities for each variable $j$. Such datasets are typically represented using a [one-hot-encoding](https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics) of each factor in a design matrix $\mathbf{X} \in \{0,1\}^{n \times d}$ where $d = \sum_{j=1}^p d_j$. Latent class analysis (LCA) is a generative model for categorical data clustering which posits conditional independance of the factor variables conditionally on the (unknown) partition. Below is a description of its Bayesian formulation with the use of proper conjugate priors
+We are interested in the clustering of categorical datasets, which are typically found in survey data or item response theory (ITR). In this context, we observe $n$ individuals described by $p$ variables, taking one among $d_j$ modalities for each variable $j$. Such datasets are typically represented using a [one-hot-encoding](https://en.wikipedia.org/wiki/One-hot#Machine_learning_and_statistics) of each factor in a design matrix $\mathbf{X} \in \{0,1\}^{n \times d}$ where $d = \sum_{j=1}^p d_j$. Latent class analysis (LCA) is a generative model for categorical data clustering which posits conditional independence of the factor variables conditionally on the (unknown) partition. Below is a description of its Bayesian formulation with the use of proper conjugate priors
 \[
 \begin{equation}
 \begin{aligned}
@@ -74,7 +74,7 @@ This default values may be changed and we refer to the `?Lca` documentation for 
 We now illustrate the use of the `greed` package on two real datasets:
 
  1. **Mushroom** data from UCI Machine Learning Repository describing 8124 mushrooms with 22 phenotype variables. Each mushroom is classified as "edible" or "poisonous" and the goal is to recover the mushroom class from its phenotype.
- 2. **Young people survey** data from Miroslav Sabo and avalaible on the [Kaggle platform](https://www.kaggle.com/miroslavsabo/young-people-survey). This is an authentic example of questionnaire data where Slovakian young people (15-30 years old) were asked musical preferences according to different genres (rock, hip-hop, classical, etc.).
+ 2. **Young people survey** data from Miroslav Sabo and available on the [Kaggle platform](https://www.kaggle.com/miroslavsabo/young-people-survey). This is an authentic example of questionnaire data where Slovakian young people (15-30 years old) were asked musical preferences according to different genres (rock, hip-hop, classical, etc.).
  
 These two datasets come attached with `greed` package.
 
@@ -182,7 +182,7 @@ X = Xnum %>%
 
 ### Hierarchical clustering 
 
-As previously the clustering is obtained with a call to greed and the Lca generative model will be taken by default since the dataset is a data.frame with factors only. We demonstrate here how to increase a little bit the exploration capabilities of the optimization algorithm by increasing the population size and the probaility of mutation.
+As previously the clustering is obtained with a call to greed and the Lca generative model will be taken by default since the dataset is a data.frame with factors only. We demonstrate here how to increase a little bit the exploration capabilities of the optimization algorithm by increasing the population size and the probability of mutation.
 
 ```{r survey-lca-cust,fig.show='hold',out.width="100%",fig.width=8,fig.height=5.5}
 sol=greed(X, alg = Hybrid(pop_size = 50,prob_mutation = 0.5))
@@ -205,7 +205,7 @@ plot(sol,type='marginals')
 
 The clusters appear to be quite different and coherent. For example, the seventh group (second row, in brown) display a strong tendency to like Opera and Classical music and dislike more *modern* genres (Techno, Trance, Punk or Hi-Hop), whereas the 4th group (top row, in pink) corresponds to music lovers with quite eclectic musical taste across the proposed survey's genres.
 
-In addition, the conditional maximum a posteriori estimates of $\theta_{kj}$ are qvailable through the `coef()` method. 
+In addition, the conditional maximum a posteriori estimates of $\theta_{kj}$ are available through the `coef()` method. 
 
 ```{r}
 params = coef(sol)
@@ -260,5 +260,5 @@ ggplot(gg %>% filter(abs(dm)>0.1), aes(label = var, size = abs(dm),color=dm)) +
   facet_wrap(~cluster)
 ```
 
-Using such a visualization allow to easily describe the different groups. The first cluster almost exlusively likes Pop and Dance music, the second Opera and Classical music. The third cluster has higher score for almost all music genres and the third is close to the global average score and so on.
+Using such a visualization allow to easily describe the different groups. The first cluster almost exclusively likes Pop and Dance music, the second Opera and Classical music. The third cluster has higher score for almost all music genres and the third is close to the global average score and so on.
 

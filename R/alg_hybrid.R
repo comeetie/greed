@@ -96,7 +96,7 @@ hybrid <- function(model, alg, data, K, verbose = FALSE) {
     cK <- solutions[[order(icls, decreasing = TRUE)[1]]]@K
     nbgen <- nbgen + 1
 
-    cli::cli_status_update(sb,"{cli::symbol$info} Generation {nbgen} : best solution with an ICL of {round(solutions[[which.max(icls)]]@icl)} and {solutions[[which.max(icls)]]@K} clusters.")
+    cli::cli_status_update(sb, "{cli::symbol$info} Generation {nbgen} : best solution with an ICL of {round(solutions[[which.max(icls)]]@icl)} and {solutions[[which.max(icls)]]@K} clusters.")
     
   }
   if (cK > Kmax) {
@@ -106,7 +106,7 @@ hybrid <- function(model, alg, data, K, verbose = FALSE) {
   train.hist <- rbind(train.hist, data.frame(generation = nbgen, icl = icls, K = sapply(solutions, function(s) {
     max(s@cl)
   })))
-  # parallel::stopCluster(cl)
+
   # best solution
   res <- solutions[[order(icls, decreasing = TRUE)[1]]]
 
@@ -117,9 +117,6 @@ hybrid <- function(model, alg, data, K, verbose = FALSE) {
   path <- cleanpathopt(path)
   # store train history
   path@train_hist <- train.hist
-  # stop future plan
-  # oplan <- future::plan()
-  # on.exit(future::plan(oplan), add = TRUE)
   path
 }
 
@@ -168,7 +165,7 @@ full_cross_over <- function(sol1, sol2, fimerge, fiswap, pmutation, Kmax) {
     sol <- fimerge(ncl, Matrix::tril(Am))
     move_mat <- sol@move_mat + Matrix::t(sol@move_mat)
     ncl <- sol@cl
-    for (r in 1:nrow(move_mat)) {
+    for (r in seq_len(nrow(move_mat))) {
       if (sum(move_mat[r, ] != 0) > 10) {
         merges <- which(move_mat[r, ] != 0)
         best_merges_row <- order(move_mat[r, merges], decreasing = TRUE)[1:10]
@@ -246,7 +243,7 @@ incremental_cross_over <- function(sol1, sol2, fimerge, fiswap, pmutation, Kmax)
   sol <- fimerge(ncl, Matrix::tril(move_mat))
   move_mat <- sol@move_mat
   ncl <- sol@cl
-  for (r in 1:nrow(move_mat)) {
+  for (r in seq_len(nrow(move_mat))) {
     if (sum(move_mat[r, ] != 0) > 10) {
       merges <- which(move_mat[r, ] != 0)
       best_merges_row <- order(move_mat[r, merges], decreasing = TRUE)[1:10]

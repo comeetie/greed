@@ -192,7 +192,7 @@ setMethod(
 #' @param x a \code{\link{DcLbmPath-class}}
 #' @param type a string which specify plot type:
 #' \itemize{
-#' \item \code{'tree'}: plot a co-dendogram of rows and colums clusters
+#' \item \code{'tree'}: plot a co-dendogram of rows and columns clusters
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between row and column clusters
 #' \item \code{'biplot'}: plot a block matrix with summarizing connections between row and column clusters aligned with row and clusters drendograms
 #' \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between row and column clusters
@@ -208,7 +208,7 @@ setMethod(
       blocks = co_blocks(x),
       biplot = bi_plot(x),
       nodelink = co_nodelink(x),
-      methods::callNextMethod(x, type=type)
+      methods::callNextMethod(x, type = type)
     )
   }
 )

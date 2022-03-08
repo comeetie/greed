@@ -155,7 +155,7 @@ setMethod(
 #' @return a list with the model parameters estimates (MAP), the fields are:
 #' \itemize{
 #' \item \code{'pi'}: cluster proportions
-#' \item \code{'thetav'}: cluster profile probabilites (list of matrix of size K x Dv),
+#' \item \code{'thetav'}: cluster profile probabilities (list of matrix of size K x Dv),
 #' }
 #' @export
 setMethod(
@@ -245,11 +245,11 @@ setMethod(
   definition = function(model, obs_stats, data) {
     if (length(obs_stats$x_counts) > 0) {
       cat_names <- data$var_names
-      for (v in 1:length(obs_stats$x_counts)) {
+      for (v in seq_len(length(obs_stats$x_counts))) {
         nb_levels <- length(data$levels_names[[v]])
         obs_stats$x_counts[[v]] <- matrix(obs_stats$x_counts[[v]], ncol = nb_levels)
         colnames(obs_stats$x_counts[[v]]) <- data$levels_names[[v]]
-        rownames(obs_stats$x_counts[[v]]) <- paste0("cluster", 1:nrow(obs_stats$x_counts[[v]]))
+        rownames(obs_stats$x_counts[[v]]) <- paste0("cluster", seq_len(nrow(obs_stats$x_counts[[v]])))
       }
       names(obs_stats$x_counts) <- cat_names
     }

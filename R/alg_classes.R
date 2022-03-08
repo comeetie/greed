@@ -289,8 +289,8 @@ setMethod(
 #' @title Model based hierarchical clustering
 #'
 #' @description This function is the main function for fitting Dlvms with greed. 
-#' In the simplest case you may only provide a datset and greed will find a suitable one. 
-#' The accepted classes for \code{X}  depends on the generative used wich can be specified with the \code{model} argument. 
+#' In the simplest case you may only provide a dataset and greed will find a suitable one. 
+#' The accepted classes for \code{X}  depends on the generative used which can be specified with the \code{model} argument. 
 #' See the \code{\link{DlvmPrior-class}} and the derived classes for details.
 #' 
 #'
@@ -316,7 +316,7 @@ greed <- function(X, model = find_model(X), K = 20, alg = Hybrid(), verbose = FA
   sol@obs_stats <- cleanObsStats(model, sol@obs_stats, data)
 
   if (length(sol@path) > 0) {
-    for (p in 1:length(sol@path)) {
+    for (p in seq_len(length(sol@path))) {
       sol@path[[p]]$obs_stats <- cleanObsStats(model, sol@path[[p]]$obs_stats, data)
     }
   }

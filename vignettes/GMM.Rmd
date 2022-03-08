@@ -97,7 +97,7 @@ The optimal clustering found by the hybrid GA has $K^\star=3$ clusters. You may 
 table(diabetes$cl,clustering(sol)) %>% knitr::kable()
 ```
 
-It roughly corresponds to the known groups with cluster 1,2 and 3 recovering overt, chemical and normal diabetes respectively, with some missclassifications that are expected with GMM clustering on this dataset. 
+It roughly corresponds to the known groups with cluster 1,2 and 3 recovering overt, chemical and normal diabetes respectively, with some miss-classifications that are expected with GMM clustering on this dataset. 
 
 To get an overview of the clustering results, you may also use the `gmmpairs()` plot function which displays the scatter plot matrix, colored by cluster membership, with estimated Gaussian ellipses in each cluster via maximum a posteriori:
 ```{r diabetes-gmm-FIG, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5, fig.cap="Matrix pairs plots of the clustering with default hyperparameters on the diabetes data."}
@@ -132,7 +132,7 @@ soldiag = greed(X,model=DiagGmm())
 gmmpairs(soldiag,X)
 ```
 
-As previously, the clustering is quite aligned with the known groups except that now two clusters were needed to fit the "overt" class which presents an important ellongation.
+As previously, the clustering is quite aligned with the known groups except that now two clusters were needed to fit the "overt" class which presents an important elongation.
 
 ```{r}
 table(diabetes$cl,clustering(soldiag)) %>% knitr::kable()
