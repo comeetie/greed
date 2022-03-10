@@ -23,17 +23,17 @@ an \code{\link{IclPath-class}} object
 }
 \description{
 This function is the main function for fitting Dlvms with greed. 
-In the simplest case you may only provide a datset and greed will find a suitable one. 
-The accepted classes for \code{X}  depends on the generative used wich can be specified with the \code{model} argument. 
+In the simplest case you may only provide a dataset and greed will find a suitable one. 
+The accepted classes for \code{X}  depends on the generative used which can be specified with the \code{model} argument. 
 See the \code{\link{DlvmPrior-class}} and the derived classes for details.
 
-Greed enables the clustering of networks and count data such as document-term
-matrix with different models. Model selection and clustering are performed in
+Greed enables the clustering of networks and count data matrix with different models. 
+Model selection and clustering are performed in
 combination by optimizing the Integrated Classification Likelihood.
 Optimization is performed thanks to a combination of greedy local search and
 a genetic algorithm. The main entry point is the \code{\link{greed}} function
 to perform the clustering, which is documented below. The package also
-provides sampling functions for all the implemented DLVMs
+provides sampling functions for all the implemented DLVMs.
 }
 \seealso{
 Other DlvmModels: 

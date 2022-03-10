@@ -21,8 +21,6 @@ NULL
 #' @family DlvmModels
 #' @examples
 #' Sbm()
-#' sbm <- rsbm(100, c(0.5, 0.5), diag(2) * 0.1 + 0.01)
-#' sol <- greed(sbm$x, model = Sbm(a0 = 0.5, b0 = 0.5, alpha = 0.5))
 #' @references Nowicki, Krzysztof and Tom A B Snijders (2001). “Estimation and prediction for stochastic block structures”. In:Journal of the American statistical association 96.455, pp. 1077–1087
 #' @export
 setClass("SbmPrior",

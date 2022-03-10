@@ -12,7 +12,7 @@ An object of class \code{list} with two fields;
   \describe{
   \item{Id}{id of the node, rownames of network adjacency matrix}
   \item{Locale}{factor with the locali affiliation of the node , "OUT": Suspects not belonging to La Lombardia, "MISS": Information not available, other Locali Id.}
-  \item{Role}{factor with the type of hierarchical position of the node "MISS": Information not available,"boss": high hierachical position, "aff": affiliate}
+  \item{Role}{factor with the type of hierarchical position of the node "MISS": Information not available,"boss": high hierarchical position, "aff": affiliate}
  }
 }
 }

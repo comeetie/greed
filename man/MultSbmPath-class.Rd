@@ -3,7 +3,7 @@
 \docType{class}
 \name{MultSbmPath-class}
 \alias{MultSbmPath-class}
-\title{Multinomial Stochastic Block Model hierachical fit results class}
+\title{Multinomial Stochastic Block Model hierarchical fit results class}
 \description{
 An S4 class to represent a hierarchical fit of a Multinomial Stochastic Block Model, extend \code{\link{IclPath-class}}.
 }

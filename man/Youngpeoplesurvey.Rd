@@ -15,7 +15,7 @@ An R data.frame with columns containing each of the 150 original
 data(Youngpeoplesurvey)
 }
 \description{
-Young people survey data from Miroslav Sabo and avalaible on the Kaggle
+Young people survey data from Miroslav Sabo and available on the Kaggle
 platform. This is an authentic example of questionnaire data where Slovakian
 young people (15-30 years old) were asked musical preferences according to
 different genres (rock, hip-hop, classical, etc.).

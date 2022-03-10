@@ -159,15 +159,13 @@ We begin by preprocessing the data, only keeping the categorical variable. The o
 
 
 ```{r}
-nc  = 19
+
 
 selected = Youngpeoplesurvey %>% 
-  select(all_of(1:nc)) %>%
   mutate(string = longstring(.)) %>%
   mutate(sel = if_else(string <= 10,TRUE,FALSE) ) %>% pull(sel)
 
 Xnum = Youngpeoplesurvey %>% 
-  select(all_of(1:nc)) %>%
   filter(all_of(selected) )
 
 X = Xnum %>% 

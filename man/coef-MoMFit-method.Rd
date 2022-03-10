@@ -13,7 +13,7 @@
 a list with the model parameters estimates (MAP), the fields are:
 \itemize{
 \item \code{'pi'}: cluster proportions
-\item \code{'thetak'}: cluster profile probabilites (matrix of size K x D),
+\item \code{'thetak'}: cluster profile probabilities (matrix of size K x D),
 }
 }
 \description{

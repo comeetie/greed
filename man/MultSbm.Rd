@@ -25,7 +25,7 @@ a \code{MultSbmPrior-class} object
 a \code{MultSbm-class} object
 }
 \description{
-An S4 class to represent a Multinomial Stochastic Block Model. Such model can be used to cluster multilayer-graph vertex, and model a square adjacency cube \eqn{X} of size NxNxM with the following generative model :
+An S4 class to represent a Multinomial Stochastic Block Model. Such model can be used to cluster multi-layer graph vertex, and model a square adjacency cube \eqn{X} of size NxNxM with the following generative model :
 \deqn{ \pi \sim Dirichlet(\alpha)}
 \deqn{ Z_i  \sim \mathcal{M}(1,\pi)}
 \deqn{ \theta_{kl} \sim Dirichlet(\beta)}

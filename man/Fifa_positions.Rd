@@ -7,19 +7,16 @@
 \format{
 An object of class \code{list} with two fields; \describe{
   \item{bg_img}{a matrix containing raw pixel representation of an image of a football
-  field (usefull for plotting payers).}
+  field (useful for plotting payers).}
   \item{positions}{An R data.frame with 36 rows and 3 columns describing position, x and y axis on the field respectively.}
   }
-}
-\source{
-\url{https://}
 }
 \usage{
 data(Fifa)
 }
 \description{
-A subset of the \code{\link{Fifa}} dataset with 36 players containing their
-position and x and y coordinate on a 2D image of a football field. Mainly
+A subset of the \code{\link{Fifa}} dataset with 36 possible players positions containing their
+x and y coordinate on a 2D image of a football field. Mainly
 useful for plotting.
 }
 \examples{

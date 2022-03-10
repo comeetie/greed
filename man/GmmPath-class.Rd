@@ -18,7 +18,7 @@ An S4 class to represent a hierarchical fit of a gaussian mixture model, extend 
 
 \item{\code{K}}{number of extracted clusters over row and columns}
 
-\item{\code{cl}}{a numeric vector with row and clolumns cluster indexes}
+\item{\code{cl}}{a numeric vector with row and columns cluster indexes}
 
 \item{\code{obs_stats}}{a list with the following elements:
 \itemize{

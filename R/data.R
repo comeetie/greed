@@ -57,7 +57,7 @@
 #' @keywords datasets
 #'
 #' @references M. Girvan and M. E. J. Newman, Community structure in social and biological networks, Proc. Natl. Acad. Sci. USA 99, 7821-7826 (2002)
-#' (\href{https://www.pnas.org/content/99/12/7821}{PNAS}).
+#' (\href{https://www.pnas.org/doi/10.1073/pnas.122653799}{PNAS}).
 #'
 #' @source \href{http://www-personal.umich.edu/~mejn/netdata/}{M. E. J. Newman Network datasets}
 #'
@@ -217,24 +217,6 @@
 #' @examples
 #' data(FrenchParliament)
 "FrenchParliament"
-
-#' French Parliament votes dataset
-#'
-#' @keywords datasets
-#'
-#' @docType data
-#'
-#' @usage data(Xvlegislature)
-#'
-#' @format An object of class \code{list} with three fields;
-#'  \describe{
-#'   \item{X}{matrix of deputy votes a \code{\link[Matrix]{sparseMatrix}} of size 593x1839}
-#'   \item{rowmeta}{a data frame with deputy meta-data}
-#'   \item{colmeta}{a data frame with votes meta data}
-#' }
-#' @examples
-#' data(Xvlegislature)
-"Xvlegislature"
 
 
 

@@ -300,6 +300,10 @@ setMethod(
 #' @param alg an optimization algorithm of class \code{\link{Alg-class}} such as \code{\link{Hybrid-class}} (default), \code{\link{Multistarts-class}}, \code{\link{Seed-class}} or \code{\link{Genetic-class}}
 #' @param verbose boolean value for verbose mode
 #' @return an \code{\link{IclPath-class}} object
+#' @examples 
+#' sbm <- rsbm(50, c(0.5, 0.5), diag(2) * 0.1 + 0.01)
+#' sol <- greed(sbm$x, model = Sbm())
+#' table(sbm$cl,clustering(sol))
 #' @export
 greed <- function(X, model = find_model(X), K = 20, alg = Hybrid(), verbose = FALSE) {
   data <- preprocess(model, X)

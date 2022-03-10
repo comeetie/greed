@@ -36,6 +36,6 @@ data(Football)
 }
 \references{
 M. Girvan and M. E. J. Newman, Community structure in social and biological networks, Proc. Natl. Acad. Sci. USA 99, 7821-7826 (2002)
-(\href{https://www.pnas.org/content/99/12/7821}{PNAS}).
+(\href{https://www.pnas.org/doi/10.1073/pnas.122653799}{PNAS}).
 }
 \keyword{datasets}
