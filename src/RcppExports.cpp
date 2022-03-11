@@ -158,6 +158,44 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// log_prob_gauss
+double log_prob_gauss(arma::vec x, arma::vec mu, arma::mat iS);
+RcppExport SEXP _greed_log_prob_gauss(SEXP xSEXP, SEXP muSEXP, SEXP iSSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type iS(iSSEXP);
+    rcpp_result_gen = Rcpp::wrap(log_prob_gauss(x, mu, iS));
+    return rcpp_result_gen;
+END_RCPP
+}
+// log_evi_gauss
+double log_evi_gauss(arma::vec mu, arma::mat iS);
+RcppExport SEXP _greed_log_evi_gauss(SEXP muSEXP, SEXP iSSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type iS(iSSEXP);
+    rcpp_result_gen = Rcpp::wrap(log_evi_gauss(mu, iS));
+    return rcpp_result_gen;
+END_RCPP
+}
+// GaussMerge
+List GaussMerge(List current_k, List current_l, arma::mat iSigma_prior);
+RcppExport SEXP _greed_GaussMerge(SEXP current_kSEXP, SEXP current_lSEXP, SEXP iSigma_priorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type current_k(current_kSEXP);
+    Rcpp::traits::input_parameter< List >::type current_l(current_lSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type iSigma_prior(iSigma_priorSEXP);
+    rcpp_result_gen = Rcpp::wrap(GaussMerge(current_k, current_l, iSigma_prior));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sp_cross
 arma::sp_mat sp_cross(arma::sp_mat colvec, arma::sp_mat rowvec, int self, int oldcl, int newcl, int K);
 RcppExport SEXP _greed_sp_cross(SEXP colvecSEXP, SEXP rowvecSEXP, SEXP selfSEXP, SEXP oldclSEXP, SEXP newclSEXP, SEXP KSEXP) {
@@ -493,6 +531,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_test_swap", (DL_FUNC) &_greed_test_swap, 5},
     {"_greed_test_merge", (DL_FUNC) &_greed_test_merge, 5},
     {"_greed_test_merge_correction", (DL_FUNC) &_greed_test_merge_correction, 5},
+    {"_greed_log_prob_gauss", (DL_FUNC) &_greed_log_prob_gauss, 3},
+    {"_greed_log_evi_gauss", (DL_FUNC) &_greed_log_evi_gauss, 2},
+    {"_greed_GaussMerge", (DL_FUNC) &_greed_GaussMerge, 3},
     {"_greed_sp_cross", (DL_FUNC) &_greed_sp_cross, 6},
     {"_greed_add_sppat", (DL_FUNC) &_greed_add_sppat, 2},
     {"_greed_add_spmatpat", (DL_FUNC) &_greed_add_spmatpat, 2},

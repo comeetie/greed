@@ -240,7 +240,7 @@ means_scores_long = do.call(rbind,
 # compute the average score for the whole population
 means_scores_glob = Xnum %>% 
   summarise_all(function(x){mean(x,na.rm=TRUE)}) %>% 
-  tidyr::pivot_longer(all_of(1:nc),names_to = "var",) %>% 
+  tidyr::pivot_longer(all_of(1:ncol(Xnum)),names_to = "var",) %>% 
   mutate(var = gsub("[,-/]"," ",var))
 
 # compute the differences between clusters scores and averages scores
