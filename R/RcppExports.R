@@ -41,18 +41,6 @@ test_merge_correction <- function(model, data, cl, k, l) {
     .Call('_greed_test_merge_correction', PACKAGE = 'greed', model, data, cl, k, l)
 }
 
-log_prob_gauss <- function(x, mu, iS) {
-    .Call('_greed_log_prob_gauss', PACKAGE = 'greed', x, mu, iS)
-}
-
-log_evi_gauss <- function(mu, iS) {
-    .Call('_greed_log_evi_gauss', PACKAGE = 'greed', mu, iS)
-}
-
-GaussMerge <- function(current_k, current_l, iSigma_prior) {
-    .Call('_greed_GaussMerge', PACKAGE = 'greed', current_k, current_l, iSigma_prior)
-}
-
 sp_cross <- function(colvec, rowvec, self, oldcl, newcl, K) {
     .Call('_greed_sp_cross', PACKAGE = 'greed', colvec, rowvec, self, oldcl, newcl, K)
 }

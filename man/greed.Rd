@@ -35,6 +35,11 @@ a genetic algorithm. The main entry point is the \code{\link{greed}} function
 to perform the clustering, which is documented below. The package also
 provides sampling functions for all the implemented DLVMs.
 }
+\examples{
+sbm <- rsbm(50, c(0.5, 0.5), diag(2) * 0.1 + 0.01)
+sol <- greed(sbm$x, model = Sbm())
+table(sbm$cl,clustering(sol))
+}
 \seealso{
 Other DlvmModels: 
 \code{\link{CombinedModels}},

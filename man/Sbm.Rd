@@ -38,8 +38,6 @@ The \code{Sbm-class} must be used when fitting a simple Sbm whereas the \code{Sb
 }
 \examples{
 Sbm()
-sbm <- rsbm(100, c(0.5, 0.5), diag(2) * 0.1 + 0.01)
-sol <- greed(sbm$x, model = Sbm(a0 = 0.5, b0 = 0.5, alpha = 0.5))
 SbmPrior()
 SbmPrior(type = "undirected")
 Sbm()
