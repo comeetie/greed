@@ -169,7 +169,7 @@ arma::vec DcLbm::delta_swap(const int i,arma::uvec & cl, bool almost_dead_cluste
   // for each possible move
   for(arma::uword j = 0; j < iclust.n_elem; ++j) {
     k=iclust(j);
-    if((k!=oldcl) & (clusttypes(k)==clusttypes(oldcl))){
+    if((k!=oldcl) && (clusttypes(k)==clusttypes(oldcl))){
       arma::mat new_ec = x_counts;
       arma::vec new_counts = update_count(counts,oldcl,k);
       arma::vec new_dr = dr;
@@ -283,7 +283,7 @@ double DcLbm::delta_merge_correction(int k,int l,int obk,int obl,const List & ol
   int lo,ko;
   double cc;
   
-  if((clusttypes(k)==clusttypes(l)) & (clusttypes(k)!=clusttypes(obl))){
+  if((clusttypes(k)==clusttypes(l)) && (clusttypes(k)!=clusttypes(obl))){
     // k,l position in old_stats
     //Rcout << "Corr" << std::endl;
     if(l>=obk){

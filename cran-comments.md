@@ -4,11 +4,11 @@ This submission correspond to version 0.6 of package greed. The check results ob
 
 ## Test environments
 
-* ubuntu 20.04 (on github-action), R 4.0.5 
-* ubuntu 20.04 (on github-action), R-devel (2021-04-06 r80146)
-* windows (on github-action), R 4.0.5
-* macOS darwin 17 (on github-action), R 4.0.5 
-* solaris 10 (on rhub), R 4.0.5
+* ubuntu 20.04 (on github-action), R 4.1.3 
+* ubuntu 20.04 (on github-action), R-devel 
+* windows (on github-action), R 4.1.3
+* macOS-11 (on github-action), R 4.1.3
+* solaris 10 (on rhub), R 4.1.3
 
 ## R CMD check results
 
@@ -44,13 +44,13 @@ Duration: 13m 24.6s
 
 ### Ubuntu 20.04-release
 
-── R CMD check results ──────────────────────────────────────── greed 0.5.1 ────
-Duration: 6m 23.5s
+── R CMD check results ──────────────────────────────────────── greed 0.6.0 ────
+Duration: 6m 23.9s
 
 ❯ checking installed package size ... NOTE
-    installed size is 43.5Mb
+    installed size is 45.5Mb
     sub-directories of 1Mb or more:
-      libs  42.5Mb
+      libs  42.8Mb
 
 0 errors ✔ | 0 warnings ✔ | 1 note ✖
 
