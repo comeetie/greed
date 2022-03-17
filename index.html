@@ -162,8 +162,9 @@
 <span class="co">#&gt; ── Fitting a guess DCSBM model ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1346 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1347 and 3 clusters.</span>
 <span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1346 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -1346 and 4 clusters.</span>
 <span class="co">#&gt; ── Final clustering ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a DCSBM model 3 clusters and an ICL of -1345</span></code></pre></div>
@@ -176,7 +177,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Final clustering ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a SBM model 5 clusters and an ICL of -1316</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a SBM model 5 clusters and an ICL of -1255</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="result-analysis">Result analysis<a class="anchor" aria-label="anchor" href="#result-analysis"></a>
@@ -196,26 +197,26 @@
 <tbody>
 <tr class="odd">
 <td align="left">c</td>
-<td align="right">30</td>
-<td align="right">16</td>
-<td align="right">2</td>
-<td align="right">1</td>
 <td align="right">0</td>
+<td align="right">1</td>
+<td align="right">6</td>
+<td align="right">36</td>
+<td align="right">6</td>
 </tr>
 <tr class="even">
 <td align="left">l</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">30</td>
 <td align="right">5</td>
-<td align="right">25</td>
-<td align="right">13</td>
+<td align="right">0</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">n</td>
 <td align="right">0</td>
-<td align="right">7</td>
-<td align="right">4</td>
 <td align="right">2</td>
+<td align="right">8</td>
+<td align="right">3</td>
 <td align="right">0</td>
 </tr>
 </tbody>
@@ -225,15 +226,15 @@
 <span class="co">#&gt; [1] 5</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
 <span class="co">#&gt; $pi</span>
-<span class="co">#&gt; [1] 0.2857143 0.2190476 0.1047619 0.2666667 0.1238095</span>
+<span class="co">#&gt; [1] 0.07619048 0.31428571 0.18095238 0.37142857 0.05714286</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $thetakl</span>
-<span class="co">#&gt;             [,1]       [,2]        [,3]        [,4]       [,5]</span>
-<span class="co">#&gt; [1,] 0.310344828 0.06521739 0.009090909 0.000000000 0.00000000</span>
-<span class="co">#&gt; [2,] 0.065217391 0.13043478 0.019762846 0.010869565 0.01337793</span>
-<span class="co">#&gt; [3,] 0.009090909 0.01976285 0.436363636 0.006493506 0.04895105</span>
-<span class="co">#&gt; [4,] 0.000000000 0.01086957 0.006493506 0.084656085 0.27747253</span>
-<span class="co">#&gt; [5,] 0.000000000 0.01337793 0.048951049 0.277472527 0.55128205</span></code></pre></div>
+<span class="co">#&gt;             [,1]        [,2]        [,3]        [,4]       [,5]</span>
+<span class="co">#&gt; [1,] 0.821428571 0.367424242 0.065789474 0.003205128 0.00000000</span>
+<span class="co">#&gt; [2,] 0.367424242 0.106060606 0.006379585 0.003885004 0.00000000</span>
+<span class="co">#&gt; [3,] 0.065789474 0.006379585 0.251461988 0.016194332 0.04385965</span>
+<span class="co">#&gt; [4,] 0.003205128 0.003885004 0.016194332 0.099865047 0.42735043</span>
+<span class="co">#&gt; [5,] 0.000000000 0.000000000 0.043859649 0.427350427 0.73333333</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="inspecting-the-hierarchy">Inspecting the hierarchy<a class="anchor" aria-label="anchor" href="#inspecting-the-hierarchy"></a>
@@ -258,21 +259,21 @@
 <tbody>
 <tr class="odd">
 <td align="left">c</td>
-<td align="right">30</td>
-<td align="right">18</td>
 <td align="right">1</td>
+<td align="right">6</td>
+<td align="right">42</td>
 </tr>
 <tr class="even">
 <td align="left">l</td>
-<td align="right">0</td>
-<td align="right">5</td>
 <td align="right">38</td>
+<td align="right">5</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">n</td>
-<td align="right">0</td>
-<td align="right">11</td>
 <td align="right">2</td>
+<td align="right">8</td>
+<td align="right">3</td>
 </tr>
 </tbody>
 </table>
