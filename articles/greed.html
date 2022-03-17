@@ -157,14 +157,11 @@
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a guess DCSBM model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1357 and 5 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1348 and 5 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -1346 and 4 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -1346 and 5 clusters.</span>
-<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -1346 and 5 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1346 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1346 and 4 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a DCSBM model 4 clusters and an ICL of -1342</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a DCSBM model 3 clusters and an ICL of -1345</span></code></pre></div>
 <p>You may specify the model you want to use and set the priors parameters with the (<code>model</code> argument), the optimization algorithm (<code>alg</code> argument) and the initial number of cluster <code>K</code>. Here <code>Books$X</code> is a square sparse matrix and a graph clustering <code><a href="../reference/DcSbm.html">?`DcSbm-class`</a></code> model will be used by default. By default, the Hybrid genetic algorithm is used.</p>
 <p>The next example illustrates a usage without default values. A binary <code>Sbm</code> prior is used, along with a spectral clustering algorithm for graphs.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -174,7 +171,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a SBM model 5 clusters and an ICL of -1257</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a SBM model 5 clusters and an ICL of -1252</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="result-analysis">Result analysis<a class="anchor" aria-label="anchor" href="#result-analysis"></a>
@@ -194,26 +191,26 @@
 <tbody>
 <tr class="odd">
 <td align="left">c</td>
-<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">34</td>
+<td align="right">6</td>
 <td align="right">1</td>
-<td align="right">6</td>
-<td align="right">36</td>
-<td align="right">6</td>
+<td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">l</td>
-<td align="right">9</td>
-<td align="right">29</td>
+<td align="right">0</td>
+<td align="right">0</td>
 <td align="right">5</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<td align="right">29</td>
+<td align="right">9</td>
 </tr>
 <tr class="odd">
 <td align="left">n</td>
 <td align="right">0</td>
-<td align="right">2</td>
-<td align="right">8</td>
 <td align="right">3</td>
+<td align="right">8</td>
+<td align="right">2</td>
 <td align="right">0</td>
 </tr>
 </tbody>
@@ -223,15 +220,15 @@
 <span class="co">#&gt; [1] 5</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
 <span class="co">#&gt; $pi</span>
-<span class="co">#&gt; [1] 0.08571429 0.30476190 0.18095238 0.37142857 0.05714286</span>
+<span class="co">#&gt; [1] 0.07619048 0.35238095 0.18095238 0.30476190 0.08571429</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $thetakl</span>
-<span class="co">#&gt;             [,1]        [,2]        [,3]        [,4]       [,5]</span>
-<span class="co">#&gt; [1,] 0.722222222 0.357638889 0.058479532 0.002849003 0.00000000</span>
-<span class="co">#&gt; [2,] 0.357638889 0.094758065 0.006578947 0.004006410 0.00000000</span>
-<span class="co">#&gt; [3,] 0.058479532 0.006578947 0.251461988 0.016194332 0.04385965</span>
-<span class="co">#&gt; [4,] 0.002849003 0.004006410 0.016194332 0.099865047 0.42735043</span>
-<span class="co">#&gt; [5,] 0.000000000 0.000000000 0.043859649 0.427350427 0.73333333</span></code></pre></div>
+<span class="co">#&gt;            [,1]        [,2]        [,3]        [,4]        [,5]</span>
+<span class="co">#&gt; [1,] 0.71428571 0.371621622 0.052631579 0.000000000 0.000000000</span>
+<span class="co">#&gt; [2,] 0.37162162 0.082582583 0.012802276 0.004222973 0.003003003</span>
+<span class="co">#&gt; [3,] 0.05263158 0.012802276 0.251461988 0.006578947 0.058479532</span>
+<span class="co">#&gt; [4,] 0.00000000 0.004222973 0.006578947 0.094758065 0.357638889</span>
+<span class="co">#&gt; [5,] 0.00000000 0.003003003 0.058479532 0.357638889 0.722222222</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="inspecting-the-hierarchy">Inspecting the hierarchy<a class="anchor" aria-label="anchor" href="#inspecting-the-hierarchy"></a>
@@ -256,21 +253,21 @@
 <tbody>
 <tr class="odd">
 <td align="left">c</td>
+<td align="right">8</td>
+<td align="right">40</td>
 <td align="right">1</td>
-<td align="right">6</td>
-<td align="right">42</td>
 </tr>
 <tr class="even">
 <td align="left">l</td>
-<td align="right">38</td>
-<td align="right">5</td>
 <td align="right">0</td>
+<td align="right">5</td>
+<td align="right">38</td>
 </tr>
 <tr class="odd">
 <td align="left">n</td>
+<td align="right">0</td>
+<td align="right">11</td>
 <td align="right">2</td>
-<td align="right">8</td>
-<td align="right">3</td>
 </tr>
 </tbody>
 </table>
