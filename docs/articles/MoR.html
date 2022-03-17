@@ -125,15 +125,16 @@ p.caption {
 </style>
 <p>Loads packages.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span> <span class="co"># allows parralel processing in greed()</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span> <span class="co"># allows parralel processing in greed()</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://comeetie.github.io/greed/" class="external-link">greed</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mclust-org.github.io/mclust/" class="external-link">mclust</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://torvaney.github.io/ggsoccer/" class="external-link">ggsoccer</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2134</span><span class="op">)</span>
 
-<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="st">"multisession"</span>, workers<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="co"># may be increased </span></code></pre></div>
+<span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="st">"multisession"</span>, workers<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="co"># may be increased </span></code></pre></div>
 <div class="section level2">
 <h2 id="mixture-of-regression">Mixture of Regression<a class="anchor" aria-label="anchor" href="#mixture-of-regression"></a>
 </h2>
@@ -164,18 +165,17 @@ Z_i  &amp;\sim \mathcal{M}(1,\pi)\\
 <span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -675 and 2 clusters.</span>
 <span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -675 and 2 clusters.</span>
 <span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -675 and 2 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -675 and 2 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a MOR model 2 clusters and an ICL of -675</span></code></pre></div>
-<p>As expected the partition with two cluster that was used to simulate the data is recovered by the algoritthm. When, the clustering is performed, we may use the classical functions <code>clustering,coef,prior,plot,...</code> to explore the results. We may start by comparing the found clustering with the true labels :</p>
+<p>As expected the partition with two cluster that was used to simulate the data is recovered by the algorithm. When, the clustering is performed, we may use the classical functions <code>clustering,coef,prior,plot,...</code> to explore the results. We may start by comparing the found clustering with the true labels :</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cl</span> <span class="op">=</span> <span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">cl</span>,<span class="va">NPreg</span><span class="op">$</span><span class="va">class</span><span class="op">)</span>
 <span class="co">#&gt;    </span>
 <span class="co">#&gt; cl   1  2</span>
-<span class="co">#&gt;   1  5 96</span>
-<span class="co">#&gt;   2 95  4</span></code></pre></div>
+<span class="co">#&gt;   1  6 95</span>
+<span class="co">#&gt;   2 94  5</span></code></pre></div>
 <p>Look at the value used for the prior parameters :</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/prior.html">prior</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
@@ -207,25 +207,25 @@ Z_i  &amp;\sim \mathcal{M}(1,\pi)\\
 <span class="co">#&gt; $A</span>
 <span class="co">#&gt; $A$cluster1</span>
 <span class="co">#&gt;                     yn</span>
-<span class="co">#&gt; (Intercept) 13.1922329</span>
-<span class="co">#&gt; x            9.0492430</span>
-<span class="co">#&gt; I(x^2)      -0.8921487</span>
+<span class="co">#&gt; (Intercept) 13.0924918</span>
+<span class="co">#&gt; x            9.0944399</span>
+<span class="co">#&gt; I(x^2)      -0.8930568</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $A$cluster2</span>
-<span class="co">#&gt;                      yn</span>
-<span class="co">#&gt; (Intercept) -0.33002899</span>
-<span class="co">#&gt; x            4.42306827</span>
-<span class="co">#&gt; I(x^2)       0.03128846</span>
+<span class="co">#&gt;                     yn</span>
+<span class="co">#&gt; (Intercept) -0.3826692</span>
+<span class="co">#&gt; x            4.4508116</span>
+<span class="co">#&gt; I(x^2)       0.0314107</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $Sigmak</span>
 <span class="co">#&gt; $Sigmak$cluster1</span>
 <span class="co">#&gt;          yn</span>
-<span class="co">#&gt; yn 11.54822</span>
+<span class="co">#&gt; yn 11.91534</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $Sigmak$cluster2</span>
 <span class="co">#&gt;          yn</span>
-<span class="co">#&gt; yn 11.45288</span></code></pre></div>
+<span class="co">#&gt; yn 11.12156</span></code></pre></div>
 <p>And plot prediction line of the fitted sub-models:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df.pred</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span>,length.out<span class="op">=</span><span class="fl">200</span><span class="op">)</span><span class="op">)</span>
@@ -259,51 +259,54 @@ Z_i  &amp;\sim \mathcal{M}(1,\pi)\\
 <span class="co">#&gt; ── <span style="font-weight: bold;">Fitting a MOR model</span> ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -2353 and 3 clusters.</span>
-<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -2333 and 2 clusters.</span>
-<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -2330 and 2 clusters.</span>
-<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -2330 and 2 clusters.</span>
-<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -2330 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -2383 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -2353 and 3 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -2338 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 4 : best solution with an ICL of -2337 and 2 clusters.</span>
+<span class="co">#&gt; ℹ Generation 5 : best solution with an ICL of -2337 and 2 clusters.</span>
 <span class="co">#&gt; ── <span style="font-weight: bold;">Final clustering</span> ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a MOR model 2 clusters and an ICL of -2330</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a MOR model 2 clusters and an ICL of -2337</span></code></pre></div>
 <p>The clustering found has two clusters, if we look at the regression models parameters :</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cl</span><span class="op">=</span><span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
 <span class="va">co</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
 <span class="va">co</span><span class="op">$</span><span class="va">A</span>
 <span class="co">#&gt; $cluster1</span>
-<span class="co">#&gt;                value_eur</span>
-<span class="co">#&gt; (Intercept)  2.515030406</span>
-<span class="co">#&gt; age         -0.061436709</span>
-<span class="co">#&gt; pace        -0.002003113</span>
-<span class="co">#&gt; shooting     0.033272270</span>
-<span class="co">#&gt; dribbling    0.098606648</span>
-<span class="co">#&gt; passing      0.013636481</span>
-<span class="co">#&gt; defending    0.006920110</span>
-<span class="co">#&gt; physic       0.033522890</span>
+<span class="co">#&gt;                 value_eur</span>
+<span class="co">#&gt; (Intercept)  2.6168536097</span>
+<span class="co">#&gt; age         -0.0638408086</span>
+<span class="co">#&gt; pace        -0.0003547923</span>
+<span class="co">#&gt; shooting     0.0353818757</span>
+<span class="co">#&gt; dribbling    0.1001579466</span>
+<span class="co">#&gt; passing      0.0080900719</span>
+<span class="co">#&gt; defending    0.0099605344</span>
+<span class="co">#&gt; physic       0.0307995018</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $cluster2</span>
 <span class="co">#&gt;                value_eur</span>
-<span class="co">#&gt; (Intercept)  1.527661604</span>
-<span class="co">#&gt; age         -0.079392366</span>
-<span class="co">#&gt; pace         0.004846036</span>
-<span class="co">#&gt; shooting     0.004133401</span>
-<span class="co">#&gt; dribbling    0.014868677</span>
-<span class="co">#&gt; passing      0.007263064</span>
-<span class="co">#&gt; defending    0.140755154</span>
-<span class="co">#&gt; physic       0.031073446</span></code></pre></div>
-<p>The two regression model extracted are quite different, one has an important weight for the defending ability and the physic. Whereas the player’s value is more influenced by the dribling and shooting capabilities in the other regression model. The clustering seems therefore to have extracted two submarkets one for more defensive players and one for the other players. This can be confirmed by looking at the average position of the players of the two groups on the field:</p>
+<span class="co">#&gt; (Intercept)  1.782913894</span>
+<span class="co">#&gt; age         -0.077927865</span>
+<span class="co">#&gt; pace         0.004213318</span>
+<span class="co">#&gt; shooting     0.004312783</span>
+<span class="co">#&gt; dribbling    0.015477341</span>
+<span class="co">#&gt; passing      0.004875545</span>
+<span class="co">#&gt; defending    0.143943144</span>
+<span class="co">#&gt; physic       0.025867800</span></code></pre></div>
+<p>The two regression model extracted are quite different, one has an important weight for the defending ability and the physic. Whereas the player’s value is more influenced by the dribbling and shooting capabilities in the other regression model. The clustering seems therefore to have extracted two submarkets one for more defensive players and one for the other players. This can be confirmed by looking at the average position of the players of the two groups on the field:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Fifa_positions"</span><span class="op">)</span>
+<code class="sourceCode R">
 <span class="va">Xreg</span><span class="op">$</span><span class="va">cluster</span><span class="op">=</span><span class="fu"><a href="../reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
-<span class="va">pos_clust_mean</span> <span class="op">=</span> <span class="va">Xreg</span> <span class="op"><a href="https://rpkgs.datanovia.com/ggpubr/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span> <span class="op"><a href="https://rpkgs.datanovia.com/ggpubr/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pos_x</span><span class="op">)</span>,y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pos_y</span><span class="op">)</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/ggpubr/" class="external-link">ggpubr</a></span><span class="op">)</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">pos_clust_mean</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/background_image.html" class="external-link">background_image</a></span><span class="op">(</span><span class="va">Fifa_positions</span><span class="op">$</span><span class="va">bg_img</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">x</span>,y<span class="op">=</span><span class="va">y</span>,label<span class="op">=</span><span class="va">cluster</span><span class="op">)</span>,size<span class="op">=</span><span class="fl">5</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span><span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span>ratio<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">203.2</span><span class="op">)</span>,expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">101.6</span><span class="op">)</span>,expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p><img src="MoR_files/figure-html/unnamed-chunk-12-1.png" width="700" style="display: block; margin: auto;"></p>
+<span class="va">pos_clust_mean</span> <span class="op">=</span> <span class="va">Xreg</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pos_x</span><span class="op">)</span>,y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pos_y</span><span class="op">)</span><span class="op">)</span>
+
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">pos_clust_mean</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://torvaney.github.io/ggsoccer/reference/annotate_pitch.html" class="external-link">annotate_pitch</a></span><span class="op">(</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">x</span>,y<span class="op">=</span><span class="va">y</span>,label<span class="op">=</span><span class="va">cluster</span><span class="op">)</span>,size<span class="op">=</span><span class="fl">5</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu"><a href="https://torvaney.github.io/ggsoccer/reference/theme_pitch.html" class="external-link">theme_pitch</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="MoR_files/figure-html/posplot-1.png" alt="Field position map of the clusters." width="90%"><p class="caption">
+Field position map of the clusters.
+</p>
+</div>
 </div>
 </div>
   </div>
@@ -325,7 +328,7 @@ Z_i  &amp;\sim \mathcal{M}(1,\pi)\\
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
 </div>
 
       </footer>

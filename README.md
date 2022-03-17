@@ -25,32 +25,36 @@ Dedicated to clustering and visualization, the package is very general
 and currently handles the following tasks:
 
 -   **Continuous data clustering** with Gaussian Mixture Models. A
-    tutorial is available in `vignette("GMM")`. See also the
-    documentation for the `Gmm` and `DiagGmm` S4 classes.
+    [GMM](https://comeetie.github.io/greed/articles/GMM.html) tutorial
+    is available. See also the documentation for the `Gmm` and `DiagGmm`
+    S4 classes.
 -   **Graph data clustering** with the Stochastic Block Model or its
-    degree corrected variants. A tutorial is available in
-    `vignette("SBM")`. See also the documentation for the `Sbm` and
-    `dcSbm` S4 classes.
--   **Categorical data clustering** with the Latent Class Analysis. A
-    tutorial is available in `vignette("LCA")`. See also the
-    documentation for the `Lca` S4 class.
+    degree corrected variants. A
+    [SBM](https://comeetie.github.io/greed/articles/SBM.html) tutorial
+    is available . See also the documentation for the `Sbm` and `dcSbm`
+    S4 classes.
+-   **Categorical data clustering** with the Latent Class Analysis. An
+    [LCA](https://comeetie.github.io/greed/articles/LCA.html) tutorial
+    is available. See also the documentation for the `Lca` S4 class.
 -   **Count data clustering** with the Mixture of Multinomials model. A
-    tutorial will soon be available in `vignette("MoM")`. For now, we
-    refer to the documentation for the `Mom` S4 class.
+    tutorial will soon be available. For now, we refer to the
+    documentation for the `Mom` S4 class.
 -   **Mixed-typed** data clustering, *e.g.* categorical and numerical
     but the package handles virtually any type of data combination by
     stacking models on top of each data types. For example graph data
     with continuous or categorical data attached to the nodes are
-    handled. A tutorial is available in `vignette("CombinedModels")`.
-    See also the documentation for the `CombinedModels` S4 class.
+    handled. A
+    [CombinedModels](https://comeetie.github.io/greed/articles/CombinedModels.html)
+    tutorial is available. See also the documentation for the
+    `CombinedModels` S4 class.
 -   **Mixture of regression** for simultaneous clustering and fitting a
-    regression model in each cluster. A tutorial is available in
-    `vignette("MoR")`. See also the documentation for the `MoR` S4
-    class.
+    regression model in each cluster. A
+    [MoR](https://comeetie.github.io/greed/articles/MoR.html) tutorial
+    is available. See also the documentation for the `MoR` S4 class.
 -   **Co-clustering** of binary and count-data via the Latent Block
     Model and its degree-corrected variant. A tutorial will soon be
-    available in `vignette("LBM")`. For now, we refer to the
-    documentation for the `DcLbm` S4 class.
+    available. For now, we refer to the documentation for the `DcLbm` S4
+    class.
 
 With the Integrated Classification Likelihood, the parameters of the
 models are integrated out with a natural regularization effect for

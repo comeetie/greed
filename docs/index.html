@@ -117,19 +117,19 @@
 <p>Dedicated to clustering and visualization, the package is very general and currently handles the following tasks:</p>
 <ul>
 <li>
-<strong>Continuous data clustering</strong> with Gaussian Mixture Models. A tutorial is available in <code><a href="articles/GMM.html">vignette("GMM")</a></code>. See also the documentation for the <code>Gmm</code> and <code>DiagGmm</code> S4 classes.</li>
+<strong>Continuous data clustering</strong> with Gaussian Mixture Models. A <a href="https://comeetie.github.io/greed/articles/GMM.html" class="external-link">GMM</a> tutorial is available. See also the documentation for the <code>Gmm</code> and <code>DiagGmm</code> S4 classes.</li>
 <li>
-<strong>Graph data clustering</strong> with the Stochastic Block Model or its degree corrected variants. A tutorial is available in <code><a href="articles/SBM.html">vignette("SBM")</a></code>. See also the documentation for the <code>Sbm</code> and <code>dcSbm</code> S4 classes.</li>
+<strong>Graph data clustering</strong> with the Stochastic Block Model or its degree corrected variants. A <a href="https://comeetie.github.io/greed/articles/SBM.html" class="external-link">SBM</a> tutorial is available . See also the documentation for the <code>Sbm</code> and <code>dcSbm</code> S4 classes.</li>
 <li>
-<strong>Categorical data clustering</strong> with the Latent Class Analysis. A tutorial is available in <code><a href="articles/LCA.html">vignette("LCA")</a></code>. See also the documentation for the <code>Lca</code> S4 class.</li>
+<strong>Categorical data clustering</strong> with the Latent Class Analysis. An <a href="https://comeetie.github.io/greed/articles/LCA.html" class="external-link">LCA</a> tutorial is available. See also the documentation for the <code>Lca</code> S4 class.</li>
 <li>
-<strong>Count data clustering</strong> with the Mixture of Multinomials model. A tutorial will soon be available in <code><a href="articles/MoM.html">vignette("MoM")</a></code>. For now, we refer to the documentation for the <code>Mom</code> S4 class.</li>
+<strong>Count data clustering</strong> with the Mixture of Multinomials model. A tutorial will soon be available. For now, we refer to the documentation for the <code>Mom</code> S4 class.</li>
 <li>
-<strong>Mixed-typed</strong> data clustering, <em>e.g.</em> categorical and numerical but the package handles virtually any type of data combination by stacking models on top of each data types. For example graph data with continuous or categorical data attached to the nodes are handled. A tutorial is available in <code><a href="articles/CombinedModels.html">vignette("CombinedModels")</a></code>. See also the documentation for the <code>CombinedModels</code> S4 class.</li>
+<strong>Mixed-typed</strong> data clustering, <em>e.g.</em> categorical and numerical but the package handles virtually any type of data combination by stacking models on top of each data types. For example graph data with continuous or categorical data attached to the nodes are handled. A <a href="https://comeetie.github.io/greed/articles/CombinedModels.html" class="external-link">CombinedModels</a> tutorial is available. See also the documentation for the <code>CombinedModels</code> S4 class.</li>
 <li>
-<strong>Mixture of regression</strong> for simultaneous clustering and fitting a regression model in each cluster. A tutorial is available in <code><a href="articles/MoR.html">vignette("MoR")</a></code>. See also the documentation for the <code>MoR</code> S4 class.</li>
+<strong>Mixture of regression</strong> for simultaneous clustering and fitting a regression model in each cluster. A <a href="https://comeetie.github.io/greed/articles/MoR.html" class="external-link">MoR</a> tutorial is available. See also the documentation for the <code>MoR</code> S4 class.</li>
 <li>
-<strong>Co-clustering</strong> of binary and count-data via the Latent Block Model and its degree-corrected variant. A tutorial will soon be available in <code><a href="articles/LBM.html">vignette("LBM")</a></code>. For now, we refer to the documentation for the <code>DcLbm</code> S4 class.</li>
+<strong>Co-clustering</strong> of binary and count-data via the Latent Block Model and its degree-corrected variant. A tutorial will soon be available. For now, we refer to the documentation for the <code>DcLbm</code> S4 class.</li>
 </ul>
 <p>With the Integrated Classification Likelihood, the parameters of the models are integrated out with a natural regularization effect for complex models. This penalization allows to automatically find a suitable value for the number of clusters <em>K</em><sup>⋆</sup>. A user only needs to provide an initial guess for the number of clusters <em>K</em>, as well as values for the prior parameters (reasonable default values are used if no prior information is given). The default optimization is performed thanks to a combination of a greedy local search and a genetic algorithm described in <a href="https://doi.org/10.1007/s11634-021-00440-z" class="external-link">Côme, Jouvin, Latouche, and Bouveyron (2021)</a>, but several other optimization algorithms are also available.</p>
 <p>Eventually, a whole hierarchy of solutions from <em>K</em><sup>⋆</sup> to 1 cluster is extracted. This enables an ordering of the clusters, and the exploration of simpler clustering along the hierarchy. The package also provides some plotting functionality.</p>
@@ -162,8 +162,9 @@
 <span class="co">#&gt; ── Fitting a guess DCSBM model ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ℹ Initializing a population of 20 solutions.</span>
-<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1346 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 1 : best solution with an ICL of -1347 and 3 clusters.</span>
 <span class="co">#&gt; ℹ Generation 2 : best solution with an ICL of -1346 and 4 clusters.</span>
+<span class="co">#&gt; ℹ Generation 3 : best solution with an ICL of -1346 and 4 clusters.</span>
 <span class="co">#&gt; ── Final clustering ──</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Clustering with a DCSBM model 3 clusters and an ICL of -1345</span></code></pre></div>
@@ -176,14 +177,14 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ── Final clustering ──</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; ── Clustering with a SBM model 5 clusters and an ICL of -1316</span></code></pre></div>
+<span class="co">#&gt; ── Clustering with a SBM model 5 clusters and an ICL of -1255</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="result-analysis">Result analysis<a class="anchor" aria-label="anchor" href="#result-analysis"></a>
 </h2>
 <p>The results of <code><a href="reference/greed.html">greed()</a></code> is an S4 class which depends on the <code>model</code> argument (here, an SBM) which comes with readily implemented methods: <code><a href="reference/clustering.html">clustering()</a></code> to access the estimated partitions, <code><a href="reference/K.html">K()</a></code> the estimated number of clusters, and <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> the (conditional) maximum a posteriori of the model parameters.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">label</span>,<span class="fu"><a href="reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">label</span>,<span class="fu"><a href="reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left"></th>
@@ -196,26 +197,26 @@
 <tbody>
 <tr class="odd">
 <td align="left">c</td>
-<td align="right">30</td>
-<td align="right">16</td>
-<td align="right">2</td>
-<td align="right">1</td>
 <td align="right">0</td>
+<td align="right">1</td>
+<td align="right">6</td>
+<td align="right">36</td>
+<td align="right">6</td>
 </tr>
 <tr class="even">
 <td align="left">l</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">30</td>
 <td align="right">5</td>
-<td align="right">25</td>
-<td align="right">13</td>
+<td align="right">0</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">n</td>
 <td align="right">0</td>
-<td align="right">7</td>
-<td align="right">4</td>
 <td align="right">2</td>
+<td align="right">8</td>
+<td align="right">3</td>
 <td align="right">0</td>
 </tr>
 </tbody>
@@ -225,15 +226,15 @@
 <span class="co">#&gt; [1] 5</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span>
 <span class="co">#&gt; $pi</span>
-<span class="co">#&gt; [1] 0.2857143 0.2190476 0.1047619 0.2666667 0.1238095</span>
+<span class="co">#&gt; [1] 0.07619048 0.31428571 0.18095238 0.37142857 0.05714286</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $thetakl</span>
-<span class="co">#&gt;             [,1]       [,2]        [,3]        [,4]       [,5]</span>
-<span class="co">#&gt; [1,] 0.310344828 0.06521739 0.009090909 0.000000000 0.00000000</span>
-<span class="co">#&gt; [2,] 0.065217391 0.13043478 0.019762846 0.010869565 0.01337793</span>
-<span class="co">#&gt; [3,] 0.009090909 0.01976285 0.436363636 0.006493506 0.04895105</span>
-<span class="co">#&gt; [4,] 0.000000000 0.01086957 0.006493506 0.084656085 0.27747253</span>
-<span class="co">#&gt; [5,] 0.000000000 0.01337793 0.048951049 0.277472527 0.55128205</span></code></pre></div>
+<span class="co">#&gt;             [,1]        [,2]        [,3]        [,4]       [,5]</span>
+<span class="co">#&gt; [1,] 0.821428571 0.367424242 0.065789474 0.003205128 0.00000000</span>
+<span class="co">#&gt; [2,] 0.367424242 0.106060606 0.006379585 0.003885004 0.00000000</span>
+<span class="co">#&gt; [3,] 0.065789474 0.006379585 0.251461988 0.016194332 0.04385965</span>
+<span class="co">#&gt; [4,] 0.003205128 0.003885004 0.016194332 0.099865047 0.42735043</span>
+<span class="co">#&gt; [5,] 0.000000000 0.000000000 0.043859649 0.427350427 0.73333333</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="inspecting-the-hierarchy">Inspecting the hierarchy<a class="anchor" aria-label="anchor" href="#inspecting-the-hierarchy"></a>
@@ -247,7 +248,7 @@
 <code class="sourceCode R"><span class="va">sol_K3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">sol</span>, K<span class="op">=</span><span class="fl">3</span><span class="op">)</span>
 <span class="fu"><a href="reference/K.html">K</a></span><span class="op">(</span><span class="va">sol_K3</span><span class="op">)</span>
 <span class="co">#&gt; [1] 3</span>
-<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">label</span>,<span class="fu"><a href="reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol_K3</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">Books</span><span class="op">$</span><span class="va">label</span>,<span class="fu"><a href="reference/clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol_K3</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left"></th>
@@ -258,21 +259,21 @@
 <tbody>
 <tr class="odd">
 <td align="left">c</td>
-<td align="right">30</td>
-<td align="right">18</td>
 <td align="right">1</td>
+<td align="right">6</td>
+<td align="right">42</td>
 </tr>
 <tr class="even">
 <td align="left">l</td>
-<td align="right">0</td>
-<td align="right">5</td>
 <td align="right">38</td>
+<td align="right">5</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">n</td>
-<td align="right">0</td>
-<td align="right">11</td>
 <td align="right">2</td>
+<td align="right">8</td>
+<td align="right">3</td>
 </tr>
 </tbody>
 </table>
@@ -299,8 +300,8 @@
 </h2>
 <p>For large datasets, it is possible to use parallelism to speed-up the computations thanks to the <a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a> package. You only need to specify the type of back-end you want to use, before calling the <code><a href="reference/greed.html">?greed</a></code> function:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="co"># may be increased</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span>
+<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span>, workers<span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="co"># may be increased</span></code></pre></div>
 </div>
 </div>
   </div>
@@ -326,7 +327,7 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing greed</a></li>
+<li><a href="authors.html">Citing greed</a></li>
 </ul>
 </div>
 
@@ -357,7 +358,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
 </div>
 
       </footer>

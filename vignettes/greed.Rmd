@@ -1,34 +1,26 @@
 ---
-output: github_document
+title: "greed"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{greed}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, include = FALSE, echo=FALSE, message=FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/",
-  out.width = "60%"
+  comment = "#>"
 )
-library(knitr)
-library(dplyr) 
-
-set.seed(2134)
 ```
 
 
 
 
 # GREED : Bayesian greedy clustering
-<!-- badges: start -->
-[![R build status](https://github.com/comeetie/greed/workflows/R-CMD-check/badge.svg)](https://github.com/comeetie/greed/actions)
-[![CRAN status](https://www.r-pkg.org/badges/version/greed)](https://CRAN.R-project.org/package=greed)
-<!-- badges: end -->
+
 
 Greed enables model-based clustering of networks, matrices of count data and much more with different types of generative models. Model-selection and clustering are performed in combination by optimizing the Integrated Classification Likelihood. Details of the algorithms and methods proposed by this package can be found in Côme, Jouvin, Latouche, and Bouveyron (2021) [10.1007/s11634-021-00440-z](https://doi.org/10.1007/s11634-021-00440-z).
-
-<img src="man/figures/greed.png" width=200 align="right" />
 
 
 Dedicated to clustering and visualization, the package is very general and currently handles the following tasks:
@@ -47,22 +39,6 @@ With the Integrated Classification Likelihood, the parameters of the models are 
 
 Eventually, a whole hierarchy of solutions from $K^\star$ to 1 cluster is extracted. This enables an ordering of the clusters, and the exploration of simpler clustering along the hierarchy. The package also provides some plotting functionality.
 
-
-## Installation
-
-You can install the development version of greed from [GitHub](https://github.com/) with:
-
-``` r
-#GitHub
-install.packages("devtools")
-devtools::install_github("comeetie/greed")
-```
-
-Or use the CRAN version:
-``` r
-#CRAN
-install.packages("greed")
-```
 
 ## Usage: the greed function
 
@@ -92,7 +68,7 @@ sol <- greed(Books$X,model=Sbm(),alg=Seed(),K=10)
 ## Result analysis
 The results of `greed()` is an S4 class which depends on the `model` argument (here, an SBM) which comes with readily implemented methods: `clustering()` to access the estimated partitions, `K()` the estimated number of clusters, and `coef()` the (conditional) maximum a posteriori of the model parameters. 
 ```{r coef,K, clust}
-table(Books$label,clustering(sol)) %>% knitr::kable()
+knitr::kable(table(Books$label,clustering(sol)))
 K(sol)
 coef(sol)
 ```
@@ -109,7 +85,7 @@ Moreover, similar to standard hierarchical algorithm such as `hclust`, the `cut(
 ```{r}
 sol_K3 = cut(sol, K=3)
 K(sol_K3)
-table(Books$label,clustering(sol_K3)) %>% knitr::kable()
+knitr::kable(table(Books$label,clustering(sol_K3)))
 ```
 
 

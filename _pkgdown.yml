@@ -149,17 +149,12 @@ reference:
 - title: Data sets
   desc: ~
   contents:
-    - '`Blogs`'
     - '`Books`'
     - '`Football`'
     - '`Jazz`'
-    - '`Jazz_full`'
-    - '`Xvlegislature`'
     - '`fashion`'
     - '`mushroom`'
     - '`Fifa`'
-    - '`Fifa_positions`'
-    - '`FrenchParliament`'
     - '`Ndrangheta`'
     - '`Youngpeoplesurvey`'
     - '`NewGuinea`'

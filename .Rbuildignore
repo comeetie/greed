@@ -10,3 +10,10 @@
 ^CRAN-RELEASE$
 ^doc$
 ^Meta$
+^vignettes/SBM.Rmd$
+^vignettes/LCA.Rmd$
+^vignettes/GMM.Rmd$
+^vignettes/CombinedModels.Rmd$
+^vignettes/MoR.Rmd$
+^vignettes/MoM.Rmd$
+^vignettes/LBM.Rmd$

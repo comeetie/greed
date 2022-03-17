@@ -88,6 +88,20 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="0.6" id="greed-06">greed 0.6<a class="anchor" aria-label="anchor" href="#greed-06"></a></h2>
+<ul><li>Finalization of the Models and Algorithms API with user friendly constructors and final model acronyms see greed::available_algorithms() and greed::available_models()</li>
+<li>Generic functions to access fit results slots ICL(), K(), clustering(), coefs(), prior() and analyze them cut(), plot()</li>
+<li>New CombinedModels() model to combine multiple observational models with the same discrete latent variable and conditional independence assumptions</li>
+<li>New Lca() model for Latent class analysis</li>
+<li>New interface for Mixture of regression models (MoR) with the use of a formula object to define the regression model to use.</li>
+<li>7 Vignettes for the main package / model use cases on the website</li>
+<li>New datasets (mushroom, youngpeople survey, …)</li>
+<li>Better tests for all models swap and merge moves</li>
+<li>Optimization of MoM model swap moves to avoid unnecessary matrix transpositions</li>
+<li>Bug correction on Lbm merge matrix update from the cluster proportions part</li>
+<li>Bug correction on as.sparse matrix to avoid problems with empty rows / columns</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.5.1" id="greed-051">greed 0.5.1<small>2021-05-10</small><a class="anchor" aria-label="anchor" href="#greed-051"></a></h2>
 <ul><li>New Gaussian mixture model diaggmm for diagonal mixture models</li>
 <li>New generic function coef to extract MAP estimate of the models parameters</li>
@@ -112,7 +126,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
 </div>
 
       </footer></div>

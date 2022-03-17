@@ -1,6 +1,6 @@
 Dear cran members.
 
-This submission correspond to version 0.6 of package greed. The check results obtained are similar to those of the previous version, except a new note on the doc folder size, which comes from the several vignettes that were added to the package.
+This submission correspond to version 0.6 of package greed. The check results obtained are similar to those of the previous version.
 
 ## Test environments
 
