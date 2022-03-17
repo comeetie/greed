@@ -15,8 +15,10 @@ An R data.frame with columns containing each of the descriptive
 data(Fifa)
 }
 \description{
-Data from the FIFA videogame with various statistics on all player ranging
-from position, cost in the game, capacity in offense/defense, speed, etc.
+A random sample of 6000 players from the FIFA videogame with various statistics on all player ranging
+from position, cost in the game, capacity in offense/defense, speed, etc. 
+Two columns pos_x, pos_y with average player possible positions (in opta coordiantes)
+were derived from the raw data.  was also u.
 }
 \examples{
 data(Fifa)

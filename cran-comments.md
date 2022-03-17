@@ -1,6 +1,6 @@
 Dear cran members.
 
-I corrected the problem found with valgrind. The provided example did no raise a warning anymore. I also added a vignette and worked on input checking and priors specification. I have performed the same tests as previously with similar results (same notes 1 on UTF8 on Solaris, and 1 on package size on Windows and Ubuntu).  
+This submission correspond to version 0.6 of package greed. The check results obtained are similar to those of the previous version, except a new note on the doc folder size, which comes from the several vignettes that were added to the package.
 
 ## Test environments
 

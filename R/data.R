@@ -75,20 +75,7 @@
 #'
 #' @keywords datasets
 #'
-#' @format An object of class \code{list} with two fields;
-#'  \describe{
-#'   \item{X}{pixels intensities values data.frame of size 1 000x784}
-#'   \item{labels}{vector of labels with the following encoding (0 = T-shirt/top,
-#'   1 = Trouser,
-#'   2 = Pullover,
-#'   3 = Dress,
-#'   4 = Coat,
-#'   5 = Sandal,
-#'   6 = Shirt,
-#'   7 = Sneaker,
-#'   8 = Bag
-#'   9 = Ankle boot)}
-#' }
+#' @format An object of class \code{matrix} with a random sample of 1000 images (one per rows) extracted from the fashionmnist dataset.
 #'
 #'
 #' @references Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms. Han Xiao, Kashif Rasul, Roland Vollgraf (2017)
@@ -101,31 +88,7 @@
 "fashion"
 
 
-#' Political blogs network dataset
-#'
-#' A directed network of hyperlinks between weblogs on US politics, recorded in 2005 by Adamic and Glance.
-#' Only the biggest connected component of the original graph is provided.
-#'
-#' @docType data
-#'
-#' @usage data(Blogs)
-#'
-#' @format An object of class \code{list} with two fields;
-#'  \describe{
-#'   \item{X}{network adjacency matrix as a \code{\link[Matrix]{sparseMatrix}} of size 1222x1222}
-#'   \item{label}{vector of political leaning of each blogs (size 1222) with the following encoding (0 = left or liberal,1 = right or conservative)}
-#' }
-#'
-#' @keywords datasets
-#'
-#' @references Lada A. Adamic and Natalie Glance, "The political blogosphere and the 2004 US Election", in Proceedings of the WWW-2005 Workshop
-#' on the Weblogging Ecosystem (2005) (\href{https://dl.acm.org/doi/10.1145/1134271.1134277}{ACM}).
-#'
-#' @source \href{http://www-personal.umich.edu/~mejn/netdata/}{M. E. J. Newman Network datasets}
-#'
-#' @examples
-#' data(Blogs)
-"Blogs"
+
 
 
 
@@ -174,49 +137,6 @@
 #' @examples
 #' data(Jazz)
 "Jazz"
-
-#' Jazz musicians / Bands relations
-#'
-#' List  Jazz musicians / Bands relationship
-#'
-#' @docType data
-#'
-#' @usage data(Jazz_full)
-#'
-#' @format A list with two fields:
-#' \describe{
-#'   \item{X}{a \code{\link[Matrix]{sparseMatrix}} binary matrix of size 4475x965 with a one when one musicians played once in a given band.}
-#'   \item{col_meta}{a data.frame with columns (bands) meta_data}
-#' }
-#'
-#' @keywords datasets
-#'
-#' @references P.Gleiser and L. Danon , Community Structure in jazz, Adv. Complex Syst.6, 565 (2003) (\href{https://arxiv.org/abs/cond-mat/0307434}{Arxiv})
-#'
-#' @source \href{http://deim.urv.cat/~alexandre.arenas/data/welcome.htm}{A. Arena Network datasets}
-#'
-#' @examples
-#' data(Jazz_full)
-"Jazz_full"
-
-
-#' French Parliament votes dataset
-#'
-#'
-#'
-#'
-#' @docType data
-#'
-#' @usage data(FrenchParliament)
-#'
-#' @format An object of class \code{list} with two fields;
-#'  \describe{
-#'   \item{X}{matrix of deputy votes a \code{\link[Matrix]{sparseMatrix}} of size 593x570}
-#'   \item{labels}{a data frame with deputy meta-data}
-#' }
-#' @examples
-#' data(FrenchParliament)
-"FrenchParliament"
 
 
 
@@ -273,8 +193,10 @@
 
 #' Fifa data
 #'
-#' Data from the FIFA videogame with various statistics on all player ranging
-#' from position, cost in the game, capacity in offense/defense, speed, etc.
+#' A random sample of 6000 players from the FIFA videogame with various statistics on all player ranging
+#' from position, cost in the game, capacity in offense/defense, speed, etc. 
+#' Two columns pos_x, pos_y with average player possible positions (in opta coordiantes)
+#' were derived from the raw data.  was also u.
 #'
 #' @docType data
 #'
@@ -293,27 +215,7 @@
 "Fifa"
 
 
-#' Fifa_positions data
-#'
-#' A subset of the \code{\link{Fifa}} dataset with 36 possible players positions containing their
-#' x and y coordinate on a 2D image of a football field. Mainly
-#' useful for plotting.
-#'
-#' @docType data
-#'
-#' @usage data(Fifa)
-#'
-#' @format An object of class \code{list} with two fields; \describe{
-#'   \item{bg_img}{a matrix containing raw pixel representation of an image of a football
-#'   field (useful for plotting payers).}
-#'   \item{positions}{An R data.frame with 36 rows and 3 columns describing position, x and y axis on the field respectively.}
-#'   }
-#'
-#' @keywords datasets
-#'
-#' @examples
-#' data(Fifa_positions)
-"Fifa_positions"
+
 
 
 #' NewGuinea data

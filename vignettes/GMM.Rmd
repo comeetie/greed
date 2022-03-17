@@ -175,11 +175,11 @@ As explained above, diagonal models are attractive when working in high-dimensio
 
 ```{r fashion-diaggmm}
 data("fashion")
-dim(fashion$X)
-sol_fashion=greed(fashion$X,model=DiagGmm(),alg=Seed(),K=60)
+dim(fashion)
+sol_fashion=greed(fashion,model=DiagGmm(),alg=Seed(),K=60)
 ```
 
-On this more complex dataset, the clustering found by the algorithm has $K=23$ clusters and the dendrogram proves very informative, highlighting the complex structure of these data.
+On this more complex dataset, the clustering found by the algorithm has `r K(sol_fashion)` clusters and the dendrogram proves very informative, highlighting the complex structure of these data.
 
 ```{r fashion-tree, fig.show='hold',out.width="60%",fig.width=8,fig.height=6,fig.cap="Dendogram extracted with a DiagGmm model on the fashionMNIST data."}
 plot(sol_fashion,type='tree')

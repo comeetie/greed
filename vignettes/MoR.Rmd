@@ -26,6 +26,7 @@ library(future) # allows parralel processing in greed()
 library(greed)
 library(mclust)
 library(ggplot2)
+library(ggsoccer)
 library(dplyr)
 library(tidyr)
 set.seed(2134)
@@ -125,14 +126,13 @@ co$A
 
 The two regression model extracted are quite different, one has an important weight for the defending ability and the physic. Whereas the player's value is more influenced by the dribbling and shooting capabilities in the other regression model. The clustering seems therefore to have extracted two submarkets one for more defensive players and one for the other players. This can be confirmed by looking at the average position of the players of the two groups on the field:
 
-```{r}
-data("Fifa_positions")
+```{r posplot, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5,fig.cap="Field position map of the clusters."}
+
 Xreg$cluster=clustering(sol)
 pos_clust_mean = Xreg %>% group_by(cluster) %>% summarize(x=mean(pos_x),y=mean(pos_y))
-library(ggpubr)
-ggplot(pos_clust_mean)+background_image(Fifa_positions$bg_img)+geom_text(aes(x=x,y=y,label=cluster),size=5,col="red")+
-  coord_fixed(ratio=1)+
-  scale_x_continuous(limits=c(0,203.2),expand = c(0,1))+
-  scale_y_continuous(limits=c(0,101.6),expand = c(0,1))+theme_void()
+
+ggplot(pos_clust_mean)+annotate_pitch()+
+  geom_text(aes(x=x,y=y,label=cluster),size=5,col="red")+
+  theme_pitch()
 ```
 

@@ -25,17 +25,17 @@ for (p in positions) {
 
 
 
-X <- fifa %>%
+Fifa <- fifa %>%
   select(short_name, nationality, preferred_foot, age, height_cm, weight_kg, value_eur, pace, shooting, passing, dribbling, defending, physic, !!!syms(positions)) %>%
   filter(!is.na(pace)) %>%
   mutate(preferred_foot = factor(preferred_foot))
 
-data("Fifa")
-poscolnames <- tolower(colnames(Fifa)[14:28])
-poscolnames
-data("Fifa_positions")
 
-pos <- Fifa_positions$positions[match(poscolnames, Fifa_positions$positions$team_position), ]
+poscolnames <- colnames(Fifa)[14:28]
+
+pos = read_delim("./data-raw/fifaposition.csv",delim=",")
+
+pos <- pos[match(poscolnames, pos$pos), ]
 
 Xp <- matrix(rep(pos$x, each = nrow(Fifa)), nrow(Fifa))
 Yp <- matrix(rep(pos$y, each = nrow(Fifa)), nrow(Fifa))

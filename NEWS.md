@@ -4,12 +4,13 @@
 * Generic functions to access fit results slots ICL(), K(), clustering(), coefs(), prior() and analyze them cut(), plot()
 * New CombinedModels() model to combine multiple observational models with the same discrete latent variable and conditional independence assumptions
 * New Lca() model for Latent class analysis
+* New interface for Mixture of regression models (MoR) with the use of a formula object to define the regression model to use.
 * 7 Vignettes for the main package / model use cases
+* New datasets (mushroom, youngpeople survey, ...)
 * Better tests for all models swap and merge moves
 * Optimization of MoM model swap moves to avoid unnecessary matrix transpositions
 * Bug correction on Lbm merge matrix update
 * Bug correction on as.sparse matrix to avoid problems with empty rows / columns
-
 
 
 # greed 0.5.1

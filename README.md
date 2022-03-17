@@ -108,8 +108,9 @@ sol <- greed(Books$X)
 #> ── Fitting a guess DCSBM model ──
 #> 
 #> ℹ Initializing a population of 20 solutions.
-#> ℹ Generation 1 : best solution with an ICL of -1346 and 4 clusters.
+#> ℹ Generation 1 : best solution with an ICL of -1347 and 3 clusters.
 #> ℹ Generation 2 : best solution with an ICL of -1346 and 4 clusters.
+#> ℹ Generation 3 : best solution with an ICL of -1346 and 4 clusters.
 #> ── Final clustering ──
 #> 
 #> ── Clustering with a DCSBM model 3 clusters and an ICL of -1345
@@ -132,7 +133,7 @@ sol <- greed(Books$X,model=Sbm(),alg=Seed(),K=10)
 #> 
 #> ── Final clustering ──
 #> 
-#> ── Clustering with a SBM model 5 clusters and an ICL of -1316
+#> ── Clustering with a SBM model 5 clusters and an ICL of -1255
 ```
 
 ## Result analysis
@@ -149,24 +150,24 @@ table(Books$label,clustering(sol)) %>% knitr::kable()
 
 |     |   1 |   2 |   3 |   4 |   5 |
 |:----|----:|----:|----:|----:|----:|
-| c   |  30 |  16 |   2 |   1 |   0 |
-| l   |   0 |   0 |   5 |  25 |  13 |
-| n   |   0 |   7 |   4 |   2 |   0 |
+| c   |   0 |   1 |   6 |  36 |   6 |
+| l   |   8 |  30 |   5 |   0 |   0 |
+| n   |   0 |   2 |   8 |   3 |   0 |
 
 ``` r
 K(sol)
 #> [1] 5
 coef(sol)
 #> $pi
-#> [1] 0.2857143 0.2190476 0.1047619 0.2666667 0.1238095
+#> [1] 0.07619048 0.31428571 0.18095238 0.37142857 0.05714286
 #> 
 #> $thetakl
-#>             [,1]       [,2]        [,3]        [,4]       [,5]
-#> [1,] 0.310344828 0.06521739 0.009090909 0.000000000 0.00000000
-#> [2,] 0.065217391 0.13043478 0.019762846 0.010869565 0.01337793
-#> [3,] 0.009090909 0.01976285 0.436363636 0.006493506 0.04895105
-#> [4,] 0.000000000 0.01086957 0.006493506 0.084656085 0.27747253
-#> [5,] 0.000000000 0.01337793 0.048951049 0.277472527 0.55128205
+#>             [,1]        [,2]        [,3]        [,4]       [,5]
+#> [1,] 0.821428571 0.367424242 0.065789474 0.003205128 0.00000000
+#> [2,] 0.367424242 0.106060606 0.006379585 0.003885004 0.00000000
+#> [3,] 0.065789474 0.006379585 0.251461988 0.016194332 0.04385965
+#> [4,] 0.003205128 0.003885004 0.016194332 0.099865047 0.42735043
+#> [5,] 0.000000000 0.000000000 0.043859649 0.427350427 0.73333333
 ```
 
 ## Inspecting the hierarchy
@@ -197,9 +198,9 @@ table(Books$label,clustering(sol_K3)) %>% knitr::kable()
 
 |     |   1 |   2 |   3 |
 |:----|----:|----:|----:|
-| c   |  30 |  18 |   1 |
-| l   |   0 |   5 |  38 |
-| n   |   0 |  11 |   2 |
+| c   |   1 |   6 |  42 |
+| l   |  38 |   5 |   0 |
+| n   |   2 |   8 |   3 |
 
 ## Visualization
 

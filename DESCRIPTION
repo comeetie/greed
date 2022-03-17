@@ -31,6 +31,7 @@ Suggests:
     purrr,
     spelling,
     ggpubr,
+    ggsoccer,
     ggrepel,
     stringr,
     aricode,

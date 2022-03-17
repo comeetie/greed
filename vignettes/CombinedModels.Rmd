@@ -25,7 +25,7 @@ Loads packages.
 library(greed)
 library(dplyr)
 library(ggplot2)
-library(ggpubr)
+library(ggsoccer)
 set.seed(2134)
 ```
 
@@ -36,12 +36,12 @@ One of distinctive feature of greed is that you may combine several model togeth
 
 ### Lca + Gmm, the Fifa data-set 
 
-We first load the `?Fifa` dataset (several features of Soccer players in the Fifa 2020 videogame). We remove the first two columns that give the players names and nationality, and we kept only the players which earn more than  3000000 euros.
+We first load the `?Fifa` dataset (several features of Soccer players in the Fifa 2020 videogame). We remove the first two columns that give the players names and nationality, and we kept only the players which earn more than 1000000 euros.
 
 ```{r fifa-data}
 data(Fifa)
 X <- Fifa[,-c(1,2)] %>% 
-  filter(value_eur>3000000) %>% 
+  filter(value_eur>1000000) %>% 
   select(-value_eur,-GK,-pos_x,-pos_y)
 ```
 
@@ -50,7 +50,7 @@ This leave us with a dataset of $n=`r nrow(X)`$ rows and $p=`r ncol(X)`$ columns
 Preparing the data and the model is a little bit more complicated than for the other models since we must specify the different models we want to use. The data are provided with a named list, and the model is created with the `?CombinedModels` constructor, which must also be provided with a list of model priors, with the same named slots as in the data list. The following piece of code demonstrate this approach and the Fifa dataset:
 ```{r fifa-mmm}
 library(future)
-plan(multisession)
+plan(multisession,workers=5)# may be increased
 # prepare the dataset create a list with the factor columns in one slot 
 # and the numeric columns in another slot
 data <- list(categorical = X %>% select_if(is.factor),
@@ -83,30 +83,29 @@ plot(extractSubModel(sol,"cont"),type="marginals")
 ```
 To clearly show, the alignment of the cluster with field position we will make a little figure and plot for each cluster their mean position on the field. This will be computed as the weighted average coordinate of each field position were the weight correspond to the probability that a cluster member can play at this position.
 
+
 ```{r posplot, fig.show='hold',out.width="90%",fig.width=8,fig.height=5.5,fig.cap="Field position map of the clusters."}
-data("Fifa_positions")
 
 clust_positions = Fifa[,-c(1,2)] %>% 
-  filter(value_eur>3000000) %>%
+  filter(value_eur>1000000) %>%
   select(pos_x,pos_y) %>%
   mutate(cluster=clustering(sol)) %>%
   group_by(cluster) %>%
   summarize(pos_x=mean(pos_x),pos_y=mean(pos_y))
 
-ggplot(clust_positions)+ background_image(Fifa_positions$bg_img)+
+ggplot(clust_positions)+
+  annotate_pitch()+
   geom_text(aes(x=pos_x,y=pos_y,label=cluster),size=5,col="red")+
-  coord_fixed(ratio=1)+
-  scale_x_continuous(limits=c(0,203.2),expand = c(0,1))+
-  scale_y_continuous(limits=c(0,101.6),expand = c(0,1))+theme_void()
-
+  theme_pitch() 
 ```
 
-The organization of the clusters clearly appears, cluster 1 correspond to central defensive players, cluster 2 and 3 to lateral defensive players (recall that the preferred foot of this player were quite different between this two clusters with almost only right footed players in cluster 2 and left footed players in cluster 3).
+
+The organization of the clusters clearly appears, cluster 7 correspond to central defensive players, cluster 5 and 6 to lateral defensive players (recall that the preferred foot of these player were quite different between this two clusters with almost only right footed players in cluster 6 and left footed players in cluster 5).
 
 
 ### Sbm + Lca, the Ndrangheta data-set 
 
-Combined models may also be used to analyze graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangheta dataset. This dataset contains relationship information between members of the Ndrangheta mafia together with some information on their group affiliation and their role. We wil use an Sbm model to fit the adjacency matrix and an Lca model for the factor describing the roles. 
+Combined models may also be used to analyze graph datasets with node attribute for example. To demonstrate this feature we will use the Ndrangheta dataset. This dataset contains relationship information between members of the Ndrangheta mafia together with some information on their group affiliation and their role. We will use an Sbm model to fit the adjacency matrix and an Lca model for the factor describing the roles. 
 
 ```{r,out.width="90%",fig.width=8,fig.height=5.5,fig.cap="Ndrangheta dataset dendogram with Sbm + Lca."}
 # laod the dataset

@@ -5,20 +5,7 @@
 \alias{fashion}
 \title{Fashion mnist dataset}
 \format{
-An object of class \code{list} with two fields;
- \describe{
-  \item{X}{pixels intensities values data.frame of size 1 000x784}
-  \item{labels}{vector of labels with the following encoding (0 = T-shirt/top,
-  1 = Trouser,
-  2 = Pullover,
-  3 = Dress,
-  4 = Coat,
-  5 = Sandal,
-  6 = Shirt,
-  7 = Sneaker,
-  8 = Bag
-  9 = Ankle boot)}
-}
+An object of class \code{matrix} with a random sample of 1000 images (one per rows) extracted from the fashionmnist dataset.
 }
 \source{
 \href{https://github.com/zalandoresearch/fashion-mnist}{https://github.com/zalandoresearch/fashion-mnist}
