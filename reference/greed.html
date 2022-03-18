@@ -153,20 +153,9 @@ provides sampling functions for all the implemented DLVMs.</p>
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">sbm</span> <span class="op">&lt;-</span> <span class="fu"><a href="rsbm.html">rsbm</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.1</span> <span class="op">+</span> <span class="fl">0.01</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">sol</span> <span class="op">&lt;-</span> <span class="fu">greed</span><span class="op">(</span><span class="va">sbm</span><span class="op">$</span><span class="va">x</span>, model <span class="op">=</span> <span class="fu"><a href="Sbm.html">Sbm</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Fitting a guess SBM model</span> ──</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ℹ Initializing a population of 20 solutions.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ℹ Generation 1 : best solution with an ICL of -557 and 3 clusters.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ℹ Generation 2 : best solution with an ICL of -557 and 3 clusters.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Final clustering</span> ──</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ── Clustering with a SBM model 2 clusters and an ICL of -549 </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> An SBM model expect a square adjacency matrix.</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">sbm</span><span class="op">$</span><span class="va">cl</span>,<span class="fu"><a href="clustering.html">clustering</a></span><span class="op">(</span><span class="va">sol</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      1  2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1 24  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2  0 25</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'fit' in selecting a method for function 'clustering': object 'sol' not found</span>
 </code></pre></div>
     </div>
   </div>
