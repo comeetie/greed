@@ -34,7 +34,6 @@ test_that("SBM sim", {
   
 })
 
-
 test_that("SBM hybrid", {
   N <- 100
   K <- 3
