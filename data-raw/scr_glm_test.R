@@ -24,10 +24,10 @@ irls_b <- function(A, b, family = poisson, lambda = 0.1, intercept = TRUE, maxit
 X <- model.matrix(hp ~ -1 + drat + cyl, data = mtcars)
 y <- mtcars$hp
 
-lambda = 0.01
+lambda = 0.000001
 scale = sqrt(1/lambda)
 irls_b(X,y,poisson,lambda,FALSE,5000,10^-8)
-res_greed_glm  = greed:::glm_fit(X,y,lambda,5000,10^-8)
+res_greed_glm  = greed:::glm_fit(X,y,"poisson",lambda,5000,10^-8)
 
 
 library(rstanarm)

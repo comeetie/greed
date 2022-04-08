@@ -482,33 +482,48 @@ BEGIN_RCPP
 END_RCPP
 }
 // glm_fit_hot
-List glm_fit_hot(const arma::mat& X, const arma::colvec& y, arma::colvec s, const double lambda, int maxit, double tol);
-RcppExport SEXP _greed_glm_fit_hot(SEXP XSEXP, SEXP ySEXP, SEXP sSEXP, SEXP lambdaSEXP, SEXP maxitSEXP, SEXP tolSEXP) {
+List glm_fit_hot(const arma::mat& X, const arma::colvec& y, arma::colvec s, const std::string& family_name, const double lambda, int maxit, double tol);
+RcppExport SEXP _greed_glm_fit_hot(SEXP XSEXP, SEXP ySEXP, SEXP sSEXP, SEXP family_nameSEXP, SEXP lambdaSEXP, SEXP maxitSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const arma::colvec& >::type y(ySEXP);
     Rcpp::traits::input_parameter< arma::colvec >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type family_name(family_nameSEXP);
     Rcpp::traits::input_parameter< const double >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< int >::type maxit(maxitSEXP);
     Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(glm_fit_hot(X, y, s, lambda, maxit, tol));
+    rcpp_result_gen = Rcpp::wrap(glm_fit_hot(X, y, s, family_name, lambda, maxit, tol));
     return rcpp_result_gen;
 END_RCPP
 }
 // glm_fit
-List glm_fit(const arma::mat& X, const arma::colvec& y, const double lambda, int maxit, double tol);
-RcppExport SEXP _greed_glm_fit(SEXP XSEXP, SEXP ySEXP, SEXP lambdaSEXP, SEXP maxitSEXP, SEXP tolSEXP) {
+List glm_fit(const arma::mat& X, const arma::colvec& y, const std::string& family_name, const double lambda, int maxit, double tol);
+RcppExport SEXP _greed_glm_fit(SEXP XSEXP, SEXP ySEXP, SEXP family_nameSEXP, SEXP lambdaSEXP, SEXP maxitSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const arma::colvec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type family_name(family_nameSEXP);
     Rcpp::traits::input_parameter< const double >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< int >::type maxit(maxitSEXP);
     Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(glm_fit(X, y, lambda, maxit, tol));
+    rcpp_result_gen = Rcpp::wrap(glm_fit(X, y, family_name, lambda, maxit, tol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// glm_log_lik
+arma::colvec glm_log_lik(const arma::mat& X, const arma::colvec& y, List fit);
+RcppExport SEXP _greed_glm_log_lik(SEXP XSEXP, SEXP ySEXP, SEXP fitSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< List >::type fit(fitSEXP);
+    rcpp_result_gen = Rcpp::wrap(glm_log_lik(X, y, fit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -572,8 +587,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_gmm_marginal_del1", (DL_FUNC) &_greed_gmm_marginal_del1, 6},
     {"_greed_gmm_marginal_merge", (DL_FUNC) &_greed_gmm_marginal_merge, 6},
     {"_greed_possible_moves", (DL_FUNC) &_greed_possible_moves, 2},
-    {"_greed_glm_fit_hot", (DL_FUNC) &_greed_glm_fit_hot, 6},
-    {"_greed_glm_fit", (DL_FUNC) &_greed_glm_fit, 5},
+    {"_greed_glm_fit_hot", (DL_FUNC) &_greed_glm_fit_hot, 7},
+    {"_greed_glm_fit", (DL_FUNC) &_greed_glm_fit, 6},
+    {"_greed_glm_log_lik", (DL_FUNC) &_greed_glm_log_lik, 3},
     {"_greed_delta_merge_post", (DL_FUNC) &_greed_delta_merge_post, 3},
     {"_greed_log_mvn_pdf", (DL_FUNC) &_greed_log_mvn_pdf, 3},
     {NULL, NULL, 0}

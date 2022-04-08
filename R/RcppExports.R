@@ -129,12 +129,16 @@ possible_moves <- function(k, move_mat) {
     .Call('_greed_possible_moves', PACKAGE = 'greed', k, move_mat)
 }
 
-glm_fit_hot <- function(X, y, s, lambda = 0.01, maxit = 100L, tol = 1e-6) {
-    .Call('_greed_glm_fit_hot', PACKAGE = 'greed', X, y, s, lambda, maxit, tol)
+glm_fit_hot <- function(X, y, s, family_name = "poisson", lambda = 0.01, maxit = 100L, tol = 1e-6) {
+    .Call('_greed_glm_fit_hot', PACKAGE = 'greed', X, y, s, family_name, lambda, maxit, tol)
 }
 
-glm_fit <- function(X, y, lambda = 0.01, maxit = 100L, tol = 1e-6) {
-    .Call('_greed_glm_fit', PACKAGE = 'greed', X, y, lambda, maxit, tol)
+glm_fit <- function(X, y, family_name = "poisson", lambda = 0.01, maxit = 100L, tol = 1e-6) {
+    .Call('_greed_glm_fit', PACKAGE = 'greed', X, y, family_name, lambda, maxit, tol)
+}
+
+glm_log_lik <- function(X, y, fit) {
+    .Call('_greed_glm_log_lik', PACKAGE = 'greed', X, y, fit)
 }
 
 delta_merge_post <- function(fit1, fit2, lambda) {
