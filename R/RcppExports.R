@@ -129,3 +129,19 @@ possible_moves <- function(k, move_mat) {
     .Call('_greed_possible_moves', PACKAGE = 'greed', k, move_mat)
 }
 
+glm_fit_hot <- function(X, y, s, lambda = 0.01, maxit = 100L, tol = 1e-6) {
+    .Call('_greed_glm_fit_hot', PACKAGE = 'greed', X, y, s, lambda, maxit, tol)
+}
+
+glm_fit <- function(X, y, lambda = 0.01, maxit = 100L, tol = 1e-6) {
+    .Call('_greed_glm_fit', PACKAGE = 'greed', X, y, lambda, maxit, tol)
+}
+
+delta_merge_post <- function(fit1, fit2, lambda) {
+    .Call('_greed_delta_merge_post', PACKAGE = 'greed', fit1, fit2, lambda)
+}
+
+log_mvn_pdf <- function(x, mu, S) {
+    .Call('_greed_log_mvn_pdf', PACKAGE = 'greed', x, mu, S)
+}
+

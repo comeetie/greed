@@ -767,7 +767,6 @@ List gmm_marginal_spherical_merge(List current1, List current2,double kappa,doub
   arma::rowvec S2 =  as<arma::rowvec>(current2["S"]);
   arma::rowvec S = S1+ng1*arma::pow(m1-m,2)+S2+ng2*arma::pow(m2-m,2);
   
-  
   arma::rowvec betan = beta +0.5*S + (tau*ng)/(2*(tau+ng))*arma::pow(m-mu,2);
   double taun = tau+ng;
   double kappan = kappa+(ng/2);

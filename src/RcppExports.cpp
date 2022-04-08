@@ -481,6 +481,63 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// glm_fit_hot
+List glm_fit_hot(const arma::mat& X, const arma::colvec& y, arma::colvec s, const double lambda, int maxit, double tol);
+RcppExport SEXP _greed_glm_fit_hot(SEXP XSEXP, SEXP ySEXP, SEXP sSEXP, SEXP lambdaSEXP, SEXP maxitSEXP, SEXP tolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< arma::colvec >::type s(sSEXP);
+    Rcpp::traits::input_parameter< const double >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< int >::type maxit(maxitSEXP);
+    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(glm_fit_hot(X, y, s, lambda, maxit, tol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// glm_fit
+List glm_fit(const arma::mat& X, const arma::colvec& y, const double lambda, int maxit, double tol);
+RcppExport SEXP _greed_glm_fit(SEXP XSEXP, SEXP ySEXP, SEXP lambdaSEXP, SEXP maxitSEXP, SEXP tolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const double >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< int >::type maxit(maxitSEXP);
+    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(glm_fit(X, y, lambda, maxit, tol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// delta_merge_post
+double delta_merge_post(List fit1, List fit2, double lambda);
+RcppExport SEXP _greed_delta_merge_post(SEXP fit1SEXP, SEXP fit2SEXP, SEXP lambdaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type fit1(fit1SEXP);
+    Rcpp::traits::input_parameter< List >::type fit2(fit2SEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    rcpp_result_gen = Rcpp::wrap(delta_merge_post(fit1, fit2, lambda));
+    return rcpp_result_gen;
+END_RCPP
+}
+// log_mvn_pdf
+double log_mvn_pdf(arma::colvec x, arma::colvec mu, arma::mat S);
+RcppExport SEXP _greed_log_mvn_pdf(SEXP xSEXP, SEXP muSEXP, SEXP SSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::colvec >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::colvec >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type S(SSEXP);
+    rcpp_result_gen = Rcpp::wrap(log_mvn_pdf(x, mu, S));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_greed_post_probs", (DL_FUNC) &_greed_post_probs, 3},
@@ -515,6 +572,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_greed_gmm_marginal_del1", (DL_FUNC) &_greed_gmm_marginal_del1, 6},
     {"_greed_gmm_marginal_merge", (DL_FUNC) &_greed_gmm_marginal_merge, 6},
     {"_greed_possible_moves", (DL_FUNC) &_greed_possible_moves, 2},
+    {"_greed_glm_fit_hot", (DL_FUNC) &_greed_glm_fit_hot, 6},
+    {"_greed_glm_fit", (DL_FUNC) &_greed_glm_fit, 5},
+    {"_greed_delta_merge_post", (DL_FUNC) &_greed_delta_merge_post, 3},
+    {"_greed_log_mvn_pdf", (DL_FUNC) &_greed_log_mvn_pdf, 3},
     {NULL, NULL, 0}
 };
 
