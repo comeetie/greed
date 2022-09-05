@@ -87,10 +87,8 @@ double DcSbmUndirected::delta_merge_correction(int k,int l,int obk,int obl,const
   arma::vec old_counts =as<arma::vec>(old_stats["counts"]);
   arma::mat old_x_counts =as<arma::mat>(old_stats["x_counts"]);
   cc = counts(k)*counts(l);
-  arma::uvec kl;
-  kl << k << l << arma::endr;
-  arma::uvec mkl;
-  mkl << obk << obl << arma::endr;
+  arma::uvec kl({k, l});
+  arma::uvec mkl({obk, obl});
   if(l>=obk){
     lo=l+1;
   }else{
