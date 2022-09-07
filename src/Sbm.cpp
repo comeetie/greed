@@ -149,8 +149,8 @@ double Sbm::delta_merge_correction(int k,int l,int obk,int obl,const List & old_
   arma::vec old_counts =as<arma::vec>(old_stats["counts"]);
   arma::mat old_x_counts =as<arma::mat>(old_stats["x_counts"]);
   cc = counts(k)*counts(l);
-  arma::uvec kl({k, l});
-  arma::uvec mkl({obk, obl});
+  arma::ivec kl({k, l});
+  arma::ivec mkl({obk, obl});
   if(l>=obk){
     lo=l+1;
   }else{

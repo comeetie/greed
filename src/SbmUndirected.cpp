@@ -4,7 +4,6 @@
 using namespace Rcpp;
 
 
-
 double SbmUndirected::icl_emiss(const List & obs_stats){
   arma::vec counts =as<arma::vec>(obs_stats["counts"]);
   arma::mat edges_counts =as<arma::mat>(obs_stats["x_counts"]);
@@ -59,8 +58,8 @@ double SbmUndirected::delta_merge_correction(int k,int l,int obk,int obl,const L
   arma::vec old_counts =as<arma::vec>(old_stats["counts"]);
   arma::mat old_x_counts =as<arma::mat>(old_stats["x_counts"]);
   cc = counts(k)*counts(l);
-  arma::uvec kl({k, l});
-  arma::uvec mkl({obk, obl});
+  arma::ivec kl({k, l});
+  arma::ivec mkl({obk, obl});
   if(l>=obk){
     lo=l+1;
   }else{

@@ -216,11 +216,11 @@ double SimpleIclCoModel::delta_merge_correction(int k,int l,int obk,int obl,cons
 double SimpleIclCoModel::delta_merge_correction_prop(int k,int l,int obk,int obl,const List & old_stats){
   int Kold;
   double cor_prop = 0;
-  if((clusttypes(k)==1) &  (clusttypes(l)==1) & (clusttypes(obl)==1)){
+  if((clusttypes(k)==1) &&  (clusttypes(l)==1) && (clusttypes(obl)==1)){
     Kold = Kr+1;
     cor_prop = lgamma((Kold-2)*alpha)-2*lgamma((Kold-1)*alpha)+lgamma(Kold*alpha)+2*lgamma((Kold-1)*alpha+N)-lgamma((Kold-2)*alpha+N)-lgamma(Kold*alpha+N);
   }
-  if((clusttypes(k)==2) &  (clusttypes(l)==2) & (clusttypes(obl)==2)){
+  if((clusttypes(k)==2) &&  (clusttypes(l)==2) && (clusttypes(obl)==2)){
     Kold = Kc+1;
     cor_prop = lgamma((Kold-2)*alpha)-2*lgamma((Kold-1)*alpha)+lgamma(Kold*alpha)+2*lgamma((Kold-1)*alpha+N)-lgamma((Kold-2)*alpha+N)-lgamma(Kold*alpha+N);
   }

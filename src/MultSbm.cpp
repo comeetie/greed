@@ -3,6 +3,8 @@
 #include "MultSbm.h"
 using namespace Rcpp;
 
+
+
 MultSbm::MultSbm(const arma::cube  & xp,S4 modeli,bool verb){
   model = modeli;
   beta = model.slot("beta");
@@ -194,8 +196,8 @@ double MultSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & 
   arma::cube old_x_counts =as<arma::cube>(old_stats["x_counts"]);
   arma::vec klcounts;
 
-  arma::uvec kl({k, l});
-  arma::uvec mkl({obk, obl});
+  arma::ivec kl({k, l});
+  arma::ivec mkl({obk, obl});
   if(l>=obk){
     lo=l+1;
   }else{
