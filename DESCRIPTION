@@ -27,7 +27,8 @@ Suggests:
     spelling,
     igraph,
     tidygraph,
-    ggraph
+    ggraph,
+    ggsoccer
 Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2.9000
