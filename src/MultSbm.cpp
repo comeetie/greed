@@ -194,10 +194,8 @@ double MultSbm::delta_merge_correction(int k,int l,int obk,int obl,const List & 
   arma::cube old_x_counts =as<arma::cube>(old_stats["x_counts"]);
   arma::vec klcounts;
 
-  arma::uvec kl;
-  kl << k << l << arma::endr;
-  arma::uvec mkl;
-  mkl << obk << obl << arma::endr;
+  arma::uvec kl({k, l});
+  arma::uvec mkl({obk, obl});
   if(l>=obk){
     lo=l+1;
   }else{
