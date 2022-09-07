@@ -2,7 +2,7 @@ Package: greed
 Type: Package
 Title: Clustering and Model Selection with the Integrated Classification Likelihood
 Version: 0.6.0
-Date: 2022-01-15
+Date: 2022-03-18
 Authors@R: 
     c(person(given = "Etienne",
              family = "Côme",
