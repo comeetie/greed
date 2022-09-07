@@ -267,7 +267,7 @@ setMethod(
   signature = signature("DcLbm"),
   definition = function(model, data) {
     X <- as.sparse(data)
-    if (class(X) != "dgCMatrix") {
+    if (!methods::is(X,"dgCMatrix")) {
       stop(paste0("Unsupported data type :", class(X), "for DcLbm model."), call. = FALSE)
     }
     ij <- which(X > 0, arr.ind = TRUE)
