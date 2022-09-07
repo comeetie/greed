@@ -1,3 +1,5 @@
+library(greed)
+library(Matrix)
 N  <- 2000           # Number of node
 K  <- 15            # Number of cluster
 pi <- rep(1/K,K)    # Clusters proportions 
@@ -5,7 +7,7 @@ lambda   <- 0.1     # Building the connectivity matrix template
 lambda_o <- 0.01
 Ks <- 3
 mu <- bdiag(lapply(1:(K/Ks), function(k){
-  matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
+matrix(lambda_o,Ks,Ks)+diag(rep(lambda,Ks))}))+0.001
 sbm <- rsbm(N,pi,mu) # Simulation
 model=Sbm()
 data=greed:::preprocess(model,sbm$x)
