@@ -28,7 +28,15 @@ Suggests:
     igraph,
     tidygraph,
     ggraph,
-    ggsoccer
+    ggsoccer,
+    mclust,
+    aricode,
+    ggwordcloud,
+    careless,
+    tidyr,
+    dplyr,
+    ggpubr,
+    flexmix
 Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2.9000

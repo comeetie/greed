@@ -1,5 +1,5 @@
-pandoc: 2.11.4
-pkgdown: 2.0.2
+pandoc: '2.18'
+pkgdown: 2.0.3
 pkgdown_sha: ~
 articles:
   CombinedModels: CombinedModels.html
@@ -9,5 +9,6 @@ articles:
   MoM: MoM.html
   MoR: MoR.html
   SBM: SBM.html
-last_built: 2022-02-24T14:33Z
+  greed: greed.html
+last_built: 2022-09-08T09:33Z
 
