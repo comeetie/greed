@@ -27,16 +27,7 @@ Suggests:
     spelling,
     igraph,
     tidygraph,
-    ggraph,
-    ggsoccer,
-    mclust,
-    aricode,
-    ggwordcloud,
-    careless,
-    tidyr,
-    dplyr,
-    ggpubr,
-    flexmix
+    ggraph
 Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2.9000
