@@ -76,7 +76,7 @@ coef(sol)
 
 ## Inspecting the hierarchy 
 An important aspect of the **greed** package is its hierarchical clustering algorithm which extract a set of nested partitions from `K=K(sol)` to `K=1`. This hierarchy may be visualized thanks to a dendogram representing the fusion order and the level of regularization $- \log(\alpha)$ needed for each fusion.
-```{r, out.width="90%",fig.width=8,fig.height=8}
+```{r, out.width="90%",fig.width=8,fig.height=8,eval=FALSE}
 plot(sol, type='tree') # try also: type="path"
 ```
 
@@ -92,7 +92,7 @@ knitr::kable(table(Books$label,clustering(sol_K3)))
 ## Visualization
 Finally, the **greed** package propose efficient and model-adapted visualization via the `plot()` methods. In this graph clustering example, the `"blocks"` and `"nodelink"` display the cluster-aggregated adjacency matrix and diagram of the graph respectively. Note that the ordering of the clusters is the same than the one computed for the dendrogram, greatly enhancing visualization of the hierarchical structure.
 
-```{r plot,message=FALSE,results="hide", fig.show='hold', out.width="90%",fig.width=8,fig.height=8}
+```{r plot,message=FALSE,results="hide", fig.show='hold', out.width="90%",fig.width=8,fig.height=8,eval=FALSE}
 plot(sol,type='blocks')
 plot(sol, type='nodelink')
 ```
