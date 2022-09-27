@@ -11,9 +11,6 @@ An object of class \code{list} with two fields;
   \item{label}{ a factor of length  (size 105) with levels "l", "n", or "c" to indicate whether the books are liberal, neutral, or conservative}
 }
 }
-\source{
-\href{http://www-personal.umich.edu/~mejn/netdata/}{M. E. J. Newman Network datasets}
-}
 \usage{
 data(Books)
 }

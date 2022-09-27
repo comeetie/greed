@@ -57,9 +57,7 @@
 #' @keywords datasets
 #'
 #' @references M. Girvan and M. E. J. Newman, Community structure in social and biological networks, Proc. Natl. Acad. Sci. USA 99, 7821-7826 (2002)
-#' (\href{https://www.pnas.org/doi/10.1073/pnas.122653799}{PNAS}).
 #'
-#' @source \href{http://www-personal.umich.edu/~mejn/netdata/}{M. E. J. Newman Network datasets}
 #'
 #' @examples
 #' data(Football)
@@ -111,7 +109,6 @@
 #' @keywords datasets
 #'
 #'
-#' @source \href{http://www-personal.umich.edu/~mejn/netdata/}{M. E. J. Newman Network datasets}
 #'
 #' @examples
 #' data(Books)
@@ -132,7 +129,6 @@
 #'
 #' @references P.Gleiser and L. Danon , Community Structure in jazz, Adv. Complex Syst.6, 565 (2003) (\href{https://arxiv.org/abs/cond-mat/0307434}{Arxiv})
 #'
-#' @source \href{http://deim.urv.cat/~alexandre.arenas/data/welcome.htm}{A. Arena Network datasets}
 #'
 #' @examples
 #' data(Jazz)
