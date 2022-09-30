@@ -34,14 +34,9 @@ I still have one note on installed package size that comes from my usage of Rcpp
 
 ### macOS-release
 ── R CMD check results ──────────────────────────────────────── greed 0.6.1 ────
+Duration: 8m 16.2s
 
-❯ checking installed package size ... NOTE
-    installed size is  7.6Mb
-    sub-directories of 1Mb or more:
-      libs   1.6Mb
-      R      4.1Mb
-
-0 errors ✔ | 0 warnings ✔ | 1 note ✖
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 ### windows-release
 
@@ -52,32 +47,31 @@ Duration: 7m 41.6s
 
 ### windows-devel
 
-── R CMD check results ──────────────────────────────────────── greed 0.6.1 ────
-Duration: 7m 41.6s
+ ── R CMD check results ──────────────────────────────────────── greed 0.6.1 ────
+Duration: 9m 46.6s
 
-❯ checking data for non-ASCII characters ... NOTE
-  Note: found 989 marked UTF-8 strings
-
-0 errors ✔ | 0 warnings ✔ | 1 notes ✔
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 ### Ubuntu 20.04-release
 
+
 ── R CMD check results ──────────────────────────────────────── greed 0.6.1 ────
-Duration: 8m 33.1s
+Duration: 7m 16.3s
 
 ❯ checking installed package size ... NOTE
-    installed size is 48.7Mb
+    installed size is 45.4Mb
     sub-directories of 1Mb or more:
-      R      3.9Mb
       libs  42.9Mb
 
+0 errors ✔ | 0 warnings ✔ | 1 note ✖
+
 ### Ubuntu 20.04-devel
- ── R CMD check results ──────────────────────────────────────── greed 0.6.1 ────
+── R CMD check results ──────────────────────────────────────── greed 0.6.1 ────
+Duration: 8m 22.2s
 
 ❯ checking installed package size ... NOTE
-    installed size is 48.9Mb
+    installed size is 45.6Mb
     sub-directories of 1Mb or more:
-      R      4.1Mb
       libs  42.9Mb
 
 0 errors ✔ | 0 warnings ✔ | 1 note ✖
