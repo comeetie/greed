@@ -27,19 +27,6 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
-          dependencies: 'character()'
-
-      - name: Install pdflatex
-        run: sudo apt-get install texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra
-
-      - name: Install tidy
-        run: sudo apt install tidy
+          extra-packages: rcmdcheck
 
       - uses: r-lib/actions/check-r-package@v2
-        with:
-          args: 'c("--as-cran", "--no-examples", "--no-tests", "--no-vignettes", "--no-build-vignettes", "--ignore-vignettes")'
-          build_args: 'c("--no-build-vignettes")'
-        env:
-          _R_CHECK_CRAN_INCOMING_REMOTE_: false
-          _R_CHECK_CRAN_INCOMING_: false
