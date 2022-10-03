@@ -14,8 +14,8 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      CC:clang-14
-      CXX: clang++-14
+      CC: 'clang-14'
+      CXX: 'clang++-14'
     steps:
       - uses: actions/checkout@v2
 
