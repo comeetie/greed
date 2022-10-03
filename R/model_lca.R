@@ -137,13 +137,13 @@ setClass("LcaPath", contains = c("IclPath", "LcaFit"))
 #' \itemize{
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
 #' }
-#' @return a \code{\link{ggplot2}} graphic
+#' @return a \code{\link[ggplot2]{ggplot}} graphic
 #' @export
 setMethod(
   f = "plot",
   signature = signature("LcaFit", "missing"),
   definition = function(x, type = "marginals") {
-    pl <- greed:::block_lca(x)
+    pl <- block_lca(x)
     grid::grid.newpage()
     gpl <- grid::grid.draw(pl)
     invisible(pl)

@@ -614,7 +614,7 @@ nodelink_cube <- function(sol) {
 #' Make a matrix of plots with a given data and gmm fitted parameters with ellipses.
 #' @param sol a \code{\link{GmmFit-class}} or \code{\link{DiagGmmFit-class}}
 #' @param X the data used for the fit a data.frame or matrix.
-#' @return a \code{\link{ggplot2}} graphic
+#' @return a \code{\link[ggplot2]{ggplot}} object
 #' @export
 gmmpairs <- function(sol, X) {
   if (!(methods::is(sol, "GmmFit") | methods::is(sol, "DiagGmmFit"))) {

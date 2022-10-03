@@ -15,7 +15,7 @@
 }}
 }
 \value{
-a \code{\link{ggplot2}} graphic
+a \code{\link[ggplot2]{ggplot}} graphic
 }
 \description{
 Plot a \code{\link{MoMFit-class}} object

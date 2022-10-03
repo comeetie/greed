@@ -12,7 +12,7 @@ gmmpairs(sol, X)
 \item{X}{the data used for the fit a data.frame or matrix.}
 }
 \value{
-a \code{\link{ggplot2}} graphic
+a \code{\link[ggplot2]{ggplot}} object
 }
 \description{
 Make a matrix of plots with a given data and gmm fitted parameters with ellipses.

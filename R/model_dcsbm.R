@@ -155,7 +155,7 @@ setClass("DcSbmPath", contains = c("IclPath", "DcSbmFit"))
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
 #' \item \code{'nodelink'}: plot a nodelink diagram of the graph summarizing connections between clusters
 #' }
-#' @return a \code{\link{ggplot2}} graphic
+#' @return a \code{\link[ggplot2]{ggplot}} graphic
 #' @seealso \code{\link{plot,IclPath,missing-method}}
 #' @export
 setMethod(

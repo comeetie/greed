@@ -1,3 +1,7 @@
+# greed 0.6.1
+
+* 
+
 # greed 0.6
 
 * Finalization of the Models and Algorithms API with user friendly constructors and final model acronyms see greed::available_algorithms() and greed::available_models()

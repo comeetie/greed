@@ -249,7 +249,7 @@ setMethod(
 #' \item \code{'path'}: plot the evolution of ICL with respect to K
 #' \item \code{'tree'}: plot the associated dendrogram
 #' }
-#' @return a \code{\link{ggplot2}} graphic
+#' @return a \code{\link[ggplot2]{ggplot}} graphic
 #' @export
 setMethod(
   f = "plot",

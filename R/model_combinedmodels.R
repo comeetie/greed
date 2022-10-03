@@ -142,7 +142,7 @@ setMethod(
       stop("Models names do notch match datasets names, please check the model and dataset list.", .call = FALSE)
     }
     data_prep <- lapply(mnames, function(current_name) {
-      greed:::preprocess(model@models[[current_name]], data[[current_name]])
+      preprocess(model@models[[current_name]], data[[current_name]])
     })
     names(data_prep) <- mnames
     Ns <- sapply(data_prep, function(x) {
