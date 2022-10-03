@@ -18,14 +18,15 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-22.04,   r: 'release'}
-
+          - {os: macOS-latest,   r: 'release'}
+          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,   r: 'release'}
+          - {os: windows-latest,   r: 'release'}
+          - {os: windows-latest,   r: 'devel', htpp-user-agent: 'release'}
           
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      CC:   clang-14
-      CXX:  clang-14
 
     steps:
       - uses: actions/checkout@v2
