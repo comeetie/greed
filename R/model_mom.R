@@ -136,7 +136,7 @@ setClass("MoMPath", contains = c("IclPath", "MoMFit"))
 #' \itemize{
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between clusters
 #' }
-#' @return a \code{\link[ggplot2]{ggplot}} graphic
+#' @return a ggplot graphic
 #' @export
 setMethod(
   f = "plot",

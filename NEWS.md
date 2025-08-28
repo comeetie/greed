@@ -1,6 +1,6 @@
 # greed 0.6.1
 
-* 
+* only small change in doc to comply with CRAN notes 
 
 # greed 0.6
 

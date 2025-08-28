@@ -240,7 +240,7 @@ information we refer to the vignettes linked above for each use case.
 
 For large datasets, it is possible to use parallelism to speed-up the
 computations thanks to the
-[future](https://github.com/HenrikBengtsson/future) package. You only
+[future](https://github.com/futureverse/future) package. You only
 need to specify the type of back-end you want to use, before calling the
 `?greed` function:
 

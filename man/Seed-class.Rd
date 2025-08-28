@@ -16,9 +16,9 @@ An S4 class to represent a greedy algorithm with initialization from spectral cl
 }
 \section{Functions}{
 \itemize{
-\item \code{Seed}: Seed algorithm class constructor
-}}
+\item \code{Seed()}: Seed algorithm class constructor
 
+}}
 \examples{
 Seed()
 }

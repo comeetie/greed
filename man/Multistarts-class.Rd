@@ -19,9 +19,9 @@ An S4 class to represent a greedy algorithm  with multiple start (extends \code{
 }
 \section{Functions}{
 \itemize{
-\item \code{Multistarts}: Multistarts algorithm class constructor
-}}
+\item \code{Multistarts()}: Multistarts algorithm class constructor
 
+}}
 \section{Slots}{
 
 \describe{

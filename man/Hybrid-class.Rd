@@ -25,9 +25,9 @@ An S4 class to represent an hybrid genetic/greedy algorithm (extends \code{\link
 }
 \section{Functions}{
 \itemize{
-\item \code{Hybrid}: Hybrid algorithm class constructor
-}}
+\item \code{Hybrid()}: Hybrid algorithm class constructor
 
+}}
 \section{Slots}{
 
 \describe{

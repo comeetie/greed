@@ -197,7 +197,7 @@ setMethod(
 #' \item \code{'biplot'}: plot a block matrix with summarizing connections between row and column clusters aligned with row and clusters drendograms
 #' \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between row and column clusters
 #' }
-#' @return a \code{\link[ggplot2]{ggplot}} graphic
+#' @return a ggplot graphic
 #' @export
 setMethod(
   f = "plot",
@@ -222,7 +222,7 @@ setMethod(
 #' \item \code{'blocks'}: plot a block matrix with summarizing connections between row and column clusters
 #' \item \code{'nodelink'}: plot a nodelink diagram of the bipartite graph summarizing connections between row and column clusters
 #' }
-#' @return a \code{\link[ggplot2]{ggplot}} graphic
+#' @return a ggplot graphic
 #' @export
 setMethod(
   f = "plot",

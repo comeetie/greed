@@ -20,6 +20,6 @@ This method take a \code{\link{IclFit-class}} object and return the prior used.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{IclFit}: IclFit method
-}}
+\item \code{prior(IclFit)}: IclFit method
 
+}}

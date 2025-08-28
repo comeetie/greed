@@ -161,7 +161,7 @@ setClass("DiagGmmPath", contains = c("IclPath", "DiagGmmFit"))
 #' \item \code{'marginals'}: plot the marginal densities
 #' \item \code{'violins'}: make a violin plot for each clusters and features
 #' }
-#' @return a \code{\link[ggplot2]{ggplot}} graphic
+#' @return a ggplot graphic
 #' @export
 setMethod(
   f = "plot",

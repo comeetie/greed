@@ -2,6 +2,7 @@
 % Please edit documentation in R/alg_classes.R, R/greed.R
 \docType{package}
 \name{greed}
+\alias{greed-package}
 \alias{greed}
 \title{Model based hierarchical clustering}
 \usage{
@@ -41,6 +42,14 @@ sol <- greed(sbm$x, model = Sbm())
 table(sbm$cl,clustering(sol))
 }
 \seealso{
+Useful links:
+\itemize{
+  \item \url{https://comeetie.github.io/greed/}
+  \item \url{https://github.com/comeetie/greed}
+  \item Report bugs at \url{https://github.com/comeetie/greed/issues}
+}
+
+
 Other DlvmModels: 
 \code{\link{CombinedModels}},
 \code{\link{DcLbm}},
@@ -53,5 +62,14 @@ Other DlvmModels:
 \code{\link{MoR}},
 \code{\link{MultSbm}},
 \code{\link{Sbm}}
+}
+\author{
+\strong{Maintainer}: Etienne Côme \email{etienne.come@univ-eiffel.fr}
+
+Authors:
+\itemize{
+  \item Nicolas Jouvin
+}
+
 }
 \concept{DlvmModels}

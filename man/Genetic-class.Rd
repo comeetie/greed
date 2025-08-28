@@ -25,9 +25,9 @@ An S4 class to represent a genetic algorithm (extends \code{\link{Alg-class}} cl
 }
 \section{Functions}{
 \itemize{
-\item \code{Genetic}: Genetic algorithm class constructor
-}}
+\item \code{Genetic()}: Genetic algorithm class constructor
 
+}}
 \section{Slots}{
 
 \describe{

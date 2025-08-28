@@ -20,6 +20,6 @@ This method take a \code{\link{IclFit-class}} object and return an integer vecto
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{IclFit}: IclFit-class method
-}}
+\item \code{clustering(IclFit)}: IclFit-class method
 
+}}

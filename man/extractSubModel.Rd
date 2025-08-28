@@ -24,6 +24,6 @@ Extract a part of a \code{\link{CombinedModelsPath-class}} object
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{sol = CombinedModelsPath,sub_model_name = character}: CombinedModelsPath method
-}}
+\item \code{extractSubModel(sol = CombinedModelsPath, sub_model_name = character)}: CombinedModelsPath method
 
+}}
