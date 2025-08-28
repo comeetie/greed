@@ -16,7 +16,7 @@
 }}
 }
 \value{
-a \code{\link[ggplot2]{ggplot}} graphic
+a ggplot graphic
 }
 \description{
 Plot a \code{\link{SbmFit-class}} object

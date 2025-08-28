@@ -17,7 +17,7 @@
 }}
 }
 \value{
-a \code{\link[ggplot2]{ggplot}} graphic
+a ggplot graphic
 }
 \description{
 Plot an \code{\link{IclPath-class}} object
