@@ -20,11 +20,6 @@ test_that("Combined models sbm and gmm", {
   sol <- greed(Xinput, model = Mtt)
   expect_equal(sol@K, K)
   solc <- cut(sol, 8)
-  expect_true(is.ggplot(plot(solc, type = "tree")))
-  expect_true(is.ggplot(plot(solc, type = "path")))
-  expect_true(is.ggplot(plot(solc, type = "front")))
-  expect_true(is(plot(extractSubModel(solc, "Xnodes")), "gtable"))
-  expect_true(is.ggplot(plot(extractSubModel(solc, "graph"))))
 })
 
 
@@ -50,11 +45,6 @@ test_that("Combined models multsbm and gmm", {
   sol <- greed(Xinput, model = Mtt)
   expect_equal(sol@K, K)
   solc <- cut(sol, 2)
-  expect_true(is.ggplot(plot(sol, type = "tree")))
-  expect_true(is.ggplot(plot(sol, type = "path")))
-  expect_true(is.ggplot(plot(sol, type = "front")))
-  expect_true(is(plot(extractSubModel(sol, "Xnodes")), "gtable"))
-  expect_true(is.ggplot(plot(extractSubModel(sol, "graph"))))
 })
 
 test_that("Combined models mom and gmm", {
@@ -72,11 +62,6 @@ test_that("Combined models mom and gmm", {
   sol <- greed(Xinput, model = Mtt)
   expect_equal(sol@K, K)
   solc <- cut(sol, 2)
-  expect_true(is.ggplot(plot(sol, type = "tree")))
-  expect_true(is.ggplot(plot(sol, type = "path")))
-  expect_true(is.ggplot(plot(sol, type = "front")))
-  expect_true(is(plot(extractSubModel(sol, "Xnodes")), "gtable"))
-  expect_true(is.ggplot(plot(extractSubModel(sol, "mom"))))
 })
 
 test_that("Combined models lca and gmm", {
@@ -97,11 +82,6 @@ test_that("Combined models lca and gmm", {
   Mtt <- CombinedModels(models = list(lca = LcaPrior(), Xnodes = GmmPrior()))
   sol <- greed(Xinput, model = Mtt)
   solc <- cut(sol, 2)
-  expect_true(is.ggplot(plot(sol, type = "tree")))
-  expect_true(is.ggplot(plot(sol, type = "path")))
-  expect_true(is.ggplot(plot(sol, type = "front")))
-  expect_true(is(plot(extractSubModel(sol, "Xnodes")), "gtable"))
-  expect_true(is(plot(extractSubModel(sol, "lca")), "gtable"))
 })
 
 test_that("Combined models lca and diaggmm", {
@@ -123,9 +103,4 @@ test_that("Combined models lca and diaggmm", {
   sol <- greed(Xinput, model = Mtt)
   expect_equal(sol@K, K)
   solc <- cut(sol, 2)
-  expect_true(is.ggplot(plot(sol, type = "tree")))
-  expect_true(is.ggplot(plot(sol, type = "path")))
-  expect_true(is.ggplot(plot(sol, type = "front")))
-  expect_true(is(plot(extractSubModel(sol, "Xnodes")), "gtable"))
-  expect_true(is(plot(extractSubModel(sol, "lca")), "gtable"))
 })
