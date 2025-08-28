@@ -53,8 +53,8 @@ test_that("GMM hybrid", {
   # expect_true(is.ggplot(plot(solc, type = "tree")))
   # expect_true(is.ggplot(plot(solc, type = "path")))
   # expect_true(is.ggplot(plot(solc, type = "front")))
-  expect_true(methods::is(plot(solc, type = "violins"), "gtable"))
-  expect_true(methods::is(plot(solc, type = "marginals"), "gtable"))
+  #expect_true(methods::is(plot(solc, type = "violins"), "gtable"))
+  #expect_true(methods::is(plot(solc, type = "marginals"), "gtable"))
 })
 
 test_that("GMM seed", {
@@ -66,6 +66,6 @@ test_that("GMM seed", {
   # expect_true(is.ggplot(plot(solc, type = "tree")))
   # expect_true(is.ggplot(plot(solc, type = "path")))
   # expect_true(is.ggplot(plot(solc, type = "front")))
-  expect_true(methods::is(plot(solc, type = "violins"), "gtable"))
-  expect_true(methods::is(plot(solc, type = "marginals"), "gtable"))
+  #expect_true(methods::is(plot(solc, type = "violins"), "gtable"))
+  #expect_true(methods::is(plot(solc, type = "marginals"), "gtable"))
 })

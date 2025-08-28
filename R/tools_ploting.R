@@ -842,7 +842,7 @@ block_gmm_marginals_violin <- function(sol) {
       p[j]
     }))
     plts[[j]] <- ggplot2::ggplot(pdfs.df) +
-      ggplot2::geom_ribbon(ggplot2::aes_(ymin = ~ cl - 0.45 * pdfu / (max(pdfu)), x = ~x, ymax = ~ cl + 0.45 * pdfu / (max(pdfu)), group = ~cl, fill = ~ factor(cl)), color = "#000000", size = 0.5) +
+      ggplot2::geom_ribbon(ggplot2::aes_(ymin = ~ cl - 0.45 * pdfu / (max(pdfu)), x = ~x, ymax = ~ cl + 0.45 * pdfu / (max(pdfu)), group = ~cl, fill = ~ factor(cl)), color = "#000000", linewidth = 0.5) +
       ggplot2::geom_segment(data = mus, ggplot2::aes_(x = ~mu, xend = ~mu, y = ~ cl - 0.45, yend = ~ cl + 0.45)) +
       ggplot2::scale_x_continuous(limits = c(liminf[j], limsup[j])) +
       ggplot2::theme_bw() +
