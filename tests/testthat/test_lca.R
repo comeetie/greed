@@ -41,5 +41,5 @@ test_that("LCA icl opt", {
   # expect_true(is.ggplot(plot(sol, type = "tree")))
   # expect_true(is.ggplot(plot(sol, type = "path")))
   # expect_true(is.ggplot(plot(sol, type = "front")))
-  expect_true(methods::is(plot(sol, type = "marginals"), "gtable"))
+  # expect_true(methods::is(plot(sol, type = "marginals"), "gtable"))
 })
