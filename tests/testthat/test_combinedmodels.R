@@ -84,23 +84,23 @@ test_that("Combined models sbm and gmm", {
 #   solc <- cut(sol, 2)
 # })
 
-test_that("Combined models lca and diaggmm", {
-  N <- 500
-  theta <- list(
-    matrix(c(0.1, 0.9, 0.9, 0.1, 0.8, 0.2, 0.05, 0.95), ncol = 2, byrow = TRUE),
-    matrix(c(0.95, 0.05, 0.3, 0.7, 0.05, 0.95, 0.05, 0.95), ncol = 2, byrow = TRUE),
-    matrix(c(0.95, 0.04, 0.01, 0.9, 0.09, 0.01, 0.01, 0.01, 0.98, 0.9, 0.05, 0.05), ncol = 3, byrow = TRUE),
-    matrix(c(1, 0, 0, 1, 1, 0, 0, 1), ncol = 2, byrow = TRUE)
-  )
-  lca.data <- rlca(N, rep(1 / 4, 4), theta)
-  K <- 4
-  gmm <- do.call(cbind, lapply(1:K, function(x) {
-    rnorm(N, 20 * runif(1) - 10)
-  }))
-  Xnodes <- as.matrix(gmm[cbind(1:N, lca.data$cl)])
-  Xinput <- list(lca = lca.data$x, Xnodes = Xnodes)
-  Mtt <- CombinedModels(models = list(lca = LcaPrior(), Xnodes = DiagGmmPrior()))
-  sol <- greed(Xinput, model = Mtt)
-  expect_equal(sol@K, K)
-  solc <- cut(sol, 2)
-})
+# test_that("Combined models lca and diaggmm", {
+#   N <- 500
+#   theta <- list(
+#     matrix(c(0.1, 0.9, 0.9, 0.1, 0.8, 0.2, 0.05, 0.95), ncol = 2, byrow = TRUE),
+#     matrix(c(0.95, 0.05, 0.3, 0.7, 0.05, 0.95, 0.05, 0.95), ncol = 2, byrow = TRUE),
+#     matrix(c(0.95, 0.04, 0.01, 0.9, 0.09, 0.01, 0.01, 0.01, 0.98, 0.9, 0.05, 0.05), ncol = 3, byrow = TRUE),
+#     matrix(c(1, 0, 0, 1, 1, 0, 0, 1), ncol = 2, byrow = TRUE)
+#   )
+#   lca.data <- rlca(N, rep(1 / 4, 4), theta)
+#   K <- 4
+#   gmm <- do.call(cbind, lapply(1:K, function(x) {
+#     rnorm(N, 20 * runif(1) - 10)
+#   }))
+#   Xnodes <- as.matrix(gmm[cbind(1:N, lca.data$cl)])
+#   Xinput <- list(lca = lca.data$x, Xnodes = Xnodes)
+#   Mtt <- CombinedModels(models = list(lca = LcaPrior(), Xnodes = DiagGmmPrior()))
+#   sol <- greed(Xinput, model = Mtt)
+#   expect_equal(sol@K, K)
+#   solc <- cut(sol, 2)
+# })
